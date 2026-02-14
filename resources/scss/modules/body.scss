@@ -1,0 +1,94 @@
+@use "../utils/fonts";
+@use "../utils/vars";
+
+html {
+    font-size: vars.$basicFontSize;
+
+    @media (max-width: vars.$mediaTablet) {
+        font-size: 22px;
+    }
+
+    @media (max-width: vars.$mediaSmallTablet) {
+        font-size: 20px;
+    }
+
+    @media (max-width: vars.$mediaMobile) {
+        font-size: 18px;
+    }
+
+    @media (max-width: vars.$mediaSmallMobile) {
+        font-size: 16px;
+    }
+}
+
+body {
+    background-color: vars.$mainBgColor;
+    font-family: vars.$mainFontFamily;
+    color: vars.$mainTextColor;
+}
+
+.body__fixed {
+    overflow: hidden;
+}
+
+.container {
+    max-width: vars.$containerWidth;
+    padding: 0 vars.$containerPadding;
+    margin: 0 auto;
+}
+
+.display--none {
+    display: none;
+}
+
+.main-bg {
+    background: url("../../img/hero-bg.jpg") center top / cover no-repeat;
+}
+
+.webp {
+    .main-bg {
+        background: url("/dist/assets/img/hero-bg.webp") center top/ cover
+            no-repeat;
+    }
+}
+
+.avif {
+    .main-bg {
+        background: url("/dist/assets/img/hero-bg.avif") center top/ cover
+            no-repeat;
+        @media (max-width: 1115px) {
+            background: linear-gradient(
+                    90deg,
+                    rgba(0, 0, 0, 0.15) 0%,
+                    rgba(0, 0, 0, 0.35) 10%,
+                    rgba(0, 0, 0, 0.5) 50%,
+                    rgba(0, 0, 0, 0.35) 70%,
+                    rgba(0, 0, 0, 0.2) 100%
+                ),
+                url("../../img/hero-bg.jpg") center top / cover no-repeat;
+        }
+    }
+}
+
+.title {
+    font-size: calc(1rem * (55px / vars.$basicFontSize));
+    white-space: nowrap;
+    color: vars.$lightTextColor;
+    font-weight: 600;
+    text-align: center;
+    border-image: url("../../img/border-title.png");
+    border-image-slice: 1 fill;
+    padding: calc(1rem * (14px / vars.$basicFontSize))
+        calc(1rem * (34px / vars.$basicFontSize))
+        calc(1rem * (21px / vars.$basicFontSize));
+    width: fit-content;
+    margin: 0 auto calc(1rem * (109px / vars.$basicFontSize));
+    border-color: transparent;
+    border-width: 6px;
+    border-style: solid;
+
+    @media (max-width: vars.$mediaMobile) {
+        font-size: calc(1rem * (32px / vars.$basicFontSize));
+        padding: 6px 18px;
+    }
+}

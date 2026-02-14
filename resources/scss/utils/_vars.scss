@@ -1,0 +1,36 @@
+// Text Colors
+$mainTextColor: rgba(255, 255, 255, 0.75);
+$lightTextColor: #ffffff;
+
+// Background Colors
+$lightBgColor: #ffffff;
+$darkBgColor: rgba(255, 255, 255, 0.05);
+$mainBgColor: #1b2316;
+
+// Fonts
+$mainFontFamily: "Inter", "Open Sans", sans-serif;
+$basicFontSize: 24px;
+
+//  Container
+$containerPadding: 1.5rem;
+$containerWidth: calc(1620px + ($containerPadding * 2));
+
+//  Transitions
+$basicTransTime: 0.3s;
+
+//  Opacity
+$opacity: 0.75;
+
+// Paddings & Margins
+$mainPadding: 1rem;
+$linkPadding: 8px;
+$mainMargin: 1rem;
+$mainGap: 1.4rem;
+
+// Medias
+$mediaPC: 1400px;
+$mediaSmallPC: 1200px;
+$mediaTablet: 992px;
+$mediaSmallTablet: 768px;
+$mediaMobile: 576px;
+$mediaSmallMobile: 320px;
