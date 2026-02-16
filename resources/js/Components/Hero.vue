@@ -1,4 +1,9 @@
-<script setup></script>
+<script setup>
+import IconStar from "img/icons/star.svg?component";
+import IconStarHalf from "img/icons/star-half.svg?component";
+import IconPlay from "img/icons/play.svg?component";
+import IconArrowRight from "img/icons/arrow-right.svg?component";
+</script>
 
 <template>
     <section class="hero" id="hero" aria-label="Hero section">
@@ -31,12 +36,10 @@
                                 class="button--circ"
                                 aria-label="Play video"
                             >
-                                <svg
+                                <IconPlay
                                     class="hero__video--img"
                                     aria-label="Play icon"
-                                >
-                                    <use href="./spritemap.svg#play"></use>
-                                </svg>
+                                ></IconPlay>
                             </button>
 
                             <span
@@ -55,7 +58,7 @@
                     >
                         <div class="author__photo" aria-label="Author`s photo">
                             <img
-                                src="./src/assets/img/users/user1.png"
+                                src="@/../images/users/user1.png"
                                 alt="Author image"
                             />
                         </div>
@@ -69,40 +72,30 @@
                                 class="authors__assessment"
                                 aria-label="Author`s assessment"
                             >
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStarHalf
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star-half"></use>
-                                </svg>
+                                ></IconStarHalf>
                             </div>
                         </div>
                     </div>
@@ -127,7 +120,7 @@
                             aria-label="Slider card image"
                         >
                             <img
-                                src="./src/assets/img/plants/Plant7.png"
+                                src="@/../images/plants/Plant7.png"
                                 alt="Plant"
                             />
                         </div>
@@ -163,24 +156,20 @@
                     aria-label="Slider direction buttons"
                 >
                     <button class="button slider-mini__left" aria-label="Left">
-                        <svg
+                        <IconArrowRight
                             class="slider-mini__left-img"
                             aria-label="Arrow icon"
-                        >
-                            <use href="./spritemap.svg#arrow-right"></use>
-                        </svg>
+                        ></IconArrowRight>
                     </button>
 
                     <button
                         class="button slider-mini__right"
                         aria-label="Right"
                     >
-                        <svg
+                        <IconArrowRight
                             class="slider-mini__right-img"
                             aria-label="Arrow icon"
-                        >
-                            <use href="./spritemap.svg#arrow-right"></use>
-                        </svg>
+                        ></IconArrowRight>
                     </button>
                 </div>
 

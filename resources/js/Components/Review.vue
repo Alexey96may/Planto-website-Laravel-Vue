@@ -1,4 +1,7 @@
-<script setup></script>
+<script setup>
+import IconStar from "img/icons/star.svg?component";
+import IconStarHalf from "img/icons/star-half.svg?component";
+</script>
 
 <template>
     <section class="review" id="review" aria-label="Review section">
@@ -13,7 +16,7 @@
                     >
                         <div class="author__photo" aria-label="Author`s photo">
                             <img
-                                src="./src/assets/img/users/user3.png"
+                                src="@/../images/users/user3.png"
                                 alt="Author image"
                             />
                         </div>
@@ -27,40 +30,30 @@
                                 class="authors__assessment"
                                 aria-label="Author`s assessment"
                             >
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStarHalf
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star-half"></use>
-                                </svg>
+                                ></IconStarHalf>
                             </div>
                         </div>
                     </div>
@@ -81,7 +74,7 @@
                     >
                         <div class="author__photo" aria-label="Author`s photo">
                             <img
-                                src="./src/assets/img/users/user5.png"
+                                src="@/../images/users/user5.png"
                                 alt="Author image"
                             />
                         </div>
@@ -95,40 +88,30 @@
                                 class="authors__assessment"
                                 aria-label="Author`s assessment"
                             >
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStarHalf
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star-half"></use>
-                                </svg>
+                                ></IconStarHalf>
                             </div>
                         </div>
                     </div>
@@ -149,7 +132,7 @@
                     >
                         <div class="author__photo" aria-label="Author`s photo">
                             <img
-                                src="./src/assets/img/users/user6.png"
+                                src="@/../images/users/user6.png"
                                 alt="Author image"
                             />
                         </div>
@@ -163,40 +146,30 @@
                                 class="authors__assessment"
                                 aria-label="Author`s assessment"
                             >
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStar
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star"></use>
-                                </svg>
+                                ></IconStar>
 
-                                <svg
+                                <IconStarHalf
                                     class="authors__star"
                                     aria-label="Star icon"
-                                >
-                                    <use href="./spritemap.svg#star-half"></use>
-                                </svg>
+                                ></IconStarHalf>
                             </div>
                         </div>
                     </div>

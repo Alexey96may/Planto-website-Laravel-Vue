@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import IconBag from "img/icons/bag.svg?component";
+</script>
 
 <template>
     <section class="top" id="top" aria-label="Top selling section">
@@ -8,10 +10,7 @@
             <div class="top__cards" aria-label="Cards field">
                 <figure class="card top__card" aria-label="Top card">
                     <div class="card__img-wrapper" aria-label="Top card image">
-                        <img
-                            src="./src/assets/img/plants/Plant7.png"
-                            alt="Plant"
-                        />
+                        <img src="@/../images/plants/Plant7.png" alt="Plant" />
                     </div>
 
                     <h3 class="card__title" aria-label="Card title">
@@ -36,19 +35,17 @@
                         </div>
 
                         <button class="button--square" aria-label="Add to cart">
-                            <svg class="button-image" aria-label="Cart">
-                                <use href="./spritemap.svg#bag"></use>
-                            </svg>
+                            <IconBag
+                                class="button-image"
+                                aria-label="Cart"
+                            ></IconBag>
                         </button>
                     </div>
                 </figure>
 
                 <figure class="card top__card" aria-label="Top card">
                     <div class="card__img-wrapper" aria-label="Top card image">
-                        <img
-                            src="./src/assets/img/plants/Plant1.png"
-                            alt="Plant"
-                        />
+                        <img src="@/../images/plants/Plant1.png" alt="Plant" />
                     </div>
 
                     <h3 class="card__title" aria-label="Card title">
@@ -73,19 +70,17 @@
                         </div>
 
                         <button class="button--square" aria-label="Add to cart">
-                            <svg class="button-image" aria-label="Cart">
-                                <use href="./spritemap.svg#bag"></use>
-                            </svg>
+                            <IconBag
+                                class="button-image"
+                                aria-label="Cart"
+                            ></IconBag>
                         </button>
                     </div>
                 </figure>
 
                 <figure class="card top__card" aria-label="Top card">
                     <div class="card__img-wrapper" aria-label="Top card image">
-                        <img
-                            src="./src/assets/img/plants/Plant3.png"
-                            alt="Plant"
-                        />
+                        <img src="@/../images/plants/Plant3.png" alt="Plant" />
                     </div>
 
                     <h3 class="card__title" aria-label="Card title">
@@ -110,19 +105,17 @@
                         </div>
 
                         <button class="button--square" aria-label="Add to cart">
-                            <svg class="button-image" aria-label="Cart">
-                                <use href="./spritemap.svg#bag"></use>
-                            </svg>
+                            <IconBag
+                                class="button-image"
+                                aria-label="Cart"
+                            ></IconBag>
                         </button>
                     </div>
                 </figure>
 
                 <figure class="card top__card" aria-label="Top card">
                     <div class="card__img-wrapper" aria-label="Top card image">
-                        <img
-                            src="./src/assets/img/plants/Plant4.png"
-                            alt="Plant"
-                        />
+                        <img src="@/../images/plants/Plant4.png" alt="Plant" />
                     </div>
 
                     <h3 class="card__title" aria-label="Card title">
@@ -147,19 +140,17 @@
                         </div>
 
                         <button class="button--square" aria-label="Add to cart">
-                            <svg class="button-image" aria-label="Cart">
-                                <use href="./spritemap.svg#bag"></use>
-                            </svg>
+                            <IconBag
+                                class="button-image"
+                                aria-label="Cart"
+                            ></IconBag>
                         </button>
                     </div>
                 </figure>
 
                 <figure class="card top__card" aria-label="Top card">
                     <div class="card__img-wrapper" aria-label="Top card image">
-                        <img
-                            src="./src/assets/img/plants/Plant5.png"
-                            alt="Plant"
-                        />
+                        <img src="@/../images/plants/Plant5.png" alt="Plant" />
                     </div>
 
                     <h3 class="card__title" aria-label="Card title">
@@ -184,19 +175,17 @@
                         </div>
 
                         <button class="button--square" aria-label="Add to cart">
-                            <svg class="button-image" aria-label="Cart">
-                                <use href="./spritemap.svg#bag"></use>
-                            </svg>
+                            <IconBag
+                                class="button-image"
+                                aria-label="Cart"
+                            ></IconBag>
                         </button>
                     </div>
                 </figure>
 
                 <figure class="card top__card" aria-label="Top card">
                     <div class="card__img-wrapper" aria-label="Top card image">
-                        <img
-                            src="./src/assets/img/plants/Plant6.png"
-                            alt="Plant"
-                        />
+                        <img src="@/../images/plants/Plant6.png" alt="Plant" />
                     </div>
 
                     <h3 class="card__title" aria-label="Card title">
@@ -221,9 +210,10 @@
                         </div>
 
                         <button class="button--square" aria-label="Add to cart">
-                            <svg class="button-image" aria-label="Cart">
-                                <use href="./spritemap.svg#bag"></use>
-                            </svg>
+                            <IconBag
+                                class="button-image"
+                                aria-label="Cart"
+                            ></IconBag>
                         </button>
                     </div>
                 </figure>

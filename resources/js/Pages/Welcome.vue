@@ -1,6 +1,9 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
 import MainLayout from "@/Layouts/MainLayout.vue";
+import Top from "@/Components/Top.vue";
+import Review from "@/Components/Review.vue";
+import Best from "@/Components/Best.vue";
 
 defineOptions({
     layout: MainLayout,
@@ -41,5 +44,7 @@ function handleImageError() {
 
 <template>
     <Head title="Main" />
-    <section class="hero">Welcome to</section>
+    <Top />
+    <Review />
+    <Best />
 </template>

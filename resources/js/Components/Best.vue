@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import IconArrowRight from "img/icons/arrow-right.svg?component";
+</script>
 
 <template>
     <section class="best" id="best" aria-label="Review section">
@@ -13,7 +15,7 @@
                             aria-label="Slider card image"
                         >
                             <img
-                                src="./src/assets/img/plants/Plant7.png"
+                                src="@/../images/plants/Plant7.png"
                                 alt="Plant"
                             />
                         </div>
@@ -68,14 +70,10 @@
                                         class="button slider-mini__left"
                                         aria-label="Left"
                                     >
-                                        <svg
+                                        <IconArrowRight
                                             class="slider-mini__left-img"
                                             aria-label="Arrow icon"
-                                        >
-                                            <use
-                                                href="./spritemap.svg#arrow-right"
-                                            ></use>
-                                        </svg>
+                                        ></IconArrowRight>
                                     </button>
 
                                     <span class="card__number-info">
@@ -89,14 +87,10 @@
                                         class="button slider-mini__right"
                                         aria-label="Right"
                                     >
-                                        <svg
+                                        <IconArrowRight
                                             class="slider-mini__right-img"
                                             aria-label="Arrow icon"
-                                        >
-                                            <use
-                                                href="./spritemap.svg#arrow-right"
-                                            ></use>
-                                        </svg>
+                                        ></IconArrowRight>
                                     </button>
                                 </div>
                             </div>

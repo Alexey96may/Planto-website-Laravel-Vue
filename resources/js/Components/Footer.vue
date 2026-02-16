@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import IconLogo from "img/icons/logo.svg?component";
+</script>
 
 <template>
     <footer class="footer" id="footer" aria-label="Footer">
@@ -6,11 +8,12 @@
             <div class="footer__top" aria-label="Footer top side">
                 <div class="footer__info" aria-label="Footer information">
                     <div class="logo" aria-label="Logo field">
-                        <svg class="logo__image" aria-label="Logo image">
-                            <use href="./spritemap.svg#logo"></use>
-                        </svg>
+                        <IconLogo
+                            class="logo__image"
+                            aria-label="Logo image"
+                        ></IconLogo>
                         <span class="logo__text" aria-label="Logo text"
-                            >Planto.</span
+                            >{{ $page.props.appName }}.</span
                         >
                     </div>
 
@@ -92,7 +95,7 @@
                 </ul>
 
                 <div class="copyright" aria-label="Copyright">
-                    planto © all right reserve
+                    {{ $page.props.appName }} © all right reserve
                 </div>
             </div>
         </div>

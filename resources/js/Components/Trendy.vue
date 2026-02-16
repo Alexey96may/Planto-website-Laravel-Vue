@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import IconBag from "img/icons/bag.svg?component";
+</script>
 
 <template>
     <section class="trendy" id="trendy" aria-label="Trendy plants section">
@@ -10,10 +12,7 @@
                         class="card__img-wrapper"
                         aria-label="Trendy card image"
                     >
-                        <img
-                            src="./src/assets/img/plants/Plant1.png"
-                            alt="Plant"
-                        />
+                        <img src="@/../images/plants/Plant1.png" alt="Plant" />
                     </div>
 
                     <div class="card__info" aria-label="Card information">
@@ -48,9 +47,10 @@
                                 class="button--square"
                                 aria-label="Add to cart"
                             >
-                                <svg class="button-image" aria-label="Cart">
-                                    <use href="./spritemap.svg#bag"></use>
-                                </svg>
+                                <IconBag
+                                    class="button-image"
+                                    aria-label="Cart"
+                                ></IconBag>
                             </button>
                         </div>
                     </div>
@@ -61,10 +61,7 @@
                         class="card__img-wrapper"
                         aria-label="Trendy card image"
                     >
-                        <img
-                            src="./src/assets/img/plants/Plant2.png"
-                            alt="Plant"
-                        />
+                        <img src="@/../images/plants/Plant2.png" alt="Plant" />
                     </div>
 
                     <div class="card__info" aria-label="Card information">
@@ -99,9 +96,10 @@
                                 class="button--square"
                                 aria-label="Add to cart"
                             >
-                                <svg class="button-image" aria-label="Cart">
-                                    <use href="./spritemap.svg#bag"></use>
-                                </svg>
+                                <IconBag
+                                    class="button-image"
+                                    aria-label="Cart"
+                                ></IconBag>
                             </button>
                         </div>
                     </div>
