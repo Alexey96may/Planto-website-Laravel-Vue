@@ -1,0 +1,100 @@
+<script setup></script>
+
+<template>
+    <footer class="footer" id="footer" aria-label="Footer">
+        <div class="container footer__container">
+            <div class="footer__top" aria-label="Footer top side">
+                <div class="footer__info" aria-label="Footer information">
+                    <div class="logo" aria-label="Logo field">
+                        <svg class="logo__image" aria-label="Logo image">
+                            <use href="./spritemap.svg#logo"></use>
+                        </svg>
+                        <span class="logo__text" aria-label="Logo text"
+                            >Planto.</span
+                        >
+                    </div>
+
+                    <p class="footer__descr">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                        sed do eiusmod tempor incididunt ut labore et dolore
+                        magna aliqua.
+                    </p>
+                </div>
+
+                <nav class="footer__nav" aria-label="Footer navigation">
+                    <ul class="footer__nav-list" aria-label="Navigation list">
+                        <li class="footer__nav-item">Quick Link’s</li>
+                        <li class="footer__nav-item">
+                            <a href="#" aria-label="to ">Home</a>
+                        </li>
+                        <li class="footer__nav-item">
+                            <a href="#top" aria-label="to Type’s Of plant’s"
+                                >Type’s Of plant’s</a
+                            >
+                        </li>
+                        <li class="footer__nav-item">
+                            <a href="#review" aria-label="to Contact"
+                                >Contact</a
+                            >
+                        </li>
+                        <li class="footer__nav-item">
+                            <a href="#" aria-label="to Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="footer__subscribe" aria-label="Subscribe field">
+                    <h3 class="footer__subscribe-title">For Every Update.</h3>
+
+                    <form
+                        class="footer__form"
+                        action="#"
+                        method="get"
+                        aria-label="Subscribe form"
+                    >
+                        <input
+                            type="email"
+                            class="footer__form-text"
+                            name="footerFormText"
+                            id="footerFormText"
+                            placeholder="Enter Email"
+                            aria-label="Email form"
+                        />
+                        <input
+                            class="button footer__form-button"
+                            type="button"
+                            aria-label="To Subscribe"
+                            value="Subscribe"
+                        />
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer__bottom" aria-label="Footer bottom side">
+                <ul class="footer__socials" aria-label="Socials">
+                    <li class="footer__social" aria-label="Facebook social">
+                        <a
+                            href="https://www.facebook.com/"
+                            aria-label="to Facebook"
+                            >FB</a
+                        >
+                    </li>
+                    <li class="footer__social" aria-label="X social">
+                        <a href="https://x.com/" aria-label="to X">X</a>
+                    </li>
+                    <li class="footer__social" aria-label="Linkedin social">
+                        <a
+                            href="https://www.linkedin.com/"
+                            aria-label="to Linkedin"
+                            >LI</a
+                        >
+                    </li>
+                </ul>
+
+                <div class="copyright" aria-label="Copyright">
+                    planto © all right reserve
+                </div>
+            </div>
+        </div>
+    </footer>
+</template>
