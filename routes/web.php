@@ -3,10 +3,12 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Models\Product;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
+        'products'=> Product::all(),
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'storeName' => 'Planto',

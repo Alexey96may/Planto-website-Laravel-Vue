@@ -4,14 +4,18 @@ import MainLayout from "@/Layouts/MainLayout.vue";
 import Top from "@/Components/Top.vue";
 import Review from "@/Components/Review.vue";
 import Best from "@/Components/Best.vue";
+import { onMounted } from "vue";
 
 defineOptions({
     layout: MainLayout,
 });
 
-defineProps({
+const props = defineProps({
     canLogin: {
         type: Boolean,
+    },
+    products: {
+        type: String,
     },
     canRegister: {
         type: Boolean,
@@ -34,6 +38,10 @@ defineProps({
     },
 });
 
+onMounted(() => {
+    console.log(props.products);
+});
+
 function handleImageError() {
     document.getElementById("screenshot-container")?.classList.add("!hidden");
     document.getElementById("docs-card")?.classList.add("!row-span-1");
@@ -44,6 +52,7 @@ function handleImageError() {
 
 <template>
     <Head title="Main" />
+
     <Top />
     <Review />
     <Best />
