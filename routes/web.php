@@ -9,6 +9,8 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
+        'storeName' => 'Planto',
+        'status' => 'Сегодня работаем до 22:00',
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
