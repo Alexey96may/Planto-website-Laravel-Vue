@@ -30,6 +30,17 @@ Route::get('/shop/plant-{product}', function (Product $product) {
     ]);
 });
 
+Route::get('/cart', function () {
+    $cartIds = session('cart', []);
+    $cartProducts = Product::whereIn('id', $cartIds)->get();
+    $totalPrice = $cartProducts->sum('price');
+
+    return Inertia::render('CartPage', [
+        'cartItems' => $cartProducts,
+        'total' => $totalPrice
+    ]);
+})->name('cart.index');
+
 Route::post('/cart/add', function (Request $request) {
     $productId = $request->input('product_id');
 
@@ -42,6 +53,19 @@ Route::post('/cart/add', function (Request $request) {
 
     return back();
 })->name('cart.add');
+
+Route::post('/cart/remove', function (Request $request) {
+    $productId = $request->input('product_id');
+    $cart = session()->get('cart', []);
+
+    if (($key = array_search($productId, $cart)) !== false) {
+        unset($cart[$key]);
+    }
+
+    session()->put('cart', array_values($cart));
+
+    return back();
+})->name('cart.remove');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

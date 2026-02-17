@@ -1,5 +1,5 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 import IconLogo from "img/icons/logo.svg?component";
 import IconArrowMore from "img/icons/arrow-more.svg?component";
 import IconSearch from "img/icons/search.svg?component";
@@ -80,13 +80,13 @@ defineProps({ cartCount: Number });
                         />
                     </a>
 
-                    <a href="#cart" aria-label="To cart">
+                    <Link href="/cart" aria-label="To cart">
                         <IconBag
                             class="header__social-img"
                             aria-label="Bag image"
                         />
                         {{ cartCount }}
-                    </a>
+                    </Link>
 
                     <button
                         class="burger"
