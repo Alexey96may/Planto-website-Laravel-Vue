@@ -4,6 +4,8 @@ import IconLogo from "img/icons/logo.svg?component";
 import IconArrowMore from "img/icons/arrow-more.svg?component";
 import IconSearch from "img/icons/search.svg?component";
 import IconBag from "img/icons/bag.svg?component";
+
+defineProps({ cartCount: Number });
 </script>
 
 <template>
@@ -83,6 +85,7 @@ import IconBag from "img/icons/bag.svg?component";
                             class="header__social-img"
                             aria-label="Bag image"
                         />
+                        {{ cartCount }}
                     </a>
 
                     <button

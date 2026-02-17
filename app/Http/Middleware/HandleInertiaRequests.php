@@ -35,6 +35,8 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'appName' => 'Planto',
+            'cart_count' => count(session('cart', [])),
+            'cart_ids' => session('cart', []),
         ];
     }
 }

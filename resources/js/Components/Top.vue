@@ -1,5 +1,12 @@
 <script setup>
 import IconBag from "img/icons/bag.svg?component";
+import PlantTopCard from "@/Components/TopCard.vue";
+
+const props = defineProps({
+    topPlants: {
+        type: Array,
+    },
+});
 </script>
 
 <template>
@@ -8,215 +15,11 @@ import IconBag from "img/icons/bag.svg?component";
             <h2 class="title top__title">Our Top Selling</h2>
 
             <div class="top__cards" aria-label="Cards field">
-                <figure class="card top__card" aria-label="Top card">
-                    <div class="card__img-wrapper" aria-label="Top card image">
-                        <img src="@/../images/plants/Plant7.png" alt="Plant" />
-                    </div>
-
-                    <h3 class="card__title" aria-label="Card title">
-                        <a
-                            href="#"
-                            class="card__tag-title"
-                            aria-label="To Calathea plant"
-                            >Calathea plant</a
-                        >
-                    </h3>
-
-                    <p
-                        class="card__descr card__descr--white"
-                        aria-label="Plant description"
-                    >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                    </p>
-
-                    <div class="card__buying" aria-label="Plant buying info">
-                        <div class="card__price" aria-label="Plant price">
-                            Rs. 359/-
-                        </div>
-
-                        <button class="button--square" aria-label="Add to cart">
-                            <IconBag
-                                class="button-image"
-                                aria-label="Cart"
-                            ></IconBag>
-                        </button>
-                    </div>
-                </figure>
-
-                <figure class="card top__card" aria-label="Top card">
-                    <div class="card__img-wrapper" aria-label="Top card image">
-                        <img src="@/../images/plants/Plant1.png" alt="Plant" />
-                    </div>
-
-                    <h3 class="card__title" aria-label="Card title">
-                        <a
-                            href="#"
-                            class="card__tag-title"
-                            aria-label="To Calathea plant"
-                            >Calathea plant</a
-                        >
-                    </h3>
-
-                    <p
-                        class="card__descr card__descr--white"
-                        aria-label="Plant description"
-                    >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                    </p>
-
-                    <div class="card__buying" aria-label="Plant buying info">
-                        <div class="card__price" aria-label="Plant price">
-                            Rs. 359/-
-                        </div>
-
-                        <button class="button--square" aria-label="Add to cart">
-                            <IconBag
-                                class="button-image"
-                                aria-label="Cart"
-                            ></IconBag>
-                        </button>
-                    </div>
-                </figure>
-
-                <figure class="card top__card" aria-label="Top card">
-                    <div class="card__img-wrapper" aria-label="Top card image">
-                        <img src="@/../images/plants/Plant3.png" alt="Plant" />
-                    </div>
-
-                    <h3 class="card__title" aria-label="Card title">
-                        <a
-                            href="#"
-                            class="card__tag-title"
-                            aria-label="To Calathea plant"
-                            >Calathea plant</a
-                        >
-                    </h3>
-
-                    <p
-                        class="card__descr card__descr--white"
-                        aria-label="Plant description"
-                    >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                    </p>
-
-                    <div class="card__buying" aria-label="Plant buying info">
-                        <div class="card__price" aria-label="Plant price">
-                            Rs. 359/-
-                        </div>
-
-                        <button class="button--square" aria-label="Add to cart">
-                            <IconBag
-                                class="button-image"
-                                aria-label="Cart"
-                            ></IconBag>
-                        </button>
-                    </div>
-                </figure>
-
-                <figure class="card top__card" aria-label="Top card">
-                    <div class="card__img-wrapper" aria-label="Top card image">
-                        <img src="@/../images/plants/Plant4.png" alt="Plant" />
-                    </div>
-
-                    <h3 class="card__title" aria-label="Card title">
-                        <a
-                            href="#"
-                            class="card__tag-title"
-                            aria-label="To Calathea plant"
-                            >Calathea plant</a
-                        >
-                    </h3>
-
-                    <p
-                        class="card__descr card__descr--white"
-                        aria-label="Plant description"
-                    >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                    </p>
-
-                    <div class="card__buying" aria-label="Plant buying info">
-                        <div class="card__price" aria-label="Plant price">
-                            Rs. 359/-
-                        </div>
-
-                        <button class="button--square" aria-label="Add to cart">
-                            <IconBag
-                                class="button-image"
-                                aria-label="Cart"
-                            ></IconBag>
-                        </button>
-                    </div>
-                </figure>
-
-                <figure class="card top__card" aria-label="Top card">
-                    <div class="card__img-wrapper" aria-label="Top card image">
-                        <img src="@/../images/plants/Plant5.png" alt="Plant" />
-                    </div>
-
-                    <h3 class="card__title" aria-label="Card title">
-                        <a
-                            href="#"
-                            class="card__tag-title"
-                            aria-label="To Calathea plant"
-                            >Calathea plant</a
-                        >
-                    </h3>
-
-                    <p
-                        class="card__descr card__descr--white"
-                        aria-label="Plant description"
-                    >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                    </p>
-
-                    <div class="card__buying" aria-label="Plant buying info">
-                        <div class="card__price" aria-label="Plant price">
-                            Rs. 359/-
-                        </div>
-
-                        <button class="button--square" aria-label="Add to cart">
-                            <IconBag
-                                class="button-image"
-                                aria-label="Cart"
-                            ></IconBag>
-                        </button>
-                    </div>
-                </figure>
-
-                <figure class="card top__card" aria-label="Top card">
-                    <div class="card__img-wrapper" aria-label="Top card image">
-                        <img src="@/../images/plants/Plant6.png" alt="Plant" />
-                    </div>
-
-                    <h3 class="card__title" aria-label="Card title">
-                        <a
-                            href="#"
-                            class="card__tag-title"
-                            aria-label="To Calathea plant"
-                            >Calathea plant</a
-                        >
-                    </h3>
-
-                    <p
-                        class="card__descr card__descr--white"
-                        aria-label="Plant description"
-                    >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                    </p>
-
-                    <div class="card__buying" aria-label="Plant buying info">
-                        <div class="card__price" aria-label="Plant price">
-                            Rs. 359/-
-                        </div>
-
-                        <button class="button--square" aria-label="Add to cart">
-                            <IconBag
-                                class="button-image"
-                                aria-label="Cart"
-                            ></IconBag>
-                        </button>
-                    </div>
-                </figure>
+                <PlantTopCard
+                    v-for="plant in topPlants"
+                    :key="plant.id"
+                    :plant="plant"
+                ></PlantTopCard>
             </div>
         </div>
     </section>
