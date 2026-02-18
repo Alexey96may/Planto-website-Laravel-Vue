@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -79,11 +82,15 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    Route::get('/', function () {
-        return Inertia::render('Admin/Dashboard');
-    })->name('index');
+    Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'index'])->name('dashboard');
 
     Route::resource('products', AdminProductController::class);
+        
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.updateRole');
 });
+
 
 require __DIR__.'/auth.php';
