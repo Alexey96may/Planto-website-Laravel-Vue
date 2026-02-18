@@ -1,10 +1,22 @@
 <script setup>
 import AppImage from "@/Components/AppImage.vue";
 import { Link, router } from "@inertiajs/vue3";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 const props = defineProps({
     cartItems: Array,
     total: Number,
+});
+
+defineOptions({
+    layout: (h, page) =>
+        h(
+            MainLayout,
+            {
+                full: false,
+            },
+            () => page,
+        ),
 });
 
 // Метод для удаления товара

@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from "@inertiajs/vue3";
 import IconArrowRight from "img/icons/arrow-right.svg?component";
 </script>
 
@@ -59,7 +60,12 @@ import IconArrowRight from "img/icons/arrow-right.svg?component";
                                     class="button--rect card__button"
                                     aria-label="Explore"
                                 >
-                                    Explore
+                                    <Link
+                                        href="/shop"
+                                        aria-label="To see more plants"
+                                    >
+                                        Explore
+                                    </Link>
                                 </button>
 
                                 <div

@@ -23,9 +23,13 @@ defineProps({ cartCount: Number });
                 <nav class="nav" id="nav" aria-label="Navigation">
                     <ul class="nav__list" aria-label="Navigation list">
                         <li class="nav__item">
-                            <a class="nav__link" href="#" aria-label="To home"
-                                >Home</a
+                            <Link
+                                href="/"
+                                class="nav__link"
+                                aria-label="To the home page"
                             >
+                                Home
+                            </Link>
                         </li>
                         <li class="nav__item nav__item--plus">
                             <span class="nav__link" aria-label="To plants type"
@@ -54,12 +58,13 @@ defineProps({ cartCount: Number });
                             </ul>
                         </li>
                         <li class="nav__item">
-                            <a
+                            <Link
+                                href="/shop"
                                 class="nav__link"
-                                href="#best"
-                                aria-label="To see more"
-                                >More</a
+                                aria-label="To see more plants"
                             >
+                                More
+                            </Link>
                         </li>
                         <li class="nav__item">
                             <a

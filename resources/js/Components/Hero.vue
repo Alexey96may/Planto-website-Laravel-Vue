@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from "@inertiajs/vue3";
 import IconStar from "img/icons/star.svg?component";
 import IconStarHalf from "img/icons/star-half.svg?component";
 import IconPlay from "img/icons/play.svg?component";
@@ -24,7 +25,9 @@ import IconArrowRight from "img/icons/arrow-right.svg?component";
                             aria-label="Press to explore"
                             id="heroExploreButton"
                         >
-                            Explore
+                            <Link href="/shop" aria-label="To see more plants">
+                                Explore
+                            </Link>
                         </button>
 
                         <div

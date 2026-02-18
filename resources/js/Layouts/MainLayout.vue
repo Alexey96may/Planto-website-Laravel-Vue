@@ -5,15 +5,20 @@ import Hero from "@/Components/Hero.vue";
 import Trendy from "@/Components/Trendy.vue";
 import Footer from "@/Components/Footer.vue";
 
+defineProps({ full: { type: Boolean, default: true } });
+
 const page = usePage();
 </script>
 
 <template>
     <div class="app-wrapper">
-        <div class="main-bg">
+        <div class="main-bg" v-if="full">
             <Header :cartCount="page.props.cart_count" />
             <Hero />
             <Trendy />
+        </div>
+        <div v-else>
+            <Header :cartCount="page.props.cart_count" />
         </div>
 
         <main class="content">

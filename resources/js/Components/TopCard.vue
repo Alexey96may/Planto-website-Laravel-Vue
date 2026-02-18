@@ -9,10 +9,10 @@ import { computed } from "vue";
 const props = defineProps({
     plant: Object,
 });
+
 const page = usePage();
 
 const isInCart = computed(() => {
-    // Предполагаем, что ты прокинул массив ID как 'cart_items' в HandleInertiaRequests
     return page.props.cart_ids?.includes(props.plant.id);
 });
 

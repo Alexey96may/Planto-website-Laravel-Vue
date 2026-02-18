@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Controllers\ShopController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -24,11 +25,9 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/shop/plant-{product}', function (Product $product) {
-    return Inertia::render('Product/PlantPage', [
-        'plant' => $product,
-    ]);
-});
+Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+
+Route::get('/shop/plant-{product}', [ShopController::class, 'show'])->name('shop.show');
 
 Route::get('/cart', function () {
     $cartIds = session('cart', []);
@@ -40,6 +39,7 @@ Route::get('/cart', function () {
         'total' => $totalPrice
     ]);
 })->name('cart.index');
+
 
 Route::post('/cart/add', function (Request $request) {
     $productId = $request->input('product_id');

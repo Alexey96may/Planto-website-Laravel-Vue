@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from "@inertiajs/vue3";
 import IconBag from "img/icons/bag.svg?component";
 </script>
 
@@ -40,7 +41,12 @@ import IconBag from "img/icons/bag.svg?component";
 
                         <div class="card__buttons" aria-label="Buttons">
                             <button class="button--rect" aria-label="Explore">
-                                Explore
+                                <Link
+                                    href="/shop"
+                                    aria-label="To see more plants"
+                                >
+                                    Explore
+                                </Link>
                             </button>
 
                             <button
@@ -89,7 +95,12 @@ import IconBag from "img/icons/bag.svg?component";
 
                         <div class="card__buttons" aria-label="Buttons">
                             <button class="button--rect" aria-label="Explore">
-                                Explore
+                                <Link
+                                    href="/shop"
+                                    aria-label="To see more plants"
+                                >
+                                    Explore
+                                </Link>
                             </button>
 
                             <button
