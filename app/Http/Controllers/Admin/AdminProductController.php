@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Inertia\Inertia;
 use App\Models\Category;
+use Illuminate\Support\Facades\Storage;
 
 class AdminProductController extends Controller
 {
@@ -37,8 +38,14 @@ class AdminProductController extends Controller
             'description' => 'nullable|string',
             'price'       => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image'       => 'nullable|string'
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            
+            $validated['image'] = '/storage/' . $path;
+        }
 
         Product::create($validated);
 
@@ -58,13 +65,27 @@ class AdminProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        // dd($request->all(), $request->file('image'));
+
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
             'price'       => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image'       => 'nullable|string',
+            'image'       => $request->hasFile('image') ? 'image|mimes:jpg,jpeg,png|max:2048' : 'nullable',
         ]);
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                $oldPath = str_replace('/storage/', '', $product->image);
+                Storage::disk('public')->delete($oldPath);
+            }
+
+            $path = $request->file('image')->store('products', 'public');
+            $validated['image'] = '/storage/' . $path;
+        } else {
+            unset($validated['image']);
+        }
 
         $product->update($validated);
 

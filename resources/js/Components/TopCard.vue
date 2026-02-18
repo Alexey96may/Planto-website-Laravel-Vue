@@ -34,10 +34,7 @@ const addToCart = () => {
 <template>
     <figure class="card top__card" aria-label="Top card">
         <div class="card__img-wrapper" aria-label="Top card image">
-            <AppImage
-                :src="'/storage/' + plant.image"
-                :alt="plant.title"
-            ></AppImage>
+            <AppImage :src="plant.image" :alt="plant.title"></AppImage>
         </div>
 
         <h3 class="card__title" aria-label="Card title">

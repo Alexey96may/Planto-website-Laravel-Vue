@@ -9,16 +9,16 @@ const props = defineProps({
 
 // Заполняем форму старыми данными товара
 const form = useForm({
+    _method: "put",
     title: props.product.title,
     description: props.product.description,
     price: props.product.price,
     category_id: props.product.category_id,
-    image: props.product.image,
+    image: null,
 });
 
 const submit = () => {
-    // В Laravel для обновления через Resource используется метод PUT или PATCH
-    form.put(route("admin.products.update", props.product.id));
+    form.post(route("admin.products.update", props.product.id));
 };
 </script>
 
@@ -37,6 +37,37 @@ const submit = () => {
                         type="text"
                         class="w-full border rounded-lg p-2"
                     />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-1"
+                        >Текущее фото</label
+                    >
+
+                    <div v-if="product.image" class="mb-3">
+                        <img
+                            :src="product.image"
+                            class="w-32 h-32 object-cover rounded-lg border shadow-sm"
+                            alt="Preview"
+                        />
+                    </div>
+
+                    <input
+                        type="file"
+                        @input="form.image = $event.target.files[0]"
+                        class="w-full border rounded-lg p-2"
+                        accept="image/*"
+                    />
+
+                    <p class="text-xs text-gray-500 mt-1">
+                        Оставьте пустым, если не хотите менять фото
+                    </p>
+                    <div
+                        v-if="form.errors.image"
+                        class="text-red-500 text-xs mt-1"
+                    >
+                        {{ form.errors.image }}
+                    </div>
                 </div>
 
                 <div>

@@ -41,6 +41,28 @@ const submit = () => {
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium mb-1"
+                        >Фото товара</label
+                    >
+                    <input
+                        type="file"
+                        @input="form.image = $event.target.files[0]"
+                        class="w-full border rounded-lg p-2"
+                        accept="image/*"
+                    />
+                    <progress
+                        v-if="form.progress"
+                        :value="form.progress.percentage"
+                        max="100"
+                    >
+                        {{ form.progress.percentage }}%
+                    </progress>
+                    <div v-if="form.errors.image" class="text-red-500 text-xs">
+                        {{ form.errors.image }}
+                    </div>
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium">Категория</label>
                     <select
                         v-model="form.category_id"
