@@ -7,6 +7,10 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\Admin\AdminProductController;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -71,6 +75,31 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('/', function () {
+        return Inertia::render('Admin/Dashboard');
+    })->name('index');
+
+    Route::resource('products', AdminProductController::class);
+});
+
+Route::get('/check-me', function () {
+    // Используем Фасад - это самый надежный способ
+    $user = Auth::user(); 
+    
+    if (!$user) {
+        return "Вы не авторизованы. Пожалуйста, войдите в аккаунт.";
+    }
+    
+    return response()->json([
+        'сообщение' => 'Вы залогинены!',
+        'id' => $user->id,
+        'email' => $user->email,
+        'role' => $user->role, // Здесь мы увидим, что реально в базе
+    ]);
 });
 
 require __DIR__.'/auth.php';
