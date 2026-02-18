@@ -11,6 +11,8 @@ class ShopController extends Controller
 {
     public function index(Request $request)
     {
+        $pagination_count = 5;
+
         $validated = $request->validate([
             'search'    => 'nullable|string|max:100',
             'category'  => 'nullable|string|exists:categories,slug',
@@ -28,7 +30,9 @@ class ShopController extends Controller
             })
             ->when($validated['min_price'] ?? null, fn($q, $p) => $q->where('price', '>=', $p))
             ->when($validated['max_price'] ?? null, fn($q, $p) => $q->where('price', '<=', $p))
-            ->get();
+            ->latest()
+            ->paginate($pagination_count)
+            ->withQueryString();
 
         return Inertia::render('Shop/Index', [
             'products' => $products,

@@ -2,6 +2,7 @@
 import { Head, Link } from "@inertiajs/vue3";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import PlantCard from "@/Components/TopCard.vue";
+import Pagination from "@/Components/Pagination.vue";
 import { ref, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 
@@ -17,7 +18,7 @@ defineOptions({
 });
 
 const props = defineProps({
-    products: Array,
+    products: Object,
     categories: Array,
     currentCategory: String,
     filters: Object,
@@ -57,8 +58,6 @@ const applyFilters = () => {
                 class="w-full border-gray-300 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500"
             />
         </div>
-
-        <nav class="mb-8">...</nav>
 
         <div class="space-y-4">
             <h3 class="font-bold">Цена</h3>
@@ -140,20 +139,26 @@ const applyFilters = () => {
                             Наш магазин
                         </h1>
                         <p class="text-gray-500">
-                            Найдено товаров: {{ products.length }}
+                            Найдено товаров: {{ products.total }}
+                        </p>
+                        <p class="text-gray-500 text-sm">
+                            Показано {{ products.from }}-{{ products.to }} из
+                            {{ products.total }} растений
                         </p>
                     </div>
                 </div>
 
                 <div
-                    v-if="products.length > 0"
+                    v-if="products.data.length > 0"
                     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
                 >
                     <PlantCard
-                        v-for="plant in products"
+                        v-for="plant in products.data"
                         :key="plant.id"
                         :plant="plant"
                     />
+
+                    <Pagination :links="products.links" />
                 </div>
 
                 <div v-else class="text-center py-20 bg-gray-50 rounded-3xl">
