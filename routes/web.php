@@ -86,20 +86,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('products', AdminProductController::class);
 });
 
-Route::get('/check-me', function () {
-    // Используем Фасад - это самый надежный способ
-    $user = Auth::user(); 
-    
-    if (!$user) {
-        return "Вы не авторизованы. Пожалуйста, войдите в аккаунт.";
-    }
-    
-    return response()->json([
-        'сообщение' => 'Вы залогинены!',
-        'id' => $user->id,
-        'email' => $user->email,
-        'role' => $user->role, // Здесь мы увидим, что реально в базе
-    ]);
-});
-
 require __DIR__.'/auth.php';

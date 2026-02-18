@@ -21,13 +21,6 @@ class AdminProductController extends Controller
         ]);
     }
 
-    public function destroy(Product $product)
-    {
-        $product->delete();
-
-        return back()->with('message', 'Товар успешно удален');
-    }
-
     public function create()
     {
         $categories = Category::all();
@@ -51,5 +44,39 @@ class AdminProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('message', 'Product is succesfully created!');
+    }
+
+    public function edit(Product $product)
+    {
+        $categories = Category::all();
+        
+        return Inertia::render('Admin/Products/Edit', [
+            'product' => $product,
+            'categories' => $categories
+        ]);
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'image'       => 'nullable|string',
+        ]);
+
+        $product->update($validated);
+
+        return redirect()->route('admin.products.index')
+            ->with('message', 'Product is succesfully updated!');
+    }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+
+        return redirect()->route('admin.products.index')
+            ->with('message', 'Product is deleted!');
     }
 }
