@@ -34,9 +34,15 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'appName' => 'Planto',
             'cart_count' => count(session('cart', [])),
             'cart_ids' => session('cart', []),
+
+            'settings' => \App\Models\Setting::all()->pluck('value', 'key'),
+
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+            ],
         ];
     }
 }

@@ -15,9 +15,9 @@ defineProps({ cartCount: Number });
             <div class="container header__container">
                 <div class="logo" aria-label="Logo field">
                     <IconLogo class="logo__image" aria-label="Logo image" />
-                    <span class="logo__text" aria-label="Logo text"
-                        >{{ $page.props.appName }}.</span
-                    >
+                    <span class="logo__text" aria-label="Logo text">{{
+                        $page.props.settings.site_name
+                    }}</span>
                 </div>
 
                 <nav class="nav" id="nav" aria-label="Navigation">

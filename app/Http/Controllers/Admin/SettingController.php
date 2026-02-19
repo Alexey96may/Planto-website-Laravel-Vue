@@ -25,6 +25,11 @@ class SettingController extends Controller
             'contact_phone' => 'nullable|string',
             'contact_email' => 'nullable|email',
             'is_open' => 'required|boolean',
+            'link_fb' => 'nullable|url',
+            'link_x' => 'nullable|url',
+            'link_li' => 'nullable|url',
+            'footer_main_text' => 'nullable|string|max:1000',
+            'footer_rights' => 'nullable|string|max:255',
         ]);
 
         foreach ($data as $key => $value) {
@@ -34,6 +39,6 @@ class SettingController extends Controller
             );
         }
 
-        return back()->with('message', 'Settings is succesfully updated!');
+        return back()->with('message', 'Settings are succesfully updated!');
     }
 }

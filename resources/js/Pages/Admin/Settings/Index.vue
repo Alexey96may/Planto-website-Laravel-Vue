@@ -13,14 +13,19 @@ const form = useForm({
     site_name: props.settings.site_name || "",
     contact_phone: props.settings.contact_phone || "",
     contact_email: props.settings.contact_email || "",
-    is_open: props.settings.is_open === "1" || props.settings.is_open === true, // Превращаем в булево
+    is_open: props.settings.is_open === "1" || props.settings.is_open === true,
+    link_fb: props.settings.link_fb || "",
+    link_x: props.settings.link_x || "",
+    link_li: props.settings.link_li || "",
+    footer_main_text: props.settings.footer_main_text || "",
+    footer_rights: props.settings.footer_rights || "",
 });
 
 const submit = () => {
     // Отправляем POST запрос на сохранение
     form.post(route("admin.settings.update"), {
         preserveScroll: true,
-        onSuccess: () => alert("Настройки сохранены!"),
+        onSuccess: () => alert("Settings are saved!"),
     });
 };
 </script>
@@ -82,6 +87,42 @@ const submit = () => {
                                 class="w-full border rounded-lg p-2.5 outline-none"
                             />
                         </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-1"
+                                >Ссылка на FB</label
+                            >
+                            <input
+                                v-model="form.link_fb"
+                                type="url"
+                                placeholder="https://www.facebook.com"
+                                class="w-full border rounded-lg p-2.5 outline-none"
+                            />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-1"
+                                >Ссылка на X</label
+                            >
+                            <input
+                                v-model="form.link_x"
+                                type="url"
+                                placeholder="https://www.x.com"
+                                class="w-full border rounded-lg p-2.5 outline-none"
+                            />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-1"
+                                >Ссылка на LinkedIn</label
+                            >
+                            <input
+                                v-model="form.link_li"
+                                type="url"
+                                placeholder="https://www.linkedin.com"
+                                class="w-full border rounded-lg p-2.5 outline-none"
+                            />
+                        </div>
                     </div>
 
                     <div
@@ -99,6 +140,30 @@ const submit = () => {
                         >
                             Магазин открыт и принимает заказы
                         </label>
+                    </div>
+
+                    <div class="footer-info">
+                        <h3>Footer Info</h3>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1"
+                                >Footer main text</label
+                            >
+                            <input
+                                v-model="form.footer_main_text"
+                                type="text"
+                                class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-green-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1"
+                                >Footer rights text</label
+                            >
+                            <input
+                                v-model="form.footer_rights"
+                                type="text"
+                                class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-green-500 outline-none"
+                            />
+                        </div>
                     </div>
 
                     <div class="flex justify-end pt-4 border-t">

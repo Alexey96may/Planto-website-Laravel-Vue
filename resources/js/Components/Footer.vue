@@ -12,15 +12,16 @@ import IconLogo from "img/icons/logo.svg?component";
                             class="logo__image"
                             aria-label="Logo image"
                         ></IconLogo>
-                        <span class="logo__text" aria-label="Logo text"
-                            >{{ $page.props.appName }}.</span
-                        >
+                        <span class="logo__text" aria-label="Logo text">{{
+                            $page.props.settings.site_name
+                        }}</span>
                     </div>
 
                     <p class="footer__descr">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua.
+                        {{
+                            $page.props.settings.footer_main_text ||
+                            "Site info will be here!"
+                        }}
                     </p>
                 </div>
 
@@ -75,19 +76,33 @@ import IconLogo from "img/icons/logo.svg?component";
 
             <div class="footer__bottom" aria-label="Footer bottom side">
                 <ul class="footer__socials" aria-label="Socials">
-                    <li class="footer__social" aria-label="Facebook social">
+                    <li
+                        class="footer__social"
+                        aria-label="Facebook social"
+                        v-if="$page.props.settings.link_fb"
+                    >
                         <a
-                            href="https://www.facebook.com/"
+                            :href="$page.props.settings.link_fb"
                             aria-label="to Facebook"
                             >FB</a
                         >
                     </li>
-                    <li class="footer__social" aria-label="X social">
-                        <a href="https://x.com/" aria-label="to X">X</a>
+                    <li
+                        class="footer__social"
+                        aria-label="X social"
+                        v-if="$page.props.settings.link_x"
+                    >
+                        <a :href="$page.props.settings.link_x" aria-label="to X"
+                            >X</a
+                        >
                     </li>
-                    <li class="footer__social" aria-label="Linkedin social">
+                    <li
+                        class="footer__social"
+                        aria-label="Linkedin social"
+                        v-if="$page.props.settings.link_li"
+                    >
                         <a
-                            href="https://www.linkedin.com/"
+                            :href="$page.props.settings.link_li"
                             aria-label="to Linkedin"
                             >LI</a
                         >
@@ -95,7 +110,10 @@ import IconLogo from "img/icons/logo.svg?component";
                 </ul>
 
                 <div class="copyright" aria-label="Copyright">
-                    {{ $page.props.appName }} © all right reserve
+                    {{
+                        $page.props.settings.footer_rights ||
+                        "© All rights reserved"
+                    }}
                 </div>
             </div>
         </div>
