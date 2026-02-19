@@ -35,7 +35,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'cart_count' => count(session('cart', [])),
-            'cart_ids' => session('cart', []),
+            'cart_ids' => array_keys(session()->get('cart', [])),
 
             'settings' => \App\Models\Setting::all()->pluck('value', 'key'),
 

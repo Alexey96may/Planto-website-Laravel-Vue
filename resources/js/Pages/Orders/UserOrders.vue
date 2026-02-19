@@ -1,0 +1,98 @@
+<script setup>
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { Head } from "@inertiajs/vue3";
+
+defineProps({
+    orders: Array,
+});
+
+// Упрощенная логика статусов для клиента
+const getStatusLabel = (status) => {
+    const labels = {
+        new: "Принят",
+        processing: "В сборке",
+        completed: "Доставлен",
+        cancelled: "Отменен",
+    };
+    return labels[status] || status;
+};
+</script>
+
+<template>
+    <Head title="Мои заказы" />
+
+    <AuthenticatedLayout>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Мои заказы
+            </h2>
+        </template>
+
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div
+                    v-if="orders.length === 0"
+                    class="bg-white p-6 shadow rounded-lg text-center text-gray-500"
+                >
+                    У вас пока нет заказов. Время что-нибудь
+                    <a
+                        :href="route('products.index')"
+                        class="text-indigo-600 underline"
+                        >купить</a
+                    >!
+                </div>
+
+                <div v-else class="space-y-4">
+                    <div
+                        v-for="order in orders"
+                        :key="order.id"
+                        class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-l-4 border-indigo-500"
+                    >
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <span class="text-sm text-gray-500"
+                                    >Заказ от
+                                    {{
+                                        new Date(
+                                            order.created_at,
+                                        ).toLocaleDateString()
+                                    }}</span
+                                >
+                                <h3 class="text-lg font-bold">
+                                    Заказ №{{ order.id }}
+                                </h3>
+                            </div>
+                            <div class="text-right">
+                                <span
+                                    class="px-3 py-1 rounded-full text-xs font-bold uppercase"
+                                    :class="
+                                        order.status === 'completed'
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-blue-100 text-blue-800'
+                                    "
+                                >
+                                    {{ getStatusLabel(order.status) }}
+                                </span>
+                                <p class="text-xl font-black mt-1">
+                                    {{ order.total_price }} ₽
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">
+                                Состав заказа:
+                            </h4>
+                            <ul class="text-sm text-gray-600">
+                                <li v-for="item in order.items" :key="item.id">
+                                    {{ item.product_name }} —
+                                    {{ item.quantity }} шт.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AuthenticatedLayout>
+</template>

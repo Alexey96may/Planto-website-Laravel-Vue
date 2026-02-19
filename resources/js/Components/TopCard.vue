@@ -17,16 +17,21 @@ const isInCart = computed(() => {
 });
 
 const addToCart = () => {
+    console.log("Пытаемся добавить товар ID:", props.plant.id);
+    console.log("Сейчас в корзине?", isInCart.value);
+
     if (!isInCart.value) {
         router.post(
             "/cart/add",
-            {
-                product_id: props.plant.id,
-            },
+            { id: props.plant.id },
             {
                 preserveScroll: true,
+                onSuccess: () => console.log("Сервер ответил: Товар добавлен!"),
+                onError: (err) => console.log("Ошибка сервера:", err),
             },
         );
+    } else {
+        console.log("Запрос не отправлен, так как isInCart = true");
     }
 };
 </script>

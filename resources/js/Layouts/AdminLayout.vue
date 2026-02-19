@@ -1,6 +1,7 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import Toast from "@/Components/Toast.vue";
+import NavLink from "@/Components/NavLink.vue";
 </script>
 
 <template>
@@ -41,6 +42,12 @@ import Toast from "@/Components/Toast.vue";
                 >
                     👥 Пользователи
                 </Link>
+                <NavLink
+                    :href="route('admin.orders.index')"
+                    :active="route().current('admin.orders.*')"
+                >
+                    Заказы
+                </NavLink>
                 <Link
                     :href="route('admin.settings.index')"
                     class="block py-3 px-6 hover:bg-gray-800 transition"

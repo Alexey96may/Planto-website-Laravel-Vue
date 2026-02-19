@@ -38,7 +38,7 @@ const removeItem = (id) => {
                 >
                     <div class="flex items-center gap-4">
                         <AppImage
-                            :src="'/storage/' + item.image"
+                            :src="item.image"
                             className="w-20 h-20 object-cover rounded-xl"
                         />
                         <div>
@@ -65,11 +65,13 @@ const removeItem = (id) => {
                         {{ total }} ₽
                     </p>
                 </div>
-                <button
+
+                <Link
+                    :href="route('checkout.index')"
                     class="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition"
                 >
-                    Оформить заказ
-                </button>
+                    Перейти к оформлению заказа
+                </Link>
             </div>
         </div>
 
