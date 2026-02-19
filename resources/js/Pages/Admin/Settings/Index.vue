@@ -19,6 +19,7 @@ const form = useForm({
     link_li: props.settings.link_li || "",
     footer_main_text: props.settings.footer_main_text || "",
     footer_rights: props.settings.footer_rights || "",
+    products_per_page: props.settings.products_per_page || 5,
 });
 
 const submit = () => {
@@ -140,6 +141,24 @@ const submit = () => {
                         >
                             Магазин открыт и принимает заказы
                         </label>
+                    </div>
+
+                    <div>
+                        <label>Товаров на страницу:</label>
+                        <input
+                            type="number"
+                            v-model="form.products_per_page"
+                            class="border p-2 rounded"
+                            :class="{
+                                'border-red-500': form.errors.products_per_page,
+                            }"
+                        />
+                        <p
+                            v-if="form.errors.products_per_page"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ form.errors.products_per_page }}
+                        </p>
                     </div>
 
                     <div class="footer-info">

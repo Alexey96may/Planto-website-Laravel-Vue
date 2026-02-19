@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Setting;
 use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Category;
@@ -11,7 +12,7 @@ class ShopController extends Controller
 {
     public function index(Request $request)
     {
-        $pagination_count = 5;
+        $perPage = Setting::where('key', 'products_per_page')->value('value') ?? 6;
 
         $validated = $request->validate([
             'search'    => 'nullable|string|max:100',
@@ -31,7 +32,7 @@ class ShopController extends Controller
             ->when($validated['min_price'] ?? null, fn($q, $p) => $q->where('price', '>=', $p))
             ->when($validated['max_price'] ?? null, fn($q, $p) => $q->where('price', '<=', $p))
             ->latest()
-            ->paginate($pagination_count)
+            ->paginate($perPage)
             ->withQueryString();
 
         return Inertia::render('Shop/Index', [

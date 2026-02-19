@@ -22,6 +22,7 @@ class SettingSeeder extends Seeder
             ['key' => 'link_x', 'value' => 'https://x.com'],
             ['key' => 'link_li', 'value' => 'https://www.linkedin.com'],
             ['key' => 'is_open', 'value' => true],
+            ['key' => 'products_per_page', 'value' => 5],
         ];
 
         foreach ($settings as $setting) {

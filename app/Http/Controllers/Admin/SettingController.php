@@ -30,6 +30,7 @@ class SettingController extends Controller
             'link_li' => 'nullable|url',
             'footer_main_text' => 'nullable|string|max:1000',
             'footer_rights' => 'nullable|string|max:255',
+            'products_per_page' => 'required|integer|min:1|max:100',
         ]);
 
         foreach ($data as $key => $value) {
@@ -39,6 +40,6 @@ class SettingController extends Controller
             );
         }
 
-        return back()->with('message', 'Settings are succesfully updated!');
+        return back()->with('success', 'Settings are succesfully updated!');
     }
 }

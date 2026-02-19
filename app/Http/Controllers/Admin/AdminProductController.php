@@ -7,15 +7,18 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Inertia\Inertia;
 use App\Models\Category;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Storage;
 
 class AdminProductController extends Controller
 {
     public function index()
     {
+        $perPage = Setting::where('key', 'products_per_page')->value('value') ?? 6;
+
         $products = Product::with('category')
             ->latest()
-            ->paginate(5);
+            ->paginate($perPage);
 
         return Inertia::render('Admin/Products/Index', [
             'products' => $products

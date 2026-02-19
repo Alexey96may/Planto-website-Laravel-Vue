@@ -1,8 +1,10 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
+import Toast from "@/Components/Toast.vue";
 </script>
 
 <template>
+    <Toast />
     <div class="min-h-screen bg-gray-100 flex">
         <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
             <div class="p-6 text-2xl font-bold border-b border-gray-800">
