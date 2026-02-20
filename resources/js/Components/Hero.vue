@@ -1,9 +1,23 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 import IconStar from "img/icons/star.svg?component";
 import IconStarHalf from "img/icons/star-half.svg?component";
 import IconPlay from "img/icons/play.svg?component";
 import IconArrowRight from "img/icons/arrow-right.svg?component";
+import { computed } from "vue";
+
+const comment = computed(() => usePage().props.comments[0]) || null;
+
+const starNumber = computed(() => {
+    const val = Math.floor(Number(comment.value?.rating) || 0);
+    return Math.max(0, val);
+});
+
+const isHalfStar = computed(() => {
+    const val = Number(comment.value?.rating) || 0;
+    return val % 1 !== 0;
+});
 </script>
 
 <template>
@@ -54,21 +68,28 @@ import IconArrowRight from "img/icons/arrow-right.svg?component";
                     </div>
                 </div>
 
-                <figure class="comment hero__comment" aria-label="Main comment">
+                <figure
+                    class="comment hero__comment"
+                    aria-label="Main comment"
+                    v-if="comment"
+                >
                     <div
                         class="comment__author author"
                         aria-label="Comment author"
                     >
                         <div class="author__photo" aria-label="Author`s photo">
                             <img
-                                src="@/../images/users/user1.png"
-                                alt="Author image"
+                                :src="
+                                    comment?.user?.avatar_url ||
+                                    defaultAvatarLink
+                                "
+                                alt="Author photo"
                             />
                         </div>
 
                         <div class="author__info" aria-label="Author`s info">
                             <p class="author__name" aria-label="Author`s name">
-                                alena Patel
+                                {{ comment?.user?.name }}
                             </p>
 
                             <div
@@ -76,28 +97,16 @@ import IconArrowRight from "img/icons/arrow-right.svg?component";
                                 aria-label="Author`s assessment"
                             >
                                 <IconStar
+                                    v-for="n in starNumber"
+                                    :key="'full-' + n"
                                     class="authors__star"
-                                    aria-label="Star icon"
-                                ></IconStar>
-
-                                <IconStar
-                                    class="authors__star"
-                                    aria-label="Star icon"
-                                ></IconStar>
-
-                                <IconStar
-                                    class="authors__star"
-                                    aria-label="Star icon"
-                                ></IconStar>
-
-                                <IconStar
-                                    class="authors__star"
-                                    aria-label="Star icon"
+                                    aria-label="Full star"
                                 ></IconStar>
 
                                 <IconStarHalf
+                                    v-if="isHalfStar"
                                     class="authors__star"
-                                    aria-label="Star icon"
+                                    aria-label="Half star"
                                 ></IconStarHalf>
                             </div>
                         </div>
@@ -105,8 +114,7 @@ import IconArrowRight from "img/icons/arrow-right.svg?component";
 
                     <div class="comment__message" aria-label="Author`s message">
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt...
+                            {{ comment?.body }}
                         </p>
                     </div>
                 </figure>

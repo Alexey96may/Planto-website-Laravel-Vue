@@ -37,6 +37,7 @@ Route::get('/', function () {
         'comments' => Comment::with('user:id,name,avatar')
             ->where('is_active', true)
             ->latest()
+            ->limit(3) //todo
             ->get(),
     ]);
 })->name('home');
@@ -144,17 +145,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.user');
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 
-
-//Удалить!
 Route::get('/debug-reset', function() {
     session()->forget('cart');
     return "Корзина полностью очищена. Начнем с чистого листа.";
 });
-
 
 require __DIR__.'/auth.php';

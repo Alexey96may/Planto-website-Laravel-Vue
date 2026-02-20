@@ -50,6 +50,6 @@ const props = defineProps({
     <Head title="Main" />
 
     <Top :topPlants="topPlants" />
-    <Review :comments="comments" />
+    <Review v-if="comments.length" :comments="comments" />
     <Best />
 </template>

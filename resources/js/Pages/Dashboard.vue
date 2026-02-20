@@ -10,7 +10,10 @@ const props = defineProps({
 });
 
 const formAvatar = useForm({
+    name: props.auth.user.name,
+    email: props.auth.user.email,
     avatar: null,
+    _method: "patch",
 });
 
 const imageUrl = ref(props.auth.user.avatar_url);
@@ -19,14 +22,18 @@ const onFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
         formAvatar.avatar = file;
-        imageUrl.value = URL.createObjectURL(file); // показываем превью
+        imageUrl.value = URL.createObjectURL(file);
     }
 };
 
-const submitAvatar = () => {
-    formAvatar.post(route("profile.avatar.update"), {
+const submitInfo = () => {
+    formAvatar.post(route("profile.update"), {
+        preserveScroll: true,
         forceFormData: true,
-        onSuccess: () => alert("Фото обновлено"),
+        onSuccess: () => {
+            photoPreview.value = null;
+            form.avatar = null;
+        },
     });
 };
 
@@ -36,11 +43,10 @@ const form = useForm({
 });
 
 const submitComment = () => {
-    form.post(route("comments.store"), {
+    form.post(route("profile.update"), {
         preserveScroll: true,
         onSuccess: () => {
-            form.reset("body");
-            alert("Отзыв отправлен!");
+            form.avatar = null;
         },
     });
 };
@@ -57,39 +63,96 @@ const submitComment = () => {
         </template>
 
         <div class="profile-upload">
-            <h3>Ваше фото</h3>
+            <form @submit.prevent="submitInfo">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="relative">
+                        <img
+                            :src="imageUrl"
+                            class="w-32 h-32 rounded-full object-cover border"
+                        />
+                    </div>
 
-            <div class="avatar-preview mb-4">
-                <img
-                    :src="imageUrl"
-                    class="w-32 h-32 rounded-full object-cover border"
-                />
-            </div>
-
-            <form @submit.prevent="submitAvatar">
-                <input
-                    type="file"
-                    @change="onFileChange"
-                    accept="image/*"
-                    class="block w-full text-sm text-gray-500 mb-4"
-                />
-
-                <div
-                    v-if="formAvatar.errors.avatar"
-                    class="text-red-500 text-sm"
-                >
-                    {{ formAvatar.errors.avatar }}
+                    <input
+                        type="file"
+                        id="avatar-input"
+                        @change="onFileChange"
+                        accept="image/*"
+                        class="hidden"
+                    />
+                    <label
+                        for="avatar-input"
+                        class="cursor-pointer text-sm font-semibold text-blue-600 hover:text-blue-500"
+                    >
+                        Изменить фото
+                    </label>
+                    <p
+                        v-if="formAvatar.errors.avatar"
+                        class="text-red-500 text-xs"
+                    >
+                        {{ formAvatar.errors.avatar }}
+                    </p>
                 </div>
 
-                <button
-                    type="submit"
-                    :disabled="formAvatar.processing"
-                    class="px-4 py-2 bg-blue-600 text-white rounded shadow"
+                <hr class="border-gray-100" />
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700"
+                        >Имя</label
+                    >
+                    <input
+                        v-model="formAvatar.name"
+                        type="text"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                    <div
+                        v-if="formAvatar.errors.name"
+                        class="text-red-500 text-xs mt-1"
+                    >
+                        {{ formAvatar.errors.name }}
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700"
+                        >Email</label
+                    >
+                    <input
+                        v-model="formAvatar.email"
+                        type="email"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                    <div
+                        v-if="formAvatar.errors.email"
+                        class="text-red-500 text-xs mt-1"
+                    >
+                        {{ formAvatar.errors.email }}
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button
+                        type="submit"
+                        :disabled="formAvatar.processing"
+                        class="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700 transition disabled:opacity-50"
+                    >
+                        <span v-if="formAvatar.processing">Сохранение...</span>
+                        <span v-else>Сохранить настройки</span>
+                    </button>
+                </div>
+
+                <Transition
+                    enter-active-class="transition ease-in-out"
+                    enter-from-class="opacity-0"
+                    leave-active-class="transition ease-in-out"
+                    leave-to-class="opacity-0"
                 >
-                    {{
-                        formAvatar.processing ? "Загрузка..." : "Сохранить фото"
-                    }}
-                </button>
+                    <p
+                        v-if="formAvatar.recentlySuccessful"
+                        class="text-sm text-green-600 text-center"
+                    >
+                        Данные успешно обновлены!
+                    </p>
+                </Transition>
             </form>
         </div>
 
