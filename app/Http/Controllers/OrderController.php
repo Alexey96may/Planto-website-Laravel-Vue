@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -107,7 +108,12 @@ class OrderController extends Controller
         return to_route('home')->with('success', 'Заказ успешно оформлен! Наш менеджер свяжется с вами.');
 
         } catch (\Exception $e) {
-            dd($e->getMessage(), $e->getLine());
+            Log::error('Error during order creation: ' . $e->getMessage(), [
+                'user_email' => $request->email,
+                'cart' => session()->get('cart'),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return redirect()->back()->with('error', 'Ошибка при создании заказа: ' . $e->getMessage());
         }
     }
