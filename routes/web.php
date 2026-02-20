@@ -18,6 +18,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
+//todo 'topPlants' => Product::latest()->take(4)->get(),
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'products'=> Product::all(),
@@ -29,7 +30,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -40,30 +41,25 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/shop/plant-{product}', [ShopController::class, 'show'])->name('shop.show');
 
 Route::get('/cart', function () {
-    // 1. Получаем корзину [ID => Количество]
     $cart = session('cart', []);
     
-    // 2. Достаем только ID (ключи массива) для запроса к базе
     $ids = array_keys($cart);
     
-    // 3. Получаем товары из базы
     $products = Product::whereIn('id', $ids)->get();
 
     $totalPrice = 0;
     $cartItems = [];
 
-    // 4. Сопоставляем товары из базы с количеством из сессии
     foreach ($products as $product) {
-        $quantity = $cart[$product->id]; // Берем кол-во из сессии по ID
+        $quantity = $cart[$product->id];
         $subtotal = $product->price * $quantity;
         $totalPrice += $subtotal;
 
-        // Формируем данные для фронтенда
         $cartItems[] = [
             'id' => $product->id,
             'name' => $product->name,
             'price' => $product->price,
-            'image' => $product->image, // Теперь картинка не пропадет
+            'image' => $product->image,
             'quantity' => $quantity,
             'total_item_price' => $subtotal,
         ];
@@ -132,11 +128,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/orders/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
 });
 
-// Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
     Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.user');
 });
 

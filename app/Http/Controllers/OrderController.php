@@ -7,11 +7,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        $orders = Auth::user()->orders()->with('items')->latest()->get();
+
+        return Inertia::render('Orders/UserOrders', [
+            'orders' => $orders
+        ]);
+    }
+
     public function store(Request $request)
     {
+        // dd($request->all());
         $cart = session()->get('cart', []);
 
         if (empty($cart)) {
@@ -19,13 +32,35 @@ class OrderController extends Controller
         }
 
         $request->validate([
+            'email' => 'required|email',
             'name' => 'required|string|max:255',
             'phone' => 'required|string',
             'address' => 'required|string|min:5',
         ]);
 
+        $user = Auth::user();
+
+        if (!$user && $request->create_account) {
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                $password = Str::random(10);
+                
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'password' => Hash::make($password),
+                ]);
+
+                Auth::login($user);
+
+                // TODO: Позже здесь будет отправка письма с паролем $password
+            }
+        }
+
         try {
-            DB::transaction(function () use ($request, $cart) {
+            DB::transaction(function () use ($request, $cart, $user) {
                 $total = 0;
                 $itemsToSave = [];
 
@@ -46,9 +81,10 @@ class OrderController extends Controller
 
                 // Создаем основной заказ
                 $order = \App\Models\Order::create([
-                    'user_id' => Auth::id(),
+                    'user_id' => $user ? $user->id : Auth::id(),
                     'total_price' => $total,
                     'customer_name' => $request->name,
+                    'customer_email' => $request->email,
                     'customer_phone' => $request->phone,
                     'delivery_address' => $request->address,
                     'comment' => $request->comment,
@@ -64,11 +100,14 @@ class OrderController extends Controller
                 session()->forget('cart');
             });
 
-            return to_route('dashboard')->with('success', 'Заказ успешно оформлен!');
+        if (Auth::check()) {
+            return to_route('dashboard')->with('success', 'Заказ оформлен! Добро пожаловать в личный кабинет.');
+        }
+
+        return to_route('home')->with('success', 'Заказ успешно оформлен! Наш менеджер свяжется с вами.');
 
         } catch (\Exception $e) {
-            // Если база выдаст ту самую ошибку "Integrity constraint", мы её поймаем
-            dd($e->getMessage(), $e->getLine(), $e->getFile());
+            dd($e->getMessage(), $e->getLine());
             return redirect()->back()->with('error', 'Ошибка при создании заказа: ' . $e->getMessage());
         }
     }

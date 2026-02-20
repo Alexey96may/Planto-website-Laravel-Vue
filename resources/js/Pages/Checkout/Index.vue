@@ -9,9 +9,11 @@ const props = defineProps({
 // Инициализируем форму через Inertia useForm
 const form = useForm({
     name: usePage().props.auth.user?.name || "", // Предзаполняем, если залогинен
+    email: "",
     phone: "",
     address: "",
     comment: "",
+    create_account: false,
 });
 
 const submit = () => {
@@ -56,6 +58,14 @@ const submit = () => {
             </div>
 
             <div>
+                <input
+                    v-model="form.email"
+                    type="email"
+                    placeholder="Ваш Email"
+                />
+            </div>
+
+            <div>
                 <label class="block text-sm font-medium">Адрес доставки</label>
                 <textarea
                     v-model="form.address"
@@ -74,6 +84,20 @@ const submit = () => {
                     class="w-full border rounded p-2"
                     rows="3"
                 ></textarea>
+            </div>
+
+            <div class="mt-4">
+                <label class="flex items-center">
+                    <input
+                        type="checkbox"
+                        v-model="form.create_account"
+                        class="rounded border-gray-300 text-pink-600 shadow-sm focus:ring-pink-500"
+                    />
+                    <span class="ml-2 text-sm text-gray-600"
+                        >Создать личный кабинет, чтобы следить за статусом
+                        заказа</span
+                    >
+                </label>
             </div>
 
             <div class="border-t pt-4">
