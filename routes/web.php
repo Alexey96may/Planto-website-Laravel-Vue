@@ -10,8 +10,8 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\AdminUserController;
-use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Models\User;
@@ -135,6 +135,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.user');
 });
 
+
+//Удалить!
 Route::get('/debug-reset', function() {
     session()->forget('cart');
     return "Корзина полностью очищена. Начнем с чистого листа.";

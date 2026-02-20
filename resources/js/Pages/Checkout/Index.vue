@@ -86,7 +86,7 @@ const submit = () => {
                 ></textarea>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4" v-if="!$page.props.auth.user">
                 <label class="flex items-center">
                     <input
                         type="checkbox"

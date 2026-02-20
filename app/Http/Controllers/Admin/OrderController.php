@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Notifications\OrderStatusChanged;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
@@ -30,10 +31,19 @@ class OrderController extends Controller
         $request->validate([
             'status' => 'required|in:new,processing,completed,cancelled'
         ]);
+        
+        $oldStatus = $order->status;
+        $order->update($request->only('status'));
 
-        $order->update([
-            'status' => $request->status
-        ]);
-        return back()->with('success', 'Status has been changed!');
+        if ($oldStatus !== $order->status) {
+            if ($order->user) {
+                $order->user->notify(new OrderStatusChanged($order));
+            } else {
+                \Illuminate\Support\Facades\Notification::route('mail', $order->customer_email)
+                    ->notify(new OrderStatusChanged($order));
+            }
+        }
+
+        return back()->with('success', 'The status has been changed!');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Notifications\NewUserWelcome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +57,7 @@ class OrderController extends Controller
 
                 Auth::login($user);
 
-                // TODO: Позже здесь будет отправка письма с паролем $password
+                $user->notify(new \App\Notifications\NewUserWelcome($password));
             }
         }
 
