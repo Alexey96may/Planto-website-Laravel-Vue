@@ -17,6 +17,10 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\CommentController as AdminCommentController;
+use App\Http\Controllers\ReviewController;
 
 //todo 'topPlants' => Product::latest()->take(4)->get(),
 Route::get('/', function () {
@@ -31,10 +35,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 })->name('home');
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 
@@ -126,14 +126,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
+
+    Route::get('/comments', [AdminCommentController::class, 'index'])->name('comments.index');
+    Route::patch('/comments/{comment}', [AdminCommentController::class, 'update'])->name('comments.update');
+    Route::delete('/comments/{comment}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
 });
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.user');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 });
+
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 
 
 //Удалить!

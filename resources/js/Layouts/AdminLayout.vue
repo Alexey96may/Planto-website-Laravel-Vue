@@ -42,12 +42,20 @@ import NavLink from "@/Components/NavLink.vue";
                 >
                     👥 Пользователи
                 </Link>
-                <NavLink
+                <Link
+                    class="block py-3 px-6 hover:bg-gray-800 transition"
                     :href="route('admin.orders.index')"
                     :active="route().current('admin.orders.*')"
                 >
                     Заказы
-                </NavLink>
+                </Link>
+                <Link
+                    class="block py-3 px-6 hover:bg-gray-800 transition"
+                    :href="route('admin.comments.index')"
+                    :active="route().current('admin.comments.*')"
+                >
+                    Комментарии
+                </Link>
                 <Link
                     :href="route('admin.settings.index')"
                     class="block py-3 px-6 hover:bg-gray-800 transition"

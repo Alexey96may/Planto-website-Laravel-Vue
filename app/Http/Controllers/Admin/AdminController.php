@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Comment;
 
 class AdminController extends Controller
 {
@@ -16,6 +17,7 @@ class AdminController extends Controller
             'stats' => [
                 'products_count' => Product::count(),
                 'users_count' => User::count(),
+                'pending_comments_count' => Comment::where('is_active', false)->count(), //Нужно ли?
             ]
         ]);
     }

@@ -28,12 +28,48 @@ defineProps({
                     </div>
                     <h2 class="text-xl font-bold mb-2">Товары</h2>
                     <p class="text-gray-500 text-sm mb-4">
-                        Управление ассортиментом ({{
-                            stats.products_count
-                        }}
+                        Управление ассортиментом ({{ stats.products_count }}
                         шт.)
                     </p>
                     <span class="text-green-600 font-medium flex items-center"
+                        >Перейти →</span
+                    >
+                </Link>
+
+                <Link
+                    :href="route('admin.orders.index')"
+                    class="group p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100"
+                >
+                    <div
+                        class="text-blue-600 bg-blue-50 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition"
+                    >
+                        👥
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Заказы</h2>
+                    <p class="text-gray-500 text-sm mb-4">
+                        Список Заказов. Новых: (Пока не доступно)
+                    </p>
+                    <span class="text-blue-600 font-medium flex items-center"
+                        >Перейти →</span
+                    >
+                </Link>
+
+                <Link
+                    :href="route('admin.comments.index')"
+                    class="group p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100"
+                >
+                    <div
+                        class="text-blue-600 bg-blue-50 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition"
+                    >
+                        👥
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Комменты</h2>
+                    <p class="text-gray-500 text-sm mb-4">
+                        Список Комментов. Новых: ({{
+                            stats.pending_comments_count
+                        }})
+                    </p>
+                    <span class="text-blue-600 font-medium flex items-center"
                         >Перейти →</span
                     >
                 </Link>
