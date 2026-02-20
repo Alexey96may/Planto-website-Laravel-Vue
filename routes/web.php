@@ -14,6 +14,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,10 @@ Route::get('/', function () {
         'status' => 'Сегодня работаем до 22:00',
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'comments' => Comment::with('user:id,name,avatar')
+            ->where('is_active', true)
+            ->latest()
+            ->get(),
     ]);
 })->name('home');
 
@@ -139,6 +144,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.user');
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
 });
 
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');

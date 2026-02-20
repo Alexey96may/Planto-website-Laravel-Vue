@@ -2,10 +2,33 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { defineProps } from "vue";
+import { ref } from "vue";
 
 const props = defineProps({
     myComments: Array,
+    auth: Object,
 });
+
+const formAvatar = useForm({
+    avatar: null,
+});
+
+const imageUrl = ref(props.auth.user.avatar_url);
+
+const onFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        formAvatar.avatar = file;
+        imageUrl.value = URL.createObjectURL(file); // показываем превью
+    }
+};
+
+const submitAvatar = () => {
+    formAvatar.post(route("profile.avatar.update"), {
+        forceFormData: true,
+        onSuccess: () => alert("Фото обновлено"),
+    });
+};
 
 const form = useForm({
     body: "",
@@ -32,6 +55,43 @@ const submitComment = () => {
                 Dashboard
             </h2>
         </template>
+
+        <div class="profile-upload">
+            <h3>Ваше фото</h3>
+
+            <div class="avatar-preview mb-4">
+                <img
+                    :src="imageUrl"
+                    class="w-32 h-32 rounded-full object-cover border"
+                />
+            </div>
+
+            <form @submit.prevent="submitAvatar">
+                <input
+                    type="file"
+                    @change="onFileChange"
+                    accept="image/*"
+                    class="block w-full text-sm text-gray-500 mb-4"
+                />
+
+                <div
+                    v-if="formAvatar.errors.avatar"
+                    class="text-red-500 text-sm"
+                >
+                    {{ formAvatar.errors.avatar }}
+                </div>
+
+                <button
+                    type="submit"
+                    :disabled="formAvatar.processing"
+                    class="px-4 py-2 bg-blue-600 text-white rounded shadow"
+                >
+                    {{
+                        formAvatar.processing ? "Загрузка..." : "Сохранить фото"
+                    }}
+                </button>
+            </form>
+        </div>
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">

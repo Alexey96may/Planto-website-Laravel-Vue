@@ -39,6 +39,10 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    comments: {
+        type: Array,
+        required: true,
+    },
 });
 </script>
 
@@ -46,6 +50,6 @@ const props = defineProps({
     <Head title="Main" />
 
     <Top :topPlants="topPlants" />
-    <Review />
+    <Review :comments="comments" />
     <Best />
 </template>
