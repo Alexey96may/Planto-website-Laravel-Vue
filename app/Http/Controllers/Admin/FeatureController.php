@@ -7,6 +7,7 @@ use App\Models\Feature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Mews\Purifier\Facades\Purifier;
 
 class FeatureController extends Controller
 {
@@ -27,13 +28,17 @@ class FeatureController extends Controller
             'image'       => 'nullable|image|max:2048',
         ]);
 
+        if ($request->filled('description')) {
+            $validated['description'] = Purifier::clean($request->description);
+        }
+
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('features', 'public');
         }
 
         Feature::create($validated);
 
-        return back()->with('message', 'Карточка успешно создана!');
+        return redirect()->route('admin.features.index')->with('message', 'Карточка успешно создана!');
     }
 
     public function update(Request $request, Feature $feature)
@@ -45,6 +50,10 @@ class FeatureController extends Controller
             'order'       => 'integer',
             'image'       => 'nullable|image|max:2048',
         ]);
+
+        if ($request->filled('description')) {
+            $validated['description'] = Purifier::clean($request->description);
+        }
 
         if ($request->hasFile('image')) {
             if ($feature->image) {

@@ -1,15 +1,33 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import IconArrowRight from "img/icons/arrow-right.svg?component";
+import PlantBestCard from "@/Components/BestCard.vue";
+
+defineProps({
+    features: {
+        type: Array,
+        default: () => [],
+    },
+});
 </script>
 
 <template>
-    <section class="best" id="best" aria-label="Review section">
+    <section
+        class="best"
+        id="best"
+        aria-label="Review section"
+        v-if="features.length"
+    >
         <div class="container best__container">
             <h2 class="title best__title">Our Best o2</h2>
 
             <div class="slider review__slider" aria-label="Slider">
                 <div class="slider__cards" aria-label="Slider cards">
+                    <PlantBestCard
+                        v-for="feature in features"
+                        :key="feature.id"
+                        :feature="feature"
+                    />
                     <figure class="card slider__card" aria-label="Slider card">
                         <div
                             class="card__img-wrapper"

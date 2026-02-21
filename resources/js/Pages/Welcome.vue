@@ -16,9 +16,11 @@ const props = defineProps({
     },
     products: {
         type: Array,
+        default: () => [],
     },
     topPlants: {
         type: Array,
+        default: () => [],
     },
     canRegister: {
         type: Boolean,
@@ -41,7 +43,11 @@ const props = defineProps({
     },
     comments: {
         type: Array,
-        required: true,
+        default: () => [],
+    },
+    features: {
+        type: Array,
+        default: () => [],
     },
 });
 </script>
@@ -51,5 +57,5 @@ const props = defineProps({
 
     <Top :topPlants="topPlants" />
     <Review v-if="comments.length" :comments="comments" />
-    <Best />
+    <Best :features="features" />
 </template>

@@ -23,9 +23,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\FeatureController;
+use App\Models\Feature;
 
 //todo 'topPlants' => Product::latest()->take(4)->get(),
 Route::get('/', function () {
+
     return Inertia::render('Welcome', [
         'products'=> Product::all(),
         'canLogin' => Route::has('login'),
@@ -38,8 +40,12 @@ Route::get('/', function () {
         'comments' => Comment::with('user:id,name,avatar')
             ->where('is_active', true)
             ->latest()
-            ->limit(3) //todo
+            ->take(3) //todo
             ->get(),
+        'features' => Feature::where('is_active', true)
+            ->orderBy('order')
+            ->take(4) //todo
+            ->get()
     ]);
 })->name('home');
 
