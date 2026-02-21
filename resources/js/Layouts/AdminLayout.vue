@@ -57,12 +57,20 @@ import NavLink from "@/Components/NavLink.vue";
                     Комментарии
                 </Link>
                 <Link
+                    :href="route('admin.features.index')"
+                    class="block py-3 px-6 hover:bg-gray-800 transition"
+                    :active="route().current('admin.features.*')"
+                >
+                    ⚙️ Фичи
+                </Link>
+                <Link
                     :href="route('admin.settings.index')"
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :class="{
                         'bg-gray-800 border-l-4 border-green-500':
                             $page.component === 'Admin/Settings/Index',
                     }"
+                    :active="route().current('admin.comments.*')"
                 >
                     ⚙️ Настройки
                 </Link>

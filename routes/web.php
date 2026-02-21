@@ -22,6 +22,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Admin\FeatureController;
 
 //todo 'topPlants' => Product::latest()->take(4)->get(),
 Route::get('/', function () {
@@ -126,6 +127,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.updateRole');
 
@@ -136,6 +138,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/comments', [AdminCommentController::class, 'index'])->name('comments.index');
     Route::patch('/comments/{comment}', [AdminCommentController::class, 'update'])->name('comments.update');
     Route::delete('/comments/{comment}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
+
+    Route::resource('features', FeatureController::class);
 });
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
