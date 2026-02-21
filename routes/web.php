@@ -149,6 +149,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('features', FeatureController::class);
 
     Route::resource('navigation', NavigationController::class);
+    Route::post('navigation/reorder', [NavigationController::class, 'reorder'])->name('navigation.reorder');
 });
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

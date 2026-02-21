@@ -1,9 +1,30 @@
 <script setup>
 import { Link, router } from "@inertiajs/vue3";
+import { ref } from "vue";
+import draggable from "vuedraggable";
 
-defineProps({
+const props = defineProps({
     menuItems: Array,
 });
+
+const list = ref([...props.menuItems]);
+
+const saveOrder = () => {
+    // Create simple array: [{id: 5, position: 0}, {id: 2, position: 1}, ...]
+    const orders = list.value.map((item, index) => ({
+        id: item.id,
+        position: index,
+    }));
+
+    router.post(
+        route("admin.navigation.reorder"),
+        { orders },
+        {
+            preserveScroll: true,
+            onSuccess: () => alert("Порядок сохранен!"),
+        },
+    );
+};
 
 const deleteItem = (id) => {
     if (confirm("Удалить этот пункт и все вложенные меню?")) {
@@ -23,6 +44,40 @@ const deleteItem = (id) => {
                 + Добавить пункт
             </Link>
         </div>
+
+        <div class="flex justify-between mb-4">
+            <h1 class="text-2xl font-bold">Сортировка меню</h1>
+            <button
+                @click="saveOrder"
+                class="bg-green-600 text-white px-4 py-2 rounded"
+            >
+                Сохранить порядок
+            </button>
+        </div>
+
+        <draggable
+            v-model="list"
+            item-key="id"
+            tag="div"
+            class="space-y-2"
+            handle=".drag-handle"
+        >
+            <template #item="{ element }">
+                <div
+                    class="flex items-center bg-white p-4 shadow rounded border"
+                >
+                    <div class="drag-handle cursor-move mr-4 text-gray-400">
+                        ☰
+                    </div>
+                    <div class="flex-1">
+                        {{ element.title }}
+                        <span class="text-xs text-gray-400 ml-2 uppercase"
+                            >({{ element.location }})</span
+                        >
+                    </div>
+                </div>
+            </template>
+        </draggable>
 
         <table class="w-full bg-white rounded-lg shadow">
             <thead>

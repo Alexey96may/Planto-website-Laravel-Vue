@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Navigation;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class NavigationController extends Controller
 {
@@ -89,5 +90,19 @@ class NavigationController extends Controller
 
         return redirect()->route('admin.navigation.index')
                         ->with('message', 'Пункт меню и его подпункты удалены');
+    }
+
+    public function reorder(Request $request)
+    {
+        $orders = $request->input('orders');
+
+        DB::transaction(function () use ($orders) {
+            foreach ($orders as $item) {
+                \App\Models\Navigation::where('id', $item['id'])
+                    ->update(['order' => $item['position']]);
+            }
+        });
+
+        return back()->with('message', 'Порядок обновлен');
     }
 }

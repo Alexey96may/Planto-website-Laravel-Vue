@@ -12,6 +12,24 @@ defineProps({
         ><Head title="Панель управления" />
 
         <div class="p-8 max-w-7xl mx-auto">
+            <div
+                class="p-6 bg-gray-900 rounded-2xl text-white flex justify-between items-center"
+            >
+                <div>
+                    <h3 class="text-lg font-bold">Быстрое действие</h3>
+                    <p class="text-gray-400 text-sm">
+                        Хотите добавить новый цветок в магазин?
+                    </p>
+                </div>
+                <Link
+                    :href="route('admin.products.create')"
+                    class="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-xl font-bold transition"
+                >
+                    + Добавить товар
+                </Link>
+            </div>
+            <br />
+            <br />
             <h1 class="text-3xl font-bold mb-8 text-gray-800">
                 Панель управления
             </h1>
@@ -144,23 +162,6 @@ defineProps({
                     <span class="text-purple-600 font-medium flex items-center"
                         >Перейти →</span
                     >
-                </Link>
-            </div>
-
-            <div
-                class="mt-10 p-6 bg-gray-900 rounded-2xl text-white flex justify-between items-center"
-            >
-                <div>
-                    <h3 class="text-lg font-bold">Быстрое действие</h3>
-                    <p class="text-gray-400 text-sm">
-                        Хотите добавить новый цветок в магазин?
-                    </p>
-                </div>
-                <Link
-                    :href="route('admin.products.create')"
-                    class="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-xl font-bold transition"
-                >
-                    + Добавить товар
                 </Link>
             </div>
         </div>

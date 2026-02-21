@@ -1,5 +1,11 @@
 <script setup>
 import IconLogo from "img/icons/logo.svg?component";
+import { Link, usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
+
+const page = usePage();
+const footerMenuItems = computed(() => page.props.navigation.footer);
+const currentYear = new Date().getFullYear();
 </script>
 
 <template>
@@ -26,7 +32,17 @@ import IconLogo from "img/icons/logo.svg?component";
                 </div>
 
                 <nav class="footer__nav" aria-label="Footer navigation">
-                    <ul class="footer__nav-list" aria-label="Navigation list">
+                    <ul class="space-y-2">
+                        <li v-for="item in footerMenuItems" :key="item.id">
+                            <Link
+                                :href="item.link || '#'"
+                                class="text-gray-400 hover:text-white transition-colors text-sm"
+                            >
+                                {{ item.title }}
+                            </Link>
+                        </li>
+                    </ul>
+                    <!-- <ul class="footer__nav-list" aria-label="Navigation list">
                         <li class="footer__nav-item">Quick Link’s</li>
                         <li class="footer__nav-item">
                             <a href="#" aria-label="to ">Home</a>
@@ -44,7 +60,7 @@ import IconLogo from "img/icons/logo.svg?component";
                         <li class="footer__nav-item">
                             <a href="#" aria-label="to Privacy">Privacy</a>
                         </li>
-                    </ul>
+                    </ul> -->
                 </nav>
 
                 <div class="footer__subscribe" aria-label="Subscribe field">

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\Navigation;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -43,6 +44,18 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
                 'message' => $request->session()->get('message'),
+            ],
+            'navigation' => [
+                'header' => Navigation::with('children')
+                    ->where('location', 'header')
+                    ->whereNull('parent_id')
+                    ->where('is_active', true)
+                    ->orderBy('order')
+                    ->get(),
+                'footer' => Navigation::where('location', 'footer')
+                    ->where('is_active', true)
+                    ->orderBy('order')
+                    ->get(),
             ],
         ];
     }
