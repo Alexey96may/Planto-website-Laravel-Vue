@@ -47,6 +47,8 @@ const form = useForm({
     // Медиа и контакты
     live_demo_url: props.settings.live_demo_url || "",
     contact_address: props.settings.contact_address || "Our Address",
+    hero_main_text: props.settings.hero_main_text || "Main Description",
+    section_hero_title: props.settings.section_hero_title || "Main Title",
 });
 
 const submit = () => {
@@ -69,7 +71,7 @@ const submit = () => {
                         Общие настройки сайта
                     </h1>
                     <p class="text-sm text-gray-500">
-                        Эти данные отображаются в футере, шапке и контактах
+                        Эти данные отображаются на всём сайте.
                     </p>
                 </div>
 
@@ -80,7 +82,7 @@ const submit = () => {
                         <h2
                             class="text-lg font-semibold mb-4 text-indigo-700 border-b pb-2"
                         >
-                            🎥 Медиа и Контакты
+                            Контакты
                         </h2>
                         <div class="space-y-4">
                             <div>
@@ -140,7 +142,7 @@ const submit = () => {
                         <h2
                             class="text-lg font-semibold mb-4 text-indigo-700 border-b pb-2"
                         >
-                            🎥 Ссылки
+                            🎥 Медиа и Ссылки
                         </h2>
                         <div class="space-y-4">
                             <div>
@@ -213,6 +215,7 @@ const submit = () => {
 
                     <div class="footer-info">
                         <h3>Footer Info</h3>
+                        <br />
                         <div>
                             <label class="block text-sm font-semibold mb-1"
                                 >Footer main text</label
@@ -223,6 +226,7 @@ const submit = () => {
                                 class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-green-500 outline-none"
                             />
                         </div>
+                        <br />
                         <div>
                             <label class="block text-sm font-semibold mb-1"
                                 >Footer rights text</label
@@ -232,6 +236,30 @@ const submit = () => {
                                 type="text"
                                 class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-green-500 outline-none"
                             />
+                        </div>
+                        <br />
+                        <h3>Footer Info</h3>
+                        <br />
+                        <div>
+                            <label class="block text-sm font-semibold mb-1"
+                                >Main Title</label
+                            >
+                            <input
+                                v-model="form.section_hero_title"
+                                type="text"
+                                class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-green-500 outline-none"
+                            />
+                        </div>
+                        <br />
+                        <div>
+                            <label class="block text-sm font-semibold mb-1"
+                                >Main Description</label
+                            >
+                            <textarea
+                                v-model="form.hero_main_text"
+                                class="w-full border rounded-lg p-2.5 outline-none"
+                                rows="2"
+                            ></textarea>
                         </div>
                     </div>
 

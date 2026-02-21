@@ -25,12 +25,12 @@ const isHalfStar = computed(() => {
         <div class="container hero__container">
             <div class="hero__info" aria-label="Hero information">
                 <div class="hero__info-main" aria-label="Hero main information">
-                    <h2 class="hero__title">Breath Natureal</h2>
+                    <h2 class="hero__title">
+                        {{ $page.props.settings.section_hero_title }}
+                    </h2>
 
                     <p class="hero__descr">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua.
+                        {{ $page.props.settings.hero_main_text }}
                     </p>
 
                     <div class="hero__buttons" aria-label="Hero buttons">

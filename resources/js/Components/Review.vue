@@ -12,8 +12,19 @@ defineProps({
 <template>
     <section class="review" id="review" aria-label="Review section">
         <div class="container review__container">
-            <h2 class="title review__title">
-                <Link :href="route('reviews.index')">Customer Review</Link>
+            <h2
+                class="title review__title"
+                v-if="$page.props.settings.section_reviews_link"
+            >
+                <Link
+                    :href="$page.props.settings.section_reviews_link"
+                    :aria-label="$page.props.settings.section_reviews_title"
+                >
+                    {{ $page.props.settings.section_reviews_title }}
+                </Link>
+            </h2>
+            <h2 class="title review__title" v-else>
+                {{ $page.props.settings.section_reviews_title }}
             </h2>
 
             <div class="review__cards" aria-label="Cards field with Review">

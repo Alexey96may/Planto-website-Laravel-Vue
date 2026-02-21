@@ -29,6 +29,7 @@ class SettingController extends Controller
             'link_x' => 'nullable|url',
             'link_li' => 'nullable|url',
             'footer_main_text'  => 'nullable|string|max:1000',
+            'hero_main_text'  => 'nullable|string|max:1000',
             'footer_rights'     => 'nullable|string|max:255',
             'products_per_page' => 'required|integer|min:1|max:100',
 
@@ -37,6 +38,7 @@ class SettingController extends Controller
             'live_demo_url'         => 'nullable|url',
 
             'section_trendy_title'  => 'required|string|max:100',
+            'section_hero_title'  =>   'required|string|max:100',
             'section_selling_title' => 'required|string|max:100',
             'section_reviews_title' => 'required|string|max:100',
             'section_o2_title'      => 'required|string|max:100',

@@ -6,7 +6,20 @@ import IconBag from "img/icons/bag.svg?component";
 <template>
     <section class="trendy" id="trendy" aria-label="Trendy plants section">
         <div class="container trendy__container">
-            <h2 class="trendy__title">Our Trendy plants</h2>
+            <h2
+                class="trendy__title"
+                v-if="$page.props.settings.section_trendy_link"
+            >
+                <Link
+                    :href="$page.props.settings.section_trendy_link"
+                    :aria-label="$page.props.settings.section_trendy_title"
+                >
+                    {{ $page.props.settings.section_trendy_title }}
+                </Link>
+            </h2>
+            <h2 class="trendy__title" v-else>
+                {{ $page.props.settings.section_trendy_title }}
+            </h2>
             <div class="trendy__cards">
                 <figure class="card trendy-card" aria-label="Trendy card">
                     <div

@@ -19,7 +19,20 @@ defineProps({
         v-if="features.length"
     >
         <div class="container best__container">
-            <h2 class="title best__title">Our Best o2</h2>
+            <h2
+                class="title best__title"
+                v-if="$page.props.settings.section_o2_link"
+            >
+                <Link
+                    :href="$page.props.settings.section_o2_link"
+                    :aria-label="$page.props.settings.section_o2_title"
+                >
+                    {{ $page.props.settings.section_o2_title }}
+                </Link>
+            </h2>
+            <h2 class="title best__title" v-else>
+                {{ $page.props.settings.section_o2_title }}
+            </h2>
 
             <div class="slider review__slider" aria-label="Slider">
                 <div class="slider__cards" aria-label="Slider cards">
