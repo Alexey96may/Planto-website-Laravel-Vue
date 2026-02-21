@@ -33,6 +33,20 @@ import NavLink from "@/Components/NavLink.vue";
                     📦 Товары
                 </Link>
                 <Link
+                    class="block py-3 px-6 hover:bg-gray-800 transition"
+                    :href="route('admin.orders.index')"
+                    :active="route().current('admin.orders.*')"
+                >
+                    👥 Заказы
+                </Link>
+                <Link
+                    class="block py-3 px-6 hover:bg-gray-800 transition"
+                    :href="route('admin.comments.index')"
+                    :active="route().current('admin.comments.*')"
+                >
+                    👥 Комментарии
+                </Link>
+                <Link
                     :href="route('admin.users.index')"
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :class="{
@@ -43,19 +57,13 @@ import NavLink from "@/Components/NavLink.vue";
                     👥 Пользователи
                 </Link>
                 <Link
+                    :href="route('admin.navigation.index')"
                     class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :href="route('admin.orders.index')"
-                    :active="route().current('admin.orders.*')"
+                    :active="route().current('admin.navigation.*')"
                 >
-                    Заказы
+                    ⚙️ Навигация
                 </Link>
-                <Link
-                    class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :href="route('admin.comments.index')"
-                    :active="route().current('admin.comments.*')"
-                >
-                    Комментарии
-                </Link>
+
                 <Link
                     :href="route('admin.features.index')"
                     class="block py-3 px-6 hover:bg-gray-800 transition"
@@ -72,7 +80,7 @@ import NavLink from "@/Components/NavLink.vue";
                     }"
                     :active="route().current('admin.comments.*')"
                 >
-                    ⚙️ Настройки
+                    ⚙️ Общие Настройки
                 </Link>
                 <div class="border-t border-gray-800 mt-6 pt-6">
                     <Link

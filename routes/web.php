@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Models\Feature;
+use App\Http\Controllers\Admin\NavigationController;
 
 //todo 'topPlants' => Product::latest()->take(4)->get(),
 Route::get('/', function () {
@@ -146,6 +147,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/comments/{comment}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
 
     Route::resource('features', FeatureController::class);
+
+    Route::resource('navigation', NavigationController::class);
 });
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
