@@ -7,6 +7,7 @@ use App\Models\Setting;
 use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\CategoryService;
 
 class ShopController extends Controller
 {
@@ -37,7 +38,7 @@ class ShopController extends Controller
 
         return Inertia::render('Shop/Index', [
             'products' => $products,
-            'categories' => Category::all(),
+            'categories' => CategoryService::getAll(),
             'filters' => $request->only(['category', 'search', 'min_price', 'max_price']),
         ]);
     }

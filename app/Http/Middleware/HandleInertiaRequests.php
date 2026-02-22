@@ -4,7 +4,8 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-use App\Models\Navigation;
+use App\Services\SettingService;
+use App\Services\NavigationService;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -38,24 +39,13 @@ class HandleInertiaRequests extends Middleware
             'cart_count' => count(session('cart', [])),
             'cart_ids' => array_keys(session()->get('cart', [])),
 
-            'settings' => \App\Models\Setting::all()->pluck('value', 'key'),
+            'settings' => SettingService::all(),
+            'navigation' => NavigationService::get(),
 
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
                 'message' => $request->session()->get('message'),
-            ],
-            'navigation' => [
-                'header' => Navigation::with('children')
-                    ->where('location', 'header')
-                    ->whereNull('parent_id')
-                    ->where('is_active', true)
-                    ->orderBy('order')
-                    ->get(),
-                'footer' => Navigation::where('location', 'footer')
-                    ->where('is_active', true)
-                    ->orderBy('order')
-                    ->get(),
             ],
         ];
     }

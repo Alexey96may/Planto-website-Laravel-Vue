@@ -21,5 +21,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
+        \App\Models\Setting::observe(\App\Observers\SettingObserver::class);
+        \App\Models\Navigation::observe(\App\Observers\NavigationObserver::class);
+        \App\Models\Category::observe(\App\Observers\CategoryObserver::class);
     }
 }
