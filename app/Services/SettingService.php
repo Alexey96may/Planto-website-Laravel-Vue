@@ -16,6 +16,12 @@ class SettingService
         });
     }
 
+    public static function get(string $key, $default = null)
+    {
+        $settings = self::all();
+        return $settings[$key] ?? $default;
+    }
+
     public static function clearCache()
     {
         Cache::forget(self::CACHE_KEY);

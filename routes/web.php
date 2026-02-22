@@ -25,8 +25,9 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Models\Feature;
 use App\Http\Controllers\Admin\NavigationController;
+use App\Services\CommentService;
+use App\Services\FeatureService;
 
-//todo 'topPlants' => Product::latest()->take(4)->get(),
 Route::get('/', function () {
 
     return Inertia::render('Welcome', [
@@ -38,15 +39,8 @@ Route::get('/', function () {
         'status' => 'Сегодня работаем до 22:00',
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
-        'comments' => Comment::with('user:id,name,avatar')
-            ->where('is_active', true)
-            ->latest()
-            ->take(3) //todo
-            ->get(),
-        'features' => Feature::where('is_active', true)
-            ->orderBy('order')
-            ->take(4) //todo
-            ->get()
+        'comments' => CommentService::getLatestActive(),
+        'features' => FeatureService::getActive(),
     ]);
 })->name('home');
 
