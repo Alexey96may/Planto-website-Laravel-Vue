@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Auth\Events\Login;
+use App\Listeners\SyncCartOnLogin;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,7 +23,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Event::listen(
+            Login::class,
+            SyncCartOnLogin::class
+        );
+
         Vite::prefetch(concurrency: 3);
+        
         \App\Models\Setting::observe(\App\Observers\SettingObserver::class);
         \App\Models\Navigation::observe(\App\Observers\NavigationObserver::class);
         \App\Models\Category::observe(\App\Observers\CategoryObserver::class);

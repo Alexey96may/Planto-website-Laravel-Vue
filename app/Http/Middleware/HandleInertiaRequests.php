@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Middleware;
 use App\Services\SettingService;
 use App\Services\NavigationService;
+use App\Services\CartService;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -36,8 +37,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'cart_count' => count(session('cart', [])),
-            'cart_ids' => array_keys(session()->get('cart', [])),
+            
+            'cart_count' => CartService::getCount(),
+            'cart_ids' => CartService::getIds(),
 
             'settings' => SettingService::all(),
             'navigation' => NavigationService::get(),

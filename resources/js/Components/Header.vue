@@ -6,9 +6,8 @@ import IconSearch from "img/icons/search.svg?component";
 import IconBag from "img/icons/bag.svg?component";
 import { computed, ref } from "vue";
 
-defineProps({ cartCount: Number });
-
 const page = usePage();
+
 const menuItems = computed(() => page.props.navigation.header);
 const mobileMenuOpen = ref(false);
 </script>
@@ -165,7 +164,9 @@ const mobileMenuOpen = ref(false);
                             class="header__social-img"
                             aria-label="Bag image"
                         />
-                        {{ cartCount }}
+                        <span v-if="$page.props.cart_count > 0">
+                            {{ $page.props.cart_count }}
+                        </span>
                     </Link>
 
                     <button

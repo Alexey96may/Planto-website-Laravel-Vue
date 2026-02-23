@@ -5,9 +5,18 @@ import IconStar from "img/icons/star.svg?component";
 import IconStarHalf from "img/icons/star-half.svg?component";
 import IconPlay from "img/icons/play.svg?component";
 import IconArrowRight from "img/icons/arrow-right.svg?component";
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import Modal from "@/Components/Modal.vue";
 
 const comment = computed(() => usePage().props.comments[0]) || null;
+const videoUrl = computed(() => usePage().props.settings.live_demo_url) || "";
+const isVideoModalOpen = ref(false);
+
+const openVideo = () => {
+    if (videoUrl.value) {
+        isVideoModalOpen.value = true;
+    }
+};
 
 const starNumber = computed(() => {
     const val = Math.floor(Number(comment.value?.rating) || 0);
@@ -48,16 +57,32 @@ const isHalfStar = computed(() => {
                             class="hero__video-prevue"
                             aria-label="Hero video field"
                             title="Live Demonstration"
+                            v-if="videoUrl"
                         >
                             <button
-                                class="button--circ"
+                                class="button--circ play-btn"
                                 aria-label="Play video"
+                                @click="openVideo"
                             >
                                 <IconPlay
                                     class="hero__video--img"
                                     aria-label="Play icon"
                                 ></IconPlay>
                             </button>
+
+                            <Modal
+                                :show="isVideoModalOpen"
+                                @close="isVideoModalOpen = false"
+                            >
+                                <div class="aspect-video">
+                                    <iframe
+                                        :src="videoUrl"
+                                        class="w-full h-full"
+                                        allowfullscreen
+                                        allow="autoplay; encrypted-media"
+                                    ></iframe>
+                                </div>
+                            </Modal>
 
                             <span
                                 class="hero__video-descr"

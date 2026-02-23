@@ -14,6 +14,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\CartController;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -27,13 +28,15 @@ use App\Models\Feature;
 use App\Http\Controllers\Admin\NavigationController;
 use App\Services\CommentService;
 use App\Services\FeatureService;
+use App\Services\SettingService;
 
 Route::get('/', function () {
+    $limit = SettingService::get('top_plants_limit', 4);
 
     return Inertia::render('Welcome', [
         'products'=> Product::all(),
         'canLogin' => Route::has('login'),
-        'topPlants' => Product::latest()->take(4)->get(),
+        'topPlants' => Product::latest()->take($limit)->get(),
         'canRegister' => Route::has('register'),
         'storeName' => 'Planto',
         'status' => 'Сегодня работаем до 22:00',
@@ -48,58 +51,8 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 
 Route::get('/shop/plant-{product}', [ShopController::class, 'show'])->name('shop.show');
 
-Route::get('/cart', function () {
-    $cart = session('cart', []);
-    
-    $ids = array_keys($cart);
-    
-    $products = Product::whereIn('id', $ids)->get();
-
-    $totalPrice = 0;
-    $cartItems = [];
-
-    foreach ($products as $product) {
-        $quantity = $cart[$product->id];
-        $subtotal = $product->price * $quantity;
-        $totalPrice += $subtotal;
-
-        $cartItems[] = [
-            'id' => $product->id,
-            'name' => $product->name,
-            'price' => $product->price,
-            'image' => $product->image,
-            'quantity' => $quantity,
-            'total_item_price' => $subtotal,
-        ];
-    }
-
-    return Inertia::render('CartPage', [
-        'cartItems' => $cartItems, // Теперь это массив объектов с кол-вом
-        'total' => $totalPrice
-    ]);
-})->name('cart.index');
-
-
-Route::post('/cart/add', function (Request $request) {
-    $id = $request->input('id');
-    
-    if (!$id) {
-        return redirect()->back()->with('error', 'Товар не найден');
-    }
-
-    $cart = session()->get('cart', []);
-
-    if (isset($cart[$id])) {
-        $cart[$id]++;
-    } else {
-        $cart[$id] = 1;
-    }
-
-    session()->put('cart', $cart);
-
-    return redirect()->back()->with('success', 'Товар добавлен в корзину!');
-})->name('cart.add');
-
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'store'])->name('cart.add');
 Route::post('/cart/remove', function (Request $request) {
     $productId = $request->input('product_id');
     

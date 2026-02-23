@@ -12,28 +12,20 @@ const props = defineProps({
 
 const page = usePage();
 
+const addToCart = () => {
+    const id = props.plant?.id;
+
+    console.log(props.plant);
+
+    router.post(route("cart.add"), {
+        product_id: id,
+        quantity: 1,
+    });
+};
+
 const isInCart = computed(() => {
     return page.props.cart_ids?.includes(props.plant.id);
 });
-
-const addToCart = () => {
-    console.log("Пытаемся добавить товар ID:", props.plant.id);
-    console.log("Сейчас в корзине?", isInCart.value);
-
-    if (!isInCart.value) {
-        router.post(
-            "/cart/add",
-            { id: props.plant.id },
-            {
-                preserveScroll: true,
-                onSuccess: () => console.log("Сервер ответил: Товар добавлен!"),
-                onError: (err) => console.log("Ошибка сервера:", err),
-            },
-        );
-    } else {
-        console.log("Запрос не отправлен, так как isInCart = true");
-    }
-};
 </script>
 
 <template>
