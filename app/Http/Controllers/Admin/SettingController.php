@@ -53,8 +53,10 @@ class SettingController extends Controller
             'features_limit'     => 'required|integer|min:1|max:100',
             'reviews_limit'      => 'required|integer|min:1|max:100',
             'trendy_limit'       => 'required|integer|min:1|max:100',
+            'hero_plants_limit'  => 'required|integer|min:1|max:100',
 
             'contact_address'     => 'nullable|string|max:255',
+            
         ]);
 
         foreach ($data as $key => $value) {

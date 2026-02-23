@@ -29,6 +29,7 @@ const form = useForm({
     features_limit: props.settings.features_limit || 4,
     reviews_limit: props.settings.reviews_limit || 6,
     trendy_limit: props.settings.trendy_limit || 8,
+    hero_plants_limit: props.settings.hero_plants_limit || 3,
 
     // Заголовки секций
     section_trendy_title: props.settings.section_trendy_title || "Trendy title",
@@ -277,6 +278,7 @@ const submit = () => {
                                     'products_per_page',
                                     'slider_main_limit',
                                     'slider_features_limit',
+                                    'hero_plants_limit',
                                     'top_plants_limit',
                                     'comments_limit',
                                     'features_limit',

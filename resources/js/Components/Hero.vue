@@ -7,6 +7,14 @@ import IconPlay from "img/icons/play.svg?component";
 import IconArrowRight from "img/icons/arrow-right.svg?component";
 import { computed, ref } from "vue";
 import Modal from "@/Components/Modal.vue";
+import HeroSliderCard from "@/Components/HeroSliderCard.vue";
+
+defineProps({
+    heroPlants: {
+        type: Array,
+        default: () => [],
+    },
+});
 
 const comment = computed(() => usePage().props.comments[0]) || null;
 const videoUrl = computed(() => usePage().props.settings.live_demo_url) || "";
@@ -147,44 +155,11 @@ const isHalfStar = computed(() => {
 
             <div class="slider-mini hero__slider-mini" aria-label="Slider">
                 <div class="slider-mini__cards" aria-label="Slider cards">
-                    <figure
-                        class="card slider-mini__card"
-                        aria-label="Slider card"
-                    >
-                        <div
-                            class="card__img-wrapper"
-                            aria-label="Slider card image"
-                        >
-                            <img
-                                src="@/../images/plants/Plant7.png"
-                                alt="Plant"
-                            />
-                        </div>
-
-                        <span class="card__tag" aria-label="Slider card tag"
-                            ><a
-                                href="#"
-                                class="card__tag-link"
-                                aria-label="To trendy house plant"
-                                >Trendy House Plant</a
-                            ></span
-                        >
-                        <h3 class="card__title" aria-label="Slider card title">
-                            <a
-                                href="#"
-                                class="card__tag-title"
-                                aria-label="To Calathea plant"
-                                >Calathea plant</a
-                            >
-                        </h3>
-
-                        <button
-                            class="button--rect card__button"
-                            aria-label="Buy now"
-                        >
-                            Buy Now
-                        </button>
-                    </figure>
+                    <HeroSliderCard
+                        v-for="plant in heroPlants"
+                        :key="plant.id"
+                        :plant="plant"
+                    />
                 </div>
 
                 <div

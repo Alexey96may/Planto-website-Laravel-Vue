@@ -16,7 +16,7 @@ const page = usePage();
     <div class="app-wrapper">
         <div class="main-bg" v-if="full">
             <Header :cartCount="page.props.cart_count" />
-            <Hero />
+            <Hero :heroPlants="page.props.heroPlants" />
             <Trendy
                 v-if="page.props.trendyPlants?.length"
                 :trendyPlants="page.props.trendyPlants"

@@ -33,12 +33,14 @@ use App\Services\SettingService;
 Route::get('/', function () {
     $limitTop = SettingService::get('top_plants_limit', 4);
     $limitTrendy = SettingService::get('trendy_limit', 2);
+    $limitHero = SettingService::get('hero_plants_limit', 3);
 
     return Inertia::render('Welcome', [
         'products'=> Product::all(),
         'canLogin' => Route::has('login'),
         'topPlants' => Product::latest()->take($limitTop)->get(),
         'trendyPlants' => Product::latest()->take($limitTrendy)->get(),
+        'heroPlants' => Product::with('category')->latest()->take($limitHero)->get(),
         'canRegister' => Route::has('register'),
         'storeName' => 'Planto',
         'status' => 'Сегодня работаем до 22:00',
