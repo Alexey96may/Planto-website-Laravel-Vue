@@ -2,6 +2,7 @@
 import AppImage from "@/Components/AppImage.vue";
 import { Link, router } from "@inertiajs/vue3";
 import MainLayout from "@/Layouts/MainLayout.vue";
+import { ref } from "vue";
 
 const props = defineProps({
     cart: Object,
@@ -18,9 +19,39 @@ defineOptions({
         ),
 });
 
-// Метод для удаления товара
-const removeItem = (id) => {
-    router.post("/cart/remove", { product_id: id });
+const removeFromCart = (productId) => {
+    if (confirm("Вы уверены, что хотите удалить этот товар?")) {
+        router.delete(route("cart.remove", productId), {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Здесь можно добавить уведомление об успехе
+            },
+        });
+    }
+};
+
+const timers = ref({});
+
+const updateQuantity = (item, newQuantity) => {
+    if (newQuantity < 1) return; // Страховка
+
+    item.quantity = newQuantity;
+
+    clearTimeout(timers.value[item.product_id]);
+
+    timers.value[item.product_id] = setTimeout(() => {
+        router.patch(
+            route("cart.update", item.product_id),
+            {
+                quantity: newQuantity,
+            },
+            {
+                preserveScroll: true,
+            },
+        );
+
+        delete timers.value[item.product_id];
+    }, 500);
 };
 </script>
 
@@ -41,13 +72,39 @@ const removeItem = (id) => {
                     />
                     <div>
                         <h3 class="font-semibold">{{ item.name }}</h3>
-                        <p class="text-gray-500">
-                            {{ item.price }} x {{ item.quantity }}
-                        </p>
+                        <p class="text-gray-500">{{ item.price }} руб.</p>
                     </div>
                 </div>
-                <div class="text-right font-bold">
-                    {{ item.total_price }} руб.
+
+                <div class="flex items-center space-x-3">
+                    <button
+                        @click="updateQuantity(item, item.quantity - 1)"
+                        :disabled="item.quantity <= 1"
+                        class="px-2 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    >
+                        -
+                    </button>
+
+                    <span class="font-medium">{{ item.quantity }}</span>
+
+                    <button
+                        @click="updateQuantity(item, item.quantity + 1)"
+                        class="px-2 py-1 bg-gray-200 rounded"
+                    >
+                        +
+                    </button>
+                </div>
+
+                <div class="flex flex-col items-end justify-between">
+                    <button
+                        @click="removeFromCart(item.product_id)"
+                        class="text-red-500 hover:text-red-700 text-sm mb-2"
+                    >
+                        Удалить
+                    </button>
+                    <div class="text-right font-bold">
+                        {{ item.total_price }} руб.
+                    </div>
                 </div>
             </div>
 

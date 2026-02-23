@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\CartService;
 use Illuminate\Http\Request;
+use App\Models\Product;
 
 class CartController extends Controller
 {
@@ -27,5 +28,20 @@ class CartController extends Controller
         );
 
         return back()->with('success', 'Товар добавлен в корзину');
+    }
+
+    public function destroy(Product $product) {
+        CartService::remove($product->id);
+    }
+
+    public function update(Request $request, $productId)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        CartService::updateQuantity((int)$productId, $request->quantity);
+
+        return back();
     }
 }

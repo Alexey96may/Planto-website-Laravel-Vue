@@ -31,12 +31,14 @@ use App\Services\FeatureService;
 use App\Services\SettingService;
 
 Route::get('/', function () {
-    $limit = SettingService::get('top_plants_limit', 4);
+    $limitTop = SettingService::get('top_plants_limit', 4);
+    $limitTrendy = SettingService::get('trendy_limit', 2);
 
     return Inertia::render('Welcome', [
         'products'=> Product::all(),
         'canLogin' => Route::has('login'),
-        'topPlants' => Product::latest()->take($limit)->get(),
+        'topPlants' => Product::latest()->take($limitTop)->get(),
+        'trendyPlants' => Product::latest()->take($limitTrendy)->get(),
         'canRegister' => Route::has('register'),
         'storeName' => 'Planto',
         'status' => 'Сегодня работаем до 22:00',
@@ -53,19 +55,8 @@ Route::get('/shop/plant-{product}', [ShopController::class, 'show'])->name('shop
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'store'])->name('cart.add');
-Route::post('/cart/remove', function (Request $request) {
-    $productId = $request->input('product_id');
-    
-    $cart = session()->get('cart', []);
-
-    if (isset($cart[$productId])) {
-        unset($cart[$productId]);
-    }
-
-    session()->put('cart', $cart);
-
-    return back()->with('success', 'Товар удален из корзины');
-})->name('cart.remove');
+Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.remove');
+Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

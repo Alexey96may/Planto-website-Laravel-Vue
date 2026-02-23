@@ -110,4 +110,35 @@ class CartService
             'total_sum' => $totalSum
         ];
     }
+
+    public static function remove(int $productId): void
+    {
+        if (Auth::check()) {
+            CartItem::where('user_id', Auth::id())
+                ->where('product_id', $productId)
+                ->delete();
+        } else {
+            $cart = Session::get('cart', []);
+
+            if (isset($cart[$productId])) {
+                unset($cart[$productId]);
+                Session::put('cart', $cart);
+            }
+        }
+    }
+
+    public static function updateQuantity(int $productId, int $quantity): void
+    {
+        if (Auth::check()) {
+            \App\Models\CartItem::where('user_id', Auth::id())
+                ->where('product_id', $productId)
+                ->update(['quantity' => $quantity]);
+        } else {
+            $cart = session()->get('cart', []);
+            if (isset($cart[$productId])) {
+                $cart[$productId] = $quantity;
+                session()->put('cart', $cart);
+            }
+        }
+    }
 }

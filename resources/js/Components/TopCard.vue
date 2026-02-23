@@ -8,14 +8,13 @@ import { computed } from "vue";
 
 const props = defineProps({
     plant: Object,
+    default: () => {},
 });
 
 const page = usePage();
 
 const addToCart = () => {
     const id = props.plant?.id;
-
-    console.log(props.plant);
 
     router.post(route("cart.add"), {
         product_id: id,

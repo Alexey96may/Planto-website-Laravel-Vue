@@ -11,11 +11,21 @@ class Product extends Model
 {
     protected $fillable = ['title', 'description', 'price', 'image', 'category_id'];
 
+    protected $appends = ['image_url'];
+
     protected function imageUrl(): Attribute
     {
-        return Attribute::get(fn () => 
-            $this->image ? Storage::url($this->image) : asset('images/default-placeholder.png')
-        );
+        return Attribute::get(function () {
+            if (!$this->image) {
+                return asset('images/no-image.png');
+            }
+
+            if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+                return $this->image;
+            }
+
+            return Storage::url($this->image);
+        });
     }
     
     public function category(): BelongsTo
