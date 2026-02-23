@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\NavigationController;
 use App\Services\CommentService;
 use App\Services\FeatureService;
 use App\Services\SettingService;
+use App\Http\Controllers\NewsletterController;
 
 Route::get('/', function () {
     $limitTop = SettingService::get('top_plants_limit', 4);
@@ -59,6 +60,8 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'store'])->name('cart.add');
 Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.remove');
 Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
+
+Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
