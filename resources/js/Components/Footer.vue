@@ -1,7 +1,21 @@
 <script setup>
 import IconLogo from "img/icons/logo.svg?component";
-import { Link, usePage } from "@inertiajs/vue3";
+import { Link, usePage, useForm } from "@inertiajs/vue3";
 import { computed } from "vue";
+
+const form = useForm({
+    email: "",
+});
+
+const submit = () => {
+    form.post(route("newsletter.store"), {
+        preserveScroll: true,
+        onSuccess: () => {
+            form.reset();
+            alert("Вы успешно подписаны!");
+        },
+    });
+};
 
 const page = usePage();
 const footerMenuItems = computed(() => page.props.navigation.footer);
@@ -68,6 +82,35 @@ const currentYear = new Date().getFullYear();
 
                     <form
                         class="footer__form"
+                        @submit.prevent="submit"
+                        aria-label="Subscribe form"
+                    >
+                        <input
+                            v-model="form.email"
+                            type="email"
+                            placeholder="Ваш email"
+                            class="footer__form-text"
+                            :class="{ 'border-red-500': form.errors.email }"
+                        />
+                        <input
+                            class="button footer__form-button"
+                            type="submit"
+                            aria-label="To Subscribe"
+                            :value="
+                                form.processing ? 'Отправка...' : 'Подписаться'
+                            "
+                            :disabled="form.processing"
+                        />
+                        <span
+                            v-if="form.errors.email"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ form.errors.email }}
+                        </span>
+                    </form>
+
+                    <!-- <form
+                        class="footer__form"
                         action="#"
                         method="get"
                         aria-label="Subscribe form"
@@ -86,7 +129,7 @@ const currentYear = new Date().getFullYear();
                             aria-label="To Subscribe"
                             value="Subscribe"
                         />
-                    </form>
+                    </form> -->
                 </div>
             </div>
 

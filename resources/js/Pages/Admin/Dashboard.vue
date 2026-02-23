@@ -2,6 +2,9 @@
 import { Head, Link } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 
+import { useForm } from "@inertiajs/vue3";
+const form = useForm({ subject: "", message: "" });
+
 defineProps({
     stats: Object,
 });
@@ -163,6 +166,38 @@ defineProps({
                         >Перейти →</span
                     >
                 </Link>
+            </div>
+
+            <div class="p-6 bg-white rounded shadow">
+                <h2 class="text-xl font-bold mb-4">Создать рассылку</h2>
+                <form
+                    @submit.prevent="
+                        form.post(route('admin.newsletter.broadcast'))
+                    "
+                >
+                    <div class="mb-4">
+                        <label>Тема письма</label>
+                        <input
+                            v-model="form.subject"
+                            type="text"
+                            class="w-full border p-2"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label>Текст сообщения</label>
+                        <textarea
+                            v-model="form.message"
+                            rows="5"
+                            class="w-full border p-2"
+                        ></textarea>
+                    </div>
+                    <button
+                        :disabled="form.processing"
+                        class="bg-blue-600 text-white px-4 py-2"
+                    >
+                        {{ form.processing ? "Запуск..." : "Отправить всем" }}
+                    </button>
+                </form>
             </div>
         </div>
     </AdminLayout>
