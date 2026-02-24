@@ -38,9 +38,13 @@ class CustomNewsletter extends Mailable
      */
     public function content(): Content
     {
+        sleep(3);
         return new Content(
             markdown: 'emails.custom-newsletter',
-            with: ['body' => $this->content]
+            with: [
+                'body' => $this->content,
+                'subject' => $this->subject,
+            ],
         );
     }
 

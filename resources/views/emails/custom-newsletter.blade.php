@@ -1,12 +1,12 @@
 <x-mail::message>
-# Introduction
+# {{ $subject }}
 
-The body of your message.
+{{ $body }}
 
-<x-mail::button :url="''">
-Button Text
+<x-mail::button :url="config('app.url')">
+Перейти на сайт
 </x-mail::button>
 
-Thanks,<br>
-{{ config('app.name') }}
+Спасибо,<br>
+Команда {{ config('app.name') }}
 </x-mail::message>
