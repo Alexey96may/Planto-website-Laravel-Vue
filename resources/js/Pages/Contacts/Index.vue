@@ -10,19 +10,21 @@
             <div class="mt-16">
                 <div class="space-y-10">
                     <div>
-                        <h2 class="text-2xl font-semibold mb-6">Planto.</h2>
+                        <h2 class="text-2xl font-semibold mb-6">
+                            {{ $page.props.settings.site_name }}
+                        </h2>
                         <div class="space-y-4 text-gray-400">
                             <p class="flex items-center gap-4">
                                 <span class="text-green-500">📍</span>
-                                г. Алматы, пр. Абая 150
+                                {{ $page.props.settings.contact_address }}
                             </p>
                             <p class="flex items-center gap-4">
                                 <span class="text-green-500">📞</span>
-                                +7 (707) 123-45-67
+                                {{ $page.props.settings.contact_phone }}
                             </p>
                             <p class="flex items-center gap-4">
                                 <span class="text-green-500">✉️</span>
-                                support@planto.com
+                                {{ $page.props.settings.contact_email }}
                             </p>
                         </div>
                     </div>
@@ -31,19 +33,22 @@
                         <h3 class="text-xl mb-4">Follow us</h3>
                         <div class="flex gap-4">
                             <a
-                                href="#"
+                                :href="$page.props.settings.link_fb"
+                                aria-label="to Facebook"
                                 class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-600 transition"
-                                >Ig</a
+                                >FB</a
                             >
                             <a
-                                href="#"
+                                :href="$page.props.settings.link_x"
+                                aria-label="to X"
                                 class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-600 transition"
-                                >Tg</a
+                                >X</a
                             >
                             <a
-                                href="#"
+                                :href="$page.props.settings.link_li"
+                                aria-label="to LI"
                                 class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-600 transition"
-                                >Fb</a
+                                >LI</a
                             >
                         </div>
                     </div>

@@ -142,7 +142,7 @@ const currentYear = new Date().getFullYear();
                     >
                         <a
                             :href="$page.props.settings.link_fb"
-                            aria-label="to Facebook"
+                            :aria-label="$page.props.settings.link_fb"
                             >FB</a
                         >
                     </li>
@@ -151,7 +151,9 @@ const currentYear = new Date().getFullYear();
                         aria-label="X social"
                         v-if="$page.props.settings.link_x"
                     >
-                        <a :href="$page.props.settings.link_x" aria-label="to X"
+                        <a
+                            :href="$page.props.settings.link_x"
+                            :aria-label="$page.props.settings.link_x"
                             >X</a
                         >
                     </li>
@@ -162,7 +164,7 @@ const currentYear = new Date().getFullYear();
                     >
                         <a
                             :href="$page.props.settings.link_li"
-                            aria-label="to Linkedin"
+                            :aria-label="$page.props.settings.link_li"
                             >LI</a
                         >
                     </li>

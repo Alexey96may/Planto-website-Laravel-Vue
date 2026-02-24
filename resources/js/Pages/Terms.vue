@@ -3,7 +3,7 @@
         class="min-h-screen bg-[#0b120c] text-white py-20 px-6 font-sans selection:bg-green-500/30"
     >
         <div class="max-w-4xl mx-auto">
-            <div class="mb-16 border-b border-white/10 pb-10">
+            <div class="mb-16 border-b border-white/10 pb-10 reveal">
                 <h1 class="text-4xl md:text-6xl font-bold mb-4">
                     Terms of <span class="text-green-500">Service</span>
                 </h1>
@@ -15,7 +15,7 @@
             <div
                 class="bg-white/5 backdrop-blur-md border border-white/10 rounded-[40px] p-8 md:p-12 space-y-12 text-gray-300 leading-relaxed"
             >
-                <section>
+                <section class="reveal">
                     <h2
                         class="text-2xl font-semibold text-white mb-4 flex items-center gap-3"
                     >
@@ -30,7 +30,7 @@
                     </p>
                 </section>
 
-                <section>
+                <section class="reveal">
                     <h2
                         class="text-2xl font-semibold text-white mb-4 flex items-center gap-3"
                     >
@@ -44,7 +44,7 @@
                     </p>
                 </section>
 
-                <section>
+                <section class="reveal">
                     <h2
                         class="text-2xl font-semibold text-white mb-4 flex items-center gap-3"
                     >
@@ -58,7 +58,7 @@
                     </p>
                 </section>
 
-                <section>
+                <section class="reveal">
                     <h2
                         class="text-2xl font-semibold text-white mb-4 flex items-center gap-3"
                     >
@@ -98,6 +98,7 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import MainLayout from "@/Layouts/MainLayout.vue";
+import { onMounted } from "vue";
 
 defineOptions({
     layout: (h, page) =>
@@ -109,11 +110,40 @@ defineOptions({
             () => page,
         ),
 });
+
+onMounted(() => {
+    const observerOptions = {
+        threshold: 0.1,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("reveal-visible");
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+});
 </script>
 
 <style scoped>
 /* Плавный градиент на фоне, чтобы страница не была скучной */
 .min-h-screen {
     background: radial-gradient(circle at bottom left, #122214 0%, #0b120c 40%);
+}
+
+/* Базовое состояние: невидимый и чуть ниже своего места */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Состояние после появления: прозрачность 1 и возврат на место */
+.reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 </style>
