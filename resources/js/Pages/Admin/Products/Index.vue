@@ -108,7 +108,10 @@ const updateTrending = (product, field, value) => {
                                 <span
                                     class="px-2 py-1 bg-gray-100 rounded text-sm"
                                 >
-                                    {{ product.category?.title }}
+                                    {{
+                                        product.category?.title ||
+                                        "Без Категории"
+                                    }}
                                 </span>
                             </td>
                             <td class="p-4 font-bold">{{ product.price }} ₽</td>

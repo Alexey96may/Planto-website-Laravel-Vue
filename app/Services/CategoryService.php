@@ -12,7 +12,7 @@ class CategoryService
     public static function getAll(): array
     {
         return Cache::remember(self::CACHE_KEY, now()->addWeek(), function () {
-            return Category::orderBy('name')
+            return Category::orderBy('title')
                             ->get()
                             ->toArray();
         });

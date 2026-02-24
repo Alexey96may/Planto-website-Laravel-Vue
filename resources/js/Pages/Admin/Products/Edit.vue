@@ -13,7 +13,7 @@ const form = useForm({
     title: props.product.title,
     description: props.product.description,
     price: props.product.price,
-    category_id: props.product.category_id,
+    category_id: props.product.category_id ?? "",
     image: null,
     is_trending: props.product?.is_trending ?? false,
     trending_order: props.product?.trending_order ?? 999,
@@ -78,6 +78,7 @@ const submit = () => {
                         v-model="form.category_id"
                         class="w-full border rounded-lg p-2"
                     >
+                        <option :value="null">Без категории</option>
                         <option
                             v-for="cat in categories"
                             :key="cat.id"

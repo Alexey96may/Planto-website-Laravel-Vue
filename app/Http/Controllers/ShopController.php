@@ -28,7 +28,11 @@ class ShopController extends Controller
         $products = Product::query()
             ->with('category')
             ->when($validated['category'] ?? null, function ($q, $slug) {
-                $q->whereHas('category', fn($cat) => $cat->where('slug', $slug));
+                if ($slug === 'none') {
+                    $q->whereNull('category_id');
+                } else {
+                    $q->whereHas('category', fn($cat) => $cat->where('slug', $slug));
+                }
             })
             ->when($validated['search'] ?? null, function ($q, $search) {
                 $q->where('title', 'like', "%{$search}%");

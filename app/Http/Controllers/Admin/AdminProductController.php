@@ -42,7 +42,7 @@ class AdminProductController extends Controller
             'is_trending' => 'boolean',
             'trending_order' => 'integer|min:0',
             'price'       => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'nullable|exists:categories,id',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
@@ -78,7 +78,7 @@ class AdminProductController extends Controller
             'is_trending' => 'boolean', 
             'trending_order' => 'integer|min:0',
             'price'       => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'nullable|exists:categories,id',
             'image'       => $request->hasFile('image') ? 'image|mimes:jpg,jpeg,png|max:2048' : 'nullable',
         ]);
 

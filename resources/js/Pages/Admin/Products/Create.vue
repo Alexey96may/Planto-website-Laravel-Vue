@@ -69,9 +69,8 @@ const submit = () => {
                     <select
                         v-model="form.category_id"
                         class="w-full border rounded-lg p-2"
-                        required
                     >
-                        <option value="" disabled>Выберите категорию</option>
+                        <option :value="null">Без категории</option>
                         <option
                             v-for="cat in categories"
                             :key="cat.id"

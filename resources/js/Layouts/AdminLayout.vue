@@ -32,6 +32,18 @@ import NavLink from "@/Components/NavLink.vue";
                 >
                     📦 Товары
                 </Link>
+
+                <Link
+                    :href="route('admin.categories.index')"
+                    class="block py-3 px-6 hover:bg-gray-800 transition"
+                    :class="{
+                        'bg-gray-800 border-l-4 border-green-500':
+                            $page.component === 'Admin/Сategories/Index',
+                    }"
+                >
+                    📦 Категории
+                </Link>
+
                 <Link
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :href="route('admin.orders.index')"

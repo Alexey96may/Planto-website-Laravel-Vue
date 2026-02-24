@@ -32,6 +32,7 @@ use App\Services\SettingService;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ContactController;
 use App\Services\ProductService;
+use App\Http\Controllers\Admin\CategoryController;
 
 Route::get('/', function (ProductService $products, SettingService $settings) {
     $limitTop = $settings->get('top_plants_limit', 4);
@@ -103,6 +104,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::patch('products/{product}/update-trending', [AdminProductController::class, 'updateTrending'])
     ->name('products.update-trending');
+
+    Route::resource('categories', CategoryController::class)->except(['show', 'create']);
 });
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

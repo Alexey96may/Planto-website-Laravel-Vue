@@ -58,6 +58,26 @@ defineProps({
                 </Link>
 
                 <Link
+                    :href="route('admin.categories.index')"
+                    class="group p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100"
+                >
+                    <div
+                        class="text-purple-600 bg-purple-50 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition"
+                    >
+                        📦
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">
+                        Управление категориями товара
+                    </h2>
+                    <p class="text-gray-500 text-sm mb-4">
+                        Создание, удаление, редактирование категорий
+                    </p>
+                    <span class="text-purple-600 font-medium flex items-center"
+                        >Перейти →</span
+                    >
+                </Link>
+
+                <Link
                     :href="route('admin.orders.index')"
                     class="group p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100"
                 >
