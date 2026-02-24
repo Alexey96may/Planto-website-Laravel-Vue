@@ -30,6 +30,7 @@ use App\Services\CommentService;
 use App\Services\FeatureService;
 use App\Services\SettingService;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/', function () {
     $limitTop = SettingService::get('top_plants_limit', 4);
@@ -101,6 +102,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
 
+Route::get('/404', function () {
+    return inertia('Error', ['status' => 404]);
+});
+
+Route::get('/terms', function () {
+    return Inertia::render('Terms');
+})->name('terms');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.user');
@@ -109,6 +118,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+
+Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 
 Route::get('/debug-reset', function() {
     session()->forget('cart');

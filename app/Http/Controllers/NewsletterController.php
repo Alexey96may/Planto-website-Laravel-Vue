@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Newsletter;
 use App\Mail\WelcomeNewsletter;
+use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CustomNewsletter;
 
