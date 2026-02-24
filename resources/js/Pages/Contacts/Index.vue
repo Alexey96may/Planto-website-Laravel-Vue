@@ -14,15 +14,24 @@
                             {{ $page.props.settings.site_name }}
                         </h2>
                         <div class="space-y-4 text-gray-400">
-                            <p class="flex items-center gap-4">
+                            <p
+                                class="flex items-center gap-4"
+                                v-if="$page.props.settings?.contact_address"
+                            >
                                 <span class="text-green-500">📍</span>
                                 {{ $page.props.settings.contact_address }}
                             </p>
-                            <p class="flex items-center gap-4">
+                            <p
+                                class="flex items-center gap-4"
+                                v-if="$page.props.settings?.contact_phone"
+                            >
                                 <span class="text-green-500">📞</span>
                                 {{ $page.props.settings.contact_phone }}
                             </p>
-                            <p class="flex items-center gap-4">
+                            <p
+                                class="flex items-center gap-4"
+                                v-if="$page.props.settings?.contact_email"
+                            >
                                 <span class="text-green-500">✉️</span>
                                 {{ $page.props.settings.contact_email }}
                             </p>
@@ -34,18 +43,21 @@
                         <div class="flex gap-4">
                             <a
                                 :href="$page.props.settings.link_fb"
+                                v-if="$page.props.settings.link_fb"
                                 aria-label="to Facebook"
                                 class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-600 transition"
                                 >FB</a
                             >
                             <a
                                 :href="$page.props.settings.link_x"
+                                v-if="$page.props.settings.link_x"
                                 aria-label="to X"
                                 class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-600 transition"
                                 >X</a
                             >
                             <a
                                 :href="$page.props.settings.link_li"
+                                v-if="$page.props.settings.link_li"
                                 aria-label="to LI"
                                 class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-600 transition"
                                 >LI</a

@@ -27,18 +27,21 @@ const props = defineProps({
 const search = ref(props.filters.search || "");
 const minPrice = ref(props.filters.min_price || "");
 const maxPrice = ref(props.filters.max_price || "");
+const sort = ref(props.filters?.sort || "popular");
 
 const applyFilters = () => {
     router.get(
-        "/shop",
+        "shop",
         {
             category: props.filters.category,
             search: search.value,
             min_price: minPrice.value,
             max_price: maxPrice.value,
+            sort: sort.value,
         },
         {
             preserveState: true,
+            preserveScroll: true,
             replace: true,
         },
     );
@@ -141,10 +144,22 @@ const applyFilters = () => {
                         <p class="text-gray-500">
                             Найдено товаров: {{ products.total }}
                         </p>
-                        <p class="text-gray-500 text-sm">
-                            Показано {{ products.from }}-{{ products.to }} из
-                            {{ products.total }} растений
-                        </p>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-bold uppercase text-gray-400"
+                            >Сортировка:</span
+                        >
+                        <select
+                            v-model="sort"
+                            @change="applyFilters"
+                            class="text-sm border-none bg-transparent font-bold focus:ring-0 cursor-pointer"
+                        >
+                            <option value="popular">Хиты продаж</option>
+                            <option value="new">Новинки</option>
+                            <option value="price_asc">Сначала дешевле</option>
+                            <option value="price_desc">Сначала дороже</option>
+                        </select>
                     </div>
                 </div>
 

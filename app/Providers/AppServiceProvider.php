@@ -33,5 +33,7 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Setting::observe(\App\Observers\SettingObserver::class);
         \App\Models\Navigation::observe(\App\Observers\NavigationObserver::class);
         \App\Models\Category::observe(\App\Observers\CategoryObserver::class);
+        \App\Models\OrderItem::observe(\App\Observers\OrderItemObserver::class);
+
     }
 }

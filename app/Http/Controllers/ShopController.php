@@ -8,18 +8,21 @@ use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Category;
 use App\Services\CategoryService;
+use App\Services\SettingService;
 
 class ShopController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, SettingService $settings)
     {
-        $perPage = Setting::where('key', 'products_per_page')->value('value') ?? 6;
+        
+        $perPage = $settings->get('products_per_page', 6);
 
         $validated = $request->validate([
             'search'    => 'nullable|string|max:100',
             'category'  => 'nullable|string|exists:categories,slug',
             'min_price' => 'nullable|numeric|min:0',
             'max_price' => 'nullable|numeric|min:0',
+            'sort'      => 'nullable|string|in:popular,new,price_asc,price_desc',
         ]);
 
         $products = Product::query()
@@ -32,14 +35,15 @@ class ShopController extends Controller
             })
             ->when($validated['min_price'] ?? null, fn($q, $p) => $q->where('price', '>=', $p))
             ->when($validated['max_price'] ?? null, fn($q, $p) => $q->where('price', '<=', $p))
-            ->latest()
+            ->appliedSort($validated['sort'] ?? 'popular')
             ->paginate($perPage)
             ->withQueryString();
 
         return Inertia::render('Shop/Index', [
             'products' => $products,
             'categories' => CategoryService::getAll(),
-            'filters' => $request->only(['category', 'search', 'min_price', 'max_price']),
+            'currentCategory' => $validated['category'] ?? null,
+            'filters' => $request->only(['category', 'search', 'min_price', 'max_price', 'sort']),
         ]);
     }
 

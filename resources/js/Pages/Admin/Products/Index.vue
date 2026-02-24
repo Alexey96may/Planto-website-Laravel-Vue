@@ -12,6 +12,21 @@ const deleteProduct = (id) => {
         router.delete(route("admin.products.destroy", id));
     }
 };
+
+const updateTrending = (product, field, value) => {
+    router.patch(
+        route("admin.products.update-trending", product.id),
+        {
+            [field]: value,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Можно добавить уведомление "Сохранено"
+            },
+        },
+    );
+};
 </script>
 
 <template>
@@ -37,6 +52,9 @@ const deleteProduct = (id) => {
                         <tr class="border-b bg-gray-50">
                             <th class="p-4">Фото</th>
                             <th class="p-4">Название</th>
+                            <th class="p-4 text-center">Тренд</th>
+                            <th class="p-4 text-center">Порядок</th>
+
                             <th class="p-4">Категория</th>
                             <th class="p-4">Цена</th>
                             <th class="p-4 text-right">Действия</th>
@@ -55,6 +73,37 @@ const deleteProduct = (id) => {
                                 />
                             </td>
                             <td class="p-4 font-medium">{{ product.title }}</td>
+
+                            <td class="p-4 text-center">
+                                <input
+                                    type="checkbox"
+                                    :checked="product.is_trending"
+                                    @change="
+                                        updateTrending(
+                                            product,
+                                            'is_trending',
+                                            $event.target.checked,
+                                        )
+                                    "
+                                    class="w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                                />
+                            </td>
+
+                            <td class="p-4 text-center">
+                                <input
+                                    type="number"
+                                    :value="product.trending_order"
+                                    @blur="
+                                        updateTrending(
+                                            product,
+                                            'trending_order',
+                                            $event.target.value,
+                                        )
+                                    "
+                                    class="w-16 p-1 border rounded text-center text-sm"
+                                />
+                            </td>
+
                             <td class="p-4">
                                 <span
                                     class="px-2 py-1 bg-gray-100 rounded text-sm"
@@ -63,6 +112,7 @@ const deleteProduct = (id) => {
                                 </span>
                             </td>
                             <td class="p-4 font-bold">{{ product.price }} ₽</td>
+
                             <td class="p-4 text-right space-x-2">
                                 <Link
                                     :href="

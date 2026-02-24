@@ -30,6 +30,7 @@ const form = useForm({
     reviews_limit: props.settings.reviews_limit || 6,
     trendy_limit: props.settings.trendy_limit || 8,
     hero_plants_limit: props.settings.hero_plants_limit || 3,
+    top_days_interval: props.settings.top_days_interval || 0,
 
     // Заголовки секций
     section_trendy_title: props.settings.section_trendy_title || "Trendy title",
@@ -302,6 +303,28 @@ const submit = () => {
                                 >
                                     {{ form.errors[field] }}
                                 </p>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 capitalize"
+                                    >Интервал для ТОП-продаж (в днях)</label
+                                >
+                                <input
+                                    type="number"
+                                    v-model="form.top_days_interval"
+                                    min="0"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                />
+                                <p class="text-sm text-gray-500">
+                                    Укажите количество дней. Если ввести 0,
+                                    будет показан топ за всё время.
+                                </p>
+                                <div
+                                    v-if="form.errors['top_days_interval']"
+                                    class="text-red-500"
+                                >
+                                    {{ form.errors["top_days_interval"] }}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -39,6 +39,8 @@ class AdminProductController extends Controller
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
+            'is_trending' => 'boolean',
+            'trending_order' => 'integer|min:0',
             'price'       => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
@@ -73,6 +75,8 @@ class AdminProductController extends Controller
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
+            'is_trending' => 'boolean', 
+            'trending_order' => 'integer|min:0',
             'price'       => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'image'       => $request->hasFile('image') ? 'image|mimes:jpg,jpeg,png|max:2048' : 'nullable',
@@ -94,6 +98,18 @@ class AdminProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('message', 'Product is succesfully updated!');
+    }
+
+    public function updateTrending(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'is_trending' => 'sometimes|boolean',
+            'trending_order' => 'sometimes|integer|min:0',
+        ]);
+
+        $product->update($validated);
+
+        return back();
     }
 
     public function destroy(Product $product)

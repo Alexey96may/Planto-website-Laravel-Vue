@@ -31,17 +31,20 @@ use App\Services\FeatureService;
 use App\Services\SettingService;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ContactController;
+use App\Services\ProductService;
 
-Route::get('/', function () {
-    $limitTop = SettingService::get('top_plants_limit', 4);
-    $limitTrendy = SettingService::get('trendy_limit', 2);
-    $limitHero = SettingService::get('hero_plants_limit', 3);
+Route::get('/', function (ProductService $products, SettingService $settings) {
+    $limitTop = $settings->get('top_plants_limit', 4);
+    $limitTrendy = $settings->get('trendy_limit', 2);
+    $limitHero = $settings->get('hero_plants_limit', 3);
+
+    $topDays = $settings->get('top_days_interval', 0);
 
     return Inertia::render('Welcome', [
         'products'=> Product::all(),
         'canLogin' => Route::has('login'),
-        'topPlants' => Product::latest()->take($limitTop)->get(),
-        'trendyPlants' => Product::latest()->take($limitTrendy)->get(),
+        'topPlants' => $products->getTopProducts($limitTop, $topDays),
+        'trendyPlants' => $products->getTrendingProducts($limitTrendy),
         'heroPlants' => Product::with('category')->latest()->take($limitHero)->get(),
         'canRegister' => Route::has('register'),
         'storeName' => 'Planto',
@@ -97,6 +100,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::post('/newsletter/broadcast', [NewsletterController::class, 'sendBroadcast'])
         ->name('newsletter.broadcast');
+
+    Route::patch('products/{product}/update-trending', [AdminProductController::class, 'updateTrending'])
+    ->name('products.update-trending');
 });
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

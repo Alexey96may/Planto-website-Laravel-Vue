@@ -12,6 +12,8 @@ const form = useForm({
     price: "",
     category_id: "",
     image: "https://via.placeholder.com/300",
+    is_trending: false,
+    trending_order: 999,
 });
 
 const submit = () => {
@@ -97,6 +99,37 @@ const submit = () => {
                         class="w-full border rounded-lg p-2"
                         rows="3"
                     ></textarea>
+                </div>
+
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-100 mb-4"
+                >
+                    <div class="flex items-center space-x-3">
+                        <input
+                            id="is_trending"
+                            v-model="form.is_trending"
+                            type="checkbox"
+                            class="w-5 h-5 text-green-600 rounded border-gray-300 focus:ring-green-500"
+                        />
+                        <label
+                            for="is_trending"
+                            class="text-sm font-medium text-gray-700 cursor-pointer"
+                        >
+                            Сразу в блок "Тренды"
+                        </label>
+                    </div>
+
+                    <div v-if="form.is_trending" class="transition-all">
+                        <label class="block text-sm font-medium text-gray-700"
+                            >Порядок сортировки</label
+                        >
+                        <input
+                            v-model="form.trending_order"
+                            type="number"
+                            class="mt-1 w-full border rounded-lg p-2 bg-white"
+                            placeholder="0"
+                        />
+                    </div>
                 </div>
 
                 <div class="flex justify-end space-x-2">

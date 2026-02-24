@@ -15,6 +15,8 @@ const form = useForm({
     price: props.product.price,
     category_id: props.product.category_id,
     image: null,
+    is_trending: props.product?.is_trending ?? false,
+    trending_order: props.product?.trending_order ?? 999,
 });
 
 const submit = () => {
@@ -102,6 +104,40 @@ const submit = () => {
                         class="w-full border rounded-lg p-2"
                         rows="3"
                     ></textarea>
+                </div>
+
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200"
+                >
+                    <div class="flex items-center space-x-3">
+                        <input
+                            id="is_trending"
+                            v-model="form.is_trending"
+                            type="checkbox"
+                            class="w-5 h-5 text-green-600 rounded focus:ring-green-500"
+                        />
+                        <label
+                            for="is_trending"
+                            class="text-sm font-medium text-gray-700 select-none cursor-pointer"
+                        >
+                            Показать в блоке "Тренды"
+                        </label>
+                    </div>
+
+                    <div v-if="form.is_trending">
+                        <label class="block text-sm font-medium text-gray-700"
+                            >Порядок в трендах</label
+                        >
+                        <input
+                            v-model="form.trending_order"
+                            type="number"
+                            placeholder="0"
+                            class="mt-1 w-full border rounded-lg p-2 bg-white"
+                        />
+                        <p class="text-[10px] text-gray-400 mt-1">
+                            Меньшее число отображается первым
+                        </p>
+                    </div>
                 </div>
 
                 <div class="flex justify-end space-x-2">

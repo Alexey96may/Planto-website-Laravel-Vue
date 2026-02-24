@@ -56,7 +56,13 @@ class SettingController extends Controller
             'hero_plants_limit'  => 'required|integer|min:1|max:100',
 
             'contact_address'     => 'nullable|string|max:255',
-            
+            'hero_plants_limit'  => 'required|integer|min:1|max:100',
+            'top_days_interval' => [
+                                        'required', 
+                                        'integer', 
+                                        'min:0', 
+                                        'max:3650'
+                                    ],
         ]);
 
         foreach ($data as $key => $value) {
