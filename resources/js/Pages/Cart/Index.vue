@@ -71,8 +71,10 @@ const updateQuantity = (item, newQuantity) => {
                         class="w-16 h-16 object-cover mr-4"
                     />
                     <div>
-                        <h3 class="font-semibold">{{ item.name }}</h3>
-                        <p class="text-gray-500">{{ item.price }} руб.</p>
+                        <h3 class="text-gray-500 font-semibold">
+                            {{ item.title }}
+                        </h3>
+                        <p class="text-gray-500">{{ item.price }} $.</p>
                     </div>
                 </div>
 
@@ -103,13 +105,13 @@ const updateQuantity = (item, newQuantity) => {
                         Удалить
                     </button>
                     <div class="text-right font-bold">
-                        {{ item.total_price }} руб.
+                        {{ item.total_price }} $.
                     </div>
                 </div>
             </div>
 
             <div class="mt-6 text-right text-xl font-bold">
-                Итого: {{ cart.total_sum }} руб.
+                Итого: {{ cart.total_sum }} $.
             </div>
 
             <Link
@@ -122,7 +124,9 @@ const updateQuantity = (item, newQuantity) => {
 
         <div v-else class="text-center py-10">
             <p>Корзина пуста</p>
-            <Link href="/" class="text-blue-500">Вернуться в магазин</Link>
+            <Link :href="route('/')" class="text-blue-500"
+                >Вернуться в магазин</Link
+            >
         </div>
     </div>
 </template>

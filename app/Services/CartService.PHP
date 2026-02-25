@@ -74,7 +74,7 @@ class CartService
                 $items[] = [
                     'id' => $item->id,
                     'product_id' => $item->product_id,
-                    'name' => $item->product->name,
+                    'title' => $item->product->title,
                     'price' => $item->product->price,
                     'quantity' => $item->quantity,
                     'total_price' => $sum,
@@ -94,7 +94,7 @@ class CartService
                     $items[] = [
                         'id' => null, // Для сессии ID записи нет
                         'product_id' => $product->id,
-                        'name' => $product->name,
+                        'title' => $product->title,
                         'price' => $product->price,
                         'quantity' => $qty,
                         'total_price' => $sum,
@@ -140,5 +140,11 @@ class CartService
                 session()->put('cart', $cart);
             }
         }
+    }
+
+    public static function getIdsWithQuantities()
+    {
+        $items = self::getItems();
+        return collect($items)->pluck('quantity', 'product_id')->toArray();
     }
 }

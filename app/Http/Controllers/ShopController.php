@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Category;
 use App\Services\CategoryService;
+use App\Services\CartService;
 use App\Services\SettingService;
 
 class ShopController extends Controller
@@ -56,6 +57,7 @@ class ShopController extends Controller
 
         return Inertia::render('Product/PlantPage', [
             'product' => $product,
+            'cart_items' => CartService::getIdsWithQuantities(),
             'backUrl' => route('shop', ['page' => request('page', 1)])
         ]);
     }

@@ -4,6 +4,7 @@ import GuestLayout from "@/Layouts/GuestLayout.vue"; // Или AuthenticatedLayo
 
 const props = defineProps({
     cartItems: Array,
+    total: Number,
 });
 
 // Инициализируем форму через Inertia useForm
@@ -110,10 +111,15 @@ const submit = () => {
                     <img :src="item.image" class="w-16 h-16 object-cover" />
 
                     <div>
-                        <h4>{{ item.name }}</h4>
-                        <p>{{ item.quantity }} x {{ item.price }} ₽</p>
+                        <h4>{{ item.title }}</h4>
+                        <p>{{ item.quantity }} x {{ item.price }} $</p>
                     </div>
                 </div>
+            </div>
+
+            <div class="border-t pt-4">
+                <h3 class="font-bold mb-2">Общая сумма:</h3>
+                <p>{{ total }} $</p>
             </div>
 
             <button

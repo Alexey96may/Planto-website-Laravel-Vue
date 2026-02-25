@@ -1,10 +1,10 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import MainLayout from "@/Layouts/MainLayout.vue";
 import Top from "@/Components/Top.vue";
 import Review from "@/Components/Review.vue";
 import Best from "@/Components/Best.vue";
 import { onMounted } from "vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 defineOptions({
     layout: MainLayout,
