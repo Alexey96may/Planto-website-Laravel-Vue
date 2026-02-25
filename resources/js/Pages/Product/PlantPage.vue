@@ -35,7 +35,11 @@ const remove = () => {
 
             <p v-if="product.category">
                 <Link
-                    href="/"
+                    :href="
+                        route('shop', {
+                            category: product?.category?.slug,
+                        })
+                    "
                     class="text-sm text-gray-500 hover:text-green-600"
                     >{{ product.category.title }}</Link
                 >
