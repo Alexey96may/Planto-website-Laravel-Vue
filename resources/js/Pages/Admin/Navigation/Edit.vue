@@ -5,15 +5,18 @@ import { computed } from "vue";
 const props = defineProps({
     item: Object, // Текущий редактируемый пункт
     parentOptions: Array, // Список возможных родителей (уже отфильтрован в контроллере)
+    categories: Array,
 });
 
 const form = useForm({
     title: props.item.title,
+    type: props.item.type || "link",
+    category_id: props.item.category_id,
     link: props.item.link,
     location: props.item.location,
     parent_id: props.item.parent_id,
     order: props.item.order,
-    is_active: props.item.is_active,
+    is_active: Boolean(props.item.is_active),
 });
 
 // Фильтруем родителей по локации (как и в Create)
@@ -43,6 +46,16 @@ const submit = () => {
 
             <div class="grid gap-4">
                 <div>
+                    <label class="block font-medium">Название пункта</label>
+                    <input
+                        v-model="form.title"
+                        type="text"
+                        class="w-full border p-2 rounded"
+                        required
+                    />
+                </div>
+
+                <div>
                     <label class="block font-medium">Где отображать?</label>
                     <select
                         v-model="form.location"
@@ -54,21 +67,50 @@ const submit = () => {
                 </div>
 
                 <div>
-                    <label class="block font-medium">Название пункта</label>
-                    <input
-                        v-model="form.title"
-                        type="text"
-                        class="w-full border p-2 rounded"
-                        required
-                    />
+                    <label class="block text-sm font-medium text-gray-700"
+                        >Тип ссылки</label
+                    >
+                    <select
+                        v-model="form.type"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    >
+                        <option value="link">Произвольная ссылка</option>
+                        <option value="category">Категория товаров</option>
+                    </select>
                 </div>
 
-                <div>
-                    <label class="block font-medium">Ссылка</label>
+                <div v-if="form.type === 'category'">
+                    <label class="block text-sm font-medium text-gray-700"
+                        >Выберите категорию</label
+                    >
+                    <select
+                        v-model="form.category_id"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    >
+                        <option :value="null">-- Не выбрано --</option>
+                        <option
+                            v-for="cat in categories"
+                            :key="cat.id"
+                            :value="cat.id"
+                        >
+                            {{ cat.title }}
+                        </option>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Ссылка будет сформирована автоматически на основе слага
+                        категории.
+                    </p>
+                </div>
+
+                <div v-if="form.type === 'link'">
+                    <label class="block text-sm font-medium text-gray-700"
+                        >URL ссылки</label
+                    >
                     <input
                         v-model="form.link"
                         type="text"
-                        class="w-full border p-2 rounded"
+                        placeholder="/contacts"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                     />
                 </div>
 
@@ -103,6 +145,20 @@ const submit = () => {
                         type="number"
                         class="w-full border p-2 rounded"
                     />
+                </div>
+
+                <div class="flex items-center">
+                    <input
+                        id="is_active"
+                        v-model="form.is_active"
+                        type="checkbox"
+                        class="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    />
+                    <label
+                        for="is_active"
+                        class="ml-2 block text-sm text-gray-900"
+                        >Показывать на сайте</label
+                    >
                 </div>
 
                 <div class="flex justify-between items-center mt-6">

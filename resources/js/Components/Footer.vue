@@ -20,6 +20,16 @@ const submit = () => {
 const page = usePage();
 const footerMenuItems = computed(() => page.props.navigation.footer);
 const currentYear = new Date().getFullYear();
+
+const getHref = (item) => {
+    console.log(item);
+    if (item.type === "category" && item.category) {
+        // console.log(item);
+        // Генерируем ссылку на страницу магазина с фильтром по слагу категории
+        return route("shop", { category: item.category.slug });
+    }
+    return item.link; // Для обычных ссылок
+};
 </script>
 
 <template>
@@ -49,7 +59,7 @@ const currentYear = new Date().getFullYear();
                     <ul class="space-y-2">
                         <li v-for="item in footerMenuItems" :key="item.id">
                             <Link
-                                :href="item.link || '#'"
+                                :href="getHref(item) || '#'"
                                 class="text-gray-400 hover:text-white transition-colors text-sm"
                             >
                                 {{ item.title }}

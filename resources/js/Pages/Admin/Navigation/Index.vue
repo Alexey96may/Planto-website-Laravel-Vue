@@ -86,6 +86,7 @@ const deleteItem = (id) => {
                     <th class="p-4">Локация</th>
                     <th class="p-4">Ссылка</th>
                     <th class="p-4">Порядок</th>
+                    <th class="p-4">Активно</th>
                     <th class="p-4 text-right">Действия</th>
                 </tr>
             </thead>
@@ -96,10 +97,13 @@ const deleteItem = (id) => {
                         <td class="p-4 text-sm text-gray-500 uppercase">
                             {{ item.location }}
                         </td>
-                        <td class="p-4 text-blue-500">
-                            {{ item.link || "—" }}
+                        <td class="p-4 text-blue-500" v-if="item.link">
+                            {{ item.link }}
                         </td>
+                        <td class="p-4 text-blue-500" v-else>/shop</td>
                         <td class="p-4">{{ item.order }}</td>
+                        <td class="p-4" v-if="item.is_active">✓</td>
+                        <td class="p-4" v-else>-</td>
                         <td class="p-4 text-right">
                             <Link
                                 :href="route('admin.navigation.edit', item.id)"
@@ -122,10 +126,14 @@ const deleteItem = (id) => {
                     >
                         <td class="p-4 pl-10">↳ {{ child.title }}</td>
                         <td class="p-4 opacity-50">{{ child.location }}</td>
-                        <td class="p-4 text-blue-400">
-                            {{ child.link || "—" }}
+                        <td class="p-4 text-blue-500" v-if="item.link">
+                            {{ item.link }}
                         </td>
+                        <td class="p-4 text-blue-500" v-else>/shop</td>
                         <td class="p-4">{{ child.order }}</td>
+                        <td class="p-4" v-if="item.is_active">✓</td>
+                        <td class="p-4" v-else>-</td>
+                        <td class="p-4">{{ item.is_active && "" }}</td>
                         <td class="p-4 text-right">
                             <Link
                                 :href="route('admin.navigation.edit', child.id)"

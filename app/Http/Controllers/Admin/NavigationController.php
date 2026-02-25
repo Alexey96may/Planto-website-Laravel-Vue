@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Navigation;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,8 @@ class NavigationController extends Controller
         return Inertia::render('Admin/Navigation/Create', [
             'parentOptions' => Navigation::whereNull('parent_id')
                 ->orderBy('title')
-                ->get(['id', 'title', 'location'])
+                ->get(['id', 'title', 'location']),
+            'categories' => Category::all(['id', 'title']),
         ]);
     }
 
@@ -34,11 +36,13 @@ class NavigationController extends Controller
     {
         $validated = $request->validate([
             'title'     => 'required|string|max:255',
-            'link'      => 'nullable|string',
+            'link'      => 'required_if:type,link|nullable|string',
+            'category_id' => 'required_if:type,category|nullable|exists:categories,id',
             'location'  => 'required|in:header,footer',
             'parent_id' => 'nullable|exists:navigations,id',
             'order'     => 'integer',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
+            'type'      => 'required|in:link,category',
         ]);
 
         Navigation::create($validated);
@@ -54,7 +58,8 @@ class NavigationController extends Controller
             'parentOptions' => Navigation::whereNull('parent_id')
                 ->where('id', '!=', $navigation->id) 
                 ->orderBy('title')
-                ->get(['id', 'title', 'location'])
+                ->get(['id', 'title', 'location']),
+            'categories' => Category::all(['id', 'title']),
         ]);
     }
 
@@ -62,7 +67,9 @@ class NavigationController extends Controller
     {
         $validated = $request->validate([
             'title'     => 'required|string|max:255',
-            'link'      => 'nullable|string',
+            'link'      => 'required_if:type,link|nullable|string',
+            'category_id' => 'required_if:type,category|nullable|exists:categories,id',
+            'type'      => 'required|in:link,category',
             'location'  => 'required|in:header,footer',
             // Additional security: parent_id cannot be equal to the id of the element being edited!
             'parent_id' => [

@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Navigation extends Model
 {
     protected $fillable = [
-        'title', 
+        'title',
+        'type', 
+        'category_id', 
         'link', 
         'location', 
         'parent_id', 
@@ -31,5 +33,10 @@ class Navigation extends Model
     public function parent()
     {
         return $this->belongsTo(Navigation::class, 'parent_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

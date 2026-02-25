@@ -14,6 +14,7 @@ class NavigationService
         return Cache::remember(self::CACHE_KEY, now()->addWeek(), function () {
             return [
                 'header' => Navigation::with('children')
+                    ->with('category')
                     ->where('location', 'header')
                     ->whereNull('parent_id')
                     ->where('is_active', true)
@@ -21,7 +22,8 @@ class NavigationService
                     ->get()
                     ->toArray(),
 
-                'footer' => Navigation::where('location', 'footer')
+                'footer' => Navigation::with('category')
+                    ->where('location', 'footer')
                     ->where('is_active', true)
                     ->orderBy('order')
                     ->get()

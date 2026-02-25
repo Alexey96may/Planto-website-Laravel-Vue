@@ -10,6 +10,16 @@ const page = usePage();
 
 const menuItems = computed(() => page.props.navigation.header);
 const mobileMenuOpen = ref(false);
+
+const getHref = (item) => {
+    console.log(item);
+    if (item.type === "category" && item.category) {
+        // console.log(item);
+        // Генерируем ссылку на страницу магазина с фильтром по слагу категории
+        return route("shop", { category: item.category.slug });
+    }
+    return item.link; // Для обычных ссылок
+};
 </script>
 
 <template>
@@ -120,7 +130,7 @@ const mobileMenuOpen = ref(false);
                                                 <Link
                                                     v-for="child in item.children"
                                                     :key="child.id"
-                                                    :href="child.link || '#'"
+                                                    :href="getHref(item) || '#'"
                                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
                                                 >
                                                     {{ child.title }}
@@ -130,7 +140,7 @@ const mobileMenuOpen = ref(false);
 
                                         <Link
                                             v-else
-                                            :href="item.link || '#'"
+                                            :href="getHref(item) || '#'"
                                             class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-indigo-400 h-full"
                                         >
                                             {{ item.title }}
