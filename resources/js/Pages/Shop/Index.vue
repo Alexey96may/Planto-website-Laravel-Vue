@@ -91,7 +91,6 @@ const applyFilters = () => {
             >
         </div>
     </aside>
-
     <div class="max-w-7xl mx-auto px-4 py-12">
         <div class="flex flex-col md:flex-row gap-10">
             <aside class="w-full md:w-64 flex-shrink-0">
@@ -171,6 +170,7 @@ const applyFilters = () => {
                         v-for="plant in products.data"
                         :key="plant.id"
                         :plant="plant"
+                        :current_page="products.current_page"
                     />
 
                     <Pagination :links="products.links" />
@@ -181,7 +181,7 @@ const applyFilters = () => {
                         В этой категории пока нет цветов...
                     </p>
                     <Link
-                        href="/shop"
+                        :href="route('shop')"
                         class="text-green-600 underline mt-4 inline-block"
                         >Вернуться ко всем товарам</Link
                     >

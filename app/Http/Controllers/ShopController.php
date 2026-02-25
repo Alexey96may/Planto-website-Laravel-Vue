@@ -14,7 +14,6 @@ class ShopController extends Controller
 {
     public function index(Request $request, SettingService $settings)
     {
-        
         $perPage = $settings->get('products_per_page', 6);
 
         $validated = $request->validate([
@@ -56,7 +55,8 @@ class ShopController extends Controller
         $product = Product::with('category')->findOrFail($id);
 
         return Inertia::render('Product/PlantPage', [
-            'product' => $product
+            'product' => $product,
+            'backUrl' => route('shop', ['page' => request('page', 1)])
         ]);
     }
 }

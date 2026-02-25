@@ -7,8 +7,14 @@ import { usePage } from "@inertiajs/vue3";
 import { computed } from "vue";
 
 const props = defineProps({
-    plant: Object,
-    default: () => {},
+    plant: {
+        type: Object,
+        default: () => {},
+    },
+    current_page: {
+        type: String,
+        default: "",
+    },
 });
 
 const page = usePage();
@@ -36,6 +42,7 @@ const isInCart = computed(() => {
         <h3 class="card__title" aria-label="Card title">
             <Link
                 :href="'/shop/plant-' + plant.id"
+                :data="{ page: current_page }"
                 class="card__tag-title"
                 aria-label="To {{ plant.title }}"
             >

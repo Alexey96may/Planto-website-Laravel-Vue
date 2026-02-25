@@ -5,6 +5,7 @@ import AppImage from "@/Components/AppImage.vue";
 
 const props = defineProps({
     product: Object,
+    backUrl: String,
 });
 
 const count = ref(1);
@@ -17,7 +18,7 @@ const remove = () => {
 
 <template>
     <div class="max-w-4xl mx-auto p-6">
-        <Link href="/" class="text-sm text-gray-500 hover:text-green-600"
+        <Link :href="backUrl" class="text-sm text-gray-500 hover:text-green-600"
             >← К каталогу</Link
         >
 
