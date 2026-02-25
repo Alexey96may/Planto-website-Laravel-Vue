@@ -64,14 +64,13 @@ class AdminProductController extends Controller
         
         return Inertia::render('Admin/Products/Edit', [
             'product' => $product,
-            'categories' => $categories
+            'categories' => $categories,
+            'page' => request('page')
         ]);
     }
 
     public function update(Request $request, Product $product)
     {
-        // dd($request->all(), $request->file('image'));
-
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -96,7 +95,7 @@ class AdminProductController extends Controller
 
         $product->update($validated);
 
-        return redirect()->route('admin.products.index')
+        return redirect()->route('admin.products.index', ['page' => $request->query('page', 1)])
             ->with('message', 'Product is succesfully updated!');
     }
 

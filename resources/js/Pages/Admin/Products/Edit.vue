@@ -1,10 +1,11 @@
 <script setup>
-import { Head, useForm } from "@inertiajs/vue3";
+import { Head, useForm, Link } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 
 const props = defineProps({
     product: Object,
     categories: Array,
+    page: [String, Number],
 });
 
 // Заполняем форму старыми данными товара
@@ -20,7 +21,12 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route("admin.products.update", props.product.id));
+    form.post(
+        route("admin.products.update", {
+            product: props.product.id,
+            page: props.page,
+        }),
+    );
 };
 </script>
 
@@ -29,7 +35,9 @@ const submit = () => {
         <Head :title="'Редактировать ' + product.title" />
 
         <div class="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow">
-            <h1 class="text-2xl font-bold mb-6">Редактирование товара</h1>
+            <h1 class="text-2xl font-bold mb-6">
+                Редактирование товара {{ filters }}
+            </h1>
 
             <form @submit.prevent="submit" class="space-y-4">
                 <div>
@@ -142,13 +150,14 @@ const submit = () => {
                 </div>
 
                 <div class="flex justify-end space-x-2">
-                    <button
-                        type="button"
-                        @click="window.history.back()"
-                        class="text-gray-600"
+                    <Link
+                        class="px-4 py-2 text-black rounded-lg"
+                        :href="
+                            route('admin.products.index', { page: props.page })
+                        "
                     >
                         Отмена
-                    </button>
+                    </Link>
                     <button
                         type="submit"
                         :disabled="form.processing"

@@ -121,6 +121,7 @@ const updateTrending = (product, field, value) => {
                                     :href="
                                         route('admin.products.edit', product.id)
                                     "
+                                    :data="{ page: products.current_page }"
                                     class="text-blue-600 hover:underline"
                                     >Изменить</Link
                                 >
