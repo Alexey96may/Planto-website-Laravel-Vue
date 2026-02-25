@@ -108,7 +108,7 @@ const submit = () => {
                     :key="item.id"
                     class="flex items-center"
                 >
-                    <img :src="item.image" class="w-16 h-16 object-cover" />
+                    <img :src="item.image_url" class="w-16 h-16 object-cover" />
 
                     <div>
                         <h4>{{ item.title }}</h4>

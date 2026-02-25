@@ -68,7 +68,7 @@ const updateTrending = (product, field, value) => {
                         >
                             <td class="p-4">
                                 <img
-                                    :src="product.image"
+                                    :src="product.image_url"
                                     class="w-12 h-12 rounded-lg object-cover"
                                 />
                             </td>

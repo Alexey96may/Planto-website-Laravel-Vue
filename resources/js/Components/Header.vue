@@ -2,7 +2,7 @@
 import { Head, Link, usePage } from "@inertiajs/vue3";
 import IconLogo from "img/icons/logo.svg?component";
 import IconArrowMore from "img/icons/arrow-more.svg?component";
-import IconSearch from "img/icons/search.svg?component";
+import IconUser from "img/icons/user.svg?component";
 import IconBag from "img/icons/bag.svg?component";
 import { computed, ref } from "vue";
 
@@ -148,28 +148,29 @@ const getHref = (item) => {
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="flex items-center">
-                                <Link
-                                    v-if="!$page.props.auth.user"
-                                    :href="route('login')"
-                                    class="text-sm text-gray-700 underline"
-                                    >Войти</Link
-                                >
-                            </div>
                         </div>
                     </div>
                 </nav>
 
                 <div class="header__socials" aria-label="Socials field">
-                    <a href="#search" aria-label="To search">
-                        <IconSearch
+                    <Link
+                        :href="
+                            $page.props.auth.user
+                                ? route('dashboard')
+                                : route('login')
+                        "
+                        :aria-label="
+                            $page.props.auth.user ? 'To Dashboard' : 'To Login'
+                        "
+                        class="text-blue-600 font-medium hover:underline"
+                    >
+                        <IconUser
                             class="header__social-img"
-                            aria-label="Search image"
+                            aria-label="Profile"
                         />
-                    </a>
+                    </Link>
 
-                    <Link href="/cart" aria-label="To cart">
+                    <Link :href="route('cart.index')" aria-label="To cart">
                         <IconBag
                             class="header__social-img"
                             aria-label="Bag image"

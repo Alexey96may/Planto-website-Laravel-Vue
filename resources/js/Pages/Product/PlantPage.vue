@@ -97,7 +97,7 @@ const buttonText = computed(() => {
                 class="w-full md:w-1/2 bg-gray-100 aspect-square rounded-xl flex items-center justify-center text-gray-400"
             >
                 <AppImage
-                    :src="'/storage/' + product.image"
+                    :src="product?.image_url"
                     :alt="product.title"
                     className="rounded-lg shadow-md"
                 />

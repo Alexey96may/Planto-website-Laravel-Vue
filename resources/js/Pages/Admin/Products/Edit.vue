@@ -56,7 +56,7 @@ const submit = () => {
 
                     <div v-if="product.image" class="mb-3">
                         <img
-                            :src="product.image"
+                            :src="product.image_url"
                             class="w-32 h-32 object-cover rounded-lg border shadow-sm"
                             alt="Preview"
                         />

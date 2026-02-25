@@ -67,7 +67,7 @@ const updateQuantity = (item, newQuantity) => {
             >
                 <div class="flex items-center">
                     <img
-                        :src="item.image"
+                        :src="item.image_url"
                         class="w-16 h-16 object-cover mr-4"
                     />
                     <div>

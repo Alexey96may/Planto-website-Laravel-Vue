@@ -12,7 +12,7 @@ const props = defineProps({
 <template>
     <figure class="card slider-mini__card" aria-label="Slider card">
         <div class="card__img-wrapper" aria-label="Slider card image">
-            <img :src="plant?.image" :alt="plant.title" />
+            <img :src="plant?.image_url" :alt="plant.title" />
         </div>
 
         <span

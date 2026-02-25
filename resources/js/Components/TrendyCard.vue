@@ -32,9 +32,10 @@ const isInCart = computed(() => {
 <template>
     <figure class="card trendy-card" aria-label="Trendy card">
         <div class="card__img-wrapper" aria-label="Trendy card image">
-            <img :src="plant?.image" :alt="plant.title" />
+            <AppImage :src="plant?.image_url" :alt="plant.title" />
         </div>
 
+        {{ plant }}
         <div class="card__info" aria-label="Card information">
             <h3
                 class="card__title card__title--white"

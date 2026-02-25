@@ -47,9 +47,7 @@ class AdminProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            
-            $validated['image'] = '/storage/' . $path;
+            $validated['image'] = $request->file('image')->store('products', 'public');
         }
 
         Product::create($validated);
@@ -83,12 +81,10 @@ class AdminProductController extends Controller
 
         if ($request->hasFile('image')) {
             if ($product->image) {
-                $oldPath = str_replace('/storage/', '', $product->image);
-                Storage::disk('public')->delete($oldPath);
+                Storage::disk('public')->delete($product->image);
             }
 
-            $path = $request->file('image')->store('products', 'public');
-            $validated['image'] = '/storage/' . $path;
+            $validated['image'] = $request->file('image')->store('products', 'public');
         } else {
             unset($validated['image']);
         }

@@ -25,7 +25,7 @@ class Product extends Model
     {
         return Attribute::get(function () {
             if (!$this->image) {
-                return asset('images/no-image.png');
+                return asset('images/no-image.jpg');
             }
 
             if (filter_var($this->image, FILTER_VALIDATE_URL)) {
