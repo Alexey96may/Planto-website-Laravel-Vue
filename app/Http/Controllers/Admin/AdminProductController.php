@@ -42,6 +42,7 @@ class AdminProductController extends Controller
             'is_trending' => 'boolean',
             'trending_order' => 'integer|min:0',
             'price'       => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
             'category_id' => 'nullable|exists:categories,id',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
@@ -53,7 +54,7 @@ class AdminProductController extends Controller
         Product::create($validated);
 
         return redirect()->route('admin.products.index')
-            ->with('message', 'Product is succesfully created!');
+            ->with('message', 'The Product has been succesfully created!');
     }
 
     public function edit(Product $product)
@@ -72,8 +73,9 @@ class AdminProductController extends Controller
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'is_trending' => 'boolean', 
-            'trending_order' => 'integer|min:0',
+            'is_trending' => 'boolean',
+            'stock' => 'required|integer|min:0',
+            'trending_order' => 'nullable|integer|min:0',
             'price'       => 'required|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
             'image'       => $request->hasFile('image') ? 'image|mimes:jpg,jpeg,png|max:2048' : 'nullable',
@@ -92,14 +94,15 @@ class AdminProductController extends Controller
         $product->update($validated);
 
         return redirect()->route('admin.products.index', ['page' => $request->query('page', 1)])
-            ->with('message', 'Product is succesfully updated!');
+            ->with('message', 'The Product has been succesfully updated!');
     }
 
     public function updateTrending(Request $request, Product $product)
     {
         $validated = $request->validate([
             'is_trending' => 'sometimes|boolean',
-            'trending_order' => 'sometimes|integer|min:0',
+            'trending_order' => 'sometimes|nullable|integer|min:0',
+            'stock'          => 'sometimes|integer|min:0',
         ]);
 
         $product->update($validated);

@@ -17,7 +17,8 @@ const form = useForm({
     category_id: props.product.category_id ?? "",
     image: null,
     is_trending: props.product?.is_trending ?? false,
-    trending_order: props.product?.trending_order ?? 999,
+    trending_order: props.product?.trending_order ?? "",
+    stock: props.product?.stock ?? 0,
 });
 
 const submit = () => {
@@ -113,6 +114,31 @@ const submit = () => {
                         class="w-full border rounded-lg p-2"
                         rows="3"
                     ></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700"
+                        >Остаток на складе</label
+                    >
+                    <input
+                        type="number"
+                        v-model="form.stock"
+                        min="0"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                        :class="{ 'border-red-500 bg-red-50': form.stock <= 0 }"
+                    />
+                    <div
+                        v-if="form.errors.stock"
+                        class="text-red-500 text-xs mt-1"
+                    >
+                        {{ form.errors.stock }}
+                    </div>
+                    <p
+                        v-if="form.stock <= 0"
+                        class="text-red-500 text-[10px] mt-1 uppercase font-bold"
+                    >
+                        Товар будет скрыт с сайта
+                    </p>
                 </div>
 
                 <div

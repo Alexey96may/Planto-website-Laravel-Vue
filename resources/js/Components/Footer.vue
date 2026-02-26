@@ -22,7 +22,6 @@ const footerMenuItems = computed(() => page.props.navigation.footer);
 const currentYear = new Date().getFullYear();
 
 const getHref = (item) => {
-    console.log(item);
     if (item.type === "category" && item.category) {
         // console.log(item);
         // Генерируем ссылку на страницу магазина с фильтром по слагу категории

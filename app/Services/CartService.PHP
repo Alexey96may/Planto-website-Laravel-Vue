@@ -77,8 +77,10 @@ class CartService
 
     public static function getFullCart(): array
     {
-        $items = [];
-        $totalSum = 0;
+        $result = [
+            'items'     => [],
+            'total_sum' => 0
+        ];
 
         if (Auth::check()) {
             $cartData = \App\Models\CartItem::with('product')
@@ -87,10 +89,16 @@ class CartService
 
             foreach ($cartData as $item) {
                 if (!$item->product) continue;
-                
+
+                $isAvailable = $item->product->stock > 0;
                 $formatted = self::formatCartItem($item->product, $item->quantity, $item->id);
-                $items[] = $formatted;
-                $totalSum += $formatted['total_price'];
+                $formatted['is_available'] = $isAvailable;
+
+                $result['items'][] = $formatted;
+
+                if ($isAvailable) {
+                    $result['total_sum'] += $formatted['total_price'];
+                }
             }
         } else {
             $sessionCart = session()->get('cart', []);
@@ -99,17 +107,21 @@ class CartService
                 
                 foreach ($products as $product) {
                     $qty = $sessionCart[$product->id];
+                    $isAvailable = $product->stock > 0;
+
                     $formatted = self::formatCartItem($product, $qty);
-                    $items[] = $formatted;
-                    $totalSum += $formatted['total_price'];
+                    $formatted['is_available'] = $isAvailable;
+                    
+                    $result['items'][] = $formatted;
+
+                    if ($isAvailable) {
+                        $result['total_sum'] += $formatted['total_price'];
+                    }
                 }
             }
         }
 
-        return [
-            'items'     => $items,
-            'total_sum' => $totalSum
-        ];
+        return $result;
     }
 
     public static function remove(int $productId): void

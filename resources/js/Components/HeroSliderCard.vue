@@ -1,5 +1,6 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 const props = defineProps({
     plant: {
@@ -7,6 +8,8 @@ const props = defineProps({
         default: () => {},
     },
 });
+
+const page = usePage();
 
 const isInCart = computed(() => {
     return page.props.cart_ids?.includes(props.plant.id);

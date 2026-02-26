@@ -25,7 +25,9 @@ class HomeController extends Controller
             'trendyPlants' => $products->getTrendingProducts(
                 $settings->get('trendy_limit', 2)
             ),
-            'heroPlants'   => Product::with('category')->latest()
+            'heroPlants'   => Product::with('category')
+                ->where('stock', '>', 0)
+                ->latest()
                 ->take($settings->get('hero_plants_limit', 3))
                 ->get(),
             

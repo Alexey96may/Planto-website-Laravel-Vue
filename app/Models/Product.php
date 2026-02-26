@@ -14,7 +14,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'price', 'image', 'category_id', 'is_trending', 'trending_order', 'sales_count'];
+    protected $fillable = ['title', 'description', 'price', 'stock', 'image', 'category_id', 'is_trending', 'trending_order', 'sales_count'];
 
     protected $appends = ['image_url'];
 
@@ -57,8 +57,9 @@ class Product extends Model
     public function scopeTrending($query)
     {
         return $query->where('is_trending', true)
-                    ->orderBy('trending_order', 'asc')
-                    ->orderBy('created_at', 'desc');
+                    ->where('stock', '>', 0)
+                    ->orderByRaw('CASE WHEN trending_order IS NULL THEN 1 ELSE 0 END, trending_order ASC')
+                    ->orderByDesc('created_at');
     }
 
     public function scopeAppliedSort($query, $type)
@@ -74,11 +75,11 @@ class Product extends Model
 
     public function scopeTop($query, ?int $days = null)
     {
-        if ($days) {
+        if ($days && $days > 0) {
             return $query->withSum(['orderItems as total_sold' => function ($q) use ($days) {
                     $q->where('created_at', '>=', now()->subDays($days));
                 }], 'quantity')
-                ->orderByRaw('total_sold DESC NULLS LAST') 
+                ->orderByRaw('COALESCE(total_sold, 0) DESC') 
                 ->orderByDesc('created_at');
         }
 

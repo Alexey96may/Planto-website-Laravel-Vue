@@ -14,6 +14,7 @@ const form = useForm({
     image: "https://via.placeholder.com/300",
     is_trending: false,
     trending_order: 999,
+    stock: 1,
 });
 
 const submit = () => {
@@ -98,6 +99,33 @@ const submit = () => {
                         class="w-full border rounded-lg p-2"
                         rows="3"
                     ></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700"
+                        >Начальный остаток</label
+                    >
+                    <input
+                        type="number"
+                        v-model="form.stock"
+                        min="0"
+                        placeholder="Введите количество"
+                        class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 transition"
+                        :class="{ 'border-red-500 bg-red-50': form.stock <= 0 }"
+                    />
+                    <p
+                        v-if="form.errors.stock"
+                        class="text-red-500 text-xs mt-1"
+                    >
+                        {{ form.errors.stock }}
+                    </p>
+                    <p class="text-[10px] text-gray-500 mt-1 italic">
+                        {{
+                            form.stock > 0
+                                ? "Товар будет доступен к покупке"
+                                : "Товар будет скрыт (нет в наличии)"
+                        }}
+                    </p>
                 </div>
 
                 <div

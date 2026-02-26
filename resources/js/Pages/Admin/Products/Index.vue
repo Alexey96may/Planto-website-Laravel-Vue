@@ -13,16 +13,31 @@ const deleteProduct = (id) => {
     }
 };
 
-const updateTrending = (product, field, value) => {
+const updateProductField = (product, field, value) => {
+    let finalValue = value;
+    if (field === "stock" || field === "trending_order") {
+        finalValue = value === "" ? 0 : parseInt(value);
+    }
+
+    if (product[field] === value) return;
+
+    const url = route("admin.products.update-trending", product.id);
+
     router.patch(
         route("admin.products.update-trending", product.id),
         {
-            [field]: value,
+            [field]: finalValue,
         },
         {
             preserveScroll: true,
             onSuccess: () => {
-                // Можно добавить уведомление "Сохранено"
+                // Здесь можно вызвать Toast-уведомление
+                product[field] = finalValue;
+                console.log(`${field} обновлен успешно`);
+            },
+            onError: (errors) => {
+                // Если валидация на бекенде не прошла (например, stock < 0)
+                console.error(errors);
             },
         },
     );
@@ -54,9 +69,9 @@ const updateTrending = (product, field, value) => {
                             <th class="p-4">Название</th>
                             <th class="p-4 text-center">Тренд</th>
                             <th class="p-4 text-center">Порядок</th>
-
                             <th class="p-4">Категория</th>
                             <th class="p-4">Цена</th>
+                            <th class="p-4 text-center">Остаток</th>
                             <th class="p-4 text-right">Действия</th>
                         </tr>
                     </thead>
@@ -79,7 +94,7 @@ const updateTrending = (product, field, value) => {
                                     type="checkbox"
                                     :checked="product.is_trending"
                                     @change="
-                                        updateTrending(
+                                        updateProductField(
                                             product,
                                             'is_trending',
                                             $event.target.checked,
@@ -94,7 +109,7 @@ const updateTrending = (product, field, value) => {
                                     type="number"
                                     :value="product.trending_order"
                                     @blur="
-                                        updateTrending(
+                                        updateProductField(
                                             product,
                                             'trending_order',
                                             $event.target.value,
@@ -115,6 +130,45 @@ const updateTrending = (product, field, value) => {
                                 </span>
                             </td>
                             <td class="p-4 font-bold">{{ product.price }} ₽</td>
+
+                            <td class="p-4 text-center">
+                                <div class="flex flex-col items-center">
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        :value="product.stock"
+                                        @blur="
+                                            updateProductField(
+                                                product,
+                                                'stock',
+                                                $event.target.value,
+                                            )
+                                        "
+                                        :class="[
+                                            'w-20 p-1 border rounded text-center text-sm transition-colors focus:ring-2 outline-none',
+                                            product.stock <= 0
+                                                ? 'border-red-500 bg-red-50 text-red-700'
+                                                : 'border-gray-300',
+                                            product.stock > 0 &&
+                                            product.stock <= 5
+                                                ? 'border-orange-400 bg-orange-50'
+                                                : '',
+                                        ]"
+                                    />
+                                    <span
+                                        v-if="product.stock <= 0"
+                                        class="text-[10px] text-red-600 font-bold uppercase mt-1"
+                                    >
+                                        Пусто
+                                    </span>
+                                    <span
+                                        v-else-if="product.stock <= 5"
+                                        class="text-[10px] text-orange-600 font-bold uppercase mt-1"
+                                    >
+                                        Мало
+                                    </span>
+                                </div>
+                            </td>
 
                             <td class="p-4 text-right space-x-2">
                                 <Link

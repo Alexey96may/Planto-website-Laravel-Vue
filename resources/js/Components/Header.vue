@@ -12,7 +12,6 @@ const menuItems = computed(() => page.props.navigation.header);
 const mobileMenuOpen = ref(false);
 
 const getHref = (item) => {
-    console.log(item);
     if (item.type === "category" && item.category) {
         // console.log(item);
         // Генерируем ссылку на страницу магазина с фильтром по слагу категории

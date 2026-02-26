@@ -113,14 +113,14 @@ const updateQuantity = (item, newQuantity) => {
                     >
                         Удалить
                     </button>
-                    <div class="text-right font-bold">
-                        {{ item.total_price }} $.
+                    <div class="text-right font-bold" v-if="item.stock">
+                        {{ item.total_price }} $
                     </div>
                 </div>
             </div>
 
             <div class="mt-6 text-right text-xl font-bold">
-                Итого: {{ cart.total_sum }} $.
+                Итого: {{ cart.total_sum }} $
             </div>
 
             <Link

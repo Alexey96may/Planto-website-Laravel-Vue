@@ -22,11 +22,12 @@ class CheckoutController extends Controller
         }
         
         $totalSum = array_sum(array_column($validItems, 'total_price'));
+        $cartIds = array_column($validItems, 'id');
 
         return Inertia::render('Checkout/Index', [
             'cartItems' => $validItems,
             'total' => $totalSum,
-            'cart_ids' => array_keys($validItems['items'])
+            'cart_ids' => $cartIds
         ]);
     }
 }

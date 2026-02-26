@@ -6,6 +6,11 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 /** @var Tests\TestCase $this */
 
+beforeEach(function () {
+    // Очищаем сессию перед каждым тестом
+    session()->forget('cart');
+});
+
 it('adds the item to the authorized users cart (in the db) and checks the total amount.', function () {
     $this->withoutExceptionHandling();
     $user = User::factory()->create();
@@ -111,4 +116,89 @@ it('prevents adding products out of stock', function () {
 
     $response->assertSessionHasErrors(['quantity' => 'Недостаточно товара']);
     $this->assertDatabaseCount('cart_items', 0);
+});
+
+/**
+ * Тест 1: Пустая корзина после фильтрации по наличию
+ */
+it('fails to create an order if all products in cart are out of stock', function () {
+    // Создаем товар, которого нет на складе
+    $product = Product::factory()->create(['stock' => 0, 'title' => 'Missing Plant']);
+    
+    // Кладем его в сессию
+    session(['cart' => [$product->id => 1]]);
+
+    $response = $this->post(route('order.store'), [
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'phone' => '123456789',
+        'address' => 'Test Address 123',
+    ]);
+
+    // Проверяем, что нас вернули назад с ошибкой
+    $response->assertSessionHas('error', 'Извините, все товары из вашей корзины только что закончились.');
+    
+    // Проверяем, что заказ в базе НЕ появился
+    $this->assertDatabaseCount('orders', 0);
+});
+
+/**
+ * Тест 2: Очистка сессии (частичная)
+ */
+it('clears only purchased items from session and keeps out-of-stock items', function () {
+    // 1. Товар в наличии
+    $availableProduct = Product::factory()->create(['stock' => 5, 'title' => 'In Stock']);
+    // 2. Товар закончился
+    $outOfStockProduct = Product::factory()->create(['stock' => 0, 'title' => 'Out of Stock']);
+
+    // Кладем оба в корзину
+    session(['cart' => [
+        $availableProduct->id => 2,
+        $outOfStockProduct->id => 1
+    ]]);
+
+    $response = $this->post(route('order.store'), [
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'phone' => '123456789',
+        'address' => 'Test Address 123',
+    ]);
+
+    // Проверяем успех
+    $response->assertSessionHas('success');
+
+    // ПРОВЕРКА СЕССИИ:
+    $currentCart = session('cart');
+
+    // Купленного товара НЕ должно быть в сессии
+    expect($currentCart)->not->toHaveKey($availableProduct->id);
+    
+    // Товар, который не купили (был out of stock), ДОЛЖЕН остаться
+    expect($currentCart)->toHaveKey($outOfStockProduct->id);
+    expect($currentCart[$outOfStockProduct->id])->toBe(1);
+
+    // Проверяем, что в заказе только 1 позиция
+    $this->assertDatabaseCount('order_items', 1);
+    $this->assertDatabaseHas('order_items', [
+        'product_id' => $availableProduct->id,
+        'quantity' => 2
+    ]);
+});
+
+/**
+ * Тест 3: Проверка списания остатков (Decrement)
+ */
+it('decrements product stock after successful order', function () {
+    $product = Product::factory()->create(['stock' => 10]);
+    session(['cart' => [$product->id => 4]]);
+
+    $this->post(route('order.store'), [
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'phone' => '123456789',
+        'address' => 'Test Address',
+    ]);
+
+    // Проверяем, что из 10 осталось 6
+    expect($product->refresh()->stock)->toBe(6);
 });
