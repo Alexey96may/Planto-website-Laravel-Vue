@@ -20,6 +20,7 @@ class ProductFactory extends Factory
             'title' => fake()->words(3, true),
             'description' => fake()->paragraph(),
             'price' => fake()->randomFloat(2, 10, 5000),
+            'stock' => $this->faker->numberBetween(0, 50),
             'is_trending' => fake()->boolean(20),
             'trending_order' => 0,
             'category_id' => \App\Models\Category::factory(), 
