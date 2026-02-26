@@ -35,6 +35,11 @@ const timers = ref({});
 const updateQuantity = (item, newQuantity) => {
     if (newQuantity < 1) return; // Страховка
 
+    if (newQuantity > item.stock) {
+        alert("Извините, у нас нет столько растений 🌿");
+        return;
+    } // Страховка Number 2
+
     item.quantity = newQuantity;
 
     clearTimeout(timers.value[item.product_id]);
@@ -78,10 +83,10 @@ const updateQuantity = (item, newQuantity) => {
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3" v-if="item.stock">
                     <button
                         @click="updateQuantity(item, item.quantity - 1)"
-                        :disabled="item.quantity <= 1"
+                        :disabled="item.quantity <= 1 || !item.stock"
                         class="px-2 py-1 bg-gray-200 rounded disabled:opacity-50"
                     >
                         -
@@ -92,9 +97,13 @@ const updateQuantity = (item, newQuantity) => {
                     <button
                         @click="updateQuantity(item, item.quantity + 1)"
                         class="px-2 py-1 bg-gray-200 rounded"
+                        :disabled="item.quantity === item.stock"
                     >
                         +
                     </button>
+                </div>
+                <div class="flex items-center gap-4 mt-8 text-green" v-else>
+                    Временно нет в наличии!
                 </div>
 
                 <div class="flex flex-col items-end justify-between">
@@ -117,6 +126,7 @@ const updateQuantity = (item, newQuantity) => {
             <Link
                 href="/checkout"
                 class="mt-4 block text-center bg-black text-white p-3 rounded"
+                :disabled="cart.is_available"
             >
                 Оформить заказ
             </Link>

@@ -28,16 +28,18 @@ const search = ref(props.filters.search || "");
 const minPrice = ref(props.filters.min_price || "");
 const maxPrice = ref(props.filters.max_price || "");
 const sort = ref(props.filters?.sort || "popular");
+const inStockOnly = ref(props.filters.in_stock !== "false");
 
 const applyFilters = () => {
     router.get(
-        "shop",
+        route("shop"),
         {
             category: props.filters.category,
             search: search.value,
             min_price: minPrice.value,
             max_price: maxPrice.value,
             sort: sort.value,
+            in_stock: inStockOnly.value ? "true" : "false",
         },
         {
             preserveState: true,
@@ -159,6 +161,19 @@ const applyFilters = () => {
                             <option value="price_asc">Сначала дешевле</option>
                             <option value="price_desc">Сначала дороже</option>
                         </select>
+                    </div>
+                    <div>
+                        <label
+                            class="flex items-center space-x-2 cursor-pointer"
+                        >
+                            <input
+                                type="checkbox"
+                                v-model="inStockOnly"
+                                @change="applyFilters"
+                                class="rounded border-gray-300"
+                            />
+                            <span>Только в наличии</span>
+                        </label>
                     </div>
                 </div>
 

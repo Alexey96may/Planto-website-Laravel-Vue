@@ -7,6 +7,10 @@ const props = defineProps({
         default: () => {},
     },
 });
+
+const isInCart = computed(() => {
+    return page.props.cart_ids?.includes(props.plant.id);
+});
 </script>
 
 <template>
@@ -34,6 +38,7 @@ const props = defineProps({
             <Link
                 :href="route('shop.show', plant.id)"
                 :aria-label="plant.title"
+                :disabled="plant.stock === 0 || isInCart"
             ></Link>
             Buy Now
         </button>

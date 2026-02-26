@@ -34,8 +34,6 @@ const isInCart = computed(() => {
         <div class="card__img-wrapper" aria-label="Trendy card image">
             <AppImage :src="plant?.image_url" :alt="plant.title" />
         </div>
-
-        {{ plant }}
         <div class="card__info" aria-label="Card information">
             <h3
                 class="card__title card__title--white"
@@ -73,7 +71,7 @@ const isInCart = computed(() => {
                     @click="addToCart"
                     class="button--square"
                     aria-label="Add to cart"
-                    :disabled="isInCart"
+                    :disabled="plant.stock === 0 || isInCart"
                 >
                     <IconBag class="button-image" aria-label="Cart"></IconBag>
                 </button>

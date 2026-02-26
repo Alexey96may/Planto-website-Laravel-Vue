@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Models\CartItem;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class CartService
 {
@@ -18,17 +20,36 @@ class CartService
 
     public static function add(int $productId, int $quantity = 1): void
     {
+
+        $product = Product::findOrFail($productId);
+
+        if ($product->stock < $quantity) {
+            throw ValidationException::withMessages(['quantity' => 'Недостаточно товара']);
+        }
+
         if (Auth::check()) {
             $cartItem = CartItem::firstOrNew([
                 'user_id' => Auth::id(),
                 'product_id' => $productId,
             ]);
 
-            $cartItem->quantity = ($cartItem->quantity ?? 0) + $quantity;
+            $newQuantity = ($cartItem->quantity ?? 0) + $quantity;
+
+            if ($product->stock < $newQuantity) {
+                throw ValidationException::withMessages(['quantity' => 'Недостаточно товара']);
+            }
+
+            $cartItem->quantity = $newQuantity;
             $cartItem->save();
         } else {
             $cart = Session::get('cart', []);
-            $cart[$productId] = ($cart[$productId] ?? 0) + $quantity;
+            $currentInCart = $cart[$productId] ?? 0;
+
+            if ($product->stock < ($currentInCart + $quantity)) {
+                throw ValidationException::withMessages(['quantity' => 'Недостаточно товара']);
+            }
+
+            $cart[$productId] = $currentInCart + $quantity;
             Session::put('cart', $cart);
         }
     }
@@ -60,51 +81,33 @@ class CartService
         $totalSum = 0;
 
         if (Auth::check()) {
-            // Берем из БД со связью 'product'
             $cartData = \App\Models\CartItem::with('product')
                 ->where('user_id', Auth::id())
                 ->get();
 
             foreach ($cartData as $item) {
-                if (!$item->product) continue; // На случай если товар удален
+                if (!$item->product) continue;
                 
-                $sum = $item->product->price * $item->quantity;
-                $items[] = [
-                    'id' => $item->id,
-                    'product_id' => $item->product_id,
-                    'title' => $item->product->title,
-                    'price' => $item->product->price,
-                    'quantity' => $item->quantity,
-                    'total_price' => $sum,
-                    'image' => $item->product->image_url, // Твое поле с картинкой
-                ];
-                $totalSum += $sum;
+                $formatted = self::formatCartItem($item->product, $item->quantity, $item->id);
+                $items[] = $formatted;
+                $totalSum += $formatted['total_price'];
             }
         } else {
-            // Берем из сессии
-            $sessionCart = session()->get('cart', []); // [id => qty, id => qty]
+            $sessionCart = session()->get('cart', []);
             if (!empty($sessionCart)) {
                 $products = \App\Models\Product::whereIn('id', array_keys($sessionCart))->get();
                 
                 foreach ($products as $product) {
                     $qty = $sessionCart[$product->id];
-                    $sum = $product->price * $qty;
-                    $items[] = [
-                        'id' => null, // Для сессии ID записи нет
-                        'product_id' => $product->id,
-                        'title' => $product->title,
-                        'price' => $product->price,
-                        'quantity' => $qty,
-                        'total_price' => $sum,
-                        'image' => $product->image_url,
-                    ];
-                    $totalSum += $sum;
+                    $formatted = self::formatCartItem($product, $qty);
+                    $items[] = $formatted;
+                    $totalSum += $formatted['total_price'];
                 }
             }
         }
 
         return [
-            'items' => $items,
+            'items'     => $items,
             'total_sum' => $totalSum
         ];
     }
@@ -140,9 +143,35 @@ class CartService
         }
     }
 
+    public static function getValidItemsForOrder(): array
+    {
+        $fullCart = self::getFullCart();
+        
+        return array_filter($fullCart['items'], function ($item) {
+            return $item['is_available'] === true;
+        });
+    }
+
     public static function getIdsWithQuantities()
     {
         $items = self::getItems();
         return collect($items)->pluck('quantity', 'product_id')->toArray();
+    }
+
+    protected static function formatCartItem($product, $quantity, $cartItemId = null): array
+    {
+        $sum = $product->price * $quantity;
+
+        return [
+            'id'           => $cartItemId,
+            'product_id'   => $product->id,
+            'title'        => $product->title,
+            'price'        => $product->price,
+            'quantity'     => $quantity,
+            'total_price'  => $sum,
+            'image'        => $product->image_url,
+            'stock'        => $product->stock,
+            'is_available' => $product->stock >= $quantity,
+        ];
     }
 }

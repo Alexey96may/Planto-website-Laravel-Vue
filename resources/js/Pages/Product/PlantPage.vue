@@ -30,7 +30,14 @@ watch(
     },
 );
 
-const add = () => count.value++;
+const add = () => {
+    if (props.product?.stock > count.value) {
+        alert("Извините, у нас нет столько растений 🌿");
+        return;
+    }
+    count.value++;
+};
+
 const remove = () => {
     if (count.value > 1) count.value--;
 };
@@ -131,11 +138,12 @@ const buttonText = computed(() => {
                     </p>
                 </div>
 
-                <div class="flex items-center gap-4 mt-8">
+                <div class="flex items-center gap-4 mt-8" v-if="product.stock">
                     <div class="flex items-center border rounded-lg">
                         <button
                             @click="remove"
                             class="px-4 py-2 hover:bg-gray-100"
+                            :disabled="product.stock === 0"
                         >
                             -
                         </button>
@@ -143,6 +151,7 @@ const buttonText = computed(() => {
                         <button
                             @click="add"
                             class="px-4 py-2 hover:bg-gray-100"
+                            :disabled="count === product.stock"
                         >
                             +
                         </button>
@@ -151,6 +160,7 @@ const buttonText = computed(() => {
                     <button
                         class="bg-green-600 text-white px-8 py-2 rounded-lg hover:bg-green-700 transition"
                         @click="addOrUpdateCart"
+                        :disabled="product.stock === 0"
                     >
                         {{ buttonText }} {{ product.price * count }} ₽
                     </button>
@@ -158,9 +168,14 @@ const buttonText = computed(() => {
                         class="bg-red-500 text-white px-8 py-2 rounded-lg hover:bg-red-700 transition"
                         v-if="cart_items[product.id]"
                         @click="removeFromCart"
+                        :disabled="product.stock === 0"
                     >
                         Удалить из корзины
                     </button>
+                </div>
+
+                <div class="flex items-center gap-4 mt-8 text-green" v-else>
+                    Временно нет в наличии!
                 </div>
             </div>
         </div>

@@ -23,7 +23,10 @@ class ShopController extends Controller
             'min_price' => 'nullable|numeric|min:0',
             'max_price' => 'nullable|numeric|min:0',
             'sort'      => 'nullable|string|in:popular,new,price_asc,price_desc',
+            'in_stock'  => 'nullable',
         ]);
+
+        $inStockOnly = $request->boolean('in_stock', true);
 
         $products = Product::query()
             ->with('category')
@@ -39,6 +42,9 @@ class ShopController extends Controller
             })
             ->when($validated['min_price'] ?? null, fn($q, $p) => $q->where('price', '>=', $p))
             ->when($validated['max_price'] ?? null, fn($q, $p) => $q->where('price', '<=', $p))
+            ->when($inStockOnly, function ($q) {
+                $q->where('stock', '>', 0);
+            })
             ->appliedSort($validated['sort'] ?? 'popular')
             ->paginate($perPage)
             ->withQueryString();
@@ -47,7 +53,9 @@ class ShopController extends Controller
             'products' => $products,
             'categories' => CategoryService::getAll(),
             'currentCategory' => $validated['category'] ?? null,
-            'filters' => $request->only(['category', 'search', 'min_price', 'max_price', 'sort']),
+            'filters' => array_merge($request->only(['category', 'search', 'min_price', 'max_price', 'sort']), [
+                'in_stock' => $inStockOnly ? 'true' : 'false'
+            ]),
         ]);
     }
 

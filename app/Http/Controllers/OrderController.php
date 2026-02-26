@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Notifications\NewUserWelcome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
@@ -26,10 +21,10 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-        $cart = session()->get('cart', []);
+        $cartData = \App\Services\CartService::getFullCart();
+        $items = $cartData['items'];
 
-        if (empty($cart)) {
+        if (empty($items)) {
             return redirect()->back()->with('error', 'Корзина пуста!');
         }
 
@@ -42,48 +37,41 @@ class OrderController extends Controller
 
         $user = Auth::user();
 
-        if (!$user && $request->create_account) {
-            $user = User::where('email', $request->email)->first();
-
-            if (!$user) {
-                $password = Str::random(10);
-                
-                $user = User::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'password' => Hash::make($password),
-                ]);
-
-                Auth::login($user);
-
-                $user->notify(new \App\Notifications\NewUserWelcome($password));
-            }
-        }
-
         try {
-            DB::transaction(function () use ($request, $cart, $user) {
+            $order = DB::transaction(function () use ($request, $items, $user) {
                 $total = 0;
-                $itemsToSave = [];
+                $purchasedItems = [];
+                $purchasedProductIds = [];
 
-                // Теперь $id — это реально ID, а $quantity — реально количество
-                foreach ($cart as $id => $quantity) {
-                    $product = \App\Models\Product::findOrFail($id);
-                    
-                    $price = $product->price;
-                    $total += $price * $quantity;
+                foreach ($items as $item) {
+                    $product = \App\Models\Product::lockForUpdate()->find($item['product_id']);
 
-                    $itemsToSave[] = [
+                    if (!$product || $product->stock <= 0) {
+                        continue;
+                    }
+
+                    $quantityToBuy = min($item['quantity'], $product->stock);
+                    $sum = $product->price * $quantityToBuy;
+
+                    $purchasedItems[] = [
                         'product_id'   => $product->id,
                         'product_name' => $product->title,
-                        'price'        => $price,
-                        'quantity'     => $quantity,
+                        'price'        => $product->price,
+                        'quantity'     => $quantityToBuy,
                     ];
+
+                    $total += $sum;
+                    $purchasedProductIds[] = $product->id;
+
+                    $product->decrement('stock', $quantityToBuy);
                 }
 
-                // Создаем основной заказ
+                if (empty($purchasedItems)) {
+                    throw new \Exception('Извините, все товары из вашей корзины только что закончились.');
+                }
+
                 $order = \App\Models\Order::create([
-                    'user_id' => $user ? $user->id : Auth::id(),
+                    'user_id' => $user?->id ?? Auth::id(),
                     'total_price' => $total,
                     'customer_name' => $request->name,
                     'customer_email' => $request->email,
@@ -93,29 +81,28 @@ class OrderController extends Controller
                     'status' => 'new',
                 ]);
 
-                // Массово создаем позиции
-                foreach ($itemsToSave as $item) {
-                    $order->items()->create($item);
+                $order->items()->createMany($purchasedItems);
+
+                if (Auth::check()) {
+                    \App\Models\CartItem::where('user_id', Auth::id())
+                        ->whereIn('product_id', $purchasedProductIds)
+                        ->delete();
+                } else {
+                    $sessionCart = session()->get('cart', []);
+                    foreach ($purchasedProductIds as $id) {
+                        unset($sessionCart[$id]);
+                    }
+                    session()->put('cart', $sessionCart);
                 }
 
-                // Очищаем корзину ТОЛЬКО внутри успешной транзакции
-                session()->forget('cart');
+                return $order;
             });
 
-        if (Auth::check()) {
-            return to_route('dashboard')->with('success', 'Заказ оформлен! Добро пожаловать в личный кабинет.');
-        }
-
-        return to_route('home')->with('success', 'Заказ успешно оформлен! Наш менеджер свяжется с вами.');
+            return to_route('home')->with('success', 'Заказ №' . $order->id . ' оформлен!');
 
         } catch (\Exception $e) {
-            Log::error('Error during order creation: ' . $e->getMessage(), [
-                'user_email' => $request->email,
-                'cart' => session()->get('cart'),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return redirect()->back()->with('error', 'Ошибка при создании заказа: ' . $e->getMessage());
+            Log::error("Checkout error: " . $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }

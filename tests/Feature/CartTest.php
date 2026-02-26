@@ -99,14 +99,16 @@ it("removes a product from the guest's cart session", function () {
     expect(session('cart'))->not->toHaveKey($product->id);
 });
 
-it('prevents adding more items than available in stock', function () {
+it('prevents adding products out of stock', function () {
     $user = User::factory()->create();
     $product = Product::factory()->create(['stock' => 3]);
 
     $response = $this->actingAs($user)
-        ->from(route('home'))
-        ->post(route('cart.add'), ['product_id' => $product->id, 'quantity' => 10]);
+        ->post(route('cart.add'), [
+            'product_id' => $product->id,
+            'quantity' => 10
+        ]);
 
-    $response->assertSessionHasErrors('quantity');
+    $response->assertSessionHasErrors(['quantity' => 'Недостаточно товара']);
     $this->assertDatabaseCount('cart_items', 0);
 });

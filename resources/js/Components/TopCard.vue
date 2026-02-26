@@ -66,7 +66,7 @@ const isInCart = computed(() => {
                 class="button--square"
                 aria-label="Add to cart"
                 @click="addToCart"
-                :disabled="isInCart"
+                :disabled="isInCart || plant.stock === 0"
             >
                 <IconBag class="button-image" aria-label="Cart"></IconBag>
             </button>
