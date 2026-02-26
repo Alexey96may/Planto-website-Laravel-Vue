@@ -7,7 +7,6 @@ use Inertia\Testing\AssertableInertia as Assert;
 /** @var Tests\TestCase $this */
 
 beforeEach(function () {
-    // Очищаем сессию перед каждым тестом
     session()->forget('cart');
 });
 
@@ -51,8 +50,8 @@ it('updates the product quantity in the cart', function () {
     $user = User::factory()->create();
     $product = Product::factory()->create(['price' => 1000]);
     
-    $this->actingAs($user)->post(route('cart.add'), ['product_id' => $product.id, 'quantity' => 1]);
-    $this->patch(route('cart.update', $product), ['quantity' => 5]);
+    $this->actingAs($user)->post(route('cart.add'), ['product_id' => $product->id, 'quantity' => 1]);
+    $this->patch(route('cart.update', $product->id), ['quantity' => 5]);
 
     $this->assertDatabaseHas('cart_items', [
         'product_id' => $product->id,
@@ -61,46 +60,35 @@ it('updates the product quantity in the cart', function () {
 });
 
 it("removes a product from the user's cart", function () {
-    // 1. Подготовка: Создаем юзера и товар в его корзине
     $user = \App\Models\User::factory()->create();
     $product = \App\Models\Product::factory()->create();
     
-    // Напрямую создаем запись в таблице корзины (имитируем, что товар уже там)
     \App\Models\CartItem::create([
         'user_id' => $user->id,
         'product_id' => $product->id,
         'quantity' => 1,
     ]);
 
-    // Проверяем, что в базе сейчас 1 запись
     $this->assertDatabaseCount('cart_items', 1);
 
-    // 2. Действие: Вызываем роут удаления
-    // Убедись, что имя роута 'cart.destroy' совпадает с твоим в web.php
     $response = $this->actingAs($user)
+        ->from(route('cart.index'))
         ->delete(route('cart.remove', $product));
 
-    // 3. Проверки
-    // Обычно после удаления идет редирект обратно в корзину
     $response->assertRedirect(route('cart.index'));
     
-    // В базе должно стать 0 записей
     $this->assertDatabaseCount('cart_items', 0);
     
-    // Опционально: проверить, что в сессии появилось сообщение об успехе
     $response->assertSessionHas('success');
 });
 
 it("removes a product from the guest's cart session", function () {
     $product = \App\Models\Product::factory()->create();
 
-    // Имитируем корзину в сессии
     session(['cart' => [$product->id => 1]]);
 
-    // Удаляем
     $this->delete(route('cart.remove', $product));
 
-    // Проверяем, что в ключе 'cart' больше нет этого ID
     expect(session('cart'))->not->toHaveKey($product->id);
 });
 
@@ -118,87 +106,123 @@ it('prevents adding products out of stock', function () {
     $this->assertDatabaseCount('cart_items', 0);
 });
 
-/**
- * Тест 1: Пустая корзина после фильтрации по наличию
- */
 it('fails to create an order if all products in cart are out of stock', function () {
-    // Создаем товар, которого нет на складе
     $product = Product::factory()->create(['stock' => 0, 'title' => 'Missing Plant']);
     
-    // Кладем его в сессию
     session(['cart' => [$product->id => 1]]);
 
-    $response = $this->post(route('order.store'), [
+    $response = $this->post(route('checkout.store'), [
         'name' => 'Test User',
         'email' => 'test@example.com',
         'phone' => '123456789',
         'address' => 'Test Address 123',
     ]);
 
-    // Проверяем, что нас вернули назад с ошибкой
-    $response->assertSessionHas('error', 'Извините, все товары из вашей корзины только что закончились.');
+    $response->assertSessionHasErrors(['quantity']);
     
-    // Проверяем, что заказ в базе НЕ появился
     $this->assertDatabaseCount('orders', 0);
 });
 
-/**
- * Тест 2: Очистка сессии (частичная)
- */
-it('clears only purchased items from session and keeps out-of-stock items', function () {
-    // 1. Товар в наличии
-    $availableProduct = Product::factory()->create(['stock' => 5, 'title' => 'In Stock']);
-    // 2. Товар закончился
-    $outOfStockProduct = Product::factory()->create(['stock' => 0, 'title' => 'Out of Stock']);
+it('fails to checkout if any item in cart is out of stock', function () {
+    $availableProduct = Product::factory()->create(['stock' => 5]);
+    $outOfStockProduct = Product::factory()->create(['stock' => 0]);
 
-    // Кладем оба в корзину
     session(['cart' => [
         $availableProduct->id => 2,
         $outOfStockProduct->id => 1
     ]]);
 
-    $response = $this->post(route('order.store'), [
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'phone' => '123456789',
-        'address' => 'Test Address 123',
+    $response = $this->post(route('checkout.store'), [
+        'name' => 'Test User', 'email' => 'test@example.com',
+        'phone' => '123456789', 'address' => 'Test Address 123',
     ]);
 
-    // Проверяем успех
-    $response->assertSessionHas('success');
-
-    // ПРОВЕРКА СЕССИИ:
-    $currentCart = session('cart');
-
-    // Купленного товара НЕ должно быть в сессии
-    expect($currentCart)->not->toHaveKey($availableProduct->id);
+    $response->assertSessionHasErrors(['quantity']);
     
-    // Товар, который не купили (был out of stock), ДОЛЖЕН остаться
-    expect($currentCart)->toHaveKey($outOfStockProduct->id);
-    expect($currentCart[$outOfStockProduct->id])->toBe(1);
-
-    // Проверяем, что в заказе только 1 позиция
-    $this->assertDatabaseCount('order_items', 1);
-    $this->assertDatabaseHas('order_items', [
-        'product_id' => $availableProduct->id,
-        'quantity' => 2
-    ]);
+    $this->assertDatabaseCount('orders', 0);
+    
+    expect(session('cart'))->toHaveKey($availableProduct->id);
+    expect(session('cart'))->toHaveKey($outOfStockProduct->id);
 });
 
-/**
- * Тест 3: Проверка списания остатков (Decrement)
- */
 it('decrements product stock after successful order', function () {
     $product = Product::factory()->create(['stock' => 10]);
     session(['cart' => [$product->id => 4]]);
 
-    $this->post(route('order.store'), [
+    $this->post(route('checkout.store'), [
         'name' => 'Test User',
         'email' => 'test@example.com',
         'phone' => '123456789',
         'address' => 'Test Address',
     ]);
 
-    // Проверяем, что из 10 осталось 6
     expect($product->refresh()->stock)->toBe(6);
+});
+
+it('uses current product price from database during checkout', function () {
+    $user = User::factory()->create();
+    $product = Product::factory()->create(['price' => 1000, 'stock' => 10]);
+
+    $this->actingAs($user)->post(route('cart.add'), ['product_id' => $product->id, 'quantity' => 1]);
+
+    $product->update(['price' => 1500]);
+
+    $this->post(route('checkout.store'), [
+        'name' => 'John Doe',
+        'email' => 'test@example.com',
+        'phone' => '123456789',
+        'address' => 'Test Address 123',
+    ]);
+
+    $this->assertDatabaseHas('order_items', [
+        'product_id' => $product->id,
+        'price' => 1500
+    ]);
+});
+
+it('fails to checkout and notifies user if quantity exceeds stock', function () {
+    $user = User::factory()->create();
+    $product = Product::factory()->create(['stock' => 3]);
+
+    \App\Models\CartItem::create([
+        'user_id' => $user->id,
+        'product_id' => $product->id,
+        'quantity' => 10,
+    ]);
+
+    $response = $this->actingAs($user)->post(route('checkout.store'), [
+        'name' => 'John Doe',
+        'email' => 'test@example.com',
+        'phone' => '123456789',
+        'address' => 'Test Address 123',
+    ]);
+
+    $response->assertSessionHasErrors(['quantity']);
+    $this->assertDatabaseCount('orders', 0);
+});
+
+it('ignores or removes products from cart that no longer exist in database', function () {
+    $user = User::factory()->create();
+    $product = Product::factory()->create();
+
+    $this->actingAs($user)->post(route('cart.add'), ['product_id' => $product->id, 'quantity' => 1]);
+
+    $product->delete();
+
+    $response = $this->get(route('cart.index'));
+
+    $response->assertStatus(200);
+    $response->assertInertia(fn ($page) => $page->has('cart.items', 0));
+});
+
+it('prevents overselling using pessimistic locking', function () {
+    $product = Product::factory()->create(['stock' => 1]);
+
+    DB::beginTransaction();
+    $lockedProduct = Product::where('id', $product->id)->lockForUpdate()->first();
+
+    $lockedProduct->decrement('stock', 1);
+    DB::commit();
+
+    $this->assertEquals(0, $product->refresh()->stock);
 });

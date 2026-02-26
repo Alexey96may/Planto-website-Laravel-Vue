@@ -25,7 +25,7 @@ class OrderController extends Controller
         $items = $cartData['items'];
 
         if (empty($items)) {
-            return redirect()->back()->with('error', 'Корзина пуста!');
+            return redirect()->back()->withErrors(['cart' => 'Корзина пуста!']);
         }
 
         $request->validate([
@@ -35,10 +35,8 @@ class OrderController extends Controller
             'address' => 'required|string|min:5',
         ]);
 
-        $user = Auth::user();
-
         try {
-            $order = DB::transaction(function () use ($request, $items, $user) {
+            $order = DB::transaction(function () use ($request, $items) {
                 $total = 0;
                 $purchasedItems = [];
                 $purchasedProductIds = [];
@@ -46,28 +44,27 @@ class OrderController extends Controller
                 foreach ($items as $item) {
                     $product = \App\Models\Product::lockForUpdate()->find($item['product_id']);
 
-                    if (!$product || $product->stock <= 0) {
-                        continue;
+                    if (!$product) {
+                        throw new \Exception("Товар из вашей корзины больше не существует.");
                     }
 
-                    $quantityToBuy = min($item['quantity'], $product->stock);
-                    $sum = $product->price * $quantityToBuy;
+                    if ($product->stock < $item['quantity']) {
+                        throw new \Exception("Недостаточно товара '{$product->title}' на складе (в наличии {$product->stock} шт.).");
+                    }
+
+                    $sum = $product->price * $item['quantity'];
 
                     $purchasedItems[] = [
                         'product_id'   => $product->id,
                         'product_name' => $product->title,
                         'price'        => $product->price,
-                        'quantity'     => $quantityToBuy,
+                        'quantity'     => $item['quantity'],
                     ];
 
                     $total += $sum;
                     $purchasedProductIds[] = $product->id;
 
-                    $product->decrement('stock', $quantityToBuy);
-                }
-
-                if (empty($purchasedItems)) {
-                    throw new \Exception('Извините, все товары из вашей корзины только что закончились.');
+                    $product->decrement('stock', $item['quantity']);
                 }
 
                 $order = \App\Models\Order::create([
@@ -83,26 +80,31 @@ class OrderController extends Controller
 
                 $order->items()->createMany($purchasedItems);
 
-                if (Auth::check()) {
-                    \App\Models\CartItem::where('user_id', Auth::id())
-                        ->whereIn('product_id', $purchasedProductIds)
-                        ->delete();
-                } else {
-                    $sessionCart = session()->get('cart', []);
-                    foreach ($purchasedProductIds as $id) {
-                        unset($sessionCart[$id]);
-                    }
-                    session()->put('cart', $sessionCart);
-                }
+                $this->clearCart($purchasedProductIds);
 
                 return $order;
             });
 
-            return to_route('home')->with('success', 'Заказ №' . $order->id . ' оформлен!');
+            return to_route('home')->with('success', 'Заказ оформлен!');
 
         } catch (\Exception $e) {
             Log::error("Checkout error: " . $e->getMessage());
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->withErrors(['quantity' => $e->getMessage()])->withInput();
+        }
+    }
+
+    protected function clearCart(array $productIds)
+    {
+        if (Auth::check()) {
+            \App\Models\CartItem::where('user_id', Auth::id())
+                ->whereIn('product_id', $productIds)
+                ->delete();
+        } else {
+            $sessionCart = session()->get('cart', []);
+            foreach ($productIds as $id) {
+                unset($sessionCart[$id]);
+            }
+            session()->put('cart', $sessionCart);
         }
     }
 }

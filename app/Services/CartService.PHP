@@ -83,7 +83,9 @@ class CartService
         ];
 
         if (Auth::check()) {
-            $cartData = \App\Models\CartItem::with('product')
+            $cartData = \App\Models\CartItem::query()
+                ->whereHas('product')
+                ->with('product')
                 ->where('user_id', Auth::id())
                 ->get();
 
