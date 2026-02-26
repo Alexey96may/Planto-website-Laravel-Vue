@@ -53,8 +53,6 @@ class CartService
 
         return array_keys(session()->get('cart', []));
     }
-    
-    // app/Services/CartService.php
 
     public static function getFullCart(): array
     {

@@ -32,6 +32,8 @@ class CartController extends Controller
 
     public function destroy(Product $product) {
         CartService::remove($product->id);
+
+        return redirect()->back()->with('success', 'Товар удален');
     }
 
     public function update(Request $request, $productId)
