@@ -1,11 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use App\Models\Product;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\SettingController;
@@ -13,49 +10,19 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\CartController;
-use App\Models\Comment;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\FeatureController;
-use App\Models\Feature;
 use App\Http\Controllers\Admin\NavigationController;
-use App\Services\CommentService;
-use App\Services\FeatureService;
-use App\Services\SettingService;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ContactController;
-use App\Services\ProductService;
 use App\Http\Controllers\Admin\CategoryController;
 
-Route::get('/', function (ProductService $products, SettingService $settings) {
-    $limitTop = $settings->get('top_plants_limit', 4);
-    $limitTrendy = $settings->get('trendy_limit', 2);
-    $limitHero = $settings->get('hero_plants_limit', 3);
-
-    $topDays = $settings->get('top_days_interval', 0);
-
-    return Inertia::render('Welcome', [
-        'products'=> Product::all(),
-        'canLogin' => Route::has('login'),
-        'topPlants' => $products->getTopProducts($limitTop, $topDays),
-        'trendyPlants' => $products->getTrendingProducts($limitTrendy),
-        'heroPlants' => Product::with('category')->latest()->take($limitHero)->get(),
-        'canRegister' => Route::has('register'),
-        'storeName' => 'Planto',
-        'status' => 'Сегодня работаем до 22:00',
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-        'comments' => CommentService::getLatestActive(),
-        'features' => FeatureService::getActive(),
-    ]);
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 
@@ -129,10 +96,5 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 
 Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
-
-Route::get('/debug-reset', function() {
-    session()->forget('cart');
-    return "Корзина полностью очищена. Начнем с чистого листа.";
-});
 
 require __DIR__.'/auth.php';

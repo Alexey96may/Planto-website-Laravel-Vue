@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use App\Services\SettingService;
@@ -38,16 +39,16 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             
-            'cart_count' => CartService::getCount(),
-            'cart_ids' => CartService::getIds(),
+            'cart_count' => fn() => CartService::getCount(),
+            'cart_ids' => fn() => CartService::getIds(),
 
-            'settings' => SettingService::all(),
-            'navigation' => NavigationService::get(),
+            'settings' => fn() => Schema::hasTable('settings') ? SettingService::all() : [],
+            'navigation' => Schema::hasTable('navigations') ? NavigationService::get() : [],
 
             'flash' => [
-                'success' => $request->session()->get('success'),
-                'error' => $request->session()->get('error'),
-                'message' => $request->session()->get('message'),
+                'success' => fn() => $request->session()->get('success'),
+                'error'   => fn() => $request->session()->get('error'),
+                'message' => fn() => $request->session()->get('message'),
             ],
         ];
     }
