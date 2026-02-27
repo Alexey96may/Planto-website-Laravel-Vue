@@ -1,59 +1,47 @@
-<script setup>
-import { Head } from "@inertiajs/vue3";
-import Top from "@/Components/Top.vue";
-import Review from "@/Components/Review.vue";
-import Best from "@/Components/Best.vue";
-import { onMounted } from "vue";
-import MainLayout from "@/Layouts/MainLayout.vue";
+<script setup lang="ts">
+    import { VNode, h } from 'vue';
 
-defineOptions({
-    layout: MainLayout,
-});
+    import { Head } from '@inertiajs/vue3';
 
-const props = defineProps({
-    canLogin: {
-        type: Boolean,
-    },
-    products: {
-        type: Array,
-        default: () => [],
-    },
-    topPlants: {
-        type: Array,
-        default: () => [],
-    },
-    canRegister: {
-        type: Boolean,
-    },
-    laravelVersion: {
-        type: String,
-        required: true,
-    },
-    phpVersion: {
-        type: String,
-        required: true,
-    },
-    storeName: {
-        type: String,
-        required: true,
-    },
-    status: {
-        type: String,
-        required: true,
-    },
-    comments: {
-        type: Array,
-        default: () => [],
-    },
-    features: {
-        type: Array,
-        default: () => [],
-    },
-});
+    import Best from '@/Components/Best.vue';
+    import Hero from '@/Components/Hero.vue';
+    import Review from '@/Components/Review.vue';
+    import Top from '@/Components/Top.vue';
+    import Trendy from '@/Components/Trendy.vue';
+    import MainLayout from '@/Layouts/MainLayout.vue';
+    import { Comment, Feature, Product } from '@/types';
+
+    interface Props {
+        topPlants: Product[];
+        trendyPlants: Product[];
+        heroPlants: Product[];
+        status: string;
+        comments: Comment[];
+        features: Feature[];
+    }
+
+    defineOptions({
+        layout: MainLayout,
+    });
+
+    const props = withDefaults(defineProps<Props>(), {
+        topPlants: () => [],
+        trendyPlants: () => [],
+        heroPlants: () => [],
+        comments: () => [],
+        features: () => [],
+    });
 </script>
 
 <template>
     <Head title="Main" />
+
+    <template #hero>
+        <Hero :heroPlants="heroPlants" />
+    </template>
+    <template #trendy>
+        <Trendy v-if="trendyPlants.length" :trendyPlants="trendyPlants" />
+    </template>
 
     <Top :topPlants="topPlants" />
     <Review v-if="comments.length" :comments="comments" />

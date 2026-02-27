@@ -17,7 +17,6 @@ class HomeController extends Controller
     public function index(ProductService $products, SettingService $settings): Response
     {
         return Inertia::render('Welcome', [
-            'products'     => Product::all(),
             'topPlants'    => $products->getTopProducts(
                 $settings->get('top_plants_limit', 4), 
                 $settings->get('top_days_interval', 0)
@@ -33,13 +32,7 @@ class HomeController extends Controller
             
             'comments'     => CommentService::getLatestActive(),
             'features'     => FeatureService::getActive(),
-
-            'canLogin'       => Route::has('login'),
-            'canRegister'    => Route::has('register'),
-            'storeName'      => 'Planto',
             'status'         => 'Сегодня работаем до 22:00', //todo
-            'laravelVersion' => Application::VERSION,
-            'phpVersion'     => PHP_VERSION,
         ]);
     }
 }

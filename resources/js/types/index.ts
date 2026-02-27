@@ -6,6 +6,10 @@ export interface Category {
     updated_at: string;
 }
 
+export interface Comment {}
+
+export interface Feature {}
+
 export interface Product {
     id: number;
     title: string;

@@ -12,14 +12,7 @@
     import { calculateTotal, formatUSD } from '@/utils/money';
 
     defineOptions({
-        layout: (h: any, page: VNode) =>
-            h(
-                MainLayout,
-                {
-                    full: false,
-                },
-                () => page,
-            ),
+        layout: MainLayout,
     });
 
     const props = defineProps<{

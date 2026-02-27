@@ -1,53 +1,48 @@
 <script setup>
-import { Head, Link } from "@inertiajs/vue3";
-import MainLayout from "@/Layouts/MainLayout.vue";
-import PlantCard from "@/Components/TopCard.vue";
-import Pagination from "@/Components/Pagination.vue";
-import { ref, watch } from "vue";
-import { router } from "@inertiajs/vue3";
+    import { ref, watch } from 'vue';
 
-defineOptions({
-    layout: (h, page) =>
-        h(
-            MainLayout,
+    import { Head, Link } from '@inertiajs/vue3';
+    import { router } from '@inertiajs/vue3';
+
+    import Pagination from '@/Components/Pagination.vue';
+    import PlantCard from '@/Components/TopCard.vue';
+    import MainLayout from '@/Layouts/MainLayout.vue';
+
+    defineOptions({
+        layout: MainLayout,
+    });
+
+    const props = defineProps({
+        products: Object,
+        categories: Array,
+        currentCategory: String,
+        filters: Object,
+    });
+
+    const search = ref(props.filters.search || '');
+    const minPrice = ref(props.filters.min_price || '');
+    const maxPrice = ref(props.filters.max_price || '');
+    const sort = ref(props.filters?.sort || 'popular');
+    const inStockOnly = ref(props.filters.in_stock !== 'false');
+
+    const applyFilters = () => {
+        router.get(
+            route('shop'),
             {
-                full: false,
+                category: props.filters.category,
+                search: search.value,
+                min_price: minPrice.value,
+                max_price: maxPrice.value,
+                sort: sort.value,
+                in_stock: inStockOnly.value ? 'true' : 'false',
             },
-            () => page,
-        ),
-});
-
-const props = defineProps({
-    products: Object,
-    categories: Array,
-    currentCategory: String,
-    filters: Object,
-});
-
-const search = ref(props.filters.search || "");
-const minPrice = ref(props.filters.min_price || "");
-const maxPrice = ref(props.filters.max_price || "");
-const sort = ref(props.filters?.sort || "popular");
-const inStockOnly = ref(props.filters.in_stock !== "false");
-
-const applyFilters = () => {
-    router.get(
-        route("shop"),
-        {
-            category: props.filters.category,
-            search: search.value,
-            min_price: minPrice.value,
-            max_price: maxPrice.value,
-            sort: sort.value,
-            in_stock: inStockOnly.value ? "true" : "false",
-        },
-        {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-        },
-    );
-};
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            },
+        );
+    };
 </script>
 
 <template>
@@ -86,9 +81,7 @@ const applyFilters = () => {
             >
                 Применить
             </button>
-            <Link
-                href="/shop"
-                class="block text-center text-xs text-gray-400 underline"
+            <Link href="/shop" class="block text-center text-xs text-gray-400 underline"
                 >Сбросить всё</Link
             >
         </div>
@@ -125,9 +118,7 @@ const applyFilters = () => {
                     </Link>
                 </nav>
 
-                <div
-                    class="mt-10 p-4 bg-gray-50 rounded-2xl border border-dashed border-gray-300"
-                >
+                <div class="mt-10 p-4 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
                     <p class="text-sm text-gray-500 italic">
                         Фильтры по цене появятся здесь позже...
                     </p>
@@ -137,20 +128,14 @@ const applyFilters = () => {
             <main class="flex-grow">
                 <div class="flex justify-between items-end mb-8">
                     <div>
-                        <h1
-                            class="text-4xl font-black italic uppercase tracking-tighter"
-                        >
+                        <h1 class="text-4xl font-black italic uppercase tracking-tighter">
                             Наш магазин
                         </h1>
-                        <p class="text-gray-500">
-                            Найдено товаров: {{ products.total }}
-                        </p>
+                        <p class="text-gray-500">Найдено товаров: {{ products.total }}</p>
                     </div>
 
                     <div class="flex items-center space-x-2">
-                        <span class="text-xs font-bold uppercase text-gray-400"
-                            >Сортировка:</span
-                        >
+                        <span class="text-xs font-bold uppercase text-gray-400">Сортировка:</span>
                         <select
                             v-model="sort"
                             @change="applyFilters"
@@ -163,9 +148,7 @@ const applyFilters = () => {
                         </select>
                     </div>
                     <div>
-                        <label
-                            class="flex items-center space-x-2 cursor-pointer"
-                        >
+                        <label class="flex items-center space-x-2 cursor-pointer">
                             <input
                                 type="checkbox"
                                 v-model="inStockOnly"
@@ -192,12 +175,8 @@ const applyFilters = () => {
                 </div>
 
                 <div v-else class="text-center py-20 bg-gray-50 rounded-3xl">
-                    <p class="text-xl text-gray-400">
-                        В этой категории пока нет цветов...
-                    </p>
-                    <Link
-                        :href="route('shop')"
-                        class="text-green-600 underline mt-4 inline-block"
+                    <p class="text-xl text-gray-400">В этой категории пока нет цветов...</p>
+                    <Link :href="route('shop')" class="text-green-600 underline mt-4 inline-block"
                         >Вернуться ко всем товарам</Link
                     >
                 </div>
