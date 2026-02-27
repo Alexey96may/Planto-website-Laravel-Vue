@@ -1,48 +1,59 @@
-<script setup>
+<script setup lang="ts">
     import { ref, watch } from 'vue';
 
     import { Head, Link } from '@inertiajs/vue3';
     import { router } from '@inertiajs/vue3';
 
+    import { route } from 'ziggy-js';
+
     import Pagination from '@/Components/Pagination.vue';
     import PlantCard from '@/Components/TopCard.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
+    import { Category, PaginatedResponse, Product, ProductFilters, SortOption } from '@/types';
+    import { debounce } from '@/utils/helpers';
 
     defineOptions({
         layout: MainLayout,
     });
 
-    const props = defineProps({
-        products: Object,
-        categories: Array,
-        currentCategory: String,
-        filters: Object,
-    });
+    const props = defineProps<{
+        products: PaginatedResponse<Product>;
+        categories: Category[];
+        currentCategory: string | null;
+        filters: ProductFilters;
+    }>();
 
-    const search = ref(props.filters.search || '');
-    const minPrice = ref(props.filters.min_price || '');
-    const maxPrice = ref(props.filters.max_price || '');
-    const sort = ref(props.filters?.sort || 'popular');
-    const inStockOnly = ref(props.filters.in_stock !== 'false');
+    const search = ref<string>(props.filters.search || '');
+    const minPrice = ref<number | string>(props.filters.min_price || '');
+    const maxPrice = ref<number | string>(props.filters.max_price || '');
+    const sort = ref<SortOption | string>(props.filters?.sort || 'popular');
+    const inStockOnly = ref<boolean>(props.filters.in_stock !== 'false');
 
-    const applyFilters = () => {
-        router.get(
-            route('shop'),
-            {
-                category: props.filters.category,
-                search: search.value,
-                min_price: minPrice.value,
-                max_price: maxPrice.value,
-                sort: sort.value,
-                in_stock: inStockOnly.value ? 'true' : 'false',
-            },
-            {
-                preserveState: true,
-                preserveScroll: true,
-                replace: true,
-            },
-        );
+    const applyFilters = (): void => {
+        const params = {
+            category: props.currentCategory,
+            search: search.value || undefined,
+            min_price: minPrice.value || undefined,
+            max_price: maxPrice.value || undefined,
+            sort: sort.value,
+            in_stock: inStockOnly.value ? 'true' : 'false',
+        };
+
+        router.get(route('shop'), params, {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+        });
     };
+
+    const debouncedApplyFilters = debounce(() => {
+        applyFilters();
+    }, 500);
+    //Для чекбоксов и селекторов (выпадающих списков) debounce обычно не нужен. select/input type="checkbox" @change="applyFilters"
+
+    watch(search, () => {
+        debouncedApplyFilters();
+    });
 </script>
 
 <template>

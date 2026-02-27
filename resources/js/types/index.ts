@@ -6,6 +6,39 @@ export interface Category {
     updated_at: string;
 }
 
+export interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+    page: number | null;
+}
+
+export interface PaginatedResponse<T> {
+    current_page: number;
+    data: T[];
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: PaginationLink[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+}
+
+export interface ProductFilters {
+    search: string | null;
+    min_price: number | string | null;
+    max_price: number | string | null;
+    sort: 'popular' | 'newest' | 'price_asc' | 'price_desc' | string;
+    in_stock: 'true' | 'false' | boolean | null;
+}
+
+export type SortOption = 'popular' | 'newest' | 'price_asc' | 'price_desc';
+
 export interface Feature {
     id: number;
     title: string;

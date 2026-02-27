@@ -49,6 +49,9 @@ class ShopController extends Controller
             ->paginate($perPage)
             ->withQueryString();
 
+            dd(array_merge($request->only(['category', 'search', 'min_price', 'max_price', 'sort']), [
+                'in_stock' => $inStockOnly ? 'true' : 'false'
+            ]));
         return Inertia::render('Shop/Index', [
             'products' => $products,
             'categories' => CategoryService::getAll(),
