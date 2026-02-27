@@ -19,18 +19,18 @@
 
             <div class="-mt-12 md:-mt-20">
                 <h2 class="text-2xl md:text-4xl font-light text-white mb-4">
-                    Упс! Вы забрели в
-                    <span class="text-green-500 font-medium">дикие джунгли</span>
+                    Oops! You've wandered into
+                    <span class="text-green-500 font-medium">wild jungle</span>
                 </h2>
                 <p class="text-gray-400 mb-10 max-w-md mx-auto">
-                    Похоже, эта страница еще не выросла или была пересажена в другое место.
+                    It looks like this page hasn't grown yet or has been moved to another location.
                 </p>
 
                 <Link
                     href="/"
                     class="inline-block px-10 py-4 border border-white text-white rounded-full hover:bg-white hover:text-black transition-all duration-500 uppercase tracking-widest text-sm font-semibold"
                 >
-                    Вернуться домой
+                    Return home
                 </Link>
             </div>
         </div>

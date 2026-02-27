@@ -21,7 +21,7 @@
                     Terms of <span class="text-green-500">Service</span>
                 </h1>
                 <p class="text-gray-500 uppercase tracking-[0.2em] text-sm">
-                    Последнее обновление: 24 февраля 2026
+                    Last updated: February 24, 2026
                 </p>
             </div>
 
@@ -30,59 +30,58 @@
             >
                 <section class="reveal">
                     <h2 class="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
-                        <span class="text-green-500">01.</span> Общие положения
+                        <span class="text-green-500">01.</span> General Provisions
                     </h2>
                     <p>
-                        Добро пожаловать в Planto. Используя наш сайт, вы соглашаетесь с данными
-                        условиями. Мы просим вас внимательно ознакомиться с ними, так как они
-                        регулируют ваши права и обязанности при покупке растений и аксессуаров.
+                        Welcome to Planto. By using our website, you agree to these terms and
+                        conditions. We ask that you read them carefully, as they govern your rights
+                        and responsibilities when purchasing plants and accessories.
                     </p>
                 </section>
 
                 <section class="reveal">
                     <h2 class="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
-                        <span class="text-green-500">02.</span> Условия доставки
+                        <span class="text-green-500">02.</span> Delivery terms
                     </h2>
                     <p>
-                        Мы заботимся о каждом растении. Доставка осуществляется специализированными
-                        курьерскими службами. Planto несет ответственность за состояние растения до
-                        момента передачи его покупателю.
+                        We care for every plant. Delivery is carried out by specialized courier
+                        services. Planto is responsible for the condition of the plant until it is
+                        delivered to the buyer.
                     </p>
                 </section>
 
                 <section class="reveal">
                     <h2 class="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
-                        <span class="text-green-500">03.</span> Политика возврата
+                        <span class="text-green-500">03.</span> Return policy
                     </h2>
                     <p>
-                        Живые растения являются скоропортящимся товаром. Возврат возможен только в
-                        случае обнаружения явных дефектов или болезней в момент получения заказа.
+                        Live plants are perishable goods. Returns are only possible if obvious
+                        defects or diseases are discovered upon receipt of the order.
                     </p>
                 </section>
 
                 <section class="reveal">
                     <h2 class="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
-                        <span class="text-green-500">04.</span> Интеллектуальная собственность
+                        <span class="text-green-500">04.</span> Intellectual property
                     </h2>
                     <p>
-                        Весь контент, включая фотографии растений и описания, является
-                        собственностью Planto. Использование материалов без нашего согласия
-                        запрещено.
+                        All content, including plant photographs and descriptions, is the property
+                        of Planto. Use of materials without our consent is prohibited.
                     </p>
                 </section>
 
                 <div class="pt-8 border-t border-white/5 flex justify-between items-center">
                     <p class="text-sm text-gray-500">
-                        Есть вопросы?
+                        Any questions?
                         <Link href="/contacts" class="text-green-500 hover:underline"
-                            >Напишите нам</Link
+                            >Write to us</Link
                         >
                     </p>
                     <Link
                         href="/"
                         class="px-8 py-3 bg-white text-black rounded-full font-bold hover:bg-green-500 hover:text-white transition-colors duration-300"
                     >
-                        Согласен
+                        Agree
                     </Link>
                 </div>
             </div>

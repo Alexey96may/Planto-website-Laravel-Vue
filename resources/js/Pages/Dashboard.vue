@@ -1,54 +1,67 @@
-<script setup>
-    import { defineProps } from 'vue';
+<script setup lang="ts">
     import { ref } from 'vue';
 
     import { Head, useForm } from '@inertiajs/vue3';
 
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import { AuthProps, Comment, CommentForm, UserForm } from '@/types';
 
-    const props = defineProps({
-        myComments: Array,
-        auth: Object,
+    const props = defineProps<{
+        myComments: Comment[];
+        auth: AuthProps;
+    }>();
+
+    const form = useForm<CommentForm>({
+        body: '',
+        rating: 5.0,
     });
 
-    const formAvatar = useForm({
+    const formAvatar = useForm<UserForm>({
         name: props.auth.user.name,
         email: props.auth.user.email,
         avatar: null,
         _method: 'patch',
     });
 
-    const imageUrl = ref(props.auth.user.avatar_url);
+    const imageUrl = ref<string | null>(props.auth.user.avatar_url);
 
-    const onFileChange = (e) => {
-        const file = e.target.files[0];
+    const onFileChange = (e: Event) => {
+        const target = e.target as HTMLInputElement;
+
+        const file = target.files?.[0];
         if (file) {
             formAvatar.avatar = file;
+
+            if (imageUrl.value && imageUrl.value.startsWith('blob:')) {
+                URL.revokeObjectURL(imageUrl.value);
+            }
+
             imageUrl.value = URL.createObjectURL(file);
         }
     };
 
-    const submitInfo = () => {
+    const submitInfo = (): void => {
         formAvatar.post(route('profile.update'), {
             preserveScroll: true,
-            forceFormData: true,
+
             onSuccess: () => {
-                photoPreview.value = null;
-                form.avatar = null;
+                formAvatar.avatar = null;
+                imageUrl.value = null;
+            },
+            onError: (errors) => {
+                console.error('Error updating profile:', errors);
             },
         });
     };
 
-    const form = useForm({
-        body: '',
-        rating: 5.0,
-    });
-
-    const submitComment = () => {
-        form.post(route('profile.update'), {
+    const submitComment = (): void => {
+        form.post(route('comments.update'), {
             preserveScroll: true,
             onSuccess: () => {
-                form.avatar = null;
+                form.reset();
+            },
+            onError: (errors) => {
+                console.log('Oops, something went wrong with the comment.', errors);
             },
         });
     };
@@ -62,9 +75,7 @@
             <div class="max-w-4xl mx-auto space-y-8">
                 <header class="text-center mb-12">
                     <h2 class="text-4xl font-bold text-white tracking-tight">Breath Natureal</h2>
-                    <p class="mt-2 text-gray-400">
-                        Добро пожаловать в Planto Shop, {{ formAvatar.name }}!
-                    </p>
+                    <p class="mt-2 text-gray-400">Welcome to Planto Shop, {{ formAvatar.name }}!</p>
                 </header>
 
                 <section
@@ -95,7 +106,7 @@
                                         for="avatar-input"
                                         class="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-[#c5d86d] text-[#1a1f16] font-bold hover:bg-[#b3c65a] cursor-pointer transition"
                                     >
-                                        Изменить фото
+                                        Edit photo
                                     </label>
                                     <p v-if="formAvatar.errors.avatar" class="text-red-400 text-xs">
                                         {{ formAvatar.errors.avatar }}
@@ -113,6 +124,12 @@
                                             type="text"
                                             class="w-full bg-[#1a1f16] border-none rounded-xl focus:ring-2 focus:ring-[#c5d86d] text-white"
                                         />
+                                        <p
+                                            v-if="formAvatar.errors.name"
+                                            class="text-red-500 text-xs mt-1"
+                                        >
+                                            {{ formAvatar.errors.name }}
+                                        </p>
                                     </div>
                                     <div class="space-y-1">
                                         <label
@@ -124,6 +141,12 @@
                                             type="email"
                                             class="w-full bg-[#1a1f16] border-none rounded-xl focus:ring-2 focus:ring-[#c5d86d] text-white"
                                         />
+                                        <p
+                                            v-if="formAvatar.errors.email"
+                                            class="text-red-500 text-xs mt-1"
+                                        >
+                                            {{ formAvatar.errors.email }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -135,9 +158,7 @@
                                 :disabled="formAvatar.processing"
                                 class="w-full sm:w-auto px-12 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition disabled:opacity-50"
                             >
-                                {{
-                                    formAvatar.processing ? 'Сохранение...' : 'Сохранить настройки'
-                                }}
+                                {{ formAvatar.processing ? 'Saving...' : 'Save settings' }}
                             </button>
                             <Transition
                                 enter-active-class="transition"
@@ -158,20 +179,21 @@
                     <section
                         class="bg-[#242b1f] rounded-[2rem] p-8 shadow-xl border border-white/5 reveal"
                     >
-                        <h3 class="text-xl font-bold text-white mb-6">Оставить отзыв</h3>
+                        <h3 class="text-xl font-bold text-white mb-6">Feedback</h3>
                         <form @submit.prevent="submitComment" class="space-y-4">
                             <textarea
                                 v-model="form.body"
+                                :disabled="form.processing"
                                 rows="3"
                                 class="w-full bg-[#1a1f16] border-none rounded-2xl focus:ring-2 focus:ring-[#c5d86d] text-white placeholder-gray-600"
-                                placeholder="Что вы думаете о Planto?"
+                                placeholder="What do you think about Planto?"
                             ></textarea>
 
                             <div class="space-y-2">
                                 <div
                                     class="flex justify-between text-xs font-bold text-gray-500 uppercase"
                                 >
-                                    <span>Оценка</span>
+                                    <span>Rating</span>
                                     <span class="text-[#c5d86d] text-base"
                                         >{{ form.rating }} ⭐</span
                                     >
@@ -179,6 +201,7 @@
                                 <input
                                     type="range"
                                     v-model="form.rating"
+                                    :disabled="form.processing"
                                     min="0.5"
                                     max="5"
                                     step="0.5"
@@ -188,10 +211,10 @@
 
                             <button
                                 type="submit"
-                                :disabled="form.processing"
+                                :disabled="form.processing || !form.body"
                                 class="w-full py-3 bg-[#c5d86d] text-[#1a1f16] font-bold rounded-xl hover:bg-[#b3c65a] transition"
                             >
-                                Опубликовать
+                                {{ formAvatar.processing ? 'Publication...' : 'Publish' }}
                             </button>
                         </form>
                     </section>
@@ -199,7 +222,7 @@
                     <section
                         class="bg-[#242b1f] rounded-[2rem] p-8 shadow-xl border border-white/5 overflow-y-auto max-h-[400px] reveal"
                     >
-                        <h3 class="text-xl font-bold text-white mb-6">Мои отзывы</h3>
+                        <h3 class="text-xl font-bold text-white mb-6">My reviews</h3>
                         <div v-if="myComments.length === 0" class="text-gray-500 text-center py-8">
                             Пока пусто...
                         </div>
