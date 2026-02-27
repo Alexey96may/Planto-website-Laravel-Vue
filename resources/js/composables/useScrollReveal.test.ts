@@ -44,12 +44,20 @@ describe('useScrollReveal', () => {
     });
 
     it('should add class when element is intersecting', async () => {
-        const wrapper = mount(TestComponent, { attachTo: document.body });
+        mount(TestComponent, { attachTo: document.body });
         const element = document.querySelector('.test-item') as HTMLElement;
 
         observerCallback([{ isIntersecting: true, target: element }]);
 
         await new Promise((resolve) => setTimeout(resolve, 0));
         expect(element.classList.contains('reveal-visible')).toBe(true);
+    });
+
+    it('should disconnect observer on unmount', () => {
+        const wrapper = mount(TestComponent, { attachTo: document.body });
+
+        wrapper.unmount();
+
+        expect(disconnectSpy).toHaveBeenCalled();
     });
 });
