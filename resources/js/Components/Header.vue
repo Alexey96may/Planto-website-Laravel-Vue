@@ -1,24 +1,26 @@
 <script setup>
-import { Head, Link, usePage } from "@inertiajs/vue3";
-import IconLogo from "img/icons/logo.svg?component";
-import IconArrowMore from "img/icons/arrow-more.svg?component";
-import IconUser from "img/icons/user.svg?component";
-import IconBag from "img/icons/bag.svg?component";
-import { computed, ref } from "vue";
+    import { computed, ref } from 'vue';
 
-const page = usePage();
+    import { Head, Link, usePage } from '@inertiajs/vue3';
 
-const menuItems = computed(() => page.props.navigation.header);
-const mobileMenuOpen = ref(false);
+    import IconArrowMore from 'img/icons/arrow-more.svg?component';
+    import IconBag from 'img/icons/bag.svg?component';
+    import IconLogo from 'img/icons/logo.svg?component';
+    import IconUser from 'img/icons/user.svg?component';
 
-const getHref = (item) => {
-    if (item.type === "category" && item.category) {
-        // console.log(item);
-        // Генерируем ссылку на страницу магазина с фильтром по слагу категории
-        return route("shop", { category: item.category.slug });
-    }
-    return item.link; // Для обычных ссылок
-};
+    const page = usePage();
+
+    const menuItems = computed(() => page.props.navigation.header);
+    const mobileMenuOpen = ref(false);
+
+    const getHref = (item) => {
+        if (item.type === 'category' && item.category) {
+            // console.log(item);
+            // Генерируем ссылку на страницу магазина с фильтром по слагу категории
+            return route('shop', { category: item.category.slug });
+        }
+        return item.link; // Для обычных ссылок
+    };
 </script>
 
 <template>
@@ -94,20 +96,13 @@ const getHref = (item) => {
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex justify-between h-16">
                             <div class="flex items-center">
-                                <div
-                                    class="hidden sm:ml-10 sm:flex sm:space-x-8 h-full"
-                                >
+                                <div class="hidden sm:ml-10 sm:flex sm:space-x-8 h-full">
                                     <div
                                         v-for="item in menuItems"
                                         :key="item.id"
                                         class="relative flex items-center group"
                                     >
-                                        <template
-                                            v-if="
-                                                item.children &&
-                                                item.children.length > 0
-                                            "
-                                        >
+                                        <template v-if="item.children && item.children.length > 0">
                                             <button
                                                 class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 h-full"
                                             >
@@ -153,37 +148,21 @@ const getHref = (item) => {
 
                 <div class="header__socials" aria-label="Socials field">
                     <Link
-                        :href="
-                            $page.props.auth.user
-                                ? route('dashboard')
-                                : route('login')
-                        "
-                        :aria-label="
-                            $page.props.auth.user ? 'To Dashboard' : 'To Login'
-                        "
+                        :href="$page.props.auth.user ? route('dashboard') : route('login')"
+                        :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Login'"
                         class="text-blue-600 font-medium hover:underline"
                     >
-                        <IconUser
-                            class="header__social-img"
-                            aria-label="Profile"
-                        />
+                        <IconUser class="header__social-img" aria-label="Profile" />
                     </Link>
 
                     <Link :href="route('cart.index')" aria-label="To cart">
-                        <IconBag
-                            class="header__social-img"
-                            aria-label="Bag image"
-                        />
+                        <IconBag class="header__social-img" aria-label="Bag image" />
                         <span v-if="$page.props.cart_count > 0">
                             {{ $page.props.cart_count }}
                         </span>
                     </Link>
 
-                    <button
-                        class="burger"
-                        id="burger"
-                        aria-label="To open menu"
-                    >
+                    <button class="burger" id="burger" aria-label="To open menu">
                         <span class="burger__line"></span>
                     </button>
                 </div>

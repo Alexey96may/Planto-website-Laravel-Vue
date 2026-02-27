@@ -39,6 +39,7 @@
         "vue-tsc": "^3.2.5"
     },
     "dependencies": {
-        "vuedraggable": "^4.1.0"
+        "vuedraggable": "^4.1.0",
+        "ziggy-js": "^2.6.1"
     }
 }

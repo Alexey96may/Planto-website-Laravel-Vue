@@ -1,3 +1,7 @@
+<script setup>
+    import { Link } from '@inertiajs/vue3';
+</script>
+
 <template>
     <div
         class="min-h-screen bg-[#0b120c] flex items-center justify-center px-4 overflow-hidden relative"
@@ -16,13 +20,10 @@
             <div class="-mt-12 md:-mt-20">
                 <h2 class="text-2xl md:text-4xl font-light text-white mb-4">
                     Упс! Вы забрели в
-                    <span class="text-green-500 font-medium"
-                        >дикие джунгли</span
-                    >
+                    <span class="text-green-500 font-medium">дикие джунгли</span>
                 </h2>
                 <p class="text-gray-400 mb-10 max-w-md mx-auto">
-                    Похоже, эта страница еще не выросла или была пересажена в
-                    другое место.
+                    Похоже, эта страница еще не выросла или была пересажена в другое место.
                 </p>
 
                 <Link
@@ -36,23 +37,18 @@
     </div>
 </template>
 
-<script setup>
-import { Link } from "@inertiajs/vue3";
-</script>
-
 <style scoped>
-/* Добавим легкое покачивание для текста, будто он на ветру */
-h2 {
-    animation: sway 6s ease-in-out infinite;
-}
+    h2 {
+        animation: sway 6s ease-in-out infinite;
+    }
 
-@keyframes sway {
-    0%,
-    100% {
-        transform: translateY(0);
+    @keyframes sway {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
     }
-    50% {
-        transform: translateY(-10px);
-    }
-}
 </style>
