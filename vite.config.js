@@ -8,7 +8,7 @@ import svgLoader from "vite-svg-loader";
 export default defineConfig({
     plugins: [
         laravel({
-            input: ["resources/scss/app.scss", "resources/js/app.js"],
+            input: ["resources/scss/app.scss", "resources/js/app.ts"],
             refresh: true,
         }),
         vue({

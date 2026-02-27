@@ -1,11 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch, computed } from "vue";
+import { h, VNode } from "vue";
+import { Product, CartItems } from "@/types";
 import { Link, router } from "@inertiajs/vue3";
 import AppImage from "@/Components/AppImage.vue";
 import MainLayout from "@/Layouts/MainLayout.vue";
+import route from "ziggy-js";
+import { formatUSD, calculateTotal } from "@/utils/money";
 
 defineOptions({
-    layout: (h, page) =>
+    layout: (h: any, page: VNode) =>
         h(
             MainLayout,
             {
@@ -15,13 +19,18 @@ defineOptions({
         ),
 });
 
-const props = defineProps({
-    product: Object,
-    backUrl: String,
-    cart_items: Object,
-});
+const props = defineProps<{
+    product: Product;
+    backUrl: string;
+    cart_items: CartItems;
+}>();
 
 const count = ref(props.cart_items[props.product.id] || 1);
+
+const totalPriceRaw = computed(() =>
+    calculateTotal(props.product.price, count.value),
+);
+const formattedPrice = computed(() => formatUSD(totalPriceRaw.value));
 
 watch(
     () => props.cart_items[props.product.id],
@@ -162,7 +171,7 @@ const buttonText = computed(() => {
                         @click="addOrUpdateCart"
                         :disabled="product.stock === 0"
                     >
-                        {{ buttonText }} {{ product.price * count }} ₽
+                        {{ buttonText }} {{ formattedPrice }}
                     </button>
                     <button
                         class="bg-red-500 text-white px-8 py-2 rounded-lg hover:bg-red-700 transition"
