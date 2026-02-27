@@ -1,112 +1,111 @@
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
-import { h, VNode } from "vue";
-import { Product, CartItems } from "@/types";
-import { Link, router } from "@inertiajs/vue3";
-import AppImage from "@/Components/AppImage.vue";
-import MainLayout from "@/Layouts/MainLayout.vue";
-import route from "ziggy-js";
-import { formatUSD, calculateTotal } from "@/utils/money";
+    import { computed, ref, watch } from 'vue';
+    import { VNode, h } from 'vue';
 
-defineOptions({
-    layout: (h: any, page: VNode) =>
-        h(
-            MainLayout,
-            {
-                full: false,
-            },
-            () => page,
-        ),
-});
+    import { Link, router } from '@inertiajs/vue3';
 
-const props = defineProps<{
-    product: Product;
-    backUrl: string;
-    cart_items: CartItems;
-}>();
+    import route from 'ziggy-js';
 
-const count = ref(props.cart_items[props.product.id] || 1);
+    import AppImage from '@/Components/AppImage.vue';
+    import MainLayout from '@/Layouts/MainLayout.vue';
+    import { CartItems, Product } from '@/types';
+    import { calculateTotal, formatUSD } from '@/utils/money';
 
-const totalPriceRaw = computed(() =>
-    calculateTotal(props.product.price, count.value),
-);
-const formattedPrice = computed(() => formatUSD(totalPriceRaw.value));
+    defineOptions({
+        layout: (h: any, page: VNode) =>
+            h(
+                MainLayout,
+                {
+                    full: false,
+                },
+                () => page,
+            ),
+    });
 
-watch(
-    () => props.cart_items[props.product.id],
-    (newVal) => {
-        if (newVal) count.value = newVal;
-    },
-);
+    const props = defineProps<{
+        product: Product;
+        backUrl: string;
+        cart_items: CartItems;
+    }>();
 
-const add = () => {
-    if (props.product?.stock > count.value) {
-        alert("Извините, у нас нет столько растений 🌿");
-        return;
-    }
-    count.value++;
-};
+    const count = ref(props.cart_items[props.product.id] || 1);
 
-const remove = () => {
-    if (count.value > 1) count.value--;
-};
+    const totalPriceRaw = computed(() => calculateTotal(props.product.price, count.value));
+    const formattedPrice = computed(() => formatUSD(totalPriceRaw.value));
 
-const addOrUpdateCart = () => {
-    const id = props.product?.id;
-    const newQuantity = count.value;
+    watch(
+        () => props.cart_items[props.product.id],
+        (newVal) => {
+            if (newVal) count.value = newVal;
+        },
+    );
 
-    if (newQuantity < 1 || !id) return;
+    const add = () => {
+        if (props.product?.stock > count.value) {
+            alert('Извините, у нас нет столько растений 🌿');
+            return;
+        }
+        count.value++;
+    };
 
-    const isInCart = !!props.cart_items[id];
+    const remove = () => {
+        if (count.value > 1) count.value--;
+    };
 
-    if (isInCart) {
-        router.patch(
-            route("cart.update", id),
-            {
-                quantity: newQuantity,
-            },
-            {
+    const addOrUpdateCart = () => {
+        const id = props.product?.id;
+        const newQuantity = count.value;
+
+        if (newQuantity < 1 || !id) return;
+
+        const isInCart = !!props.cart_items[id];
+
+        if (isInCart) {
+            router.patch(
+                route('cart.update', id),
+                {
+                    quantity: newQuantity,
+                },
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {},
+                },
+            );
+        } else {
+            router.post(
+                route('cart.add'),
+                {
+                    product_id: id,
+                    quantity: newQuantity,
+                },
+                { preserveScroll: true, onSuccess: () => {} },
+            );
+        }
+    };
+
+    const removeFromCart = () => {
+        const id = props.product?.id;
+
+        if (!id) return;
+
+        if (confirm('Вы уверены, что хотите удалить этот товар?')) {
+            router.delete(route('cart.remove', id), {
                 preserveScroll: true,
                 onSuccess: () => {},
-            },
-        );
-    } else {
-        router.post(
-            route("cart.add"),
-            {
-                product_id: id,
-                quantity: newQuantity,
-            },
-            { preserveScroll: true, onSuccess: () => {} },
-        );
-    }
-};
+            });
+        }
+    };
 
-const removeFromCart = () => {
-    const id = props.product?.id;
-
-    if (!id) return;
-
-    if (confirm("Вы уверены, что хотите удалить этот товар?")) {
-        router.delete(route("cart.remove", id), {
-            preserveScroll: true,
-            onSuccess: () => {},
-        });
-    }
-};
-
-const buttonText = computed(() => {
-    return props.cart_items[props.product.id]
-        ? "Обновить количество за "
-        : "Добавить в корзину за ";
-});
+    const buttonText = computed(() => {
+        return props.cart_items[props.product.id]
+            ? 'Обновить количество за '
+            : 'Добавить в корзину за ';
+    });
 </script>
 
 <template>
     <div class="max-w-4xl mx-auto p-6">
-        <Link :href="backUrl" class="text-sm text-gray-500 hover:text-green-600"
-            >← К каталогу</Link
-        >
+        <Link :href="backUrl" class="text-sm text-gray-500 hover:text-green-600">← К каталогу</Link>
 
         <div class="flex flex-col md:flex-row gap-8 mt-6">
             <div
@@ -136,14 +135,12 @@ const buttonText = computed(() => {
                     >
                 </p>
                 <p v-else>Without Category</p>
-                <p class="text-2xl text-green-600 font-semibold mt-2">
-                    {{ product.price }} ₽
-                </p>
+                <p class="text-2xl text-green-600 font-semibold mt-2">{{ product.price }} ₽</p>
 
                 <div class="mt-6">
                     <h3 class="font-medium text-gray-700">Description:</h3>
                     <p class="text-gray-600 mt-2 leading-relaxed">
-                        {{ product.description || "Description is loading..." }}
+                        {{ product.description || 'Description is loading...' }}
                     </p>
                 </div>
 
