@@ -1,9 +1,15 @@
+<script setup lang="ts">
+    import MainLayout from '@/Layouts/MainLayout.vue';
+
+    defineOptions({
+        layout: MainLayout,
+    });
+</script>
+
 <template>
     <div class="min-h-screen bg-[#0b120c] text-white py-16 px-4 font-sans">
         <div class="max-w-6xl mx-auto">
-            <h1
-                class="text-5xl md:text-7xl font-bold mb-8 opacity-90 tracking-tight"
-            >
+            <h1 class="text-5xl md:text-7xl font-bold mb-8 opacity-90 tracking-tight">
                 Contact <span class="text-green-500">Us</span>
             </h1>
 
@@ -68,9 +74,7 @@
                     <div
                         class="w-full h-64 bg-white/5 rounded-3xl border border-white/10 overflow-hidden flex items-center justify-center relative"
                     >
-                        <span class="text-gray-500 italic"
-                            >Interactive Map will be here</span
-                        >
+                        <span class="text-gray-500 italic">Interactive Map will be here</span>
                     </div>
                 </div>
             </div>
@@ -78,24 +82,8 @@
     </div>
 </template>
 
-<script setup>
-import MainLayout from "@/Layouts/MainLayout.vue";
-
-defineOptions({
-    layout: (h, page) =>
-        h(
-            MainLayout,
-            {
-                full: false,
-            },
-            () => page,
-        ),
-});
-</script>
-
 <style scoped>
-/* Добавим мягкое свечение фону как на скрине */
-.min-h-screen {
-    background: radial-gradient(circle at top right, #1a2e1c 0%, #0b120c 50%);
-}
+    .min-h-screen {
+        background: radial-gradient(circle at top right, #1a2e1c 0%, #0b120c 50%);
+    }
 </style>

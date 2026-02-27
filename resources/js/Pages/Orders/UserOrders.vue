@@ -1,21 +1,25 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+<script setup lang="ts">
+    import { Head } from '@inertiajs/vue3';
 
-defineProps({
-    orders: Array,
-});
+    import { route } from 'ziggy-js';
 
-// Упрощенная логика статусов для клиента
-const getStatusLabel = (status) => {
-    const labels = {
-        new: "Принят",
-        processing: "В сборке",
-        completed: "Доставлен",
-        cancelled: "Отменен",
+    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import { Order, OrderStatus } from '@/types';
+
+    const props = defineProps<{
+        orders: Order[];
+    }>();
+
+    const getStatusLabel = (status: OrderStatus): string => {
+        const labels: Record<OrderStatus, string> = {
+            new: 'Accepted',
+            processing: 'Processing',
+            completed: 'Delivered',
+            cancelled: 'Cancelled',
+        };
+
+        return labels[status];
     };
-    return labels[status] || status;
-};
 </script>
 
 <template>
@@ -23,9 +27,7 @@ const getStatusLabel = (status) => {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Мои заказы
-            </h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Мои заказы</h2>
         </template>
 
         <div class="py-12">
@@ -35,11 +37,7 @@ const getStatusLabel = (status) => {
                     class="bg-white p-6 shadow rounded-lg text-center text-gray-500"
                 >
                     У вас пока нет заказов. Время что-нибудь
-                    <a
-                        :href="route('products.index')"
-                        class="text-indigo-600 underline"
-                        >купить</a
-                    >!
+                    <a :href="route('products.index')" class="text-indigo-600 underline">купить</a>!
                 </div>
 
                 <div v-else class="space-y-4">
@@ -52,15 +50,9 @@ const getStatusLabel = (status) => {
                             <div>
                                 <span class="text-sm text-gray-500"
                                     >Заказ от
-                                    {{
-                                        new Date(
-                                            order.created_at,
-                                        ).toLocaleDateString()
-                                    }}</span
+                                    {{ new Date(order.created_at).toLocaleDateString() }}</span
                                 >
-                                <h3 class="text-lg font-bold">
-                                    Заказ №{{ order.id }}
-                                </h3>
+                                <h3 class="text-lg font-bold">Заказ №{{ order.id }}</h3>
                             </div>
                             <div class="text-right">
                                 <span
@@ -73,20 +65,15 @@ const getStatusLabel = (status) => {
                                 >
                                     {{ getStatusLabel(order.status) }}
                                 </span>
-                                <p class="text-xl font-black mt-1">
-                                    {{ order.total_price }} ₽
-                                </p>
+                                <p class="text-xl font-black mt-1">{{ order.total_price }} ₽</p>
                             </div>
                         </div>
 
                         <div class="border-t pt-4">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">
-                                Состав заказа:
-                            </h4>
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">Состав заказа:</h4>
                             <ul class="text-sm text-gray-600">
                                 <li v-for="item in order.items" :key="item.id">
-                                    {{ item.product_name }} —
-                                    {{ item.quantity }} шт.
+                                    {{ item.product_name }} — {{ item.quantity }} шт.
                                 </li>
                             </ul>
                         </div>
