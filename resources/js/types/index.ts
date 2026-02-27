@@ -1,3 +1,5 @@
+import { PageProps } from '@inertiajs/core';
+
 export interface Category {
     id: number;
     title: string;
@@ -103,8 +105,21 @@ export interface Product {
 
 export type CartItems = Record<number, number>;
 
-export interface CartItem extends Product {
+export interface CartItem {
+    id: number;
+    product_id: number;
+    title: string;
+    price: string;
     quantity: number;
+    total_price: number;
+    image: string;
+    stock: number;
+    is_available: boolean;
+}
+
+export interface CartData {
+    items: CartItem[];
+    total_sum: number;
 }
 
 export interface UserForm {
@@ -205,4 +220,34 @@ export interface NavigationItem {
 export interface Navigation {
     header: NavigationItem[];
     footer: NavigationItem[];
+}
+
+export interface CheckoutForm {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    comment: string;
+    create_account: boolean;
+}
+
+export interface SharedData extends PageProps {
+    auth: AuthProps;
+    cart_count: number;
+    cart_ids: number[];
+    settings: Settings;
+    navigation: Navigation;
+    flash: {
+        success: string | null;
+        error: string | null;
+        message: string | null;
+    };
+}
+
+declare module '@vue/runtime-core' {
+    interface ComponentCustomProperties {
+        $page: {
+            props: SharedData;
+        };
+    }
 }

@@ -1,63 +1,58 @@
-<script setup>
-import AppImage from "@/Components/AppImage.vue";
-import { Link, router } from "@inertiajs/vue3";
-import MainLayout from "@/Layouts/MainLayout.vue";
-import { ref } from "vue";
+<script setup lang="ts">
+    import { computed, ref } from 'vue';
 
-const props = defineProps({
-    cart: Object,
-});
+    import { Link, router } from '@inertiajs/vue3';
 
-defineOptions({
-    layout: (h, page) =>
-        h(
-            MainLayout,
-            {
-                full: false,
-            },
-            () => page,
-        ),
-});
+    import { route } from 'ziggy-js';
 
-const removeFromCart = (productId) => {
-    if (confirm("Вы уверены, что хотите удалить этот товар?")) {
-        router.delete(route("cart.remove", productId), {
-            preserveScroll: true,
-            onSuccess: () => {
-                // Здесь можно добавить уведомление об успехе
-            },
-        });
-    }
-};
+    import AppImage from '@/Components/AppImage.vue';
+    import MainLayout from '@/Layouts/MainLayout.vue';
+    import { CartData, CartItem } from '@/types';
+    import { debounce } from '@/utils/helpers';
 
-const timers = ref({});
+    const props = defineProps<{
+        cart: CartData;
+    }>();
 
-const updateQuantity = (item, newQuantity) => {
-    if (newQuantity < 1) return; // Страховка
+    defineOptions({
+        layout: MainLayout,
+    });
 
-    if (newQuantity > item.stock) {
-        alert("Извините, у нас нет столько растений 🌿");
-        return;
-    } // Страховка Number 2
-
-    item.quantity = newQuantity;
-
-    clearTimeout(timers.value[item.product_id]);
-
-    timers.value[item.product_id] = setTimeout(() => {
-        router.patch(
-            route("cart.update", item.product_id),
-            {
-                quantity: newQuantity,
-            },
-            {
+    const removeFromCart = (productId: number) => {
+        if (confirm('Are you sure you want to delete this item?')) {
+            router.delete(route('cart.remove', productId), {
                 preserveScroll: true,
-            },
-        );
+                onSuccess: () => {
+                    // Здесь можно добавить уведомление об успехе
+                },
+            });
+        }
+    };
 
-        delete timers.value[item.product_id];
-    }, 500);
-};
+    const updateRequests = ref<Record<number, ReturnType<typeof debounce>>>({});
+
+    const updateQuantity = (item: CartItem, newQuantity: number) => {
+        if (newQuantity < 1) return;
+
+        if (newQuantity > item.stock) {
+            alert("Sorry, we don't have that many plants 🌿");
+            return;
+        }
+
+        item.quantity = newQuantity;
+
+        if (!updateRequests.value[item.product_id]) {
+            updateRequests.value[item.product_id] = debounce((id: number, qty: number) => {
+                router.patch(route('cart.update', id), { quantity: qty }, { preserveScroll: true });
+            }, 500);
+        }
+
+        updateRequests.value[item.product_id](item.product_id, newQuantity);
+    };
+
+    const hasAvailableItems = computed(() => {
+        return props.cart.items.some((item) => item.is_available);
+    });
 </script>
 
 <template>
@@ -71,10 +66,7 @@ const updateQuantity = (item, newQuantity) => {
                 class="flex justify-between border-b py-4"
             >
                 <div class="flex items-center">
-                    <img
-                        :src="item.image_url"
-                        class="w-16 h-16 object-cover mr-4"
-                    />
+                    <img :src="item.image" class="w-16 h-16 object-cover mr-4" />
                     <div>
                         <h3 class="text-gray-500 font-semibold">
                             {{ item.title }}
@@ -119,24 +111,24 @@ const updateQuantity = (item, newQuantity) => {
                 </div>
             </div>
 
-            <div class="mt-6 text-right text-xl font-bold">
-                Итого: {{ cart.total_sum }} $
-            </div>
+            <div class="mt-6 text-right text-xl font-bold">Итого: {{ cart.total_sum }} $</div>
 
             <Link
-                href="/checkout"
+                v-if="hasAvailableItems"
+                :href="route('checkout.index')"
                 class="mt-4 block text-center bg-black text-white p-3 rounded"
-                :disabled="cart.is_available"
             >
                 Оформить заказ
             </Link>
+
+            <div v-else class="btn-primary opacity-50 cursor-not-allowed text-center">
+                Add something to cart
+            </div>
         </div>
 
         <div v-else class="text-center py-10">
             <p>Корзина пуста</p>
-            <Link :href="route('/')" class="text-blue-500"
-                >Вернуться в магазин</Link
-            >
+            <Link :href="route('shop')" class="text-blue-500">Return to the store</Link>
         </div>
     </div>
 </template>

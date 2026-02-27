@@ -23,11 +23,11 @@
 </script>
 
 <template>
-    <Head title="Мои заказы" />
+    <Head title="My orders" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Мои заказы</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">My orders</h2>
         </template>
 
         <div class="py-12">
@@ -36,8 +36,10 @@
                     v-if="orders.length === 0"
                     class="bg-white p-6 shadow rounded-lg text-center text-gray-500"
                 >
-                    У вас пока нет заказов. Время что-нибудь
-                    <a :href="route('products.index')" class="text-indigo-600 underline">купить</a>!
+                    You don't have any orders yet. Time to buy
+                    <a :href="route('products.index')" class="text-indigo-600 underline"
+                        >something</a
+                    >!
                 </div>
 
                 <div v-else class="space-y-4">
