@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { VNode, h } from 'vue';
+    import { VNode } from 'vue';
 
     import { Head } from '@inertiajs/vue3';
 
@@ -21,7 +21,14 @@
     }
 
     defineOptions({
-        layout: MainLayout,
+        layout: (h: any, page: VNode) =>
+            h(
+                MainLayout,
+                {
+                    full: true,
+                },
+                () => page,
+            ),
     });
 
     const props = withDefaults(defineProps<Props>(), {
