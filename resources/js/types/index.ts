@@ -64,6 +64,10 @@ export interface Comment {
     updated_at: string;
 }
 
+export interface Review extends Comment {
+    user: User;
+}
+
 export interface User {
     id: number;
     name: string;

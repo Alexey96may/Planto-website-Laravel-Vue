@@ -1,41 +1,33 @@
-<script setup>
-import { Head } from "@inertiajs/vue3";
-import MainLayout from "@/Layouts/MainLayout.vue";
+<script setup lang="ts">
+    import { Head } from '@inertiajs/vue3';
 
-const props = defineProps({
-    reviews: Object,
-    averageRating: Number,
-});
+    import MainLayout from '@/Layouts/MainLayout.vue';
+    import { PaginatedResponse, Review } from '@/types';
 
-defineOptions({
-    layout: (h, page) =>
-        h(
-            MainLayout,
-            {
-                full: false,
-            },
-            () => page,
-        ),
-});
+    const props = defineProps<{
+        reviews: PaginatedResponse<Review>;
+        averageRating: number;
+    }>();
+
+    defineOptions({
+        layout: MainLayout,
+    });
 </script>
 
 <template>
     <Head title="Отзывы о нас" />
 
     <div class="max-w-5xl mx-auto py-12 px-4">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Отзывы клиентов</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Customer reviews</h1>
 
-        <div
-            v-if="averageRating"
-            class="mb-8 p-4 bg-indigo-50 rounded-lg flex items-center"
-        >
+        <div v-if="averageRating" class="mb-8 p-4 bg-indigo-50 rounded-lg flex items-center">
             <span class="text-4xl font-black text-indigo-600 mr-4">{{
                 averageRating.toFixed(1)
             }}</span>
             <div>
-                <div class="text-sm text-gray-600">Средняя оценка сайта</div>
+                <div class="text-sm text-gray-600">Average site rating</div>
                 <div class="text-yellow-500">
-                    {{ "⭐".repeat(Math.round(averageRating)) }}
+                    {{ '⭐'.repeat(Math.round(averageRating)) }}
                 </div>
             </div>
         </div>
@@ -49,12 +41,10 @@ defineOptions({
                 <div class="flex justify-between items-start mb-4">
                     <div>
                         <div class="font-bold text-gray-900">
-                            {{ review.user?.name || "Аноним" }}
+                            {{ review.user?.name || 'Аноним' }}
                         </div>
                         <div class="text-xs text-gray-400">
-                            {{
-                                new Date(review.created_at).toLocaleDateString()
-                            }}
+                            {{ new Date(review.created_at).toLocaleDateString() }}
                         </div>
                     </div>
                     <div
@@ -69,11 +59,8 @@ defineOptions({
             </div>
         </div>
 
-        <div
-            v-if="reviews.data.length === 0"
-            class="text-center py-20 text-gray-500"
-        >
-            Оставьте первый отзыв в личном кабинете!
+        <div v-if="reviews.data.length === 0" class="text-center py-20 text-gray-500">
+            Be the first to leave a review in your personal account!
         </div>
     </div>
 </template>
