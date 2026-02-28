@@ -14,6 +14,8 @@ export interface CategoryForm {
     id?: number;
 }
 
+export type CategoryNavigationCreate = Pick<Category, 'id' | 'title'>;
+
 export interface PaginationLink {
     url: string | null;
     label: string;
@@ -229,12 +231,26 @@ export interface NavigationItem {
     created_at: string;
     updated_at: string;
     children: NavigationItem[];
-    category: Category | null;
+    category?: Category | null;
 }
 
 export interface Navigation {
     header: NavigationItem[];
     footer: NavigationItem[];
+}
+
+export type NavigationCreate = Pick<NavigationItem, 'id' | 'title' | 'location'>;
+export type NavigationEdit = Omit<NavigationItem, 'children'>;
+
+export interface NavigationForm {
+    title: string;
+    location: 'header' | 'footer';
+    parent_id: number | null;
+    order: number;
+    is_active: boolean;
+    type: 'link' | 'category';
+    category_id: number | null;
+    link: string;
 }
 
 export interface CheckoutForm {

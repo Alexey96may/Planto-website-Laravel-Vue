@@ -1,24 +1,29 @@
-<script setup>
+<script setup lang="ts">
     import { ref } from 'vue';
 
     import { Link, router } from '@inertiajs/vue3';
 
     import draggable from 'vuedraggable';
+    import { route } from 'ziggy-js';
 
     import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { NavigationItem } from '@/types';
 
     defineOptions({
         layout: AdminLayout,
     });
 
-    const props = defineProps({
-        menuItems: Array,
-    });
+    const props = defineProps<{
+        menuItems: NavigationItem[];
+    }>();
 
     const list = ref([...props.menuItems]);
 
+    const isSaving = ref(false);
+
     const saveOrder = () => {
-        // Create simple array: [{id: 5, position: 0}, {id: 2, position: 1}, ...]
+        isSaving.value = true;
+
         const orders = list.value.map((item, index) => ({
             id: item.id,
             position: index,
@@ -29,13 +34,21 @@
             { orders },
             {
                 preserveScroll: true,
-                onSuccess: () => alert('Порядок сохранен!'),
+                onFinish: () => (isSaving.value = false),
+                onSuccess: () => {
+                    // Здесь лучше вызвать твой глобальный Toast или уведомление
+                },
             },
         );
     };
 
-    const deleteItem = (id) => {
+    //todo confirm
+    const deleteItem = (id: number): void => {
         if (confirm('Удалить этот пункт и все вложенные меню?')) {
+            router.delete(route('admin.navigation.destroy', id), {
+                preserveScroll: true,
+                // Можно добавить хук, чтобы показать лоадер, если нужно
+            });
             router.delete(route('admin.navigation.destroy', id));
         }
     };
@@ -44,19 +57,24 @@
 <template>
     <div class="p-6">
         <div class="flex justify-between mb-6">
-            <h1 class="text-2xl font-bold">Управление меню</h1>
+            <h1 class="text-2xl font-bold">Menu management</h1>
             <Link
                 :href="route('admin.navigation.create')"
                 class="bg-blue-600 text-white px-4 py-2 rounded"
             >
-                + Добавить пункт
+                + Add item
             </Link>
         </div>
 
         <div class="flex justify-between mb-4">
-            <h1 class="text-2xl font-bold">Сортировка меню</h1>
-            <button @click="saveOrder" class="bg-green-600 text-white px-4 py-2 rounded">
-                Сохранить порядок
+            <h1 class="text-2xl font-bold">Sorting the menu</h1>
+            <button
+                @click="saveOrder"
+                :disabled="isSaving"
+                class="bg-green-600 text-white px-4 py-2 rounded"
+            >
+                <span v-if="isSaving">Saving...</span>
+                <span v-else>Save order</span>
             </button>
         </div>
 
@@ -77,12 +95,12 @@
         <table class="w-full bg-white rounded-lg shadow">
             <thead>
                 <tr class="border-b text-left bg-gray-50">
-                    <th class="p-4">Название</th>
-                    <th class="p-4">Локация</th>
-                    <th class="p-4">Ссылка</th>
-                    <th class="p-4">Порядок</th>
-                    <th class="p-4">Активно</th>
-                    <th class="p-4 text-right">Действия</th>
+                    <th class="p-4">Name</th>
+                    <th class="p-4">Location</th>
+                    <th class="p-4">Link</th>
+                    <th class="p-4">Order</th>
+                    <th class="p-4">Active</th>
+                    <th class="p-4 text-right">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -103,10 +121,10 @@
                             <Link
                                 :href="route('admin.navigation.edit', item.id)"
                                 class="text-indigo-600 mr-3"
-                                >Редактировать</Link
+                                >Edit</Link
                             >
                             <button @click="deleteItem(item.id)" class="text-red-600">
-                                Удалить
+                                Delete
                             </button>
                         </td>
                     </tr>
@@ -130,10 +148,10 @@
                             <Link
                                 :href="route('admin.navigation.edit', child.id)"
                                 class="text-indigo-400 mr-3"
-                                >Ред.</Link
+                                >Edit</Link
                             >
                             <button @click="deleteItem(child.id)" class="text-red-400">
-                                Удал.
+                                Delete
                             </button>
                         </td>
                     </tr>

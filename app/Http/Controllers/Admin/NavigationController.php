@@ -13,6 +13,7 @@ class NavigationController extends Controller
 {
     public function index()
     {
+
         return Inertia::render('Admin/Navigation/Index', [
             'menuItems' => Navigation::with('children')
                 ->whereNull('parent_id') 
@@ -53,6 +54,7 @@ class NavigationController extends Controller
     
     public function edit(Navigation $navigation)
     {
+        dd($navigation->toArray());
         return Inertia::render('Admin/Navigation/Edit', [
             'item' => $navigation,
             'parentOptions' => Navigation::whereNull('parent_id')
