@@ -1,26 +1,30 @@
-<script setup>
+<script setup lang="ts">
     import { Head, Link } from '@inertiajs/vue3';
 
-    import Toast from '@/Components/Toast.vue';
+    import { route } from 'ziggy-js';
 
-    // Наш тост    import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import Toast from '@/Components/Toast.vue';
+    import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { OrderStatus, OrderWithUser } from '@/types';
+    import { formatUSD } from '@/utils/money';
+
     defineOptions({
         layout: AdminLayout,
     });
 
-    defineProps({
-        orders: Array, // Предполагаем, что контроллер передает массив orders
-    });
+    const props = defineProps<{
+        orders: OrderWithUser[];
+    }>();
 
-    // Функция для красивого отображения статуса
-    const getStatusClass = (status) => {
-        const classes = {
+    // Display the status in a beautiful way
+    const getStatusClass = (status: OrderStatus): string => {
+        const classes: Record<OrderStatus, string> = {
             new: 'bg-blue-100 text-blue-800',
             processing: 'bg-yellow-100 text-yellow-800',
             completed: 'bg-green-100 text-green-800',
             cancelled: 'bg-red-100 text-red-800',
         };
-        return classes[status] || 'bg-gray-100 text-gray-800';
+        return classes[status as OrderStatus] || 'bg-gray-100 text-gray-800';
     };
 </script>
 
@@ -45,22 +49,22 @@
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Клиент
+                                Client
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Сумма
+                                Sum
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Статус
+                                Status
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Дата
+                                Date
                             </th>
                             <th class="px-6 py-3"></th>
                         </tr>
@@ -77,7 +81,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap font-bold text-green-600">
-                                {{ order.total_price }} ₽
+                                {{ formatUSD(order.total_price) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span
@@ -96,7 +100,7 @@
                                 <Link
                                     :href="route('admin.orders.show', order.id)"
                                     class="text-indigo-600 hover:text-indigo-900"
-                                    >Детали</Link
+                                    >Details</Link
                                 >
                             </td>
                         </tr>

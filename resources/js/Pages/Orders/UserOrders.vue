@@ -4,10 +4,10 @@
     import { route } from 'ziggy-js';
 
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import { Order, OrderStatus } from '@/types';
+    import { FullOrder, OrderStatus } from '@/types';
 
     const props = defineProps<{
-        orders: Order[];
+        orders: FullOrder[];
     }>();
 
     const getStatusLabel = (status: OrderStatus): string => {

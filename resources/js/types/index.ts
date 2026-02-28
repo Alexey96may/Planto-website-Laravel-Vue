@@ -176,6 +176,13 @@ export interface Order {
     comment: string | null;
     created_at: string;
     updated_at: string;
+}
+
+export interface OrderWithUser extends Order {
+    user: User;
+}
+
+export interface FullOrder extends Order {
     items: OrderItem[];
 }
 

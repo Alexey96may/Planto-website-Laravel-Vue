@@ -1,7 +1,13 @@
-<script setup>
-import { Link } from "@inertiajs/vue3";
-import Toast from "@/Components/Toast.vue";
-import NavLink from "@/Components/NavLink.vue";
+<script setup lang="ts">
+    import { Link } from '@inertiajs/vue3';
+
+    import NavLink from '@/Components/NavLink.vue';
+    import Toast from '@/Components/Toast.vue';
+
+    defineSlots<{
+        default(props: {}): any;
+        header(props: {}): any;
+    }>();
 </script>
 
 <template>
@@ -106,9 +112,7 @@ import NavLink from "@/Components/NavLink.vue";
         </aside>
 
         <main class="flex-1">
-            <header
-                class="bg-white shadow-sm h-16 flex items-center justify-between px-8"
-            >
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-8">
                 <div class="text-gray-600 font-medium italic">
                     Добро пожаловать, {{ $page.props.auth.user.name }}
                 </div>
