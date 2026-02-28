@@ -1,12 +1,19 @@
 <script setup lang="ts">
-    import { Link } from '@inertiajs/vue3';
+    import { computed } from 'vue';
 
-    import NavLink from '@/Components/NavLink.vue';
+    import { Link } from '@inertiajs/vue3';
+    import { usePage } from '@inertiajs/vue3';
+
+    import { route } from 'ziggy-js';
+
     import Toast from '@/Components/Toast.vue';
+
+    const currentComponent = computed(() => page.component);
+
+    const page = usePage();
 
     defineSlots<{
         default(props: {}): any;
-        header(props: {}): any;
     }>();
 </script>
 
@@ -23,20 +30,21 @@
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :class="{
                         'bg-gray-800 border-l-4 border-green-500':
-                            $page.component === 'Admin/Dashboard',
+                            currentComponent === 'Admin/Dashboard',
                     }"
                 >
-                    🏠 Главная
+                    🏠 Dashboard
                 </Link>
+
                 <Link
                     :href="route('admin.products.index')"
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :class="{
                         'bg-gray-800 border-l-4 border-green-500':
-                            $page.component === 'Admin/Products/Index',
+                            currentComponent === 'Admin/Products/Index',
                     }"
                 >
-                    📦 Товары
+                    📦 Products
                 </Link>
 
                 <Link
@@ -44,10 +52,10 @@
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :class="{
                         'bg-gray-800 border-l-4 border-green-500':
-                            $page.component === 'Admin/Сategories/Index',
+                            currentComponent === 'Admin/Сategories/Index',
                     }"
                 >
-                    📦 Категории
+                    📂 Categories
                 </Link>
 
                 <Link
@@ -55,31 +63,43 @@
                     :href="route('admin.orders.index')"
                     :active="route().current('admin.orders.*')"
                 >
-                    👥 Заказы
+                    🛒 Orders
                 </Link>
+
                 <Link
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :href="route('admin.comments.index')"
                     :active="route().current('admin.comments.*')"
                 >
-                    👥 Комментарии
+                    💬 Comments
+                    <span v-if="!$page.props.pending_comments_count">{{
+                        $page.props.pending_comments_count
+                    }}</span>
+                    <span
+                        v-else
+                        class="inline-flex items-center justify-center px-2 py-1 ml-1 text-xs font-bold leading-none text-red-500 animate-bounce"
+                    >
+                        ({{ $page.props.pending_comments_count }})
+                    </span>
                 </Link>
+
                 <Link
                     :href="route('admin.users.index')"
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :class="{
                         'bg-gray-800 border-l-4 border-green-500':
-                            $page.component === 'Admin/Users/Index',
+                            currentComponent === 'Admin/Users/Index',
                     }"
                 >
-                    👥 Пользователи
+                    👥 Users
                 </Link>
+
                 <Link
                     :href="route('admin.navigation.index')"
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :active="route().current('admin.navigation.*')"
                 >
-                    ⚙️ Навигация
+                    🗺️ Navigation
                 </Link>
 
                 <Link
@@ -87,25 +107,26 @@
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :active="route().current('admin.features.*')"
                 >
-                    ⚙️ Фичи
+                    ✨ Features
                 </Link>
+
                 <Link
                     :href="route('admin.settings.index')"
                     class="block py-3 px-6 hover:bg-gray-800 transition"
                     :class="{
                         'bg-gray-800 border-l-4 border-green-500':
-                            $page.component === 'Admin/Settings/Index',
+                            currentComponent === 'Admin/Settings/Index',
                     }"
-                    :active="route().current('admin.comments.*')"
                 >
-                    ⚙️ Общие Настройки
+                    ⚙️ Settings
                 </Link>
+
                 <div class="border-t border-gray-800 mt-6 pt-6">
                     <Link
                         href="/"
                         class="block py-3 px-6 text-gray-400 hover:text-white transition"
                     >
-                        🌐 На сайт
+                        🌐 View Website
                     </Link>
                 </div>
             </nav>
@@ -114,7 +135,7 @@
         <main class="flex-1">
             <header class="bg-white shadow-sm h-16 flex items-center justify-between px-8">
                 <div class="text-gray-600 font-medium italic">
-                    Добро пожаловать, {{ $page.props.auth.user.name }}
+                    Welcome back, {{ $page.props.auth.user.name }}
                 </div>
                 <Link
                     :href="route('logout')"
@@ -122,7 +143,7 @@
                     as="button"
                     class="text-sm text-red-500 hover:underline"
                 >
-                    Выйти
+                    Logout
                 </Link>
             </header>
 

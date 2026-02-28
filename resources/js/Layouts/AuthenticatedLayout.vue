@@ -1,7 +1,9 @@
-<script setup>
+<script setup lang="ts">
     import { ref } from 'vue';
 
     import { Link } from '@inertiajs/vue3';
+
+    import { route } from 'ziggy-js';
 
     import ApplicationLogo from '@/Components/ApplicationLogo.vue';
     import Dropdown from '@/Components/Dropdown.vue';
@@ -11,6 +13,11 @@
     import Toast from '@/Components/Toast.vue';
 
     const showingNavigationDropdown = ref(false);
+
+    defineSlots<{
+        default(props: {}): any;
+        header(props: {}): any;
+    }>();
 </script>
 
 <template>
@@ -35,7 +42,7 @@
                                     :active="false"
                                     class="text-gray-400 hover:text-[#c5d86d]"
                                 >
-                                    Главная страница
+                                    Home
                                 </NavLink>
 
                                 <NavLink
@@ -43,7 +50,7 @@
                                     :active="route().current('dashboard')"
                                     class="text-gray-400 active:text-[#c5d86d]"
                                 >
-                                    Личный кабинет
+                                    My Account
                                 </NavLink>
                             </div>
                         </div>
@@ -80,7 +87,7 @@
                                                 :href="route('profile.edit')"
                                                 class="text-gray-300 hover:bg-[#1a1f16] hover:text-[#c5d86d]"
                                             >
-                                                Profile
+                                                Profile Settings
                                             </DropdownLink>
                                             <DropdownLink
                                                 :href="route('logout')"
@@ -141,7 +148,7 @@
                     class="sm:hidden bg-[#1a1f16] border-t border-white/5"
                 >
                     <div class="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink :href="'/'"> Главная </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="'/'"> Home </ResponsiveNavLink>
                         <ResponsiveNavLink
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
@@ -154,7 +161,7 @@
 
             <header class="bg-transparent" v-if="$slots.header">
                 <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                    <div class="text-[#c5d86d] font-bold tracking-tight">
+                    <div class="text-[#c5d86d] font-bold tracking-tight text-2xl">
                         <slot name="header" />
                     </div>
                 </div>
@@ -168,7 +175,6 @@
 </template>
 
 <style scoped>
-    /* Чтобы NavLink-и не выглядели стандартно, добавим кастомный акцент */
     :deep(.nav-link-active) {
         color: #c5d86d !important;
         border-bottom: 2px solid #c5d86d !important;

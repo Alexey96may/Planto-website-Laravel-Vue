@@ -218,6 +218,7 @@ export interface Settings {
 
     is_open: string;
     products_per_page: string;
+    top_days_interval: number;
 
     slider_main_limit: string;
     slider_features_limit: string;
@@ -241,6 +242,53 @@ export interface Settings {
     section_reviews_link: string | null;
     section_o2_link: string | null;
     live_demo_url: string;
+}
+
+export interface SettingsForm {
+    // General
+    site_name: string;
+    contact_phone: string;
+    contact_email: string;
+    contact_address: string;
+    is_open: boolean;
+
+    // Social Links
+    link_fb: string | null;
+    link_x: string | null;
+    link_li: string | null;
+
+    // Content
+    footer_main_text: string;
+    footer_rights: string;
+    hero_main_text: string;
+    live_demo_url: string;
+
+    // Pagination & Logic
+    products_per_page: number;
+    top_days_interval: number;
+
+    // Limits (Numeric)
+    slider_main_limit: number;
+    slider_features_limit: number;
+    top_plants_limit: number;
+    comments_limit: number;
+    features_limit: number;
+    reviews_limit: number;
+    trendy_limit: number;
+    hero_plants_limit: number;
+
+    // Section Titles
+    section_trendy_title: string;
+    section_selling_title: string;
+    section_reviews_title: string;
+    section_o2_title: string;
+    section_hero_title: string;
+
+    // Section Links
+    section_trendy_link: string | null;
+    section_selling_link: string | null;
+    section_reviews_link: string | null;
+    section_o2_link: string | null;
 }
 
 export interface NavigationItem {
@@ -298,6 +346,7 @@ export interface SharedData extends PageProps {
         error: string | null;
         message: string | null;
     };
+    pending_comments_count: number;
 }
 
 declare module '@vue/runtime-core' {

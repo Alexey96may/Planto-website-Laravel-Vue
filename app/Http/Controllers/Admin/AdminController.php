@@ -17,7 +17,6 @@ class AdminController extends Controller
             'stats' => [
                 'products_count' => Product::count(),
                 'users_count' => User::count(),
-                'pending_comments_count' => Comment::where('is_active', false)->count(), //Нужно ли?
             ]
         ]);
     }
