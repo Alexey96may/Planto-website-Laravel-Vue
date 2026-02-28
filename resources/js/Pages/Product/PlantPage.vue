@@ -8,7 +8,7 @@
 
     import AppImage from '@/Components/AppImage.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
-    import { CartItems, Product } from '@/types';
+    import { CartItems, ProductWithCategory } from '@/types';
     import { calculateTotal, formatUSD } from '@/utils/money';
 
     defineOptions({
@@ -16,7 +16,7 @@
     });
 
     const props = defineProps<{
-        product: Product;
+        product: ProductWithCategory;
         backUrl: string;
         cart_items: CartItems;
     }>();

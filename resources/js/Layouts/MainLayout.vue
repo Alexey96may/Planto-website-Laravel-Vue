@@ -1,9 +1,15 @@
-<script setup>
+<script setup lang="ts">
     import { usePage } from '@inertiajs/vue3';
 
     import Footer from '@/Components/Footer.vue';
     import Header from '@/Components/Header.vue';
     import Toast from '@/Components/Toast.vue';
+
+    defineSlots<{
+        default(props: {}): any;
+        hero(props: {}): any;
+        trendy(props: {}): any;
+    }>();
 
     defineProps({ full: { type: Boolean, default: false } });
 

@@ -47,6 +47,41 @@ export interface ProductFilters {
     in_stock: 'true' | 'false' | boolean | null;
 }
 
+export interface Product {
+    id: number;
+    title: string;
+    description: string;
+    price: string;
+    image: string;
+    image_url: string;
+    category_id: number;
+    sales_count: number;
+    is_trending: boolean;
+    trending_order: number;
+    stock: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface ProductWithCategory extends Product {
+    category: Category;
+}
+
+export interface ProductForm {
+    title: string;
+    description: string | null;
+    price: number | string;
+    category_id: number | string;
+    image: File | null;
+    is_trending: boolean;
+    trending_order: number;
+    stock: number;
+}
+
+export interface ProductEditForm extends ProductForm {
+    _method: string;
+}
+
 export type SortOption = 'popular' | 'newest' | 'price_asc' | 'price_desc';
 
 export interface Feature {
@@ -101,23 +136,6 @@ export interface User {
 
 export interface AuthProps {
     user: User;
-}
-
-export interface Product {
-    id: number;
-    title: string;
-    description: string;
-    price: string;
-    image: string;
-    image_url: string;
-    category_id: number;
-    sales_count: number;
-    is_trending: boolean;
-    trending_order: number;
-    stock: number;
-    created_at: string;
-    updated_at: string;
-    category?: Category;
 }
 
 export type CartItems = Record<number, number>;

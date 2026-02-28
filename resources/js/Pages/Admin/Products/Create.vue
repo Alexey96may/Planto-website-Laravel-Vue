@@ -1,30 +1,67 @@
-<script setup>
-import { Head, useForm } from "@inertiajs/vue3";
-import AdminLayout from "@/Layouts/AdminLayout.vue";
+<script setup lang="ts">
+    import { ref } from 'vue';
 
-defineProps({
-    categories: Array,
-});
+    import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
-const form = useForm({
-    title: "",
-    description: "",
-    price: "",
-    category_id: "",
-    image: "https://via.placeholder.com/300",
-    is_trending: false,
-    trending_order: 999,
-    stock: 1,
-});
+    import { route } from 'ziggy-js';
 
-const submit = () => {
-    form.post(route("admin.products.store"));
-};
+    import ImageUploader from '@/Components/Shared/ImageUploader.vue';
+    import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { Category, ProductForm } from '@/types';
+
+    const uploader = ref<InstanceType<typeof ImageUploader> | null>(null);
+
+    defineProps<{
+        categories: Category[];
+    }>();
+
+    const form = useForm<ProductForm>({
+        title: '',
+        description: '',
+        price: '',
+        category_id: '',
+        image: null,
+        is_trending: false,
+        trending_order: 999,
+        stock: 1,
+    });
+
+    const submit = () => {
+        form.post(route('admin.products.store'), {
+            onSuccess: () => {
+                form.reset();
+                uploader.value?.clearImage();
+                // todo
+                alert('Продукт успешно создан!');
+            },
+            onError: (errors) => {
+                // todo
+                console.error('Error while creating:', errors);
+            },
+        });
+    };
+
+    const handleImageChange = (event: Event): void => {
+        const target = event.target as HTMLInputElement;
+
+        if (target.files && target.files.length > 0) {
+            form.image = target.files[0];
+
+            // Бонус: если хочешь сразу показать превью выбранной картинки
+            // const reader = new FileReader();
+            // reader.onload = (e) => { /* логика для previewUrl.value = e.target.result */ };
+            // reader.readAsDataURL(target.files[0]);
+        }
+    };
+
+    const handleImageSelected = (file: File) => {
+        form.image = file;
+    };
 </script>
 
 <template>
     <AdminLayout>
-        <Head title="Добавить товар" />
+        <Head title="Add product" />
 
         <div class="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow">
             <h1 class="text-2xl font-bold mb-6">Новое растение</h1>
@@ -44,20 +81,14 @@ const submit = () => {
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-1"
-                        >Фото товара</label
-                    >
+                    <label class="block text-sm font-medium mb-1">Фото товара</label>
                     <input
                         type="file"
-                        @input="form.image = $event.target.files[0]"
+                        @input="handleImageChange"
                         class="w-full border rounded-lg p-2"
                         accept="image/*"
                     />
-                    <progress
-                        v-if="form.progress"
-                        :value="form.progress.percentage"
-                        max="100"
-                    >
+                    <progress v-if="form.progress" :value="form.progress.percentage" max="100">
                         {{ form.progress.percentage }}%
                     </progress>
                     <div v-if="form.errors.image" class="text-red-500 text-xs">
@@ -65,18 +96,18 @@ const submit = () => {
                     </div>
                 </div>
 
+                <ImageUploader
+                    ref="uploader"
+                    v-model="form.image"
+                    label="Product image"
+                    :error="form.errors.image"
+                />
+
                 <div>
                     <label class="block text-sm font-medium">Категория</label>
-                    <select
-                        v-model="form.category_id"
-                        class="w-full border rounded-lg p-2"
-                    >
+                    <select v-model="form.category_id" class="w-full border rounded-lg p-2">
                         <option :value="null">Без категории</option>
-                        <option
-                            v-for="cat in categories"
-                            :key="cat.id"
-                            :value="cat.id"
-                        >
+                        <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                             {{ cat.title }}
                         </option>
                     </select>
@@ -113,17 +144,14 @@ const submit = () => {
                         class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 transition"
                         :class="{ 'border-red-500 bg-red-50': form.stock <= 0 }"
                     />
-                    <p
-                        v-if="form.errors.stock"
-                        class="text-red-500 text-xs mt-1"
-                    >
+                    <p v-if="form.errors.stock" class="text-red-500 text-xs mt-1">
                         {{ form.errors.stock }}
                     </p>
                     <p class="text-[10px] text-gray-500 mt-1 italic">
                         {{
                             form.stock > 0
-                                ? "Товар будет доступен к покупке"
-                                : "Товар будет скрыт (нет в наличии)"
+                                ? 'Товар будет доступен к покупке'
+                                : 'Товар будет скрыт (нет в наличии)'
                         }}
                     </p>
                 </div>
@@ -160,19 +188,18 @@ const submit = () => {
                 </div>
 
                 <div class="flex justify-end space-x-2">
-                    <button
-                        type="button"
-                        @click="window.history.back()"
-                        class="px-4 py-2 text-gray-600"
+                    <Link
+                        :href="route('admin.products.index')"
+                        class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
                     >
-                        Отмена
-                    </button>
+                        Cancel
+                    </Link>
                     <button
                         type="submit"
                         :disabled="form.processing"
                         class="px-4 py-2 bg-green-600 text-white rounded-lg"
                     >
-                        {{ form.processing ? "Сохранение..." : "Создать" }}
+                        {{ form.processing ? 'Сохранение...' : 'Создать' }}
                     </button>
                 </div>
             </form>

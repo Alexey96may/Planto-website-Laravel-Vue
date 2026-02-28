@@ -1,47 +1,84 @@
-<script setup>
-import { Head, Link, router } from "@inertiajs/vue3";
-import Pagination from "@/Components/Pagination.vue";
-import AdminLayout from "@/Layouts/AdminLayout.vue";
+<script setup lang="ts">
+    import { ref } from 'vue';
 
-defineProps({
-    products: Object,
-});
+    import { Head, Link, router } from '@inertiajs/vue3';
 
-const deleteProduct = (id) => {
-    if (confirm("Вы уверены, что хотите удалить этот товар?")) {
-        router.delete(route("admin.products.destroy", id));
-    }
-};
+    import { route } from 'ziggy-js';
 
-const updateProductField = (product, field, value) => {
-    let finalValue = value;
-    if (field === "stock" || field === "trending_order") {
-        finalValue = value === "" ? 0 : parseInt(value);
-    }
+    import Pagination from '@/Components/Pagination.vue';
+    import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { PaginatedResponse, ProductWithCategory } from '@/types';
+    import { formatUSD } from '@/utils/money';
 
-    if (product[field] === value) return;
+    defineProps<{
+        products: PaginatedResponse<ProductWithCategory>;
+    }>();
 
-    const url = route("admin.products.update-trending", product.id);
+    //todo
+    const deleteProduct = (id: number): void => {
+        if (confirm('Are you sure you want to delete this item?')) {
+            router.delete(route('admin.products.destroy', id), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // todo toast.success('Товар успешно удален');
+                },
+                onError: (errors) => {
+                    // todo
+                    console.error('Delete failed:', errors);
 
-    router.patch(
-        route("admin.products.update-trending", product.id),
-        {
-            [field]: finalValue,
-        },
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                // Здесь можно вызвать Toast-уведомление
-                product[field] = finalValue;
-                console.log(`${field} обновлен успешно`);
+                    const errorMessage = Object.values(errors)[0] || 'Что-то пошло не так';
+                    // todo toast.error(errorMessage);
+                },
+            });
+        }
+    };
+
+    const isUpdating = ref(false);
+
+    const updateProductField = (
+        product: ProductWithCategory,
+        field: keyof ProductWithCategory,
+        value: string | number | boolean,
+    ) => {
+        let finalValue = value;
+        isUpdating.value = true;
+
+        if (['stock', 'trending_order'].includes(field)) {
+            finalValue = value === '' ? 0 : Number(value);
+        }
+
+        if (product[field as keyof ProductWithCategory] === finalValue) return;
+
+        const url = route('admin.products.update-trending', product.id);
+
+        router.patch(
+            route('admin.products.update-trending', product.id),
+            { [field]: finalValue },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // toDo Toast: "Сохранено!"
+                    console.log(`${field} обновлен`);
+                },
+                onError: (errors) => {
+                    const msg = Object.values(errors)[0] || 'Ошибка при обновлении';
+                    alert(msg); // toDo oИли Toast
+                },
+                onFinish: () => (isUpdating.value = false),
             },
-            onError: (errors) => {
-                // Если валидация на бекенде не прошла (например, stock < 0)
-                console.error(errors);
-            },
-        },
-    );
-};
+        );
+    };
+
+    const handleChange = (
+        product: ProductWithCategory,
+        field: keyof ProductWithCategory,
+        event: Event,
+    ) => {
+        const target = event.target as HTMLInputElement;
+        if (target) {
+            updateProductField(product, field, target.checked);
+        }
+    };
 </script>
 
 <template>
@@ -50,14 +87,12 @@ const updateProductField = (product, field, value) => {
 
         <div class="p-6 bg-white rounded-xl shadow-sm">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold">
-                    Товары ({{ products.total }})
-                </h1>
+                <h1 class="text-2xl font-bold">Products ({{ products.total }})</h1>
                 <Link
                     :href="route('admin.products.create')"
                     class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
                 >
-                    + Добавить товар
+                    + Add product
                 </Link>
             </div>
 
@@ -65,14 +100,14 @@ const updateProductField = (product, field, value) => {
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="border-b bg-gray-50">
-                            <th class="p-4">Фото</th>
-                            <th class="p-4">Название</th>
-                            <th class="p-4 text-center">Тренд</th>
-                            <th class="p-4 text-center">Порядок</th>
-                            <th class="p-4">Категория</th>
-                            <th class="p-4">Цена</th>
-                            <th class="p-4 text-center">Остаток</th>
-                            <th class="p-4 text-right">Действия</th>
+                            <th class="p-4">Photo</th>
+                            <th class="p-4">Title</th>
+                            <th class="p-4 text-center">Trend</th>
+                            <th class="p-4 text-center">Order</th>
+                            <th class="p-4">Category</th>
+                            <th class="p-4">Price</th>
+                            <th class="p-4 text-center">In Stock</th>
+                            <th class="p-4 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,13 +128,8 @@ const updateProductField = (product, field, value) => {
                                 <input
                                     type="checkbox"
                                     :checked="product.is_trending"
-                                    @change="
-                                        updateProductField(
-                                            product,
-                                            'is_trending',
-                                            $event.target.checked,
-                                        )
-                                    "
+                                    :disabled="isUpdating"
+                                    @change="handleChange(product, 'is_trending', $event)"
                                     class="w-4 h-4 text-green-600 rounded focus:ring-green-500"
                                 />
                             </td>
@@ -108,28 +138,17 @@ const updateProductField = (product, field, value) => {
                                 <input
                                     type="number"
                                     :value="product.trending_order"
-                                    @blur="
-                                        updateProductField(
-                                            product,
-                                            'trending_order',
-                                            $event.target.value,
-                                        )
-                                    "
+                                    @blur="handleChange(product, 'trending_order', $event)"
                                     class="w-16 p-1 border rounded text-center text-sm"
                                 />
                             </td>
 
                             <td class="p-4">
-                                <span
-                                    class="px-2 py-1 bg-gray-100 rounded text-sm"
-                                >
-                                    {{
-                                        product.category?.title ||
-                                        "Без Категории"
-                                    }}
+                                <span class="px-2 py-1 bg-gray-100 rounded text-sm">
+                                    {{ product.category?.title || 'Uncategorized' }}
                                 </span>
                             </td>
-                            <td class="p-4 font-bold">{{ product.price }} ₽</td>
+                            <td class="p-4 font-bold">{{ formatUSD(product.price) }} ₽</td>
 
                             <td class="p-4 text-center">
                                 <div class="flex flex-col items-center">
@@ -137,20 +156,13 @@ const updateProductField = (product, field, value) => {
                                         type="number"
                                         min="0"
                                         :value="product.stock"
-                                        @blur="
-                                            updateProductField(
-                                                product,
-                                                'stock',
-                                                $event.target.value,
-                                            )
-                                        "
+                                        @blur="handleChange(product, 'stock', $event)"
                                         :class="[
                                             'w-20 p-1 border rounded text-center text-sm transition-colors focus:ring-2 outline-none',
                                             product.stock <= 0
                                                 ? 'border-red-500 bg-red-50 text-red-700'
                                                 : 'border-gray-300',
-                                            product.stock > 0 &&
-                                            product.stock <= 5
+                                            product.stock > 0 && product.stock <= 5
                                                 ? 'border-orange-400 bg-orange-50'
                                                 : '',
                                         ]"
@@ -159,31 +171,29 @@ const updateProductField = (product, field, value) => {
                                         v-if="product.stock <= 0"
                                         class="text-[10px] text-red-600 font-bold uppercase mt-1"
                                     >
-                                        Пусто
+                                        Empty
                                     </span>
                                     <span
                                         v-else-if="product.stock <= 5"
                                         class="text-[10px] text-orange-600 font-bold uppercase mt-1"
                                     >
-                                        Мало
+                                        Few
                                     </span>
                                 </div>
                             </td>
 
                             <td class="p-4 text-right space-x-2">
                                 <Link
-                                    :href="
-                                        route('admin.products.edit', product.id)
-                                    "
+                                    :href="route('admin.products.edit', product.id)"
                                     :data="{ page: products.current_page }"
                                     class="text-blue-600 hover:underline"
-                                    >Изменить</Link
+                                    >Change</Link
                                 >
                                 <button
                                     @click="deleteProduct(product.id)"
                                     class="text-red-600 hover:underline"
                                 >
-                                    Удалить
+                                    Delete
                                 </button>
                             </td>
                         </tr>
