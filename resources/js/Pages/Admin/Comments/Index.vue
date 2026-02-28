@@ -1,52 +1,57 @@
-<script setup>
-import { router } from "@inertiajs/vue3";
+<script setup lang="ts">
+    import { router } from '@inertiajs/vue3';
 
-const props = defineProps({
-    comments: Array,
-});
+    import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { Review } from '@/types';
 
-const toggleStatus = (id) => {
-    router.patch(route("admin.comments.update", id));
-};
+    defineOptions({
+        layout: AdminLayout,
+    });
 
-const deleteComment = (id) => {
-    if (confirm("Точно удалить?")) {
-        router.delete(route("admin.comments.destroy", id));
-    }
-};
+    const props = defineProps<{
+        comments: Review[];
+    }>();
+
+    const toggleStatus = (id: number) => {
+        router.patch(
+            route('admin.comments.update', id),
+            {},
+            {
+                preserveScroll: true,
+            },
+        );
+    };
+
+    const deleteComment = (id: number) => {
+        if (confirm('Are you sure you want to delete this comment?')) {
+            router.delete(route('admin.comments.destroy', id), {
+                preserveScroll: true,
+            });
+        }
+    };
 </script>
 
 <template>
     <div class="admin-panel">
-        <h1>Модерация отзывов</h1>
+        <h1>Review Moderation</h1>
         <table class="w-full mt-4 border">
             <thead>
                 <tr class="bg-gray-100">
-                    <th>Автор</th>
-                    <th>Текст</th>
-                    <th>Оценка</th>
-                    <th>Статус</th>
-                    <th>Действия</th>
+                    <th>Author</th>
+                    <th>Text</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr
-                    v-for="comment in comments"
-                    :key="comment.id"
-                    class="border-t"
-                >
-                    <td>{{ comment.user?.name || "Гость" }}</td>
+                <tr v-for="comment in comments" :key="comment.id" class="border-t">
+                    <td>{{ comment.user?.name || 'Guest' }}</td>
                     <td class="max-w-xs truncate">{{ comment.body }}</td>
                     <td>{{ comment.rating }} ⭐</td>
                     <td>
-                        <span
-                            :class="
-                                comment.is_active
-                                    ? 'text-green-600'
-                                    : 'text-red-600'
-                            "
-                        >
-                            {{ comment.is_active ? "Активен" : "Скрыт" }}
+                        <span :class="comment.is_active ? 'text-green-600' : 'text-red-600'">
+                            {{ comment.is_active ? 'Active' : 'Hidden' }}
                         </span>
                     </td>
                     <td class="space-x-2">
@@ -54,13 +59,13 @@ const deleteComment = (id) => {
                             @click="toggleStatus(comment.id)"
                             class="bg-blue-500 text-white px-2 py-1 rounded"
                         >
-                            {{ comment.is_active ? "Скрыть" : "Одобрить" }}
+                            {{ comment.is_active ? 'Hide' : 'Approve' }}
                         </button>
                         <button
                             @click="deleteComment(comment.id)"
                             class="bg-red-500 text-white px-2 py-1 rounded"
                         >
-                            Удалить
+                            Delete
                         </button>
                     </td>
                 </tr>

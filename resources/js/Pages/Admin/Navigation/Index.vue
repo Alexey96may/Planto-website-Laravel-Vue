@@ -1,36 +1,44 @@
 <script setup>
-import { Link, router } from "@inertiajs/vue3";
-import { ref } from "vue";
-import draggable from "vuedraggable";
+    import { ref } from 'vue';
 
-const props = defineProps({
-    menuItems: Array,
-});
+    import { Link, router } from '@inertiajs/vue3';
 
-const list = ref([...props.menuItems]);
+    import draggable from 'vuedraggable';
 
-const saveOrder = () => {
-    // Create simple array: [{id: 5, position: 0}, {id: 2, position: 1}, ...]
-    const orders = list.value.map((item, index) => ({
-        id: item.id,
-        position: index,
-    }));
+    import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-    router.post(
-        route("admin.navigation.reorder"),
-        { orders },
-        {
-            preserveScroll: true,
-            onSuccess: () => alert("Порядок сохранен!"),
-        },
-    );
-};
+    defineOptions({
+        layout: AdminLayout,
+    });
 
-const deleteItem = (id) => {
-    if (confirm("Удалить этот пункт и все вложенные меню?")) {
-        router.delete(route("admin.navigation.destroy", id));
-    }
-};
+    const props = defineProps({
+        menuItems: Array,
+    });
+
+    const list = ref([...props.menuItems]);
+
+    const saveOrder = () => {
+        // Create simple array: [{id: 5, position: 0}, {id: 2, position: 1}, ...]
+        const orders = list.value.map((item, index) => ({
+            id: item.id,
+            position: index,
+        }));
+
+        router.post(
+            route('admin.navigation.reorder'),
+            { orders },
+            {
+                preserveScroll: true,
+                onSuccess: () => alert('Порядок сохранен!'),
+            },
+        );
+    };
+
+    const deleteItem = (id) => {
+        if (confirm('Удалить этот пункт и все вложенные меню?')) {
+            router.delete(route('admin.navigation.destroy', id));
+        }
+    };
 </script>
 
 <template>
@@ -47,28 +55,15 @@ const deleteItem = (id) => {
 
         <div class="flex justify-between mb-4">
             <h1 class="text-2xl font-bold">Сортировка меню</h1>
-            <button
-                @click="saveOrder"
-                class="bg-green-600 text-white px-4 py-2 rounded"
-            >
+            <button @click="saveOrder" class="bg-green-600 text-white px-4 py-2 rounded">
                 Сохранить порядок
             </button>
         </div>
 
-        <draggable
-            v-model="list"
-            item-key="id"
-            tag="div"
-            class="space-y-2"
-            handle=".drag-handle"
-        >
+        <draggable v-model="list" item-key="id" tag="div" class="space-y-2" handle=".drag-handle">
             <template #item="{ element }">
-                <div
-                    class="flex items-center bg-white p-4 shadow rounded border"
-                >
-                    <div class="drag-handle cursor-move mr-4 text-gray-400">
-                        ☰
-                    </div>
+                <div class="flex items-center bg-white p-4 shadow rounded border">
+                    <div class="drag-handle cursor-move mr-4 text-gray-400">☰</div>
                     <div class="flex-1">
                         {{ element.title }}
                         <span class="text-xs text-gray-400 ml-2 uppercase"
@@ -110,10 +105,7 @@ const deleteItem = (id) => {
                                 class="text-indigo-600 mr-3"
                                 >Редактировать</Link
                             >
-                            <button
-                                @click="deleteItem(item.id)"
-                                class="text-red-600"
-                            >
+                            <button @click="deleteItem(item.id)" class="text-red-600">
                                 Удалить
                             </button>
                         </td>
@@ -133,17 +125,14 @@ const deleteItem = (id) => {
                         <td class="p-4">{{ child.order }}</td>
                         <td class="p-4" v-if="item.is_active">✓</td>
                         <td class="p-4" v-else>-</td>
-                        <td class="p-4">{{ item.is_active && "" }}</td>
+                        <td class="p-4">{{ item.is_active && '' }}</td>
                         <td class="p-4 text-right">
                             <Link
                                 :href="route('admin.navigation.edit', child.id)"
                                 class="text-indigo-400 mr-3"
                                 >Ред.</Link
                             >
-                            <button
-                                @click="deleteItem(child.id)"
-                                class="text-red-400"
-                            >
+                            <button @click="deleteItem(child.id)" class="text-red-400">
                                 Удал.
                             </button>
                         </td>

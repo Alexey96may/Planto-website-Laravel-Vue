@@ -1,38 +1,42 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
-import { computed } from "vue";
+    import { computed } from 'vue';
 
-const props = defineProps({
-    parentOptions: Array,
-    categories: Array,
-});
+    import { useForm } from '@inertiajs/vue3';
 
-const form = useForm({
-    title: "",
-    location: "header",
-    parent_id: null,
-    order: 0,
-    is_active: true,
-    type: props.navigation?.type || "link",
-    category_id: props.navigation?.category_id || null,
-    link: props.navigation?.link || "",
-});
+    import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-// Фильтруем родителей: показываем только тех, кто в той же локации, что и новый пункт
-const filteredParents = computed(() => {
-    return props.parentOptions.filter((p) => p.location === form.location);
-});
+    defineOptions({
+        layout: AdminLayout,
+    });
 
-const submit = () => {
-    form.post(route("admin.navigation.store"));
-};
+    const props = defineProps({
+        parentOptions: Array,
+        categories: Array,
+    });
+
+    const form = useForm({
+        title: '',
+        location: 'header',
+        parent_id: null,
+        order: 0,
+        is_active: true,
+        type: props.navigation?.type || 'link',
+        category_id: props.navigation?.category_id || null,
+        link: props.navigation?.link || '',
+    });
+
+    // Фильтруем родителей: показываем только тех, кто в той же локации, что и новый пункт
+    const filteredParents = computed(() => {
+        return props.parentOptions.filter((p) => p.location === form.location);
+    });
+
+    const submit = () => {
+        form.post(route('admin.navigation.store'));
+    };
 </script>
 
 <template>
-    <form
-        @submit.prevent="submit"
-        class="max-w-2xl bg-white p-6 rounded shadow"
-    >
+    <form @submit.prevent="submit" class="max-w-2xl bg-white p-6 rounded shadow">
         <div class="grid gap-4">
             <div>
                 <label class="block">Название пункта</label>
@@ -46,10 +50,7 @@ const submit = () => {
 
             <div>
                 <label class="block">Где отображать?</label>
-                <select
-                    v-model="form.location"
-                    class="w-full border p-2 rounded"
-                >
+                <select v-model="form.location" class="w-full border p-2 rounded">
                     <option value="header">Header (Шапка)</option>
                     <option value="footer">Footer (Подвал)</option>
                 </select>
@@ -76,11 +77,7 @@ const submit = () => {
                 <label>Выберите категорию</label>
                 <select v-model="form.category_id" class="w-full border p-2">
                     <option :value="null">Выберите из списка...</option>
-                    <option
-                        v-for="cat in categories"
-                        :key="cat.id"
-                        :value="cat.id"
-                    >
+                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                         {{ cat.title }}
                     </option>
                 </select>
@@ -88,18 +85,9 @@ const submit = () => {
 
             <div v-if="filteredParents.length">
                 <label class="block">Родительский пункт (опционально)</label>
-                <select
-                    v-model="form.parent_id"
-                    class="w-full border p-2 rounded"
-                >
-                    <option :value="null">
-                        Без родителя (корневой уровень)
-                    </option>
-                    <option
-                        v-for="parent in filteredParents"
-                        :key="parent.id"
-                        :value="parent.id"
-                    >
+                <select v-model="form.parent_id" class="w-full border p-2 rounded">
+                    <option :value="null">Без родителя (корневой уровень)</option>
+                    <option v-for="parent in filteredParents" :key="parent.id" :value="parent.id">
                         {{ parent.title }}
                     </option>
                 </select>
@@ -107,11 +95,7 @@ const submit = () => {
 
             <div>
                 <label class="block">Порядок сортировки</label>
-                <input
-                    v-model="form.order"
-                    type="number"
-                    class="w-full border p-2 rounded"
-                />
+                <input v-model="form.order" type="number" class="w-full border p-2 rounded" />
             </div>
 
             <div class="flex items-center">

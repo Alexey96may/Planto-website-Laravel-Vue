@@ -8,6 +8,12 @@ export interface Category {
     updated_at: string;
 }
 
+export interface CategoryForm {
+    title: string;
+    slug: string;
+    id?: number;
+}
+
 export interface PaginationLink {
     url: string | null;
     label: string;
@@ -52,6 +58,15 @@ export interface Feature {
     is_active: number | boolean;
     created_at: string;
     updated_at: string;
+}
+
+export interface FeatureForm {
+    title: string;
+    description: string;
+    link: string;
+    order: number;
+    image: File | null;
+    _method?: string;
 }
 
 export type Role = 'admin' | 'user';

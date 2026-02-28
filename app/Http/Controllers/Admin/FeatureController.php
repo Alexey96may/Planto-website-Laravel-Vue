@@ -25,7 +25,7 @@ class FeatureController extends Controller
             'description' => 'nullable|string',
             'link'        => 'nullable|string',
             'order'       => 'integer',
-            'image'       => 'nullable|image|max:2048',
+            'image'       => 'nullable|image|max:10240',
         ]);
 
         if ($request->filled('description')) {
@@ -48,7 +48,7 @@ class FeatureController extends Controller
             'description' => 'nullable|string',
             'link'        => 'nullable|string',
             'order'       => 'integer',
-            'image'       => 'nullable|image|max:2048',
+            'image'       => 'nullable|image|max:10240',
         ]);
 
         if ($request->filled('description')) {

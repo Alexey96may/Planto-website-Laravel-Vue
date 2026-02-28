@@ -1,65 +1,77 @@
-<script setup>
-import { useForm } from "@inertiajs/vue3";
+<script setup lang="ts">
+    import { ref } from 'vue';
 
-// Получаем данные карточки от контроллера
-const props = defineProps({
-    feature: Object,
-});
+    import { useForm } from '@inertiajs/vue3';
 
-const form = useForm({
-    _method: "put", // ВАЖНО: Маскировка под PUT запрос
-    title: props.feature.title,
-    description: props.feature.description,
-    link: props.feature.link,
-    order: props.feature.order,
-    image: null, // Новое фото, если захотим сменить
-});
+    import ImageUploader from '@/Components/Shared/ImageUploader.vue';
+    import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { Feature, FeatureForm } from '@/types';
 
-const submit = () => {
-    // ВНИМАНИЕ: Отправляем через POST (из-за фото),
-    // но Laravel поймет что это UPDATE благодаря полю _method выше
-    form.post(route("admin.features.update", props.feature.id));
-};
+    defineOptions({
+        layout: AdminLayout,
+    });
 
-const handleFileUpload = (e) => {
-    form.image = e.target.files[0];
-};
+    const props = defineProps<{
+        feature: Feature;
+    }>();
+
+    const form = useForm<FeatureForm>({
+        _method: 'put',
+        title: props.feature.title,
+        description: props.feature.description,
+        link: props.feature.link,
+        order: props.feature.order,
+        image: null,
+    });
+
+    const uploader = ref<InstanceType<typeof ImageUploader> | null>(null);
+
+    const submit = () => {
+        form.post(route('admin.features.update', props.feature.id), {
+            onSuccess: () => {
+                uploader.value?.clearImage();
+            },
+        });
+    };
+
+    const handleFileSelect = (file: File | null) => {
+        form.image = file;
+    };
 </script>
 
 <template>
     <div class="max-w-2xl mx-auto p-6 bg-white shadow rounded">
-        <h1 class="text-xl font-bold mb-4">
-            Редактировать: {{ feature.title }}
-        </h1>
+        <h1 class="text-xl font-bold mb-4">Edit: {{ feature.title }}</h1>
 
         <form @submit.prevent="submit" class="space-y-4">
             <div>
-                <label class="block">Заголовок</label>
-                <input
-                    v-model="form.title"
-                    type="text"
-                    class="w-full border p-2 rounded"
-                />
+                <label class="block">Title</label>
+                <input v-model="form.title" type="text" class="w-full border p-2 rounded" />
             </div>
 
             <div>
-                <label class="block">Текст</label>
-                <textarea
-                    v-model="form.description"
-                    class="w-full border p-2 rounded"
-                ></textarea>
+                <label class="block">Description</label>
+                <textarea v-model="form.description" class="w-full border p-2 rounded"></textarea>
             </div>
 
-            <div>
-                <label class="block font-bold">Текущее фото:</label>
-                <img
-                    v-if="feature.image_url"
-                    :src="feature.image_url"
-                    class="w-32 mb-2 rounded"
-                />
+            <ImageUploader
+                ref="uploader"
+                v-model="form.image"
+                label="Change photo:"
+                :error="form.errors.image"
+                :existingImage="feature.image_url"
+                @on-file-select="handleFileSelect"
+            ></ImageUploader>
 
-                <label class="block">Заменить фото (если нужно):</label>
-                <input type="file" @change="handleFileUpload" />
+            <div class="flex gap-4">
+                <div class="w-1/2">
+                    <label class="block">Link (URL)</label>
+                    <input v-model="form.link" type="text" class="w-full border p-2 rounded" />
+                </div>
+                <div class="w-1/2">
+                    <label class="block">Order (Number)</label>
+                    <input v-model="form.order" type="number" class="w-full border p-2 rounded" />
+                </div>
             </div>
 
             <button
@@ -67,7 +79,7 @@ const handleFileUpload = (e) => {
                 :disabled="form.processing"
                 class="bg-blue-500 text-white px-6 py-2 rounded"
             >
-                Обновить
+                {{ form.processing ? 'Refreshing...' : 'Refresh card' }}
             </button>
         </form>
     </div>
