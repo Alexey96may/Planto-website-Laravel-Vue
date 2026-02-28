@@ -57,7 +57,7 @@
 
 <template>
     <div class="max-w-4xl mx-auto p-6">
-        <h1 class="text-2xl font-bold mb-4">Ваша корзина</h1>
+        <h1 class="text-2xl font-bold mb-4">Your cart</h1>
 
         <div v-if="cart.items.length > 0">
             <div
@@ -95,7 +95,7 @@
                     </button>
                 </div>
                 <div class="flex items-center gap-4 mt-8 text-green" v-else>
-                    Временно нет в наличии!
+                    Temporarily out of stock!
                 </div>
 
                 <div class="flex flex-col items-end justify-between">
@@ -103,7 +103,7 @@
                         @click="removeFromCart(item.product_id)"
                         class="text-red-500 hover:text-red-700 text-sm mb-2"
                     >
-                        Удалить
+                        Delete
                     </button>
                     <div class="text-right font-bold" v-if="item.stock">
                         {{ item.total_price }} $
@@ -111,14 +111,14 @@
                 </div>
             </div>
 
-            <div class="mt-6 text-right text-xl font-bold">Итого: {{ cart.total_sum }} $</div>
+            <div class="mt-6 text-right text-xl font-bold">Total: {{ cart.total_sum }} $</div>
 
             <Link
                 v-if="hasAvailableItems"
                 :href="route('checkout.index')"
                 class="mt-4 block text-center bg-black text-white p-3 rounded"
             >
-                Оформить заказ
+                Place an order
             </Link>
 
             <div v-else class="btn-primary opacity-50 cursor-not-allowed text-center">
@@ -127,7 +127,7 @@
         </div>
 
         <div v-else class="text-center py-10">
-            <p>Корзина пуста</p>
+            <p>The cart is empty</p>
             <Link :href="route('shop')" class="text-blue-500">Return to the store</Link>
         </div>
     </div>
