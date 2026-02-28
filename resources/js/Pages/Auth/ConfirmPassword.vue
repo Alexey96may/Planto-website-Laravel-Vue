@@ -1,20 +1,25 @@
-<script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+<script setup lang="ts">
+    import { Head, useForm } from '@inertiajs/vue3';
 
-const form = useForm({
-    password: '',
-});
+    import InputError from '@/Components/InputError.vue';
+    import InputLabel from '@/Components/InputLabel.vue';
+    import PrimaryButton from '@/Components/PrimaryButton.vue';
+    import TextInput from '@/Components/TextInput.vue';
+    import GuestLayout from '@/Layouts/GuestLayout.vue';
 
-const submit = () => {
-    form.post(route('password.confirm'), {
-        onFinish: () => form.reset(),
+    interface PasswordConfirmForm {
+        password: string;
+    }
+
+    const form = useForm<PasswordConfirmForm>({
+        password: '',
     });
-};
+
+    const submit = (): void => {
+        form.post(route('password.confirm'), {
+            onFinish: () => form.reset(),
+        });
+    };
 </script>
 
 <template>
@@ -22,8 +27,8 @@ const submit = () => {
         <Head title="Confirm Password" />
 
         <div class="mb-4 text-sm text-gray-600">
-            This is a secure area of the application. Please confirm your
-            password before continuing.
+            This is a secure area of the application. Please confirm your password before
+            continuing.
         </div>
 
         <form @submit.prevent="submit">

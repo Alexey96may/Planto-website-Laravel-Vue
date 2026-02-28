@@ -1,24 +1,26 @@
-<script setup>
-import { computed } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+<script setup lang="ts">
+    import { computed } from 'vue';
 
-const props = defineProps({
-    status: {
-        type: String,
-    },
-});
+    import { Head, Link, useForm } from '@inertiajs/vue3';
 
-const form = useForm({});
+    import { route } from 'ziggy-js';
 
-const submit = () => {
-    form.post(route('verification.send'));
-};
+    import PrimaryButton from '@/Components/PrimaryButton.vue';
+    import GuestLayout from '@/Layouts/GuestLayout.vue';
 
-const verificationLinkSent = computed(
-    () => props.status === 'verification-link-sent',
-);
+    type VerificationStatus = 'verification-link-sent' | 'already-verified' | '';
+
+    const props = defineProps<{
+        status?: VerificationStatus;
+    }>();
+
+    const form = useForm({});
+
+    const submit = (): void => {
+        form.post(route('verification.send'));
+    };
+
+    const verificationLinkSent = computed<boolean>(() => props.status === 'verification-link-sent');
 </script>
 
 <template>
@@ -26,17 +28,14 @@ const verificationLinkSent = computed(
         <Head title="Email Verification" />
 
         <div class="mb-4 text-sm text-gray-600">
-            Thanks for signing up! Before getting started, could you verify your
-            email address by clicking on the link we just emailed to you? If you
-            didn't receive the email, we will gladly send you another.
+            Thanks for signing up! Before getting started, could you verify your email address by
+            clicking on the link we just emailed to you? If you didn't receive the email, we will
+            gladly send you another.
         </div>
 
-        <div
-            class="mb-4 text-sm font-medium text-green-600"
-            v-if="verificationLinkSent"
-        >
-            A new verification link has been sent to the email address you
-            provided during registration.
+        <div class="mb-4 text-sm font-medium text-green-600" v-if="verificationLinkSent">
+            A new verification link has been sent to the email address you provided during
+            registration.
         </div>
 
         <form @submit.prevent="submit">
