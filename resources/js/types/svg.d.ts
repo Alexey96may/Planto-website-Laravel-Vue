@@ -1,9 +1,3 @@
-import { route as routeFn } from 'ziggy-js';
-
-declare global {
-    var route: typeof routeFn;
-}
-
 declare module '*.svg?component' {
     import { DefineComponent } from 'vue';
     const component: DefineComponent<{}, {}, any>;

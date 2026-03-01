@@ -1,32 +1,35 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
-import AppImage from "@/Components/AppImage.vue";
-import IconBag from "img/icons/bag.svg?component";
-import { router } from "@inertiajs/vue3";
-import { usePage } from "@inertiajs/vue3";
-import { computed } from "vue";
+    import { computed } from 'vue';
 
-const props = defineProps({
-    plant: {
-        type: Object,
-        default: () => {},
-    },
-});
+    import { Link } from '@inertiajs/vue3';
+    import { router } from '@inertiajs/vue3';
+    import { usePage } from '@inertiajs/vue3';
 
-const page = usePage();
+    import IconBag from 'img/icons/bag.svg?component';
 
-const addToCart = () => {
-    const id = props.plant?.id;
+    import AppImage from '@/Components/UI/AppImage.vue';
 
-    router.post(route("cart.add"), {
-        product_id: id,
-        quantity: 1,
+    const props = defineProps({
+        plant: {
+            type: Object,
+            default: () => {},
+        },
     });
-};
 
-const isInCart = computed(() => {
-    return page.props.cart_ids?.includes(props.plant.id);
-});
+    const page = usePage();
+
+    const addToCart = () => {
+        const id = props.plant?.id;
+
+        router.post(route('cart.add'), {
+            product_id: id,
+            quantity: 1,
+        });
+    };
+
+    const isInCart = computed(() => {
+        return page.props.cart_ids?.includes(props.plant.id);
+    });
 </script>
 
 <template>
@@ -35,10 +38,7 @@ const isInCart = computed(() => {
             <AppImage :src="plant?.image_url" :alt="plant.title" />
         </div>
         <div class="card__info" aria-label="Card information">
-            <h3
-                class="card__title card__title--white"
-                aria-label="Slider card title"
-            >
+            <h3 class="card__title card__title--white" aria-label="Slider card title">
                 <Link
                     class="card__link"
                     :href="route('shop.show', plant.id)"
@@ -52,9 +52,7 @@ const isInCart = computed(() => {
                 {{ plant.description }}
             </p>
 
-            <div class="card__price" aria-label="Plant price">
-                {{ plant.price }} $
-            </div>
+            <div class="card__price" aria-label="Plant price">{{ plant.price }} $</div>
 
             <div class="card__buttons" aria-label="Buttons">
                 <button class="button--rect" aria-label="Explore">

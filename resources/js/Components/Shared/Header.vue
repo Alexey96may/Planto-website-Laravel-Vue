@@ -1,26 +1,18 @@
-<script setup>
-    import { computed, ref } from 'vue';
+<script setup lang="ts">
+    import { computed } from 'vue';
 
     import { Head, Link, usePage } from '@inertiajs/vue3';
 
-    import IconArrowMore from 'img/icons/arrow-more.svg?component';
     import IconBag from 'img/icons/bag.svg?component';
     import IconLogo from 'img/icons/logo.svg?component';
     import IconUser from 'img/icons/user.svg?component';
+    import { route } from 'ziggy-js';
 
-    const page = usePage();
+    import { SharedData } from '@/types';
+    import { getHref } from '@/utils/navigation';
 
-    const menuItems = computed(() => page.props.navigation.header);
-    const mobileMenuOpen = ref(false);
-
-    const getHref = (item) => {
-        if (item.type === 'category' && item.category) {
-            // console.log(item);
-            // Генерируем ссылку на страницу магазина с фильтром по слагу категории
-            return route('shop', { category: item.category.slug });
-        }
-        return item.link; // Для обычных ссылок
-    };
+    const page = usePage<SharedData>();
+    const menuItems = computed(() => page.props.navigation?.header || []);
 </script>
 
 <template>
@@ -31,7 +23,7 @@
                 <div class="logo" aria-label="Logo field">
                     <IconLogo class="logo__image" aria-label="Logo image" />
                     <span class="logo__text" aria-label="Logo text">{{
-                        $page.props.settings.site_name
+                        $page.props.settings?.site_name
                     }}</span>
                 </div>
 

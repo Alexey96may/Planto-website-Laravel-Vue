@@ -64,10 +64,12 @@ describe('useImageUpload Composable', () => {
     it('must clear the data when calling ClearImage', async () => {
         const { clearImage, imagePreview } = useImageUpload();
 
-        imagePreview.value = 'some-url';
+        const mockUrl = 'blob:http://localhost/some-uuid';
+        imagePreview.value = mockUrl;
+
         clearImage();
 
         expect(imagePreview.value).toBeNull();
-        expect(window.URL.revokeObjectURL).toHaveBeenCalledWith('some-url');
+        expect(window.URL.revokeObjectURL).toHaveBeenCalledWith(mockUrl);
     });
 });

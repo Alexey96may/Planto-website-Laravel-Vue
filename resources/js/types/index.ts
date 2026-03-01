@@ -303,7 +303,7 @@ export interface NavigationItem {
     category_id: number | null;
     created_at: string;
     updated_at: string;
-    children: NavigationItem[];
+    children: NavigationItem[] | null;
     category?: Category | null;
 }
 

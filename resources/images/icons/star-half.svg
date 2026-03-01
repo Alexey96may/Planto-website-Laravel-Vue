@@ -1,3 +1,22 @@
-<svg viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M7.13292 0L7.13293 5.18237V7.5L7.13292 10.3647L2.72453 13.5676L4.40839 8.38525L0 5.18237H5.44907L7.13292 0Z" fill="#FFF84E"/>
+<svg viewBox="0 0 14.26 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="splitLeft">
+      <rect x="0" y="0" width="7.13" height="14" />
+    </clipPath>
+    <clipPath id="splitRight">
+      <rect x="7.13" y="0" width="7.13" height="14" />
+    </clipPath>
+  </defs>
+
+  <path 
+    d="M7.13281 0L8.81667 5.18237H14.2657L9.85735 8.38525L11.5412 13.5676L7.13281 10.3647L2.72442 13.5676L4.40828 8.38525L-0.00011158 5.18237H5.44896L7.13281 0Z" 
+    fill="#FFF84E" 
+    clip-path="url(#splitLeft)"
+  />
+
+  <path 
+    d="M7.13281 0L8.81667 5.18237H14.2657L9.85735 8.38525L11.5412 13.5676L7.13281 10.3647L2.72442 13.5676L4.40828 8.38525L-0.00011158 5.18237H5.44896L7.13281 0Z" 
+    fill="#E5E7EB" 
+    clip-path="url(#splitRight)"
+  />
 </svg>

@@ -1,34 +1,34 @@
-<script setup>
-import IconLogo from "img/icons/logo.svg?component";
-import { Link, usePage, useForm } from "@inertiajs/vue3";
-import { computed } from "vue";
+<script setup lang="ts">
+    import { computed } from 'vue';
 
-const form = useForm({
-    email: "",
-});
+    import { Link, useForm, usePage } from '@inertiajs/vue3';
 
-const submit = () => {
-    form.post(route("newsletter.store"), {
-        preserveScroll: true,
-        onSuccess: () => {
-            form.reset();
-            alert("Вы успешно подписаны!");
-        },
-    });
-};
+    import IconLogo from 'img/icons/logo.svg?component';
 
-const page = usePage();
-const footerMenuItems = computed(() => page.props.navigation.footer);
-const currentYear = new Date().getFullYear();
+    import { SharedData } from '@/types';
+    import { getHref } from '@/utils/navigation';
 
-const getHref = (item) => {
-    if (item.type === "category" && item.category) {
-        // console.log(item);
-        // Генерируем ссылку на страницу магазина с фильтром по слагу категории
-        return route("shop", { category: item.category.slug });
+    interface NewsletterForm {
+        email: string;
     }
-    return item.link; // Для обычных ссылок
-};
+
+    const form = useForm<NewsletterForm>({
+        email: '',
+    });
+
+    const submit = () => {
+        form.post(route('newsletter.store'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                form.reset();
+                alert('Вы успешно подписаны!'); //todo
+            },
+        });
+    };
+
+    const page = usePage<SharedData>();
+
+    const footerMenuItems = computed(() => page.props.navigation?.footer || []);
 </script>
 
 <template>
@@ -37,20 +37,14 @@ const getHref = (item) => {
             <div class="footer__top" aria-label="Footer top side">
                 <div class="footer__info" aria-label="Footer information">
                     <div class="logo" aria-label="Logo field">
-                        <IconLogo
-                            class="logo__image"
-                            aria-label="Logo image"
-                        ></IconLogo>
+                        <IconLogo class="logo__image" aria-label="Logo image"></IconLogo>
                         <span class="logo__text" aria-label="Logo text">{{
-                            $page.props.settings.site_name
+                            $page.props.settings?.site_name
                         }}</span>
                     </div>
 
                     <p class="footer__descr">
-                        {{
-                            $page.props.settings.footer_main_text ||
-                            "Site info will be here!"
-                        }}
+                        {{ $page.props.settings?.footer_main_text || 'Site info will be here!' }}
                     </p>
                 </div>
 
@@ -89,11 +83,7 @@ const getHref = (item) => {
                 <div class="footer__subscribe" aria-label="Subscribe field">
                     <h3 class="footer__subscribe-title">For Every Update.</h3>
 
-                    <form
-                        class="footer__form"
-                        @submit.prevent="submit"
-                        aria-label="Subscribe form"
-                    >
+                    <form class="footer__form" @submit.prevent="submit" aria-label="Subscribe form">
                         <input
                             v-model="form.email"
                             type="email"
@@ -105,15 +95,10 @@ const getHref = (item) => {
                             class="button footer__form-button"
                             type="submit"
                             aria-label="To Subscribe"
-                            :value="
-                                form.processing ? 'Отправка...' : 'Подписаться'
-                            "
+                            :value="form.processing ? 'Отправка...' : 'Подписаться'"
                             :disabled="form.processing"
                         />
-                        <span
-                            v-if="form.errors.email"
-                            class="text-red-500 text-sm"
-                        >
+                        <span v-if="form.errors.email" class="text-red-500 text-sm">
                             {{ form.errors.email }}
                         </span>
                     </form>
@@ -147,43 +132,40 @@ const getHref = (item) => {
                     <li
                         class="footer__social"
                         aria-label="Facebook social"
-                        v-if="$page.props.settings.link_fb"
+                        v-if="$page.props.settings?.link_fb"
                     >
                         <a
-                            :href="$page.props.settings.link_fb"
-                            :aria-label="$page.props.settings.link_fb"
+                            :href="$page.props.settings?.link_fb"
+                            :aria-label="$page.props.settings?.link_fb"
                             >FB</a
                         >
                     </li>
                     <li
                         class="footer__social"
                         aria-label="X social"
-                        v-if="$page.props.settings.link_x"
+                        v-if="$page.props.settings?.link_x"
                     >
                         <a
-                            :href="$page.props.settings.link_x"
-                            :aria-label="$page.props.settings.link_x"
+                            :href="$page.props.settings?.link_x"
+                            :aria-label="$page.props.settings?.link_x"
                             >X</a
                         >
                     </li>
                     <li
                         class="footer__social"
                         aria-label="Linkedin social"
-                        v-if="$page.props.settings.link_li"
+                        v-if="$page.props.settings?.link_li"
                     >
                         <a
-                            :href="$page.props.settings.link_li"
-                            :aria-label="$page.props.settings.link_li"
+                            :href="$page.props.settings?.link_li"
+                            :aria-label="$page.props.settings?.link_li"
                             >LI</a
                         >
                     </li>
                 </ul>
 
                 <div class="copyright" aria-label="Copyright">
-                    {{
-                        $page.props.settings.footer_rights ||
-                        "© All rights reserved"
-                    }}
+                    {{ $page.props.settings?.footer_rights || '© All rights reserved' }}
                 </div>
             </div>
         </div>

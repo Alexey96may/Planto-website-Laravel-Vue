@@ -14,13 +14,15 @@
         "skipLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@/*": ["resources/js/*"]
+            "@/*": ["resources/js/*"],
+            "img/*": ["resources/images/*"]
         },
         "types": ["vite/client", "ziggy-js"]
     },
     "include": [
         "resources/js/**/*.ts",
         "resources/js/**/*.d.ts",
-        "resources/js/**/*.vue"
+        "resources/js/**/*.vue",
+        "resources/js/types/svg.d.ts"
     ]
 }

@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { Head } from '@inertiajs/vue3';
 
-    import Best from '@/Components/Best.vue';
     import Hero from '@/Components/Hero.vue';
     import Review from '@/Components/Review.vue';
+    import Best from '@/Components/Sections/Best.vue';
     import Top from '@/Components/Top.vue';
     import Trendy from '@/Components/Trendy.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
@@ -38,7 +38,7 @@
 
     <MainLayout :full="true">
         <template #hero>
-            <Hero :heroPlants="heroPlants" />
+            <Hero :heroPlants="heroPlants" :comment="comments[0] || null" />
         </template>
         <template #trendy>
             <Trendy v-if="trendyPlants.length" :trendyPlants="trendyPlants" />

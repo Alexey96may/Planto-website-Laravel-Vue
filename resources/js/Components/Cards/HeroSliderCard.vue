@@ -1,25 +1,29 @@
-<script setup>
-import { Link, usePage } from "@inertiajs/vue3";
-import { computed } from "vue";
+<script setup lang="ts">
+    import { computed } from 'vue';
 
-const props = defineProps({
-    plant: {
-        type: Object,
-        default: () => {},
-    },
-});
+    import { Link, usePage } from '@inertiajs/vue3';
 
-const page = usePage();
+    import { route } from 'ziggy-js';
 
-const isInCart = computed(() => {
-    return page.props.cart_ids?.includes(props.plant.id);
-});
+    import { ProductWithCategory, SharedData } from '@/types';
+
+    interface Props {
+        plant?: ProductWithCategory;
+    }
+
+    const { plant = {} as ProductWithCategory } = defineProps<Props>();
+
+    const page = usePage<SharedData>();
+
+    const isInCart = computed(() => {
+        return page.props?.cart_ids.includes(plant.id);
+    });
 </script>
 
 <template>
     <figure class="card slider-mini__card" aria-label="Slider card">
         <div class="card__img-wrapper" aria-label="Slider card image">
-            <img :src="plant?.image_url" :alt="plant.title" />
+            <img :src="plant.image_url" :alt="plant.title" />
         </div>
 
         <span
@@ -30,11 +34,7 @@ const isInCart = computed(() => {
         >
         <h3 class="card__title card__tag-title" aria-label="Slider card title">
             {{ plant.title }}
-            <a
-                href="#"
-                class="card__tag-title"
-                aria-label="To Calathea plant"
-            ></a>
+            <a href="#" class="card__tag-title" aria-label="To Calathea plant"></a>
         </h3>
 
         <button class="button--rect card__button" aria-label="Buy now">

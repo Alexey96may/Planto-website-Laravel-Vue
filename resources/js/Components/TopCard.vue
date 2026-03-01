@@ -1,36 +1,39 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
-import AppImage from "@/Components/AppImage.vue";
-import IconBag from "img/icons/bag.svg?component";
-import { router } from "@inertiajs/vue3";
-import { usePage } from "@inertiajs/vue3";
-import { computed } from "vue";
+    import { computed } from 'vue';
 
-const props = defineProps({
-    plant: {
-        type: Object,
-        default: () => {},
-    },
-    current_page: {
-        type: String,
-        default: "",
-    },
-});
+    import { Link } from '@inertiajs/vue3';
+    import { router } from '@inertiajs/vue3';
+    import { usePage } from '@inertiajs/vue3';
 
-const page = usePage();
+    import IconBag from 'img/icons/bag.svg?component';
 
-const addToCart = () => {
-    const id = props.plant?.id;
+    import AppImage from '@/Components/UI/AppImage.vue';
 
-    router.post(route("cart.add"), {
-        product_id: id,
-        quantity: 1,
+    const props = defineProps({
+        plant: {
+            type: Object,
+            default: () => {},
+        },
+        current_page: {
+            type: String,
+            default: '',
+        },
     });
-};
 
-const isInCart = computed(() => {
-    return page.props.cart_ids?.includes(props.plant.id);
-});
+    const page = usePage();
+
+    const addToCart = () => {
+        const id = props.plant?.id;
+
+        router.post(route('cart.add'), {
+            product_id: id,
+            quantity: 1,
+        });
+    };
+
+    const isInCart = computed(() => {
+        return page.props.cart_ids?.includes(props.plant.id);
+    });
 </script>
 
 <template>
@@ -50,17 +53,12 @@ const isInCart = computed(() => {
             </Link>
         </h3>
 
-        <p
-            class="card__descr card__descr--white"
-            aria-label="Plant description"
-        >
+        <p class="card__descr card__descr--white" aria-label="Plant description">
             {{ plant.description }}
         </p>
 
         <div class="card__buying" aria-label="Plant buying info">
-            <div class="card__price" aria-label="Plant price">
-                {{ plant.price }} $
-            </div>
+            <div class="card__price" aria-label="Plant price">{{ plant.price }} $</div>
 
             <button
                 class="button--square"
