@@ -1,8 +1,7 @@
 <script setup lang="ts">
     import { Link } from '@inertiajs/vue3';
 
-    import IconBag from 'img/icons/bag.svg?component';
-
+    import AppBuyButton from '@/Components/UI/AppBuyButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import { Product } from '@/types';
 
@@ -17,12 +16,6 @@
     const emit = defineEmits<{
         (e: 'add-to-cart', product: Product): void;
     }>();
-
-    const handleAddToCart = () => {
-        if (!isInCart && plant.stock > 0) {
-            emit('add-to-cart', plant);
-        }
-    };
 </script>
 
 <template>
@@ -48,18 +41,14 @@
         <div class="card__buying" aria-label="Plant buying info">
             <div class="card__price" aria-label="Plant price">{{ plant.price }} $</div>
 
-            <button
+            <AppBuyButton
+                :is-in-cart="isInCart"
+                :is-processing="isProcessing"
+                :disabled="plant.stock === 0"
+                @click="emit('add-to-cart', plant)"
                 class="button--square"
                 aria-label="Add to cart"
-                @click="handleAddToCart"
-                :disabled="isInCart || plant.stock === 0 || isProcessing"
-            >
-                <IconBag
-                    class="button-image"
-                    :class="{ 'text-green-500': isInCart }"
-                    aria-label="Cart"
-                ></IconBag>
-            </button>
+            />
         </div>
     </figure>
 </template>

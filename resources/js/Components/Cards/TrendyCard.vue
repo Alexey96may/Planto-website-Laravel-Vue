@@ -4,6 +4,7 @@
     import IconBag from 'img/icons/bag.svg?component';
     import { route } from 'ziggy-js';
 
+    import AppBuyButton from '@/Components/UI/AppBuyButton.vue';
     import AppExploreButton from '@/Components/UI/AppExploreButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import { Product } from '@/types';
@@ -19,12 +20,6 @@
     const emit = defineEmits<{
         (e: 'add-to-cart', product: Product): void;
     }>();
-
-    const handleAddToCart = () => {
-        if (!isInCart && plant.stock > 0) {
-            emit('add-to-cart', plant);
-        }
-    };
 </script>
 
 <template>
@@ -58,18 +53,14 @@
                     Explore
                 </AppExploreButton>
 
-                <button
-                    @click="handleAddToCart"
+                <AppBuyButton
+                    :is-in-cart="isInCart"
+                    :is-processing="isProcessing"
+                    :disabled="plant.stock === 0"
+                    @click="emit('add-to-cart', plant)"
                     class="button--square"
                     aria-label="Add to cart"
-                    :disabled="plant.stock === 0 || isInCart || isProcessing"
-                >
-                    <IconBag
-                        class="button-image"
-                        aria-label="Cart"
-                        :class="{ 'text-green-500': isInCart }"
-                    ></IconBag>
-                </button>
+                />
             </div>
         </div>
     </figure>

@@ -69,3 +69,5 @@
         </div>
     </figure>
 </template>
+
+<style lang="scss" scoped></style>
