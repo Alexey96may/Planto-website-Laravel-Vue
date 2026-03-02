@@ -1,12 +1,12 @@
 <script setup lang="ts">
     import { computed } from 'vue';
 
-    import { Link, useForm, usePage } from '@inertiajs/vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     import IconLogo from 'img/icons/logo.svg?component';
 
+    import NavigationFooter from '@/Components/Shared/NavigationFooter.vue';
     import { SharedData } from '@/types';
-    import { getHref } from '@/utils/navigation';
 
     interface NewsletterForm {
         email: string;
@@ -48,37 +48,7 @@
                     </p>
                 </div>
 
-                <nav class="footer__nav" aria-label="Footer navigation">
-                    <ul class="space-y-2">
-                        <li v-for="item in footerMenuItems" :key="item.id">
-                            <Link
-                                :href="getHref(item) || '#'"
-                                class="text-gray-400 hover:text-white transition-colors text-sm"
-                            >
-                                {{ item.title }}
-                            </Link>
-                        </li>
-                    </ul>
-                    <!-- <ul class="footer__nav-list" aria-label="Navigation list">
-                        <li class="footer__nav-item">Quick Link’s</li>
-                        <li class="footer__nav-item">
-                            <a href="#" aria-label="to ">Home</a>
-                        </li>
-                        <li class="footer__nav-item">
-                            <a href="#top" aria-label="to Type’s Of plant’s"
-                                >Type’s Of plant’s</a
-                            >
-                        </li>
-                        <li class="footer__nav-item">
-                            <a href="#review" aria-label="to Contact"
-                                >Contact</a
-                            >
-                        </li>
-                        <li class="footer__nav-item">
-                            <a href="#" aria-label="to Privacy">Privacy</a>
-                        </li>
-                    </ul> -->
-                </nav>
+                <NavigationFooter />
 
                 <div class="footer__subscribe" aria-label="Subscribe field">
                     <h3 class="footer__subscribe-title">For Every Update.</h3>
@@ -87,7 +57,7 @@
                         <input
                             v-model="form.email"
                             type="email"
-                            placeholder="Ваш email"
+                            placeholder="Your email"
                             class="footer__form-text"
                             :class="{ 'border-red-500': form.errors.email }"
                         />
@@ -95,35 +65,13 @@
                             class="button footer__form-button"
                             type="submit"
                             aria-label="To Subscribe"
-                            :value="form.processing ? 'Отправка...' : 'Подписаться'"
+                            :value="form.processing ? 'Sending...' : 'Subscribe'"
                             :disabled="form.processing"
                         />
                         <span v-if="form.errors.email" class="text-red-500 text-sm">
                             {{ form.errors.email }}
                         </span>
                     </form>
-
-                    <!-- <form
-                        class="footer__form"
-                        action="#"
-                        method="get"
-                        aria-label="Subscribe form"
-                    >
-                        <input
-                            type="email"
-                            class="footer__form-text"
-                            name="footerFormText"
-                            id="footerFormText"
-                            placeholder="Enter Email"
-                            aria-label="Email form"
-                        />
-                        <input
-                            class="button footer__form-button"
-                            type="button"
-                            aria-label="To Subscribe"
-                            value="Subscribe"
-                        />
-                    </form> -->
                 </div>
             </div>
 
@@ -242,41 +190,6 @@
 
         @media (max-width: b.$mediaMobile) {
             font-size: calc(1rem * (18px / b.$basicFontSize));
-        }
-    }
-
-    .footer__nav-list {
-        @include b.flex(flex-start, flex-start, column);
-        gap: calc(1rem * (26px / b.$basicFontSize));
-
-        @media (max-width: b.$mediaMobile) {
-            gap: calc(1rem * (20px / b.$basicFontSize));
-        }
-    }
-
-    .footer__nav-item {
-        font-size: calc(1rem * (28px / b.$basicFontSize));
-        font-weight: 800;
-        color: b.$lightTextColor;
-
-        &:first-child {
-            margin-bottom: calc(1rem * (20px / b.$basicFontSize));
-
-            @media (max-width: b.$mediaMobile) {
-                font-size: calc(1rem * (26px / b.$basicFontSize));
-                margin-bottom: calc(1rem * (5px / b.$basicFontSize));
-            }
-        }
-
-        a {
-            font-size: calc(1rem * (24px / b.$basicFontSize));
-            font-weight: 500;
-            color: b.$lightTextColor;
-            white-space: nowrap;
-
-            @media (max-width: b.$mediaMobile) {
-                font-size: calc(1rem * (20px / b.$basicFontSize));
-            }
         }
     }
 
