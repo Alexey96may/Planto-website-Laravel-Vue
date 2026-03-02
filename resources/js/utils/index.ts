@@ -1,7 +1,8 @@
 export const handleImageError = (event: Event) => {
     const target = event.target as HTMLImageElement;
-    if (target) {
-        target.src = '/images/placeholder.png';
-        target.onerror = null;
-    }
+    target.onerror = null;
+    const placeholder = '/images/no-image.jpg';
+
+    if (target.src.includes(placeholder)) return;
+    target.src = placeholder;
 };
