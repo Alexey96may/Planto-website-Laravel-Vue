@@ -3,6 +3,7 @@
 
     import IconArrowRight from 'img/icons/arrow-right.svg?component';
 
+    import AppImage from '@/Components/UI/AppImage.vue';
     import { Feature } from '@/types';
 
     const { feature = {} as Feature } = defineProps<{
@@ -13,7 +14,7 @@
 <template>
     <figure class="card slider__card" aria-label="Slider card">
         <div class="card__img-wrapper" aria-label="Slider card image">
-            <img :src="feature.image_url" :alt="feature.title" />
+            <AppImage :src="feature.image_url" :alt="feature.title" />
         </div>
 
         <div class="card__info" aria-label="Card information">

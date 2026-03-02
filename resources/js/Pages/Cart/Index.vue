@@ -66,7 +66,7 @@
                 class="flex justify-between border-b py-4"
             >
                 <div class="flex items-center">
-                    <img :src="item.image" class="w-16 h-16 object-cover mr-4" />
+                    <AppImage :src="item.image" class="w-16 h-16 object-cover mr-4"></AppImage>
                     <div>
                         <h3 class="text-gray-500 font-semibold">
                             {{ item.title }}

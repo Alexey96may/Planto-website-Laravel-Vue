@@ -7,6 +7,7 @@
     import IconPlay from 'img/icons/play.svg?component';
 
     import HeroSliderCard from '@/Components/Cards/HeroSliderCard.vue';
+    import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
     import Modal from '@/Components/UI/Modal.vue';
     import { ProductWithCategory, Review, SharedData } from '@/types';
@@ -94,10 +95,9 @@
                 <figure class="comment hero__comment" aria-label="Main comment" v-if="comment">
                     <div class="comment__author author" aria-label="Comment author">
                         <div class="author__photo" aria-label="Author`s photo">
-                            <img
+                            <AppImage
                                 :src="comment.user?.avatar_url ? comment.user.avatar_url : ''"
                                 alt="Author photo"
-                                @error="handleImageError"
                             />
                         </div>
 

@@ -5,6 +5,7 @@
 
     import { route } from 'ziggy-js';
 
+    import AppImage from '@/Components/UI/AppImage.vue';
     import { ProductWithCategory, SharedData } from '@/types';
 
     interface Props {
@@ -23,7 +24,7 @@
 <template>
     <figure class="card slider-mini__card" aria-label="Slider card">
         <div class="card__img-wrapper" aria-label="Slider card image">
-            <img :src="plant.image_url" :alt="plant.title" />
+            <AppImage :src="plant.image_url" :alt="plant.title" />
         </div>
 
         <span

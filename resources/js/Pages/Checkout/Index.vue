@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { useForm, usePage } from '@inertiajs/vue3';
 
-    import GuestLayout from '@/Layouts/GuestLayout.vue';
+    import AppImage from '@/Components/UI/AppImage.vue';
     // Или AuthenticatedLayout, если только для своих
+    import GuestLayout from '@/Layouts/GuestLayout.vue';
     import { CartItem, CheckoutForm, SharedData } from '@/types';
 
     const props = defineProps<{
@@ -107,7 +108,7 @@
             <div class="border-t pt-4">
                 <h3 class="font-bold mb-2">Your order:</h3>
                 <div v-for="item in cartItems" :key="item.id" class="flex items-center">
-                    <img :src="item.image" class="w-16 h-16 object-cover" />
+                    <AppImage :src="item.image" class="w-16 h-16 object-cover"></AppImage>
 
                     <div>
                         <h4>{{ item.title }}</h4>

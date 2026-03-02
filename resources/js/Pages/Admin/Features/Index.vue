@@ -3,6 +3,7 @@
 
     import { route } from 'ziggy-js';
 
+    import AppImage from '@/Components/UI/AppImage.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { Feature } from '@/types';
 
@@ -53,11 +54,11 @@
             <tbody>
                 <tr v-for="feature in features" :key="feature.id" class="border-b hover:bg-gray-50">
                     <td class="p-2">
-                        <img
+                        <AppImage
                             v-if="feature.image_url"
                             :src="feature.image_url"
                             class="w-16 h-10 object-cover rounded"
-                        />
+                        ></AppImage>
                         <span v-else class="text-gray-400 text-xs">No photo</span>
                     </td>
                     <td class="p-2">{{ feature.title }}</td>

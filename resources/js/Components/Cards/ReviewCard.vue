@@ -1,31 +1,31 @@
 <script setup>
-import IconStar from "img/icons/star.svg?component";
-import IconStarHalf from "img/icons/star-half.svg?component";
-import { computed } from "vue";
+    import { computed } from 'vue';
 
-const props = defineProps({
-    comment: Object,
-});
+    import IconStarHalf from 'img/icons/star-half.svg?component';
+    import IconStar from 'img/icons/star.svg?component';
 
-const starNumber = computed(() => {
-    const val = Math.floor(Number(props.comment.rating) || 0);
-    return Math.max(0, val);
-});
+    import AppImage from '@/Components/UI/AppImage.vue';
 
-const isHalfStar = computed(() => {
-    const val = Number(props.comment.rating) || 0;
-    return val % 1 !== 0;
-});
+    const props = defineProps({
+        comment: Object,
+    });
+
+    const starNumber = computed(() => {
+        const val = Math.floor(Number(props.comment.rating) || 0);
+        return Math.max(0, val);
+    });
+
+    const isHalfStar = computed(() => {
+        const val = Number(props.comment.rating) || 0;
+        return val % 1 !== 0;
+    });
 </script>
 
 <template>
     <figure class="comment top__comment" aria-label="Review">
         <div class="comment__author author" aria-label="Comment author">
             <div class="author__photo" aria-label="Author`s photo">
-                <img
-                    :src="comment.user.avatar_url || defaultAvatarLink"
-                    alt="Author photo"
-                />
+                <AppImage :src="comment.user.avatar_url || defaultAvatarLink" alt="Author photo" />
             </div>
 
             <div class="author__info" aria-label="Author`s info">
@@ -33,10 +33,7 @@ const isHalfStar = computed(() => {
                     {{ comment.user.name }}
                 </p>
 
-                <div
-                    class="authors__assessment"
-                    aria-label="Author`s assessment"
-                >
+                <div class="authors__assessment" aria-label="Author`s assessment">
                     <IconStar
                         v-for="n in starNumber"
                         :key="'full-' + n"

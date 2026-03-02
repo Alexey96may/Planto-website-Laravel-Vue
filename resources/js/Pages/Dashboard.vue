@@ -3,6 +3,7 @@
 
     import { Head, useForm } from '@inertiajs/vue3';
 
+    import AppImage from '@/Components/UI/AppImage.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { AuthProps, Comment, CommentForm, UserForm } from '@/types';
 
@@ -84,10 +85,10 @@
                     <form @submit.prevent="submitInfo" class="space-y-6">
                         <div class="flex flex-col items-center sm:flex-row gap-8">
                             <div class="relative group">
-                                <img
-                                    :src="imageUrl"
+                                <AppImage
+                                    :src="imageUrl || ''"
                                     class="w-32 h-32 rounded-3xl object-cover border-2 border-[#c5d86d]/30 group-hover:border-[#c5d86d] transition-all duration-300"
-                                />
+                                ></AppImage>
                                 <div
                                     class="absolute -inset-1 bg-[#c5d86d]/20 rounded-3xl blur opacity-0 group-hover:opacity-100 transition"
                                 ></div>

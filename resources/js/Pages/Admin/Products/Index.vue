@@ -6,6 +6,7 @@
     import { route } from 'ziggy-js';
 
     import Pagination from '@/Components/Shared/Pagination.vue';
+    import AppImage from '@/Components/UI/AppImage.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { PaginatedResponse, ProductWithCategory } from '@/types';
     import { formatUSD } from '@/utils/money';
@@ -117,10 +118,10 @@
                             class="border-b hover:bg-gray-50 transition"
                         >
                             <td class="p-4">
-                                <img
+                                <AppImage
                                     :src="product.image_url"
                                     class="w-12 h-12 rounded-lg object-cover"
-                                />
+                                ></AppImage>
                             </td>
                             <td class="p-4 font-medium">{{ product.title }}</td>
 
