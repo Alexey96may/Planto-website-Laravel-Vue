@@ -5,9 +5,10 @@
  * @returns An object containing the count of full, half, and empty stars.
  */
 export const getStarStats = (rating: number | string | undefined | null, maxStars: number = 5) => {
-    const val = Number(rating) || 0;
-    const full = Math.floor(Math.max(0, val));
-    const half = val % 1 >= 0.1; // True if there's at least 0.1 remainder
+    const val = clamp(Number(rating) || 0, 0, maxStars);
+
+    const full = Math.floor(val);
+    const half = val % 1 >= 0.1 && full < maxStars;
     const empty = Math.max(0, maxStars - full - (half ? 1 : 0));
 
     return {
