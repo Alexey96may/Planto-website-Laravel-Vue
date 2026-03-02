@@ -3,7 +3,7 @@
 
     import { route } from 'ziggy-js';
 
-    import Toast from '@/Components/Toast.vue';
+    import Toast from '@/Components/Shared/Toast.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { OrderStatus, OrderWithUser } from '@/types';
     import { formatUSD } from '@/utils/money';

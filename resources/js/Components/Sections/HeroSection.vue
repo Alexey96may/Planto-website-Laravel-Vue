@@ -7,8 +7,8 @@
     import IconPlay from 'img/icons/play.svg?component';
 
     import HeroSliderCard from '@/Components/Cards/HeroSliderCard.vue';
-    import Modal from '@/Components/Modal.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
+    import Modal from '@/Components/UI/Modal.vue';
     import { ProductWithCategory, Review, SharedData } from '@/types';
     import { handleImageError } from '@/utils';
 

@@ -6,8 +6,8 @@
 
     import { route } from 'ziggy-js';
 
-    import Pagination from '@/Components/Pagination.vue';
-    import PlantCard from '@/Components/TopCard.vue';
+    import PlantCard from '@/Components/Cards/ShopCard.vue';
+    import Pagination from '@/Components/Shared/Pagination.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { Category, PaginatedResponse, Product, ProductFilters, SortOption } from '@/types';
     import { debounce } from '@/utils/helpers';

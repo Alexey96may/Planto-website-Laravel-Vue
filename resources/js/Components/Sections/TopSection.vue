@@ -3,7 +3,7 @@
 
     import { Link, usePage } from '@inertiajs/vue3';
 
-    import PlantTopCard from '@/Components/TopCard.vue';
+    import PlantTopCard from '@/Components/Cards/TopCard.vue';
     import { Product, SharedData } from '@/types';
 
     interface Props {

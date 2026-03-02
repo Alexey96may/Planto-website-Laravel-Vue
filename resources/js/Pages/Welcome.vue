@@ -3,11 +3,11 @@
 
     import { Head, router, usePage } from '@inertiajs/vue3';
 
-    import Review from '@/Components/Review.vue';
-    import Best from '@/Components/Sections/Best.vue';
-    import Hero from '@/Components/Sections/Hero.vue';
-    import Top from '@/Components/Top.vue';
-    import Trendy from '@/Components/TrendySection.vue';
+    import Best from '@/Components/Sections/BestSection.vue';
+    import Hero from '@/Components/Sections/HeroSection.vue';
+    import Review from '@/Components/Sections/ReviewSection.vue';
+    import Top from '@/Components/Sections/TopSection.vue';
+    import Trendy from '@/Components/Sections/TrendySection.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import {
         Feature,

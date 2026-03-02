@@ -5,7 +5,7 @@
 
     import { route } from 'ziggy-js';
 
-    import ImageUploader from '@/Components/Shared/ImageUploader.vue';
+    import ImageUploader from '@/Components/UI/ImageUploader.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { Category, ProductForm } from '@/types';
 

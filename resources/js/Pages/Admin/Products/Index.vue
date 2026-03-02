@@ -5,7 +5,7 @@
 
     import { route } from 'ziggy-js';
 
-    import Pagination from '@/Components/Pagination.vue';
+    import Pagination from '@/Components/Shared/Pagination.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { PaginatedResponse, ProductWithCategory } from '@/types';
     import { formatUSD } from '@/utils/money';

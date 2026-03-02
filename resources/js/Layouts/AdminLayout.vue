@@ -6,8 +6,6 @@
 
     import { route } from 'ziggy-js';
 
-    import Toast from '@/Components/Toast.vue';
-
     const currentComponent = computed(() => page.component);
 
     const page = usePage();

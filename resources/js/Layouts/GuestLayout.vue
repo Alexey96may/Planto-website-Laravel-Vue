@@ -1,8 +1,7 @@
 <script setup lang="ts">
     import { Link } from '@inertiajs/vue3';
 
-    import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-    import Toast from '@/Components/Toast.vue';
+    import ApplicationLogo from '@/Components/UI/ApplicationLogo.vue';
 
     defineSlots<{
         default(props: {}): any;

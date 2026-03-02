@@ -3,7 +3,7 @@
 
     import { Link, usePage } from '@inertiajs/vue3';
 
-    import TrendyCard from '@/Components/TrendyCard.vue';
+    import TrendyCard from '@/Components/Cards/TrendyCard.vue';
     import { Product, SharedData } from '@/types';
 
     interface Props {

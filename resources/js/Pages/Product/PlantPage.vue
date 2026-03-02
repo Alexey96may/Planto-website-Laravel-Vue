@@ -6,7 +6,7 @@
 
     import { route } from 'ziggy-js';
 
-    import AppImage from '@/Components/AppImage.vue';
+    import AppImage from '@/Components/UI/AppImage.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { CartItems, ProductWithCategory } from '@/types';
     import { calculateTotal, formatUSD } from '@/utils/money';

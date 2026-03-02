@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import MainLayout from '@/Layouts/MainLayout.vue';
-    import { SharedData } from '@/types';
 
     defineOptions({
         layout: MainLayout,

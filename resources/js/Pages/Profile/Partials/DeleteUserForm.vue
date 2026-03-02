@@ -3,12 +3,12 @@
 
     import { useForm } from '@inertiajs/vue3';
 
-    import DangerButton from '@/Components/DangerButton.vue';
-    import InputError from '@/Components/InputError.vue';
-    import InputLabel from '@/Components/InputLabel.vue';
-    import Modal from '@/Components/Modal.vue';
-    import SecondaryButton from '@/Components/SecondaryButton.vue';
-    import TextInput from '@/Components/TextInput.vue';
+    import DangerButton from '@/Components/UI/DangerButton.vue';
+    import InputError from '@/Components/UI/InputError.vue';
+    import InputLabel from '@/Components/UI/InputLabel.vue';
+    import Modal from '@/Components/UI/Modal.vue';
+    import SecondaryButton from '@/Components/UI/SecondaryButton.vue';
+    import TextInput from '@/Components/UI/TextInput.vue';
 
     const confirmingUserDeletion = ref<boolean>(false);
     const passwordInput = ref<HTMLInputElement | null>(null);

@@ -5,7 +5,7 @@
 
     import { route } from 'ziggy-js';
 
-    import AppImage from '@/Components/AppImage.vue';
+    import AppImage from '@/Components/UI/AppImage.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { CartData, CartItem } from '@/types';
     import { debounce } from '@/utils/helpers';

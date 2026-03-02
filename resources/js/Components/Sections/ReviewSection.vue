@@ -3,9 +3,8 @@
 
     import { Link, usePage } from '@inertiajs/vue3';
 
+    import ReviewCard from '@/Components/Cards/ReviewCard.vue';
     import { Review, SharedData } from '@/types';
-
-    import ReviewCard from './ReviewCard.vue';
 
     const page = usePage<SharedData>();
 
