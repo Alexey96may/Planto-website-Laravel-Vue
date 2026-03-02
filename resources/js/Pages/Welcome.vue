@@ -1,13 +1,13 @@
 <script setup lang="ts">
     import { Head } from '@inertiajs/vue3';
 
-    import Hero from '@/Components/Hero.vue';
     import Review from '@/Components/Review.vue';
     import Best from '@/Components/Sections/Best.vue';
+    import Hero from '@/Components/Sections/Hero.vue';
     import Top from '@/Components/Top.vue';
     import Trendy from '@/Components/Trendy.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
-    import { Comment, Feature, Product } from '@/types';
+    import { Feature, Product, ProductWithCategory, Review as ReviewInterface } from '@/types';
 
     defineSlots<{
         default(props: {}): any;
@@ -18,9 +18,9 @@
     interface Props {
         topPlants: Product[];
         trendyPlants: Product[];
-        heroPlants: Product[];
+        heroPlants: ProductWithCategory[];
         status: string;
-        comments: Comment[];
+        comments: ReviewInterface[];
         features: Feature[];
     }
 
