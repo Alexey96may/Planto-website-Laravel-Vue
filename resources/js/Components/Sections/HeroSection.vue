@@ -1,17 +1,18 @@
 <script setup lang="ts">
     import { computed, ref } from 'vue';
 
-    import { Link, usePage } from '@inertiajs/vue3';
+    import { router, usePage } from '@inertiajs/vue3';
 
     import IconArrowRight from 'img/icons/arrow-right.svg?component';
     import IconPlay from 'img/icons/play.svg?component';
+    import { route } from 'ziggy-js';
 
     import HeroSliderCard from '@/Components/Cards/HeroSliderCard.vue';
+    import AppExploreButton from '@/Components/UI/AppExploreButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
     import Modal from '@/Components/UI/Modal.vue';
     import { ProductWithCategory, Review, SharedData } from '@/types';
-    import { handleImageError } from '@/utils';
 
     interface Props {
         heroPlants: ProductWithCategory[];
@@ -48,13 +49,13 @@
                     </p>
 
                     <div class="hero__buttons" aria-label="Hero buttons">
-                        <button
+                        <AppExploreButton
+                            :href="route('shop')"
                             class="button--rect"
-                            aria-label="Press to explore"
-                            id="heroExploreButton"
+                            aria-label="To see more plants"
                         >
-                            <Link href="/shop" aria-label="To see more plants"> Explore </Link>
-                        </button>
+                            Explore
+                        </AppExploreButton>
 
                         <div
                             class="hero__video-prevue"

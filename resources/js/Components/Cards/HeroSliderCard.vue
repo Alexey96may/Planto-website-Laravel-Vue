@@ -1,10 +1,11 @@
 <script setup lang="ts">
     import { computed } from 'vue';
 
-    import { Link, usePage } from '@inertiajs/vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     import { route } from 'ziggy-js';
 
+    import AppExploreButton from '@/Components/UI/AppExploreButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import { ProductWithCategory, SharedData } from '@/types';
 
@@ -38,13 +39,12 @@
             <a href="#" class="card__tag-title" aria-label="To Calathea plant"></a>
         </h3>
 
-        <button class="button--rect card__button" aria-label="Buy now">
-            <Link
-                :href="route('shop.show', plant.id)"
-                :aria-label="plant.title"
-                :disabled="plant.stock === 0 || isInCart"
-            ></Link>
+        <AppExploreButton
+            :href="route('shop.show', plant.id)"
+            class="button--rect card__button"
+            :aria-label="plant.title"
+        >
             Buy Now
-        </button>
+        </AppExploreButton>
     </figure>
 </template>

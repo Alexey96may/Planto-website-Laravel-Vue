@@ -4,6 +4,7 @@
     import IconBag from 'img/icons/bag.svg?component';
     import { route } from 'ziggy-js';
 
+    import AppExploreButton from '@/Components/UI/AppExploreButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import { Product } from '@/types';
 
@@ -49,15 +50,13 @@
             <div class="card__price" aria-label="Plant price">{{ plant.price }} $</div>
 
             <div class="card__buttons" aria-label="Buttons">
-                <button class="button--rect" aria-label="Explore">
-                    <Link
-                        class="card__link"
-                        :href="route('shop.show', plant.id)"
-                        :aria-label="plant.title"
-                    >
-                        Explore
-                    </Link>
-                </button>
+                <AppExploreButton
+                    :href="route('shop.show', plant.id)"
+                    aria-label="Explore"
+                    class="button--rect card__button"
+                >
+                    Explore
+                </AppExploreButton>
 
                 <button
                     @click="handleAddToCart"

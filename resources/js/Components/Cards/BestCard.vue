@@ -3,6 +3,7 @@
 
     import IconArrowRight from 'img/icons/arrow-right.svg?component';
 
+    import AppExploreButton from '@/Components/UI/AppExploreButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import { Feature } from '@/types';
 
@@ -35,9 +36,13 @@
             ></div>
 
             <div class="card__buying" aria-label="Plant buying info">
-                <button class="button--rect card__button" aria-label="Explore">
-                    <Link :href="feature.link" aria-label="To see more plants"> Explore </Link>
-                </button>
+                <AppExploreButton
+                    :href="feature.link"
+                    aria-label="Explore"
+                    class="button--rect card__button"
+                >
+                    Explore
+                </AppExploreButton>
 
                 <div class="card__number" aria-label="Plant card number">
                     <button class="button slider-mini__left" aria-label="Left">
