@@ -1,10 +1,9 @@
-<script setup>
-defineProps({
-    type: {
-        type: String,
-        default: 'button',
-    },
-});
+<script setup lang="ts">
+    interface Props {
+        type?: 'button' | 'submit' | 'reset';
+    }
+
+    const { type = 'button' } = defineProps<Props>();
 </script>
 
 <template>

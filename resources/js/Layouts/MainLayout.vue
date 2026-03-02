@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { usePage } from '@inertiajs/vue3';
 
+    import Header from '@/Components/Sections/Header.vue';
     import Footer from '@/Components/Shared/Footer.vue';
-    import Header from '@/Components/Shared/Header.vue';
     import Toast from '@/Components/Toast.vue';
 
     defineSlots<{

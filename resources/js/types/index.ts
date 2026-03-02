@@ -335,6 +335,13 @@ export interface CheckoutForm {
     create_account: boolean;
 }
 
+export interface FlashPayload {
+    success?: string;
+    error?: string;
+    message?: string;
+    warning?: string;
+}
+
 export interface SharedData extends PageProps {
     auth: AuthProps;
     cart_count: number;

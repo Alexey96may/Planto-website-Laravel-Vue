@@ -1,19 +1,21 @@
 <script setup lang="ts">
-    import { Head } from '@inertiajs/vue3';
+    import { computed, ref } from 'vue';
+
+    import { Head, router, usePage } from '@inertiajs/vue3';
 
     import Review from '@/Components/Review.vue';
     import Best from '@/Components/Sections/Best.vue';
     import Hero from '@/Components/Sections/Hero.vue';
     import Top from '@/Components/Top.vue';
-    import Trendy from '@/Components/Trendy.vue';
+    import Trendy from '@/Components/TrendySection.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
-    import { Feature, Product, ProductWithCategory, Review as ReviewInterface } from '@/types';
-
-    defineSlots<{
-        default(props: {}): any;
-        hero(props: {}): any;
-        trendy(props: {}): any;
-    }>();
+    import {
+        Feature,
+        Product,
+        ProductWithCategory,
+        Review as ReviewInterface,
+        SharedData,
+    } from '@/types';
 
     interface Props {
         topPlants: Product[];
@@ -24,6 +26,12 @@
         features: Feature[];
     }
 
+    defineSlots<{
+        default(props: {}): any;
+        hero(props: {}): any;
+        trendy(props: {}): any;
+    }>();
+
     const props = withDefaults(defineProps<Props>(), {
         topPlants: () => [],
         trendyPlants: () => [],
@@ -31,6 +39,27 @@
         comments: () => [],
         features: () => [],
     });
+
+    const page = usePage<SharedData>();
+    const cartIds = computed(() => page.props.cartIds || []);
+
+    const processingId = ref<number | null>(null);
+
+    const handleAddToCart = (product: Product) => {
+        router.post(
+            route('cart.add'),
+            { id: product.id, quantity: 1 },
+            {
+                preserveScroll: true,
+                onBefore: () => {
+                    processingId.value = product.id;
+                },
+                onFinish: () => {
+                    processingId.value = null;
+                },
+            },
+        );
+    };
 </script>
 
 <template>
@@ -41,10 +70,22 @@
             <Hero :heroPlants="heroPlants" :comment="comments[0] || null" />
         </template>
         <template #trendy>
-            <Trendy v-if="trendyPlants.length" :trendyPlants="trendyPlants" />
+            <Trendy
+                v-if="trendyPlants.length"
+                :trendyPlants="trendyPlants"
+                :cart-ids="cartIds"
+                :processing-id="processingId"
+                @add-to-cart="handleAddToCart"
+            />
         </template>
 
-        <Top :topPlants="topPlants" />
+        <Top
+            v-if="topPlants.length"
+            :topPlants="topPlants"
+            :cart-ids="cartIds"
+            :processing-id="processingId"
+            @add-to-cart="handleAddToCart"
+        />
         <Review v-if="comments.length" :comments="comments" />
         <Best :features="features" />
     </MainLayout>

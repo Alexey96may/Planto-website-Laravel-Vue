@@ -1,41 +1,35 @@
-<script setup>
-    import { computed } from 'vue';
-
+<script setup lang="ts">
     import { Link } from '@inertiajs/vue3';
-    import { router } from '@inertiajs/vue3';
-    import { usePage } from '@inertiajs/vue3';
 
     import IconBag from 'img/icons/bag.svg?component';
+    import { route } from 'ziggy-js';
 
     import AppImage from '@/Components/UI/AppImage.vue';
+    import { Product } from '@/types';
 
-    const props = defineProps({
-        plant: {
-            type: Object,
-            default: () => {},
-        },
-    });
+    interface Props {
+        plant?: Product;
+        isInCart?: boolean;
+        isProcessing?: boolean;
+    }
 
-    const page = usePage();
+    const { plant = {} as Product, isInCart = false, isProcessing = false } = defineProps<Props>();
 
-    const addToCart = () => {
-        const id = props.plant?.id;
+    const emit = defineEmits<{
+        (e: 'add-to-cart', product: Product): void;
+    }>();
 
-        router.post(route('cart.add'), {
-            product_id: id,
-            quantity: 1,
-        });
+    const handleAddToCart = () => {
+        if (!isInCart && plant.stock > 0) {
+            emit('add-to-cart', plant);
+        }
     };
-
-    const isInCart = computed(() => {
-        return page.props.cart_ids?.includes(props.plant.id);
-    });
 </script>
 
 <template>
     <figure class="card trendy-card" aria-label="Trendy card">
         <div class="card__img-wrapper" aria-label="Trendy card image">
-            <AppImage :src="plant?.image_url" :alt="plant.title" />
+            <AppImage :src="plant.image_url" :alt="plant.title" />
         </div>
         <div class="card__info" aria-label="Card information">
             <h3 class="card__title card__title--white" aria-label="Slider card title">
@@ -66,12 +60,16 @@
                 </button>
 
                 <button
-                    @click="addToCart"
+                    @click="handleAddToCart"
                     class="button--square"
                     aria-label="Add to cart"
-                    :disabled="plant.stock === 0 || isInCart"
+                    :disabled="plant.stock === 0 || isInCart || isProcessing"
                 >
-                    <IconBag class="button-image" aria-label="Cart"></IconBag>
+                    <IconBag
+                        class="button-image"
+                        aria-label="Cart"
+                        :class="{ 'text-green-500': isInCart }"
+                    ></IconBag>
                 </button>
             </div>
         </div>

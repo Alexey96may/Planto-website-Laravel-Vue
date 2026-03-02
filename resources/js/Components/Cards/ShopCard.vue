@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
     import { computed } from 'vue';
 
     import { Link } from '@inertiajs/vue3';
@@ -8,22 +8,21 @@
     import IconBag from 'img/icons/bag.svg?component';
 
     import AppImage from '@/Components/UI/AppImage.vue';
+    import { Product, SharedData } from '@/types';
 
-    const props = defineProps({
-        plant: {
-            type: Object,
-            default: () => {},
-        },
-        current_page: {
-            type: String,
-            default: '',
-        },
-    });
+    interface Props {
+        plant?: Product;
+        current_page?: string | number;
+        isInCart?: boolean;
+        isProcessing?: boolean;
+    }
 
-    const page = usePage();
+    const { plant = {} as Product, current_page = '' } = defineProps<Props>();
+
+    const page = usePage<SharedData>();
 
     const addToCart = () => {
-        const id = props.plant?.id;
+        const id = plant?.id;
 
         router.post(route('cart.add'), {
             product_id: id,
@@ -32,8 +31,18 @@
     };
 
     const isInCart = computed(() => {
-        return page.props.cart_ids?.includes(props.plant.id);
+        return page.props.cart_ids?.includes(plant.id);
     });
+
+    const emit = defineEmits<{
+        (e: 'add-to-cart', product: Product): void;
+    }>();
+
+    const handleAddToCart = () => {
+        if (!isInCart && plant.stock > 0) {
+            emit('add-to-cart', plant);
+        }
+    };
 </script>
 
 <template>
@@ -63,10 +72,14 @@
             <button
                 class="button--square"
                 aria-label="Add to cart"
-                @click="addToCart"
+                @click="handleAddToCart"
                 :disabled="isInCart || plant.stock === 0"
             >
-                <IconBag class="button-image" aria-label="Cart"></IconBag>
+                <IconBag
+                    class="button-image"
+                    aria-label="Cart"
+                    :class="{ 'text-green-500': isInCart }"
+                ></IconBag>
             </button>
         </div>
     </figure>

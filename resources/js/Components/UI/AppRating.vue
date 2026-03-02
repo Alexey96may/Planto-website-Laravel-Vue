@@ -14,7 +14,7 @@
 
     const { rating = 0, max = 5 } = defineProps<Props>();
 
-    const stars = computed(() => getStarStats(rating, max));
+    const stars = computed(() => getStarStats(Number(rating) || 0, max));
 </script>
 
 <template>

@@ -3,6 +3,7 @@
     <style>
       .uuid-1c2c89b3-14ad-4274-a843-fae30ff30839 {
         stroke-width: 0px;
+        stroke="currentColor"
       }
     </style>
   </defs>
