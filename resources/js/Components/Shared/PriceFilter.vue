@@ -16,7 +16,7 @@
         <h3 class="text-xs uppercase tracking-widest text-zinc-500 font-bold mb-4">Price Range</h3>
 
         <div class="flex items-center gap-3">
-            <div class="relative w-1/2">
+            <div class="relative w-1/2 min-w-20">
                 <span
                     class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs font-medium"
                     >From</span
@@ -35,7 +35,7 @@
 
             <div class="h-[1px] w-4 bg-zinc-300"></div>
 
-            <div class="relative w-1/2">
+            <div class="relative w-1/2 min-w-20">
                 <span
                     class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs font-medium"
                     >To</span

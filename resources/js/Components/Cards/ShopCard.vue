@@ -42,7 +42,7 @@
 
 <template>
     <figure
-        class="product-card group relative p-5 transition-all duration-300 max-w-60 border border-current rounded-xl bg-teal-700/10 hover:bg-teal-700/30"
+        class="product-card group relative p-5 transition-all duration-300 w-full sm:max-w-60 border border-current rounded-xl bg-teal-700/10 hover:bg-teal-700/30"
         aria-label="Top card"
     >
         <div class="image-wrapper mb-8 aspect-square w-full overflow-hidden">
