@@ -2,8 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { handleImageError } from '../utils';
 
-// подправь путь, если нужно
-
 describe('handleImageError', () => {
     it('should replace src with a placeholder and reset onerror', () => {
         const img = document.createElement('img');

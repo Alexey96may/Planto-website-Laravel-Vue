@@ -61,7 +61,7 @@
                 },
                 {
                     preserveScroll: true,
-                    onSuccess: () => {},
+                    onSuccess: () => {}, //todo
                 },
             );
         } else {
@@ -71,7 +71,7 @@
                     product_id: id,
                     quantity: newQuantity,
                 },
-                { preserveScroll: true, onSuccess: () => {} },
+                { preserveScroll: true, onSuccess: () => {} }, //todo
             );
         }
     };

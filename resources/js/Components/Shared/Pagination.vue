@@ -17,9 +17,9 @@
             v-html="link.label"
             class="px-4 py-2 rounded-lg text-sm transition-all"
             :class="{
-                'bg-green-600 text-white shadow-md': link.active,
-                'text-gray-500 hover:bg-gray-100': !link.active && link.url,
-                'text-gray-300 cursor-not-allowed': !link.url,
+                'bg-emerald-600 text-white shadow-md': link.active,
+                'text-gray-300 hover:bg-gray-100/80 hover:text-gray-700': !link.active && link.url,
+                'text-gray-500 cursor-default': !link.url,
             }"
             preserve-scroll
         />

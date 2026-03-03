@@ -41,14 +41,14 @@
     });
 
     const page = usePage<SharedData>();
-    const cartIds = computed(() => page.props.cartIds || []);
+    const cartIds = computed(() => page.props.cart_ids || []);
 
     const processingId = ref<number | null>(null);
 
     const handleAddToCart = (product: Product) => {
         router.post(
             route('cart.add'),
-            { id: product.id, quantity: 1 },
+            { product_id: product.id, quantity: 1 },
             {
                 preserveScroll: true,
                 onBefore: () => {

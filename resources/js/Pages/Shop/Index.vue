@@ -1,15 +1,25 @@
 <script setup lang="ts">
-    import { ref, watch } from 'vue';
+    import { computed, ref, watch } from 'vue';
 
-    import { Head, Link } from '@inertiajs/vue3';
-    import { router } from '@inertiajs/vue3';
+    import { Head, Link, router, usePage } from '@inertiajs/vue3';
 
     import { route } from 'ziggy-js';
 
     import PlantCard from '@/Components/Cards/ShopCard.vue';
+    import ShopCategory from '@/Components/Shared/CategoryFilter.vue';
     import Pagination from '@/Components/Shared/Pagination.vue';
+    import PriceFilter from '@/Components/Shared/PriceFilter.vue';
+    import SearchInput from '@/Components/Shared/SearchFilter.vue';
+    import SortFilter from '@/Components/Shared/SortFilter.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
-    import { Category, PaginatedResponse, Product, ProductFilters, SortOption } from '@/types';
+    import {
+        Category,
+        PaginatedResponse,
+        Product,
+        ProductFilters,
+        SharedData,
+        SortOption,
+    } from '@/types';
     import { debounce } from '@/utils/helpers';
 
     defineOptions({
@@ -23,15 +33,20 @@
         filters: ProductFilters;
     }>();
 
+    const page = usePage<SharedData>();
+    const cartIds = computed(() => page.props.cart_ids || []);
+
     const search = ref<string>(props.filters.search || '');
     const minPrice = ref<number | string>(props.filters.min_price || '');
     const maxPrice = ref<number | string>(props.filters.max_price || '');
     const sort = ref<SortOption | string>(props.filters?.sort || 'popular');
     const inStockOnly = ref<boolean>(props.filters.in_stock !== 'false');
 
+    const currentCategory = ref<string | null>(props.currentCategory);
+
     const applyFilters = (): void => {
         const params = {
-            category: props.currentCategory,
+            category: currentCategory.value,
             search: search.value || undefined,
             min_price: minPrice.value || undefined,
             max_price: maxPrice.value || undefined,
@@ -49,125 +64,119 @@
     const debouncedApplyFilters = debounce(() => {
         applyFilters();
     }, 500);
-    //Для чекбоксов и селекторов (выпадающих списков) debounce обычно не нужен. select/input type="checkbox" @change="applyFilters"
 
     watch(search, () => {
         debouncedApplyFilters();
     });
+
+    const processingId = ref<number | null>(null);
+
+    const handleAddToCart = (product: Product) => {
+        router.post(
+            route('cart.add'),
+            { product_id: product.id, quantity: 1 },
+            {
+                preserveScroll: true,
+                onBefore: () => {
+                    processingId.value = product.id;
+                },
+                onFinish: () => {
+                    processingId.value = null;
+                },
+            },
+        );
+    };
+
+    const handleChangeCategory = (categotySlug: string | null) => {
+        currentCategory.value = categotySlug;
+        debouncedApplyFilters();
+    };
 </script>
 
 <template>
-    <Head title="Каталог цветов" />
+    <Head title="Plant Catalog" />
 
-    <aside class="w-full md:w-64">
-        <div class="mb-6">
-            <input
-                v-model="search"
-                @keyup.enter="applyFilters"
-                type="text"
-                placeholder="Поиск растений..."
-                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500"
-            />
-        </div>
-
-        <div class="space-y-4">
-            <h3 class="font-bold">Цена</h3>
-            <div class="flex gap-2">
-                <input
-                    v-model="minPrice"
-                    type="number"
-                    placeholder="От"
-                    class="w-1/2 border rounded-md p-2 text-sm"
-                />
-                <input
-                    v-model="maxPrice"
-                    type="number"
-                    placeholder="До"
-                    class="w-1/2 border rounded-md p-2 text-sm"
-                />
-            </div>
-            <button
-                @click="applyFilters"
-                class="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+    <div class="max-w-7xl mx-auto px-4 pt-8 pb-10 bg-plant-shop">
+        <p class="text-zinc-500 font-extralight pb-4 text-xs whitespace-nowrap text-right px-4">
+            Showing: <span class="text-zinc-200">{{ products.total }} products</span>
+        </p>
+        <div class="flex flex-col md:flex-row gap-2">
+            <aside
+                class="w-full md:w-64 px-4 py-6 shadow-sm shadow-emerald-400/50 rounded-lg bg-plant-green"
             >
-                Применить
-            </button>
-            <Link href="/shop" class="block text-center text-xs text-gray-400 underline"
-                >Сбросить всё</Link
-            >
-        </div>
-    </aside>
-    <div class="max-w-7xl mx-auto px-4 py-12">
-        <div class="flex flex-col md:flex-row gap-10">
-            <aside class="w-full md:w-64 flex-shrink-0">
-                <h2 class="text-xl font-bold mb-6">Категории</h2>
-                <nav class="space-y-2">
-                    <Link
-                        href="/shop"
-                        :class="[
-                            'block px-4 py-2 rounded-lg transition',
-                            !currentCategory
-                                ? 'bg-green-600 text-white shadow-md'
-                                : 'hover:bg-gray-100',
-                        ]"
-                    >
-                        Все растения
-                    </Link>
+                <SearchInput v-model="search" @apply-search="debouncedApplyFilters" />
 
-                    <Link
-                        v-for="category in categories"
-                        :key="category.id"
-                        :href="route('shop', { category: category.slug })"
-                        :class="[
-                            'block px-4 py-2 rounded-lg transition',
-                            currentCategory === category.slug
-                                ? 'bg-green-600 text-white shadow-md'
-                                : 'hover:bg-gray-100',
-                        ]"
-                    >
-                        {{ category.title }}
-                    </Link>
-                </nav>
+                <PriceFilter
+                    class="mb-10"
+                    v-model:min="minPrice"
+                    v-model:max="maxPrice"
+                    @change="debouncedApplyFilters"
+                />
 
-                <div class="mt-10 p-4 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
-                    <p class="text-sm text-gray-500 italic">
-                        Фильтры по цене появятся здесь позже...
-                    </p>
+                <div
+                    class="mb-10 flex items-center justify-between group cursor-pointer"
+                    @click="
+                        inStockOnly = !inStockOnly;
+                        debouncedApplyFilters();
+                    "
+                >
+                    <span
+                        class="text-sm font-medium text-zinc-300 group-hover:text-emerald-600 transition-colors"
+                    >
+                        In Stock Only
+                    </span>
+
+                    <div
+                        class="relative w-10 h-5 transition-colors duration-200 ease-in-out rounded-full"
+                        :class="inStockOnly ? 'bg-emerald-600' : 'bg-zinc-600'"
+                    >
+                        <div
+                            class="absolute top-1 left-1 w-3 h-3 transition-transform duration-200 ease-in-out transform bg-white rounded-full"
+                            :class="inStockOnly ? 'translate-x-5' : 'translate-x-0'"
+                        ></div>
+                    </div>
                 </div>
+
+                <ShopCategory
+                    @change-category="handleChangeCategory"
+                    :categories="categories"
+                    :currentCategory="currentCategory"
+                />
             </aside>
 
-            <main class="flex-grow">
+            <main
+                class="flex-grow bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50 rounded-lg"
+            >
                 <div class="flex justify-between items-end mb-8">
-                    <div>
-                        <h1 class="text-4xl font-black italic uppercase tracking-tighter">
-                            Наш магазин
-                        </h1>
-                        <p class="text-gray-500">Найдено товаров: {{ products.total }}</p>
-                    </div>
+                    <SortFilter v-model="sort" @change="debouncedApplyFilters" />
 
-                    <div class="flex items-center space-x-2">
-                        <span class="text-xs font-bold uppercase text-gray-400">Сортировка:</span>
-                        <select
-                            v-model="sort"
-                            @change="applyFilters"
-                            class="text-sm border-none bg-transparent font-bold focus:ring-0 cursor-pointer"
-                        >
-                            <option value="popular">Хиты продаж</option>
-                            <option value="new">Новинки</option>
-                            <option value="price_asc">Сначала дешевле</option>
-                            <option value="price_desc">Сначала дороже</option>
-                        </select>
-                    </div>
                     <div>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                v-model="inStockOnly"
-                                @change="applyFilters"
-                                class="rounded border-gray-300"
-                            />
-                            <span>Только в наличии</span>
-                        </label>
+                        <Link
+                            :href="route('shop')"
+                            :preserve-scroll="true"
+                            class="group overflow-hidden flex items-center justify-center gap-2 w-full px-3 py-2 text-sm rounded-xl border border-zinc-600 text-zinc-300 hover:bg-orange-800/10 transition-all duration-300"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 transition-transform duration-500 group-hover:rotate-[-180deg]"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                />
+                            </svg>
+
+                            <span
+                                class="text-sm font-bold uppercase tracking-widest text-ellipsis whitespace-nowrap"
+                            >
+                                Reset
+                            </span>
+                        </Link>
                     </div>
                 </div>
 
@@ -180,18 +189,22 @@
                         :key="plant.id"
                         :plant="plant"
                         :current_page="products.current_page"
+                        :processing-id="processingId === plant.id"
+                        :is-in-cart="cartIds.includes(plant.id)"
+                        @add-to-cart="handleAddToCart"
                     />
-
-                    <Pagination :links="products.links" />
                 </div>
 
                 <div v-else class="text-center py-20 bg-gray-50 rounded-3xl">
-                    <p class="text-xl text-gray-400">В этой категории пока нет цветов...</p>
+                    <p class="text-xl text-gray-400">
+                        There are no products in this category yet...
+                    </p>
                     <Link :href="route('shop')" class="text-green-600 underline mt-4 inline-block"
-                        >Вернуться ко всем товарам</Link
+                        >Return to all products</Link
                     >
                 </div>
             </main>
         </div>
+        <Pagination :links="products.links" />
     </div>
 </template>

@@ -33,8 +33,9 @@
         return [
             props.classes,
             {
-                'opacity-50 cursor-not-allowed': props.disabled || props.isProcessing,
-                'text-green-500': props.isInCart,
+                'opacity-50 cursor-not-allowed bg-orange-700/80':
+                    props.disabled || props.isProcessing,
+                'bg-emerald-700/40': props.isInCart,
             },
         ];
     });

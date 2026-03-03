@@ -8,6 +8,7 @@
     import AppBuyButton from '@/Components/UI/AppBuyButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import { Product, SharedData } from '@/types';
+    import { formatUSD } from '@/utils/money';
 
     interface Props {
         plant?: Product;
@@ -16,7 +17,12 @@
         isProcessing?: boolean;
     }
 
-    const { plant = {} as Product, current_page = '' } = defineProps<Props>();
+    const {
+        plant = {} as Product,
+        current_page = '',
+        isInCart = false,
+        isProcessing = false,
+    } = defineProps<Props>();
 
     const page = usePage<SharedData>();
 
@@ -29,47 +35,61 @@
         });
     };
 
-    const isInCart = computed(() => {
-        return page.props.cart_ids?.includes(plant.id);
-    });
-
     const emit = defineEmits<{
         (e: 'add-to-cart', product: Product): void;
     }>();
 </script>
 
 <template>
-    <figure class="card top__card" aria-label="Top card">
-        <div class="card__img-wrapper" aria-label="Top card image">
-            <AppImage :src="plant.image_url" :alt="plant.title"></AppImage>
+    <figure
+        class="product-card group relative p-5 transition-all duration-300 max-w-60 border border-current rounded-xl bg-teal-700/10 hover:bg-teal-700/30"
+        aria-label="Top card"
+    >
+        <div class="image-wrapper mb-8 aspect-square w-full overflow-hidden">
+            <AppImage
+                :src="plant.image_url"
+                :alt="plant.title"
+                class="plant-image mx-auto h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+            ></AppImage>
         </div>
 
-        <h3 class="card__title" aria-label="Card title">
-            <Link
-                :href="'/shop/plant-' + plant.id"
-                :data="{ page: current_page }"
-                class="card__tag-title"
-                aria-label="To {{ plant.title }}"
+        <div class="product-info w-full text-left">
+            <h3
+                class="text-white text-lg font-medium mb-1.5 text-nowrap text-ellipsis whitespace-nowrap break-all overflow-hidden"
+                aria-label="Card title"
+                :title="plant.title"
             >
+                <Link
+                    :href="'/shop/plant-' + plant.id"
+                    :data="{ page: current_page }"
+                    class="card__tag-title absolute inset-0"
+                    aria-label="To {{ plant.title }}"
+                >
+                </Link>
                 {{ plant.title }}
-            </Link>
-        </h3>
+            </h3>
 
-        <p class="card__descr card__descr--white" aria-label="Plant description">
-            {{ plant.description }}
-        </p>
+            <p class="text-zinc-400 text-xs mb-4 line-clamp-2" aria-label="Plant description">
+                {{ plant.description }}
+            </p>
 
-        <div class="card__buying" aria-label="Plant buying info">
-            <div class="card__price" aria-label="Plant price">{{ plant.price }} $</div>
+            <div
+                class="flex items-center justify-between mt-auto gap-2"
+                aria-label="Plant buying info"
+            >
+                <p class="text-white text-sd font-bold" aria-label="Plant price">
+                    {{ formatUSD(plant.price) }}
+                </p>
 
-            <AppBuyButton
-                :is-in-cart="isInCart"
-                :is-processing="isProcessing"
-                :disabled="plant.stock === 0"
-                @click="emit('add-to-cart', plant)"
-                class="button--square"
-                aria-label="Add to cart"
-            />
+                <AppBuyButton
+                    :is-in-cart="isInCart"
+                    :is-processing="isProcessing"
+                    :disabled="plant.stock === 0"
+                    @click="emit('add-to-cart', plant)"
+                    class="button--square z-[1]"
+                    aria-label="Add to cart"
+                />
+            </div>
         </div>
     </figure>
 </template>
