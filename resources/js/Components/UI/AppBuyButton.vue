@@ -33,9 +33,9 @@
         return [
             props.classes,
             {
-                'opacity-50 cursor-not-allowed bg-orange-700/80':
+                'opacity-50 cursor-normal bg-orange-700/50 pointer-events-none':
                     props.disabled || props.isProcessing,
-                'bg-emerald-700/40': props.isInCart,
+                'bg-emerald-700/40 pointer-events-none': props.isInCart,
             },
         ];
     });

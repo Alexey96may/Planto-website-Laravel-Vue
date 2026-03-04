@@ -2,8 +2,6 @@
     import { computed } from 'vue';
 
     import { Link } from '@inertiajs/vue3';
-    import { router } from '@inertiajs/vue3';
-    import { usePage } from '@inertiajs/vue3';
 
     import AppBuyButton from '@/Components/UI/AppBuyButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
@@ -24,25 +22,30 @@
         isProcessing = false,
     } = defineProps<Props>();
 
-    const page = usePage<SharedData>();
-
-    const addToCart = () => {
-        const id = plant?.id;
-
-        router.post(route('cart.add'), {
-            product_id: id,
-            quantity: 1,
-        });
-    };
+    const disabled = computed((): boolean => {
+        return plant.stock === 0;
+    });
 
     const emit = defineEmits<{
         (e: 'add-to-cart', product: Product): void;
     }>();
+
+    const allClasses = computed(() => {
+        return [
+            {
+                'opacity-50 cursor-not-allowed bg-teal-700/10 ': isProcessing,
+                'bg-teal-700/30 hover:bg-teal-700/50': isInCart,
+                'opacity-50 cursor-not-allowed bg-orange-700/20 hover:bg-orange-700/50':
+                    disabled.value,
+            },
+        ];
+    });
 </script>
 
 <template>
     <figure
-        class="product-card group relative p-5 transition-all duration-300 w-full sm:max-w-60 border border-current rounded-xl bg-teal-700/10 hover:bg-teal-700/30"
+        class="product-card group relative p-5 transition-all duration-300 w-full sm:max-w-60 border border-current rounded-xl hover:bg-teal-700/30"
+        :class="allClasses"
         aria-label="Top card"
     >
         <div class="image-wrapper mb-8 aspect-square w-full overflow-hidden">
@@ -84,7 +87,7 @@
                 <AppBuyButton
                     :is-in-cart="isInCart"
                     :is-processing="isProcessing"
-                    :disabled="plant.stock === 0"
+                    :disabled="disabled"
                     @click="emit('add-to-cart', plant)"
                     class="button--square z-[1]"
                     aria-label="Add to cart"
