@@ -155,10 +155,6 @@
     </section>
 </template>
 
-<!-- <style lang="scss" scoped>
-    @use '../../../scss/bootstrap' as b;
-</style> -->
-
 <style lang="scss" scoped>
     @use '../../../scss/bootstrap' as b;
 

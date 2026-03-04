@@ -52,3 +52,29 @@
         </div>
     </figure>
 </template>
+
+<style lang="scss" scoped>
+    @use '../../../scss/bootstrap' as b;
+
+    .top__card {
+        margin-top: calc(1rem * (110px / b.$basicFontSize));
+        gap: calc(1rem * (30px / b.$basicFontSize));
+
+        @media (max-width: b.$mediaMobile) {
+            gap: calc(1rem * (16px / b.$basicFontSize));
+        }
+
+        .card__descr {
+            margin-bottom: calc(1rem * (6px / b.$basicFontSize));
+            opacity: b.$opacity;
+
+            @media (max-width: b.$mediaMobile) {
+                margin-bottom: calc(1rem * (12px / b.$basicFontSize));
+            }
+        }
+
+        .card__price {
+            opacity: b.$opacity;
+        }
+    }
+</style>
