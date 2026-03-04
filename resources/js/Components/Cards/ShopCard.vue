@@ -33,10 +33,10 @@
     const allClasses = computed(() => {
         return [
             {
-                'opacity-50 cursor-not-allowed bg-teal-700/10 ': isProcessing,
+                'hover:bg-teal-700/30': !isProcessing && !isInCart && !disabled.value,
+                'opacity-50 bg-teal-700/10 hover:bg-teal-700/50': isProcessing,
                 'bg-teal-700/30 hover:bg-teal-700/50': isInCart,
-                'opacity-50 cursor-not-allowed bg-orange-700/20 hover:bg-orange-700/50':
-                    disabled.value,
+                'opacity-50 bg-orange-700/20 hover:bg-orange-700/50': disabled.value,
             },
         ];
     });
@@ -44,7 +44,7 @@
 
 <template>
     <figure
-        class="product-card group relative p-5 transition-all duration-300 w-full sm:max-w-60 border border-current rounded-xl hover:bg-teal-700/30"
+        class="product-card group relative p-5 transition-all duration-300 w-full sm:max-w-60 border border-current rounded-xl"
         :class="allClasses"
         aria-label="Top card"
     >

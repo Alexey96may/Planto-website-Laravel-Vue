@@ -33,8 +33,9 @@
         return [
             props.classes,
             {
-                'opacity-50 cursor-normal bg-orange-700/50 pointer-events-none':
-                    props.disabled || props.isProcessing,
+                'opacity-50 cursor-normal bg-orange-700/50 pointer-events-none': props.disabled,
+                'opacity-50 cursor-normal bg-emerald-700/50 pointer-events-none':
+                    props.isProcessing,
                 'bg-emerald-700/40 pointer-events-none': props.isInCart,
             },
         ];
