@@ -81,14 +81,14 @@
 </script>
 
 <template>
-    <nav class="nav relative" id="nav" aria-label="Navigation" ref="containerRef">
-        <ul class="nav__list justify-center items-center gap-5" aria-label="Navigation list">
+    <nav class="nav relative flex-1" id="nav" aria-label="Navigation" ref="containerRef">
+        <ul class="nav__list justify-center items-center" aria-label="Navigation list">
             <li
-                class="nav__item flex-1 min-w-0 nav__item--plus whitespace-nowrap text-nowrap text-ellipsis cursor-pointer"
+                class="nav__item min-w-0 nav__item--plus whitespace-nowrap text-nowrap text-ellipsis cursor-pointer py-1"
                 v-for="item in menuItems.slice(0, visibleCount)"
                 :key="item.id"
             >
-                <template v-if="item.children && item.children.length > 0">
+                <div v-if="item.children && item.children.length > 0" class="relative group">
                     <span aria-label="To plants type"
                         >{{ item.title }}
 
@@ -99,19 +99,19 @@
                         />
                     </span>
 
-                    <ul class="nav__item--plus-list">
-                        <li
-                            class="nav__item--plus-item"
-                            v-for="child in item.children"
-                            :key="child.id"
-                            :href="getHref(item) || '#'"
-                        >
-                            <Link :href="getHref(item) || '#'">
+                    <ul
+                        class="absolute overflow-hidden left-0 top-full w-48 text-zinc-200 bg-zinc-800/70 border border-emerald-500/10 shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50"
+                    >
+                        <li v-for="child in item.children" :key="child.id">
+                            <Link
+                                :href="getHref(item) || '#'"
+                                class="block text-xs px-4 py-2 hover:bg-emerald-500/10"
+                            >
                                 {{ child.title }}
                             </Link>
                         </li>
                     </ul>
-                </template>
+                </div>
 
                 <Link
                     :href="getHref(item) || '#'"
@@ -124,14 +124,22 @@
             </li>
             <li v-if="visibleCount < menuItems.length" class="relative group">
                 <button class="flex items-center gap-1 font-bold text-green-600">
-                    More <span>▾</span>
+                    More
+                    <IconArrowMore
+                        class="nav__item-more inline-block"
+                        id="moreArrow"
+                        aria-label="Arrow sprite"
+                    />
                 </button>
 
                 <ul
-                    class="absolute right-0 top-full mt-2 w-48 bg-white shadow-xl rounded-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50"
+                    class="absolute overflow-hidden left-0 top-full w-48 text-zinc-200 bg-zinc-800/70 border border-emerald-500/10 shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50"
                 >
                     <li v-for="item in menuItems.slice(visibleCount)" :key="item.id">
-                        <Link :href="getHref(item)" class="block px-4 py-2 hover:bg-gray-100">
+                        <Link
+                            :href="getHref(item)"
+                            class="block text-xs px-4 py-2 hover:bg-emerald-500/10"
+                        >
                             {{ item.title }}
                         </Link>
                     </li>

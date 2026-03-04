@@ -10,7 +10,6 @@
 </script>
 
 <template>
-    <Head title="Welcome" />
     <div>
         <header class="header" id="header" aria-label="Header">
             <div class="container header__container">
@@ -61,7 +60,7 @@
 
     .header__container {
         @include b.flex(space-between, center);
-        gap: b.$mainGap;
+        gap: clamp(1rem, 3vw, 3rem);
     }
 
     .header__socials {

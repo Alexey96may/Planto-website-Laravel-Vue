@@ -1,4 +1,4 @@
-@use "../bootstrap" as b;
+@use '../bootstrap' as b;
 
 .nav {
     overflow-x: visible;
@@ -29,7 +29,7 @@
 }
 
 .nav__list {
-    @include b.flex(space-between, center);
+    @include b.flex(space-between);
     gap: clamp(b.$mainGap, 3vw, 43px);
 
     @media (max-width: b.$mediaTablet) {
