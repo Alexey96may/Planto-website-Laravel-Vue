@@ -13,7 +13,7 @@
     <div>
         <header class="header" id="header" aria-label="Header">
             <div class="container header__container">
-                <div class="logo" aria-label="Logo field">
+                <div class="logo mr-auto lg:mr-0" aria-label="Logo field">
                     <IconLogo class="logo__image" aria-label="Logo image" />
                     <span class="logo__text" aria-label="Logo text">{{
                         $page.props.settings?.site_name
@@ -37,10 +37,6 @@
                             {{ $page.props.cart_count }}
                         </span>
                     </Link>
-
-                    <button class="burger" id="burger" aria-label="To open menu">
-                        <span class="burger__line"></span>
-                    </button>
                 </div>
             </div>
         </header>

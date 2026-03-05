@@ -39,6 +39,7 @@
         "vue-tsc": "^3.2.5"
     },
     "dependencies": {
+        "@headlessui/vue": "^1.7.23",
         "@vueuse/core": "^14.2.1",
         "browser-image-compression": "^2.0.2",
         "vuedraggable": "^4.1.0",

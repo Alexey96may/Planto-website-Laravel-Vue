@@ -5,6 +5,7 @@
 
     import IconArrowMore from 'img/icons/arrow-more.svg?component';
 
+    import MobileMenu from '@/Components/Shared/MobileMenu.vue';
     import NavDropdown from '@/Components/Shared/NavDropdown.vue';
     import { SharedData } from '@/types';
     import { getHref } from '@/utils/navigation';
@@ -91,8 +92,16 @@
 </script>
 
 <template>
-    <nav class="nav relative flex-1" id="nav" aria-label="Navigation" ref="containerRef">
-        <ul class="nav__list justify-center items-center flex gap-5" aria-label="Navigation list">
+    <nav
+        class="nav relative flex items-center justify-between lg:w-full order-1 lg:order-none"
+        id="nav"
+        aria-label="Navigation"
+        ref="containerRef"
+    >
+        <ul
+            class="nav__list hidden lg:flex justify-center items-center flex-1 gap-5"
+            aria-label="Navigation list"
+        >
             <template v-for="item in menuItems.slice(0, visibleCount)" :key="item.id">
                 <NavDropdown
                     v-if="item.children && item.children.length > 0"
@@ -117,6 +126,33 @@
             />
         </ul>
 
+        <div class="lg:hidden">
+            <MobileMenu>
+                <template v-for="item in menuItems" :key="'mobile-' + item.id">
+                    <div v-if="item.children?.length" class="flex flex-col gap-2">
+                        <span class="text-zinc-500 text-sm uppercase tracking-wider">{{
+                            item.title
+                        }}</span>
+                        <Link
+                            v-for="child in item.children"
+                            :key="child.id"
+                            :href="getHref(child)"
+                            class="pl-4 py-1 border-l border-emerald-500/30 hover:text-emerald-400"
+                        >
+                            {{ child.title }}
+                        </Link>
+                    </div>
+                    <Link
+                        v-else
+                        :href="getHref(item)"
+                        class="hover:text-emerald-400 transition-colors"
+                    >
+                        {{ item.title }}
+                    </Link>
+                </template>
+            </MobileMenu>
+        </div>
+
         <ul
             ref="ghostRef"
             class="absolute w-full top-0 left-0 flex gap-5 invisible pointer-events-none h-0 overflow-hidden"
@@ -124,7 +160,6 @@
             <li ref="moreBtnRef" class="nav__item--ghost font-bold text-green-600">
                 More <IconArrowMore class="inline-block" />
             </li>
-
             <li
                 v-for="item in menuItems"
                 :key="'ghost-' + item.id"
