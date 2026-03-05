@@ -5,6 +5,7 @@
 
     import IconArrowMore from 'img/icons/arrow-more.svg?component';
 
+    import NavDropdown from '@/Components/Shared/NavDropdown.vue';
     import { SharedData } from '@/types';
     import { getHref } from '@/utils/navigation';
 
@@ -12,29 +13,39 @@
     const menuItems = computed(() => page.props.navigation?.header || []);
 
     const containerRef = ref<HTMLElement | null>(null);
-    const ghostRef = ref<HTMLElement | null>(null); // Реф для скрытого списка
+    const ghostRef = ref<HTMLElement | null>(null);
     const visibleCount = ref(menuItems.value.length);
+    const moreBtnRef = ref<HTMLElement | null>(null);
 
     const updateNavigation = () => {
-        if (!containerRef.value || !ghostRef.value) return;
+        if (!containerRef.value || !ghostRef.value || !moreBtnRef.value) return;
 
-        // Ищем родителя (например, <header> или <div> в котором лежит nav)
         const parent = containerRef.value.parentElement;
         if (!parent) return;
 
-        // Берем 50% от РОДИТЕЛЯ. Эта величина стабильна и не схлопнется.
+        // Доступная ширина (берем 100%, если нужно 50% — поправь)
         const maxAllowedWidth = parent.offsetWidth * 0.5;
 
-        const ghostItems = ghostRef.value.querySelectorAll('.nav__item--ghost');
-        const moreButtonWidth = 100; // Немного увеличим запас для надежности
+        // Получаем реальный gap из CSS (Tailwind gap-5 = 20px)
+        const gap = parseInt(window.getComputedStyle(ghostRef.value).columnGap) || 0;
+
+        // Замеряем реальную ширину кнопки "More"
+        const moreButtonWidth = moreBtnRef.value.offsetWidth + gap;
+
+        // Все элементы кроме первого (который является кнопкой More для замера)
+        const ghostItems = Array.from(ghostRef.value.querySelectorAll('.nav__item--ghost')).slice(
+            1,
+        );
 
         let totalWidth = 0;
         let count = 0;
 
         for (let i = 0; i < ghostItems.length; i++) {
-            const itemWidth = (ghostItems[i] as HTMLElement).offsetWidth + 20; // gap 20
-
+            const itemWidth = (ghostItems[i] as HTMLElement).offsetWidth + gap;
             const isLast = i === ghostItems.length - 1;
+
+            // Если это не последний элемент, мы должны проверить,
+            // влезет ли он вместе с будущей кнопкой "More"
             const neededWidth = isLast
                 ? totalWidth + itemWidth
                 : totalWidth + itemWidth + moreButtonWidth;
@@ -47,15 +58,16 @@
             }
         }
 
-        // Финальная проверка: если влезли все, но мы считали с учетом кнопки More
+        // Фикс: если мы не вместили последний элемент из-за кнопки More,
+        // но кнопка More на самом деле не нужна (так как это был бы последний элемент),
+        // проверяем еще раз.
         if (count < ghostItems.length) {
-            // Проверяем, может ли влезть на один больше, если это последний (без кнопки More)
-            const nextIdx = count;
-            const lastItemWidth = (ghostItems[nextIdx] as HTMLElement).offsetWidth + 20;
-            if (
-                nextIdx === ghostItems.length - 1 &&
-                totalWidth + lastItemWidth <= maxAllowedWidth
-            ) {
+            const lastItemIdx = ghostItems.length - 1;
+            const lastItemTotalWidth =
+                totalWidth + (ghostItems[count] as HTMLElement).offsetWidth + gap;
+
+            // Если это реально последний айтем и он влезает БЕЗ кнопки More
+            if (count === lastItemIdx && lastItemTotalWidth <= maxAllowedWidth) {
                 count++;
             }
         }
@@ -68,11 +80,9 @@
         observer = new ResizeObserver(() => updateNavigation());
         if (containerRef.value) observer.observe(containerRef.value);
 
-        // Первый замер после отрисовки
         nextTick(() => updateNavigation());
     });
 
-    // Следим за обновлением данных с сервера
     watch(menuItems, () => {
         nextTick(() => updateNavigation());
     });
@@ -82,81 +92,46 @@
 
 <template>
     <nav class="nav relative flex-1" id="nav" aria-label="Navigation" ref="containerRef">
-        <ul class="nav__list justify-center items-center" aria-label="Navigation list">
-            <li
-                class="nav__item min-w-0 nav__item--plus whitespace-nowrap text-nowrap text-ellipsis cursor-pointer py-1"
-                v-for="item in menuItems.slice(0, visibleCount)"
-                :key="item.id"
-            >
-                <div v-if="item.children && item.children.length > 0" class="relative group">
-                    <span aria-label="To plants type"
-                        >{{ item.title }}
+        <ul class="nav__list justify-center items-center flex gap-5" aria-label="Navigation list">
+            <template v-for="item in menuItems.slice(0, visibleCount)" :key="item.id">
+                <NavDropdown
+                    v-if="item.children && item.children.length > 0"
+                    :items="item.children"
+                    :title="item.title"
+                />
 
-                        <IconArrowMore
-                            class="nav__item-more inline-block"
-                            id="moreArrow"
-                            aria-label="Arrow sprite"
-                        />
-                    </span>
-
-                    <ul
-                        class="absolute overflow-hidden left-0 top-full w-48 text-zinc-200 bg-zinc-800/70 border border-emerald-500/10 shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50"
+                <li v-else class="nav__item whitespace-nowrap">
+                    <Link
+                        :href="getHref(item)"
+                        class="nav__link font-bold text-green-50 hover:text-white transition-colors p-1 focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 rounded-lg outline-none"
                     >
-                        <li v-for="child in item.children" :key="child.id">
-                            <Link
-                                :href="getHref(item) || '#'"
-                                class="block text-xs px-4 py-2 hover:bg-emerald-500/10"
-                            >
-                                {{ child.title }}
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
+                        {{ item.title }}
+                    </Link>
+                </li>
+            </template>
 
-                <Link
-                    :href="getHref(item) || '#'"
-                    class="nav__link"
-                    aria-label="To see more plants"
-                    v-else
-                >
-                    {{ item.title }}
-                </Link>
-            </li>
-            <li v-if="visibleCount < menuItems.length" class="relative group">
-                <button class="flex items-center gap-1 font-bold text-green-600">
-                    More
-                    <IconArrowMore
-                        class="nav__item-more inline-block"
-                        id="moreArrow"
-                        aria-label="Arrow sprite"
-                    />
-                </button>
-
-                <ul
-                    class="absolute overflow-hidden left-0 top-full w-48 text-zinc-200 bg-zinc-800/70 border border-emerald-500/10 shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50"
-                >
-                    <li v-for="item in menuItems.slice(visibleCount)" :key="item.id">
-                        <Link
-                            :href="getHref(item)"
-                            class="block text-xs px-4 py-2 hover:bg-emerald-500/10"
-                        >
-                            {{ item.title }}
-                        </Link>
-                    </li>
-                </ul>
-            </li>
+            <NavDropdown
+                v-if="visibleCount < menuItems.length"
+                :items="menuItems.slice(visibleCount)"
+                title="More"
+            />
         </ul>
 
         <ul
             ref="ghostRef"
             class="absolute w-full top-0 left-0 flex gap-5 invisible pointer-events-none h-0 overflow-hidden"
         >
+            <li ref="moreBtnRef" class="nav__item--ghost font-bold text-green-600">
+                More <IconArrowMore class="inline-block" />
+            </li>
+
             <li
                 v-for="item in menuItems"
                 :key="'ghost-' + item.id"
-                class="nav__item--ghost whitespace-nowrap"
+                class="nav__item--ghost whitespace-nowrap font-bold text-green-600"
             >
-                {{ item.title }} <IconArrowMore v-if="item.children?.length" />
+                {{ item.title }}
+                <IconArrowMore v-if="item.children?.length" class="inline-block" />
             </li>
         </ul>
     </nav>
