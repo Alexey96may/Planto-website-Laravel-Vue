@@ -60,7 +60,7 @@
             <ul
                 v-if="isOpened"
                 role="menu"
-                class="absolute left-0 top-full z-50 mt-3 min-w-8 overflow-hidden rounded-xl border border-emerald-500/10 bg-zinc-800/80 text-zinc-200 shadow-2xl backdrop-blur-md"
+                class="absolute left-0 top-full z-50 mt-2 min-w-24 overflow-hidden rounded-xl border border-emerald-500/10 bg-zinc-800/80 text-zinc-200 shadow-2xl backdrop-blur-md"
             >
                 <li v-for="item in items" :key="item.id" role="none">
                     <Link

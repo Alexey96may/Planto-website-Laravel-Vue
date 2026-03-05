@@ -196,13 +196,14 @@
                         />
                     </div>
 
-                    <div v-else class="text-center py-20 bg-gray-50 rounded-3xl">
-                        <p class="text-xl text-gray-400">
+                    <div v-else class="text-center py-20 bg-plant-shop rounded-3xl">
+                        <p class="text-xl text-gray-300">
                             There are no products in this category yet...
                         </p>
                         <Link
                             :href="route('shop')"
-                            class="text-green-600 underline mt-4 inline-block"
+                            :preserve-scroll="true"
+                            class="text-emerald-600 hover:text-emerald-800 transition duration-300 underline mt-4 inline-block"
                             >Return to all products</Link
                         >
                     </div>
