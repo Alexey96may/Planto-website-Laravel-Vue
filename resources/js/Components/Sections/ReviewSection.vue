@@ -22,7 +22,7 @@
 
 <template>
     <section class="review" id="review" aria-label="Review section">
-        <div class="container review__container">
+        <div class="review__container container">
             <h2 class="title review__title" v-if="allReviewsUrl">
                 <Link :href="allReviewsUrl" :aria-label="reviewsTitle">
                     {{ reviewsTitle }}
@@ -67,7 +67,7 @@
         max-width: unset;
         width: calc(1rem * (512px / b.$basicFontSize));
         min-height: calc(1rem * (480px / b.$basicFontSize));
-        background: url('../../images/comment_bg.png') center / 100% 100% no-repeat;
+        background: url('../../../images/comment_bg.png') center / 100% 100% no-repeat;
         padding: 3.75rem 2.1rem 4rem 2.4rem;
 
         @media (max-width: b.$mediaMobile) {

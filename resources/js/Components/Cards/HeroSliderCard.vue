@@ -76,4 +76,11 @@
             padding-bottom: 2.5rem;
         }
     }
+
+    .card {
+        margin-top: 20%;
+    }
+    .card__img-wrapper {
+        margin-top: -20%;
+    }
 </style>

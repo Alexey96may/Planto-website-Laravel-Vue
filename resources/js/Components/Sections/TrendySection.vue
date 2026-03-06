@@ -31,7 +31,7 @@
 
 <template>
     <section class="trendy" id="trendy" aria-label="Trendy plants section">
-        <div class="container trendy__container">
+        <div class="trendy__container container">
             <h2 class="trendy__title">
                 <Link :href="sectionLink" :aria-label="sectionTitle" v-if="sectionLink">
                     {{ sectionTitle }}
@@ -85,7 +85,7 @@
         color: b.$lightTextColor;
         font-weight: 600;
         text-align: center;
-        border-image: url('../../images/border-title.png');
+        border-image: url('../../../images/border-title.png');
         border-image-slice: 1 fill;
         padding: 6px 32px;
         width: fit-content;
@@ -132,14 +132,14 @@
         &::before {
             content: '';
             filter: none;
-            background: url('../../images/hero-bigCard_bg.png') center / 100% 100% no-repeat;
+            background: url('../../../images/hero-bigCard_bg.png') center / 100% 100% no-repeat;
             border-radius: calc(1rem * (24px / b.$basicFontSize));
             backdrop-filter: blur(5px);
             overflow: hidden;
 
             @media (max-width: b.$mediaMobile) {
                 border-radius: 0rem;
-                background: url('../../images/hero-bigCard_bg-mobile.png') center / 100% 100%
+                background: url('../../../images/hero-bigCard_bg-mobile.png') center / 100% 100%
                     no-repeat;
                 border-radius: 9vw;
             }

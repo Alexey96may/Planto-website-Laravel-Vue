@@ -4,7 +4,6 @@
     import { usePage } from '@inertiajs/vue3';
 
     import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
-    import IconArrowRight from 'img/icons/arrow-right.svg?component';
     import IconPlay from 'img/icons/play.svg?component';
     import 'swiper/css';
     import 'swiper/css/navigation';
@@ -139,15 +138,25 @@
                     :slides-per-view="1"
                     :space-between="20"
                     :modules="modules"
+                    :pagination="{
+                        clickable: true,
+                        dynamicBullets: true,
+                    }"
                     :navigation="{
                         prevEl: '.prev-btn',
                         nextEl: '.next-btn',
                     }"
+                    :autoplay="{
+                        delay: 4000,
+                        disableOnInteraction: false,
+                        pauseOnMouseEnter: true,
+                    }"
+                    :speed="2000"
                     :grab-cursor="true"
                     class="rounded-3xl"
                 >
                     <swiper-slide v-for="plant in heroPlants" :key="plant.id">
-                        <HeroSliderCard :plant="plant" />
+                        <HeroSliderCard :plant="plant" class="h-full" />
                     </swiper-slide>
                 </swiper>
 
@@ -279,5 +288,29 @@
     :deep(.swiper-button-next),
     :deep(.swiper-button-prev) {
         display: none;
+    }
+
+    :deep(.swiper) {
+        /* Основной цвет активной точки и прогресс-бара */
+        --swiper-pagination-color: #10b981 !important; /* твой emerald-500 */
+
+        /* Цвет неактивных точек */
+        --swiper-pagination-bullet-inactive-color: #888896 !important; /* zinc-600 */
+
+        /* Непрозрачность неактивных точек */
+        --swiper-pagination-bullet-inactive-opacity: 0.7;
+
+        /* Расстояние между точками */
+        --swiper-pagination-bullet-horizontal-gap: 6px;
+    }
+
+    :deep(.swiper-pagination) {
+        bottom: 1.5rem !important;
+    }
+
+    :deep(.swiper-pagination-bullet-active) {
+        width: 20px;
+        border-radius: 4px;
+        transition: width 0.3s ease;
     }
 </style>
