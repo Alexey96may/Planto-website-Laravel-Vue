@@ -24,8 +24,15 @@
 
 <template>
     <figure class="card trendy-card" aria-label="Trendy card">
-        <div class="card__img-wrapper" aria-label="Trendy card image">
-            <AppImage :src="plant.image_url" :alt="plant.title" />
+        <div
+            class="card__img-wrapper relative -mt-16 aspect-square w-full px-4"
+            aria-label="Trendy card image"
+        >
+            <AppImage
+                :src="plant.image_url"
+                :alt="plant.title"
+                class="h-full w-full object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-110"
+            />
         </div>
         <div class="card__info" aria-label="Card information">
             <h3 class="card__title card__title--white" aria-label="Slider card title">
@@ -78,18 +85,14 @@
         aspect-ratio: unset;
         max-height: unset;
         margin-top: 0;
-        padding: min(5.2rem, 8vw) calc(1rem * (50px / b.$basicFontSize)) min(5.2rem, 8vw)
-            calc(1rem * (120px / b.$basicFontSize));
 
         @media (max-width: b.$mediaTablet) {
-            padding: calc(1rem * (40px / b.$basicFontSize));
             gap: calc(1rem * (60px / b.$basicFontSize));
         }
 
         @media (max-width: b.$mediaMobile) {
             flex-direction: column;
             justify-content: center;
-            padding: calc(1rem * (40px / b.$basicFontSize));
             gap: calc(1rem * (34px / b.$basicFontSize));
         }
 
@@ -111,7 +114,7 @@
 
         .card__info {
             @include b.flex(flex-start, flex-start, column);
-            margin-left: min(46.5vw, calc(1rem * (734px / b.$basicFontSize)));
+            padding: 5rem;
             gap: calc(1rem * (24px / b.$basicFontSize));
 
             @media (max-width: b.$mediaTablet) {
@@ -125,14 +128,12 @@
         }
 
         .card__img-wrapper {
-            @include b.position(absolute, -1, top, left, 0, 0);
             max-width: unset;
-            left: 0;
-            top: unset;
-            bottom: 0;
-            translate: 0 0;
             margin-top: 0;
-            width: auto;
+            position: relative;
+            top: unset;
+            left: unset;
+            translate: unset;
             height: auto;
             margin-bottom: 0;
             aspect-ratio: unset;
@@ -177,6 +178,20 @@
 
         .card__price {
             padding: 0;
+        }
+
+        .card__button {
+            margin: 0;
+        }
+    }
+
+    .trendy-card:nth-child(2) {
+        .card__img-wrapper {
+            order: 2;
+        }
+
+        .card__info {
+            order: 1;
         }
     }
 </style>

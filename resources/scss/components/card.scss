@@ -273,6 +273,12 @@
     }
 }
 
+.best__card {
+    .card__descr {
+        padding: 0;
+    }
+}
+
 .slider__bottom-buttons {
     @include b.flex(flex-start, center);
     gap: calc(1rem * (16px / b.$basicFontSize));

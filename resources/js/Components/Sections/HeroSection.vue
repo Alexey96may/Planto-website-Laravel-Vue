@@ -138,6 +138,7 @@
                     :slides-per-view="1"
                     :space-between="20"
                     :modules="modules"
+                    :loop="true"
                     :pagination="{
                         clickable: true,
                         dynamicBullets: true,
