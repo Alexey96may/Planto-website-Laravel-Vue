@@ -155,8 +155,8 @@
                     :grab-cursor="true"
                     class="rounded-3xl"
                 >
-                    <swiper-slide v-for="plant in heroPlants" :key="plant.id">
-                        <HeroSliderCard :plant="plant" class="h-full" />
+                    <swiper-slide v-for="plant in heroPlants" :key="plant.id" class="!flex !h-auto">
+                        <HeroSliderCard :plant="plant" class="h-full w-full" />
                     </swiper-slide>
                 </swiper>
 
@@ -305,12 +305,27 @@
     }
 
     :deep(.swiper-pagination) {
-        bottom: 1.5rem !important;
+        bottom: 2.5rem !important;
     }
 
     :deep(.swiper-pagination-bullet-active) {
         width: 20px;
         border-radius: 4px;
         transition: width 0.3s ease;
+    }
+
+    :deep(.swiper) {
+        height: 100%;
+
+        padding-bottom: 5.2rem !important;
+    }
+
+    :deep(.swiper-wrapper) {
+        display: flex !important;
+        align-items: stretch !important;
+    }
+
+    :deep(.swiper-slide) {
+        height: auto !important;
     }
 </style>

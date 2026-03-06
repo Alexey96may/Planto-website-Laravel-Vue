@@ -25,7 +25,7 @@
 <template>
     <figure class="card slider-mini__card w-full" aria-label="Slider card">
         <div
-            class="card__img-wrapper relative aspect-[4/5] h-48 w-full overflow-hidden sm:h-64"
+            class="card__img-wrapper relative aspect-[1/1] w-full sm:h-64"
             aria-label="Slider card image"
         >
             <AppImage
@@ -58,7 +58,7 @@
 
         <AppExploreButton
             :href="route('shop.show', plant.id)"
-            class="button--rect card__button"
+            class="button--rect card__button mt-auto"
             :aria-label="plant.title"
         >
             Buy Now
