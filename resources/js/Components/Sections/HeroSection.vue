@@ -1,10 +1,16 @@
 <script setup lang="ts">
     import { computed, ref } from 'vue';
 
-    import { router, usePage } from '@inertiajs/vue3';
+    import { usePage } from '@inertiajs/vue3';
 
+    import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
     import IconArrowRight from 'img/icons/arrow-right.svg?component';
     import IconPlay from 'img/icons/play.svg?component';
+    import 'swiper/css';
+    import 'swiper/css/navigation';
+    import 'swiper/css/pagination';
+    import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+    import { Swiper, SwiperSlide } from 'swiper/vue';
     import { route } from 'ziggy-js';
 
     import HeroSliderCard from '@/Components/Cards/HeroSliderCard.vue';
@@ -13,6 +19,8 @@
     import AppRating from '@/Components/UI/AppRating.vue';
     import Modal from '@/Components/UI/Modal.vue';
     import { ProductWithCategory, Review, SharedData } from '@/types';
+
+    const modules = [Pagination, Navigation, Autoplay];
 
     interface Props {
         heroPlants: ProductWithCategory[];
@@ -27,6 +35,8 @@
     const isVideoModalOpen = ref(false);
 
     const openVideo = () => {
+        console.log(isVideoModalOpen.value);
+
         if (videoUrl.value) {
             isVideoModalOpen.value = true;
         } else {
@@ -37,7 +47,7 @@
 
 <template>
     <section class="hero" id="hero" aria-label="Hero section">
-        <div class="container hero__container">
+        <div class="hero__container container gap-12">
             <div class="hero__info" aria-label="Hero information">
                 <div class="hero__info-main" aria-label="Hero main information">
                     <h2 class="hero__title">
@@ -67,7 +77,6 @@
                                 class="button--circ play-btn"
                                 aria-label="Play video"
                                 @click="openVideo"
-                                :disabled="!videoUrl"
                             >
                                 <IconPlay
                                     class="hero__video--img"
@@ -75,11 +84,15 @@
                                 ></IconPlay>
                             </button>
 
-                            <Modal v-if="isVideoModalOpen" @close="isVideoModalOpen = false">
+                            <Modal
+                                v-if="isVideoModalOpen"
+                                :show="isVideoModalOpen"
+                                @close="isVideoModalOpen = false"
+                            >
                                 <div class="aspect-video">
                                     <iframe
                                         :src="videoUrl"
-                                        class="w-full h-full"
+                                        class="h-full w-full"
                                         allowfullscreen
                                         allow="autoplay; encrypted-media"
                                     ></iframe>
@@ -121,35 +134,34 @@
                 </figure>
             </div>
 
-            <div class="slider-mini hero__slider-mini" aria-label="Slider">
-                <div class="slider-mini__cards" aria-label="Slider cards">
-                    <HeroSliderCard v-for="plant in heroPlants" :key="plant.id" :plant="plant" />
-                </div>
+            <div class="slider-container group relative w-full lg:w-[40%]">
+                <swiper
+                    :slides-per-view="1"
+                    :space-between="20"
+                    :modules="modules"
+                    :navigation="{
+                        prevEl: '.prev-btn',
+                        nextEl: '.next-btn',
+                    }"
+                    :grab-cursor="true"
+                    class="rounded-3xl"
+                >
+                    <swiper-slide v-for="plant in heroPlants" :key="plant.id">
+                        <HeroSliderCard :plant="plant" />
+                    </swiper-slide>
+                </swiper>
 
-                <div class="slider-mini__dir-buttons" aria-label="Slider direction buttons">
-                    <button class="button slider-mini__left" aria-label="Left">
-                        <IconArrowRight
-                            class="slider-mini__left-img"
-                            aria-label="Arrow icon"
-                        ></IconArrowRight>
-                    </button>
+                <button
+                    class="prev-btn absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-90 disabled:opacity-0 group-hover:left-4"
+                >
+                    <ChevronLeftIcon class="h-6 w-6" />
+                </button>
 
-                    <button class="button slider-mini__right" aria-label="Right">
-                        <IconArrowRight
-                            class="slider-mini__right-img"
-                            aria-label="Arrow icon"
-                        ></IconArrowRight>
-                    </button>
-                </div>
-
-                <div class="slider-mini__bottom-buttons" aria-label="Slider bottom buttons">
-                    <button
-                        class="bottom-button bottom-button--active"
-                        aria-label="To active slide"
-                    ></button>
-                    <button class="bottom-button" aria-label="To second slide"></button>
-                    <button class="bottom-button" aria-label="To third slide"></button>
-                </div>
+                <button
+                    class="next-btn absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-90 disabled:opacity-0 group-hover:right-4"
+                >
+                    <ChevronRightIcon class="h-6 w-6" />
+                </button>
             </div>
         </div>
     </section>
@@ -162,6 +174,10 @@
         @media (max-width: b.$mediaMobile) {
             padding: 0.8rem 0 0;
         }
+    }
+
+    .card {
+        gap: 3rem;
     }
 
     .hero__container {
@@ -258,5 +274,10 @@
         @media (max-width: 1115px) {
             display: none;
         }
+    }
+
+    :deep(.swiper-button-next),
+    :deep(.swiper-button-prev) {
+        display: none;
     }
 </style>

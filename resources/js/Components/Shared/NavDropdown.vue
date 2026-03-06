@@ -38,13 +38,13 @@
             aria-haspopup="true"
             :aria-expanded="isOpened"
             :class="[isOpened ? 'text-emerald-400' : 'text-green-50 hover:text-white']"
-            class="flex items-center p-1 gap-1 font-bold transition-all active:scale-95 focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 rounded-lg outline-none"
+            class="flex items-center gap-1 rounded-md p-1 font-bold outline-none transition-all focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:scale-95"
         >
             <span>{{ title }}</span>
             <IconArrowMore
                 class="nav__item-more inline-block transition-transform duration-300"
                 :class="[
-                    isOpened ? 'rotate-180 -translate-y-1/2  fill-emerald-400' : 'fill-green-50',
+                    isOpened ? '-translate-y-1/2 rotate-180 fill-emerald-400' : 'fill-green-50',
                 ]"
             />
         </button>
@@ -60,7 +60,7 @@
             <ul
                 v-if="isOpened"
                 role="menu"
-                class="absolute left-0 top-full z-50 mt-2 min-w-24 overflow-hidden rounded-xl border border-emerald-500/10 bg-zinc-800/80 text-zinc-200 shadow-2xl backdrop-blur-md"
+                class="absolute left-0 top-full z-50 mt-2 min-w-24 overflow-hidden rounded-md border border-emerald-500/10 bg-zinc-800/80 text-zinc-200 shadow-2xl backdrop-blur-md"
             >
                 <li v-for="item in items" :key="item.id" role="none">
                     <Link

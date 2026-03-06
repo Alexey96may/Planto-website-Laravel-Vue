@@ -63,14 +63,14 @@
     <button
         type="button"
         @click="toggleMenu"
-        class="relative z-[90] pointer-events-auto p-2 text-emerald-700 outline-none focus:outline-none"
+        class="pointer-events-auto relative z-[90] p-2 text-emerald-700 outline-none focus:outline-none"
         aria-label="Toggle menu"
     >
-        <div class="flex flex-col gap-1.5 w-6">
+        <div class="flex w-6 flex-col gap-1.5">
             <span
                 :class="[
                     'h-0.5 w-full bg-current transition-all duration-300',
-                    isOpen ? 'rotate-45 translate-y-2' : '',
+                    isOpen ? 'translate-y-2 rotate-45' : '',
                 ]"
             ></span>
             <span
@@ -82,7 +82,7 @@
             <span
                 :class="[
                     'h-0.5 w-full bg-current transition-all duration-300',
-                    isOpen ? '-rotate-45 -translate-y-2' : '',
+                    isOpen ? '-translate-y-2 -rotate-45' : '',
                 ]"
             ></span>
         </div>
@@ -103,7 +103,7 @@
             </TransitionChild>
 
             <div class="fixed inset-0 z-10 overflow-hidden">
-                <div class="flex min-h-full justify-end items-stretch">
+                <div class="flex min-h-full items-stretch justify-end">
                     <TransitionChild
                         as="template"
                         enter="duration-300 ease-out"
@@ -117,14 +117,14 @@
                             ref="target"
                             :style="containerStyle"
                             @scroll="handleScroll"
-                            class="relative scrollbar-hide ml-auto flex h-screen w-full max-w-xs flex-col bg-zinc-800 shadow-2xl overflow-y-auto touch-pan-y scrollbar-hide"
+                            class="scrollbar-hide scrollbar-hide relative ml-auto flex h-screen w-full max-w-xs touch-pan-y flex-col overflow-y-auto bg-zinc-800 shadow-2xl"
                         >
                             <div class="relative w-full flex-1">
                                 <div
-                                    class="sticky left-0 top-0 bottom-0 w-1 h-screen bg-zinc-700/30 pointer-events-none z-50"
+                                    class="pointer-events-none sticky bottom-0 left-0 top-0 z-50 h-screen w-1 bg-zinc-700/30"
                                 >
                                     <div
-                                        class="absolute w-full bg-emerald-500 rounded-full transition-all duration-75 will-change-transform"
+                                        class="absolute w-full rounded-full bg-emerald-500 transition-all duration-75 will-change-transform"
                                         :style="{
                                             height: '40px',
                                             top: `${scrollProgress}%`,
@@ -134,26 +134,26 @@
                                 </div>
 
                                 <div
-                                    class="absolute top-0 right-0 w-full flex justify-end px-8 py-12 z-[60] pointer-events-none"
+                                    class="pointer-events-none absolute right-0 top-0 z-[60] flex w-full justify-end px-8 py-12"
                                 >
                                     <button
                                         type="button"
                                         @click="isOpen = false"
-                                        class="pointer-events-auto text-emerald-700 outline-none hover:scale-110 transition-transform"
+                                        class="pointer-events-auto text-emerald-700 outline-none transition-transform hover:scale-110"
                                     >
-                                        <div class="relative w-6 h-6">
+                                        <div class="relative h-6 w-6">
                                             <span
-                                                class="absolute top-1/2 left-0 h-0.5 w-full bg-current rotate-45 -translate-y-1/2"
+                                                class="absolute left-0 top-1/2 h-0.5 w-full -translate-y-1/2 rotate-45 bg-current"
                                             ></span>
                                             <span
-                                                class="absolute top-1/2 left-0 h-0.5 w-full bg-current -rotate-45 -translate-y-1/2"
+                                                class="absolute left-0 top-1/2 h-0.5 w-full -translate-y-1/2 -rotate-45 bg-current"
                                             ></span>
                                         </div>
                                     </button>
                                 </div>
 
                                 <nav
-                                    class="flex flex-col p-8 pt-24 gap-6 text-xl font-medium text-zinc-200 mt-[-100vh]"
+                                    class="mt-[-100vh] flex flex-col gap-6 p-8 pt-24 text-xl font-medium text-zinc-200"
                                 >
                                     <slot />
                                 </nav>

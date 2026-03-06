@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
 
-    import { usePage } from '@inertiajs/vue3';
+    import { Link, usePage } from '@inertiajs/vue3';
 
     import { route } from 'ziggy-js';
 
@@ -23,21 +23,38 @@
 </script>
 
 <template>
-    <figure class="card slider-mini__card" aria-label="Slider card">
-        <div class="card__img-wrapper" aria-label="Slider card image">
-            <AppImage :src="plant.image_url" :alt="plant.title" />
+    <figure class="card slider-mini__card w-full" aria-label="Slider card">
+        <div
+            class="card__img-wrapper relative aspect-[4/5] h-48 w-full overflow-hidden sm:h-64"
+            aria-label="Slider card image"
+        >
+            <AppImage
+                :src="plant.image_url"
+                :alt="plant.title"
+                class="h-full w-full object-contain transition-transform duration-500 hover:scale-105"
+            />
         </div>
 
-        <span
-            class="card__tag card__tag-link"
-            aria-label="Slider card tag"
-            v-if="plant.category?.title"
-            >{{ plant.category?.title }}</span
-        >
-        <h3 class="card__title card__tag-title" aria-label="Slider card title">
-            {{ plant.title }}
-            <a href="#" class="card__tag-title" aria-label="To Calathea plant"></a>
-        </h3>
+        <div class="flex flex-col gap-2">
+            <Link
+                v-if="plant.category?.title"
+                :href="route('shop', { category: plant.category?.slug })"
+                class="card__tag card__tag-link text-zinc-300"
+                :aria-label="plant.category?.title"
+                >{{ plant.category?.title }}</Link
+            >
+            <h3
+                class="card__title card__tag-title text-xl text-zinc-100"
+                aria-label="Slider card title"
+            >
+                <Link
+                    :href="route('shop.show', plant.id)"
+                    class="card__tag-title"
+                    :aria-label="plant.title"
+                    >{{ plant.title }}</Link
+                >
+            </h3>
+        </div>
 
         <AppExploreButton
             :href="route('shop.show', plant.id)"
@@ -48,3 +65,15 @@
         </AppExploreButton>
     </figure>
 </template>
+
+<style lang="scss" scoped>
+    @use '../../../scss/bootstrap' as b;
+
+    @media (max-width: b.$mediaMobile) {
+        .card {
+            max-width: 18rem;
+            gap: 0.65rem;
+            padding-bottom: 2.5rem;
+        }
+    }
+</style>

@@ -93,13 +93,13 @@
 
 <template>
     <nav
-        class="nav relative flex items-center justify-between lg:w-full order-1 lg:order-none"
+        class="nav relative order-1 flex items-center justify-between lg:order-none lg:w-full"
         id="nav"
         aria-label="Navigation"
         ref="containerRef"
     >
         <ul
-            class="nav__list hidden lg:flex justify-center items-center flex-1 gap-5"
+            class="nav__list hidden flex-1 items-center justify-center gap-5 lg:flex"
             aria-label="Navigation list"
         >
             <template v-for="item in menuItems.slice(0, visibleCount)" :key="item.id">
@@ -112,7 +112,7 @@
                 <li v-else class="nav__item whitespace-nowrap">
                     <Link
                         :href="getHref(item)"
-                        class="nav__link font-bold text-green-50 hover:text-white transition-colors p-1 focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 rounded-lg outline-none"
+                        class="nav__link rounded-lg p-1 font-bold text-green-50 outline-none transition-colors hover:text-white focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900"
                     >
                         {{ item.title }}
                     </Link>
@@ -130,14 +130,14 @@
             <MobileMenu>
                 <template v-for="item in menuItems" :key="'mobile-' + item.id">
                     <div v-if="item.children?.length" class="flex flex-col gap-2">
-                        <span class="text-zinc-500 text-sm uppercase tracking-wider">{{
+                        <span class="text-sm uppercase tracking-wider text-zinc-500">{{
                             item.title
                         }}</span>
                         <Link
                             v-for="child in item.children"
                             :key="child.id"
                             :href="getHref(child)"
-                            class="pl-4 py-1 border-l border-emerald-500/30 hover:text-emerald-400"
+                            class="border-l border-emerald-500/30 py-1 pl-4 hover:text-emerald-400"
                         >
                             {{ child.title }}
                         </Link>
@@ -145,7 +145,7 @@
                     <Link
                         v-else
                         :href="getHref(item)"
-                        class="hover:text-emerald-400 transition-colors"
+                        class="transition-colors hover:text-emerald-400"
                     >
                         {{ item.title }}
                     </Link>
@@ -155,7 +155,7 @@
 
         <ul
             ref="ghostRef"
-            class="absolute w-full top-0 left-0 flex gap-5 invisible pointer-events-none h-0 overflow-hidden"
+            class="pointer-events-none invisible absolute left-0 top-0 flex h-0 w-full gap-5 overflow-hidden"
         >
             <li ref="moreBtnRef" class="nav__item--ghost font-bold text-green-600">
                 More <IconArrowMore class="inline-block" />
