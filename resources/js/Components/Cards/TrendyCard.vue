@@ -24,10 +24,7 @@
 
 <template>
     <figure class="card trendy-card" aria-label="Trendy card">
-        <div
-            class="card__img-wrapper relative -mt-16 aspect-square w-full px-4"
-            aria-label="Trendy card image"
-        >
+        <div class="card__img-wrapper w-full" aria-label="Trendy card image">
             <AppImage
                 :src="plant.image_url"
                 :alt="plant.title"
@@ -45,7 +42,7 @@
                 </Link>
             </h3>
 
-            <p class="card__descr card__descr--white">
+            <p class="card__descr card__descr--white line-clamp-5">
                 {{ plant.description }}
             </p>
 
@@ -85,15 +82,23 @@
         aspect-ratio: unset;
         max-height: unset;
         margin-top: 0;
+        padding: 4rem 4rem 4rem 0;
+        gap: calc(1rem * (60px / b.$basicFontSize));
+
+        @media (max-width: b.$mediaSmallPC) {
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 2rem 4rem;
+        }
 
         @media (max-width: b.$mediaTablet) {
             gap: calc(1rem * (60px / b.$basicFontSize));
         }
 
         @media (max-width: b.$mediaMobile) {
-            flex-direction: column;
-            justify-content: center;
             gap: calc(1rem * (34px / b.$basicFontSize));
+
+            padding: 0 2rem 2rem;
         }
 
         &::before {
@@ -114,7 +119,7 @@
 
         .card__info {
             @include b.flex(flex-start, flex-start, column);
-            padding: 5rem;
+
             gap: calc(1rem * (24px / b.$basicFontSize));
 
             @media (max-width: b.$mediaTablet) {
@@ -129,39 +134,38 @@
 
         .card__img-wrapper {
             max-width: unset;
-            margin-top: 0;
             position: relative;
             top: unset;
             left: unset;
             translate: unset;
             height: auto;
-            margin-bottom: 0;
+            max-width: 500px;
+            flex: 1 0 50%;
+            margin: 0;
             aspect-ratio: unset;
+            overflow: hidden;
 
             @media (max-width: 1154px) {
+                flex: 0 0 100%;
+                margin: 0 auto;
+                max-width: 400px;
                 bottom: auto;
             }
 
             @media (max-width: b.$mediaTablet) {
+                max-width: 300px;
                 position: static;
-                flex-basis: 35%;
             }
 
             @media (max-width: b.$mediaMobile) {
-                margin-top: -35%;
-                flex-basis: unset;
-                max-width: 300px;
+                margin-top: -30%;
+                max-width: 280px;
             }
 
             img {
-                max-width: min(46.5vw, calc(1rem * (728px / b.$basicFontSize)));
                 object-fit: contain;
-                width: auto;
+                width: 100%;
                 height: auto;
-
-                @media (max-width: b.$mediaTablet) {
-                    width: 100%;
-                }
             }
         }
 
@@ -180,14 +184,30 @@
             padding: 0;
         }
 
+        .card__buttons {
+            @media (max-width: b.$mediaMobile) {
+                gap: 1rem;
+            }
+        }
+
         .card__button {
             margin: 0;
         }
     }
 
     .trendy-card:nth-child(2) {
+        padding: 4rem 0 4rem 4rem;
+
+        @media (max-width: b.$mediaSmallPC) {
+            padding: 0 2rem 4rem;
+        }
+
         .card__img-wrapper {
             order: 2;
+
+            @media (max-width: b.$mediaSmallPC) {
+                order: 1;
+            }
         }
 
         .card__info {
