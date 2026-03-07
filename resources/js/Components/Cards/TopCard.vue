@@ -21,7 +21,11 @@
 <template>
     <figure class="card top__card" aria-label="Top card">
         <div class="card__img-wrapper" aria-label="Top card image">
-            <AppImage :src="plant.image_url" :alt="plant.title"></AppImage>
+            <AppImage
+                :src="plant.image_url"
+                class="transition-transform duration-500 hover:scale-110"
+                :alt="plant.title"
+            ></AppImage>
         </div>
 
         <h3 class="card__title" aria-label="Card title">
@@ -34,7 +38,7 @@
             </Link>
         </h3>
 
-        <p class="card__descr card__descr--white" aria-label="Plant description">
+        <p class="card__descr card__descr--white line-clamp-5" aria-label="Plant description">
             {{ plant.description }}
         </p>
 
