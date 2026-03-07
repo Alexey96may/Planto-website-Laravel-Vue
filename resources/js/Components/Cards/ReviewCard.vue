@@ -37,7 +37,7 @@
             </div>
         </div>
 
-        <div class="comment__message" aria-label="Author`s message">
+        <div class="comment__message line-clamp-5" aria-label="Author`s message">
             <p>
                 {{ comment.body }}
             </p>
