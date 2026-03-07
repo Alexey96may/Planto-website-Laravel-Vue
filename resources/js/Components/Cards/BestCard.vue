@@ -27,18 +27,20 @@
 
 <template>
     <figure
-        class="best__card flex h-full w-full gap-4 overflow-visible rounded-[2rem] pb-8 pr-8 shadow-sm transition-shadow hover:shadow-md lg:gap-6 lg:gap-8"
+        class="best__card flex h-full w-full flex-col gap-4 overflow-visible rounded-[2rem] pb-8 pr-8 shadow-sm transition-shadow hover:shadow-md lg:flex-row lg:gap-6"
     >
-        <div class="relative -mt-24 mb-6 aspect-square w-1/2 flex-shrink-0 lg:h-96">
+        <div
+            class="best__card-image relative mx-auto -mt-24 mb-6 aspect-square h-auto w-full max-w-48 flex-1 flex-grow-0 lg:h-96 lg:w-1/2 lg:max-w-none lg:flex-shrink-0"
+        >
             <AppImage
                 :src="feature.image_url"
                 :alt="feature.title"
-                class="h-full w-full object-contain drop-shadow-2xl"
+                class="h-full w-full object-contain drop-shadow-sm"
             />
         </div>
 
-        <div class="flex flex-grow flex-col gap-4 pt-8">
-            <h3 class="mb-4">
+        <div class="flex w-full flex-grow flex-col gap-4 lg:w-1/2 lg:flex-shrink-0 lg:pt-8">
+            <h3 class="best__card-title mb-4">
                 <Link
                     :href="feature.link"
                     class="text-xl font-semibold transition-colors hover:text-emerald-600"
@@ -48,12 +50,12 @@
             </h3>
 
             <div
-                class="card__inform mb-8 max-h-44 flex-grow text-sm leading-relaxed text-zinc-300"
+                class="best__card-description card__inform max-h-44 flex-grow text-sm leading-relaxed text-zinc-300 lg:mb-8"
                 v-if="feature.description"
                 v-html="feature.description"
             ></div>
 
-            <div class="mt-auto flex items-center justify-between pt-6">
+            <div class="mt-auto flex flex-wrap items-center justify-between gap-4 pt-4">
                 <AppExploreButton :href="feature.link" class="button--rect scale-90" />
 
                 <div class="flex items-center gap-3 text-sm font-medium">
@@ -80,9 +82,16 @@
     .best__card {
         background: url('../../../images/slider_bg.png') center / 100% 100% no-repeat;
         border-radius: 0;
+        padding: 0 4rem 4rem 2rem;
+
+        position: relative;
+        z-index: 1;
+
+        overflow: visible !important;
 
         @media (max-width: b.$mediaMobile) {
             background: url('../../../images/slider_bg-mobile.png') center / 100% 100% no-repeat;
+            padding: 0 1rem 2rem 1rem;
         }
     }
 
@@ -114,16 +123,6 @@
             border-color 0.3s ease !important;
     }
 
-    .best__card {
-        // Твои стили фона...
-        position: relative;
-        z-index: 1;
-
-        // Убедимся, что контент внутри не обрезан при вылете пыльцы
-        overflow: visible !important;
-    }
-
-    // Подготовим элементы к тяжелой анимации
     .relative,
     h3,
     .mb-8,

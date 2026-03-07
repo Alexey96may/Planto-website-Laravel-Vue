@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, ref } from 'vue';
 
-    import { Link, usePage } from '@inertiajs/vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     import { gsap } from 'gsap';
     import 'swiper/css';
@@ -27,16 +27,15 @@
 
     const { features = [] } = defineProps<{ features: Feature[] }>();
 
-    // Хук, который сработает при начале смены слайда
     const onSlideChangeTransitionStart = (swiper: any) => {
         const allSlides = swiper.el.querySelectorAll('.swiper-slide');
         const activeSlide = allSlides[swiper.activeIndex];
 
-        // 1. Улетающие элементы (Взрыв пыльцы)
         allSlides.forEach((slide: HTMLElement, index: number) => {
             if (index !== swiper.activeIndex) {
-                // Выбираем: обертку картинки (relative), заголовок (h3), описание (div) и футер
-                const pieces = slide.querySelectorAll('.relative, h3, .mb-8, .mt-auto');
+                const pieces = slide.querySelectorAll(
+                    '.best__card-image, .best__card-title, .best__card-description, p',
+                );
 
                 gsap.to(pieces, {
                     opacity: 0,
@@ -52,8 +51,9 @@
             }
         });
 
-        // 2. Прилетающие элементы (Сборка)
-        const newPieces = activeSlide.querySelectorAll('.relative, h3, .mb-8, .mt-auto');
+        const newPieces = activeSlide.querySelectorAll(
+            '.best__card-image, .best__card-title, .best__card-description, p',
+        );
 
         if (newPieces.length) {
             gsap.fromTo(
@@ -175,12 +175,15 @@
     .best-swiper {
         width: 100%;
         padding-top: 4rem !important;
-
         overflow: visible !important;
+        min-height: auto;
+
+        @media (width >= 1024px) {
+            min-height: 500px;
+        }
     }
 
     :deep(.swiper-wrapper) {
-        /* Тянем все карточки по высоте самой высокой */
         display: flex !important;
         align-items: stretch !important;
     }
@@ -188,6 +191,14 @@
     :deep(.swiper-slide) {
         height: auto !important;
         display: flex !important;
+        pointer-events: none;
+        opacity: 0 !important;
+        transition-property: opacity !important;
+
+        &.swiper-slide-active {
+            pointer-events: auto;
+            opacity: 1 !important;
+        }
     }
 
     .slider__bottom-buttons {
@@ -195,6 +206,7 @@
         justify-content: center;
         gap: 0.8rem;
         margin-top: 4rem;
+        margin-bottom: 4rem;
 
         :deep(.bottom-button) {
             width: 10px;
@@ -213,44 +225,15 @@
         }
     }
 
-    :deep(.swiper-slide) {
-        pointer-events: none; // Чтобы некликабельные скрытые слайды не мешали
-
-        &.swiper-slide-active {
-            pointer-events: auto;
-        }
-    }
-
-    /* Элементы внутри PlantBestCard по умолчанию должны быть готовы к анимации */
     :deep(.card__info),
     :deep(.card__img-wrapper) {
         will-change: filter, opacity, transform;
     }
 
-    /* Заставляем Swiper Fade не конфликтовать с GSAP */
-    :deep(.swiper-slide) {
-        opacity: 0 !important; // Скрываем слайд целиком
-        transition-property: opacity !important;
-
-        &.swiper-slide-active {
-            opacity: 1 !important; // Показываем только активный
-        }
-
-        /* Контент внутри анимируем ТОЛЬКО через GSAP */
-    }
-
-    /* Удаляем инлайновые переходы, которые могут гасить GSAP */
     :deep(.card__info *) {
         transition: none !important;
     }
 
-    /* Очень важно: Swiper Fade делает слайды абсолютными. 
-   Если у карточки нет четкой высоты, элементы могут схлопываться. */
-    .best-swiper {
-        min-height: 500px; /* Убедись, что высота зафиксирована */
-    }
-
-    /* Поможем браузеру отрисовывать блюр и трансформы */
     :deep(.card__img-wrapper),
     :deep(.card__title),
     :deep(.card__descr-wrapper),
