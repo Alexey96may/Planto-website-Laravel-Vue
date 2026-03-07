@@ -19,11 +19,15 @@
 
 <template>
     <div class="rating-display flex items-center" :aria-label="`Rating: ${rating} out of ${max}`">
-        <IconStar v-for="n in stars.full" :key="'full-' + n" class="rating-star" />
+        <IconStar v-for="n in stars.full" :key="'full-' + n" class="rating-star hover:scale-110" />
 
-        <IconStarHalf v-if="stars.half" class="rating-star" />
+        <IconStarHalf v-if="stars.half" class="rating-star hover:scale-110" />
 
-        <IconStarEmpty v-for="n in stars.empty" :key="'empty-' + n" class="rating-star" />
+        <IconStarEmpty
+            v-for="n in stars.empty"
+            :key="'empty-' + n"
+            class="rating-star hover:scale-110"
+        />
     </div>
 </template>
 
@@ -34,7 +38,8 @@
     }
 
     .rating-star {
-        width: 1.25rem;
-        height: 1.25rem;
+        width: 0.75rem;
+        transition: transform 0.25s;
+        height: 0.75rem;
     }
 </style>
