@@ -1,9 +1,15 @@
 <script setup lang="ts">
     import { computed, ref, watch } from 'vue';
-    import { VNode, h } from 'vue';
 
-    import { Link, router } from '@inertiajs/vue3';
+    import { Head, Link, router } from '@inertiajs/vue3';
 
+    import {
+        ChevronLeftIcon,
+        MinusIcon,
+        PlusIcon,
+        ShoppingBagIcon,
+        TrashIcon,
+    } from '@heroicons/vue/24/outline';
     import { route } from 'ziggy-js';
 
     import AppImage from '@/Components/UI/AppImage.vue';
@@ -11,9 +17,7 @@
     import { CartItems, ProductWithCategory } from '@/types';
     import { calculateTotal, formatUSD } from '@/utils/money';
 
-    defineOptions({
-        layout: MainLayout,
-    });
+    defineOptions({ layout: MainLayout });
 
     const props = defineProps<{
         product: ProductWithCategory;
@@ -22,7 +26,6 @@
     }>();
 
     const count = ref(props.cart_items[props.product.id] || 1);
-
     const totalPriceRaw = computed(() => calculateTotal(props.product.price, count.value));
     const formattedPrice = computed(() => formatUSD(totalPriceRaw.value));
 
@@ -34,10 +37,7 @@
     );
 
     const add = () => {
-        if (props.product?.stock > count.value) {
-            alert('Извините, у нас нет столько растений 🌿');
-            return;
-        }
+        if (count.value >= props.product.stock) return;
         count.value++;
     };
 
@@ -47,134 +47,151 @@
 
     const addOrUpdateCart = () => {
         const id = props.product?.id;
-        const newQuantity = count.value;
-
-        if (newQuantity < 1 || !id) return;
-
         const isInCart = !!props.cart_items[id];
 
         if (isInCart) {
             router.patch(
                 route('cart.update', id),
-                {
-                    quantity: newQuantity,
-                },
-                {
-                    preserveScroll: true,
-                    onSuccess: () => {}, //todo
-                },
+                { quantity: count.value },
+                { preserveScroll: true },
             );
         } else {
             router.post(
                 route('cart.add'),
-                {
-                    product_id: id,
-                    quantity: newQuantity,
-                },
-                { preserveScroll: true, onSuccess: () => {} }, //todo
+                { product_id: id, quantity: count.value },
+                { preserveScroll: true },
             );
         }
     };
 
     const removeFromCart = () => {
-        const id = props.product?.id;
-
-        if (!id) return;
-
-        if (confirm('Вы уверены, что хотите удалить этот товар?')) {
-            router.delete(route('cart.remove', id), {
-                preserveScroll: true,
-                onSuccess: () => {},
-            });
+        if (confirm('Are you sure you want to remove this plant?')) {
+            router.delete(route('cart.remove', props.product.id), { preserveScroll: true });
         }
     };
 
-    const buttonText = computed(() => {
-        return props.cart_items[props.product.id]
-            ? 'Обновить количество за '
-            : 'Добавить в корзину за ';
-    });
+    const buttonText = computed(() =>
+        props.cart_items[props.product.id] ? 'Update Quantity' : 'Add to Cart',
+    );
 </script>
 
 <template>
-    <div class="max-w-4xl mx-auto p-6">
-        <Link :href="backUrl" class="text-sm text-gray-500 hover:text-green-600">← К каталогу</Link>
+    <Head :title="product.title" />
 
-        <div class="flex flex-col md:flex-row gap-8 mt-6">
-            <div
-                class="w-full md:w-1/2 bg-gray-100 aspect-square rounded-xl flex items-center justify-center text-gray-400"
+    <div class="w-full bg-plant-shop">
+        <div class="mx-auto max-w-6xl px-6 py-10 lg:py-16">
+            <Link
+                :href="backUrl"
+                class="group inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-emerald-500"
             >
-                <AppImage
-                    :src="product?.image_url"
-                    :alt="product.title"
-                    className="rounded-lg shadow-md"
-                />
-            </div>
+                <ChevronLeftIcon class="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                Back to Catalog
+            </Link>
 
-            <div class="w-full md:w-1/2">
-                <h1 class="text-4xl font-bold text-gray-800">
-                    {{ product.title }}
-                </h1>
-
-                <p v-if="product.category">
-                    <Link
-                        :href="
-                            route('shop', {
-                                category: product?.category?.slug,
-                            })
-                        "
-                        class="text-sm text-gray-500 hover:text-green-600"
-                        >{{ product?.category?.title }}</Link
+            <div class="mt-8 grid gap-12 lg:grid-cols-2 lg:items-center">
+                <div
+                    class="group relative aspect-square overflow-hidden rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 shadow-2xl"
+                >
+                    <AppImage
+                        :src="product?.image_url"
+                        :alt="product.title"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div
+                        v-if="product.stock < 5 && product.stock > 0"
+                        class="absolute right-6 top-6 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5 text-[0.5rem] font-bold uppercase tracking-widest text-orange-500 backdrop-blur-md md:text-xs"
                     >
-                </p>
-                <p v-else>Without Category</p>
-                <p class="text-2xl text-green-600 font-semibold mt-2">{{ product.price }} ₽</p>
-
-                <div class="mt-6">
-                    <h3 class="font-medium text-gray-700">Description:</h3>
-                    <p class="text-gray-600 mt-2 leading-relaxed">
-                        {{ product.description || 'Description is loading...' }}
-                    </p>
+                        Only {{ product.stock }} left
+                    </div>
                 </div>
 
-                <div class="flex items-center gap-4 mt-8" v-if="product.stock">
-                    <div class="flex items-center border rounded-lg">
-                        <button
-                            @click="remove"
-                            class="px-4 py-2 hover:bg-gray-100"
-                            :disabled="product.stock === 0"
+                <div class="flex flex-col">
+                    <div class="mb-6">
+                        <h1
+                            class="mt-2 text-3xl font-bold tracking-tight text-zinc-100 lg:text-5xl"
                         >
-                            -
-                        </button>
-                        <span class="px-4 font-bold">{{ count }}</span>
-                        <button
-                            @click="add"
-                            class="px-4 py-2 hover:bg-gray-100"
-                            :disabled="count === product.stock"
+                            {{ product.title }}
+                        </h1>
+                        <Link
+                            v-if="product.category"
+                            :href="route('shop', { category: product?.category?.slug })"
+                            class="mt-4 block text-xs font-bold uppercase tracking-[0.2em] text-emerald-600 hover:underline"
                         >
-                            +
+                            {{ product?.category?.title }}
+                        </Link>
+                        <p class="mt-6 text-3xl font-light text-emerald-300">
+                            {{ formatUSD(product.price) }}
+                        </p>
+                    </div>
+
+                    <div class="mb-8 border-t border-zinc-800 pt-8">
+                        <h3 class="text-sm font-bold uppercase tracking-widest text-zinc-500">
+                            Description
+                        </h3>
+                        <p class="mt-4 text-lg leading-relaxed text-zinc-400">
+                            {{
+                                product.description ||
+                                'Our master gardeners are still writing a perfect description for this green friend.'
+                            }}
+                        </p>
+                    </div>
+
+                    <div v-if="product.stock" class="space-y-6">
+                        <div
+                            class="flex flex-wrap items-center justify-center gap-6 lg:justify-start"
+                        >
+                            <div
+                                class="flex items-center rounded-2xl border border-zinc-800 bg-zinc-900 p-1"
+                            >
+                                <button
+                                    @click="remove"
+                                    :disabled="count <= 1"
+                                    class="flex h-12 w-12 items-center justify-center rounded-xl text-zinc-400 transition-all hover:bg-zinc-800 hover:text-white disabled:opacity-20"
+                                >
+                                    <MinusIcon class="h-5 w-5" />
+                                </button>
+                                <span class="w-12 text-center text-xl font-bold text-zinc-200">{{
+                                    count
+                                }}</span>
+                                <button
+                                    @click="add"
+                                    :disabled="count >= product.stock"
+                                    class="flex h-12 w-12 items-center justify-center rounded-xl text-zinc-400 transition-all hover:bg-zinc-800 hover:text-white disabled:opacity-20"
+                                >
+                                    <PlusIcon class="h-5 w-5" />
+                                </button>
+                            </div>
+
+                            <button
+                                @click="addOrUpdateCart"
+                                class="group flex flex-grow items-center justify-center gap-3 rounded-2xl bg-emerald-700 px-8 py-4 font-bold text-white transition-all hover:bg-emerald-600 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)] active:scale-[0.98]"
+                            >
+                                <ShoppingBagIcon class="h-6 w-6" />
+                                {{ buttonText }} — {{ formattedPrice }}
+                            </button>
+                        </div>
+
+                        <button
+                            v-if="cart_items[product.id]"
+                            @click="removeFromCart"
+                            class="flex items-center gap-2 text-sm font-bold text-zinc-500 transition-colors hover:text-red-500"
+                        >
+                            <TrashIcon class="h-4 w-4" />
+                            Remove from cart
                         </button>
                     </div>
 
-                    <button
-                        class="bg-green-600 text-white px-8 py-2 rounded-lg hover:bg-green-700 transition"
-                        @click="addOrUpdateCart"
-                        :disabled="product.stock === 0"
+                    <div
+                        v-else
+                        class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center"
                     >
-                        {{ buttonText }} {{ formattedPrice }}
-                    </button>
-                    <button
-                        class="bg-red-500 text-white px-8 py-2 rounded-lg hover:bg-red-700 transition"
-                        v-if="cart_items[product.id]"
-                        @click="removeFromCart"
-                        :disabled="product.stock === 0"
-                    >
-                        Удалить из корзины
-                    </button>
-                </div>
-
-                <div class="flex items-center gap-4 mt-8 text-green" v-else>
-                    Временно нет в наличии!
+                        <p class="text-xl font-medium text-emerald-600">
+                            Temporarily out of stock! 🌿
+                        </p>
+                        <p class="mt-1 text-pretty text-sm text-zinc-500">
+                            We're growing more. Check back in a few days!
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
