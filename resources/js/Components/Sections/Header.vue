@@ -12,7 +12,7 @@
 <template>
     <div>
         <header class="header" id="header" aria-label="Header">
-            <div class="container header__container">
+            <div class="header__container container">
                 <div class="logo mr-auto lg:mr-0" aria-label="Logo field">
                     <IconLogo class="logo__image" aria-label="Logo image" />
                     <span class="logo__text" aria-label="Logo text">{{
@@ -26,15 +26,19 @@
                     <Link
                         :href="$page.props.auth.user ? route('dashboard') : route('login')"
                         :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Login'"
-                        class="text-blue-600 font-medium hover:underline"
+                        class="font-medium text-blue-600 hover:underline"
                     >
                         <IconUser class="header__social-img" aria-label="Profile" />
                     </Link>
 
-                    <Link :href="route('cart.index')" aria-label="To cart">
+                    <Link :href="route('cart.index')" aria-label="To cart" class="relative">
                         <IconBag class="header__social-img" aria-label="Bag image" />
-                        <span v-if="$page.props.cart_count > 0">
-                            {{ $page.props.cart_count }}
+                        <span
+                            v-if="$page.props.cart_count > 0"
+                            class="absolute -bottom-2 -right-2 rounded-[25%] bg-emerald-900/80 px-[4px] py-[1px] text-xs text-white"
+                        >
+                            <template v-if="$page.props.cart_count > 9">9+</template>
+                            <template v-else>{{ $page.props.cart_count }}</template>
                         </span>
                     </Link>
                 </div>
