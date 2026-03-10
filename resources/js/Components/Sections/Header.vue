@@ -24,8 +24,8 @@
 
                 <div class="header__socials" aria-label="Socials field">
                     <Link
-                        :href="$page.props.auth.user ? route('dashboard') : route('login')"
-                        :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Login'"
+                        :href="$page.props.auth.user ? route('dashboard') : route('register')"
+                        :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Register'"
                         class="font-medium text-blue-600 hover:underline"
                     >
                         <IconUser class="header__social-img" aria-label="Profile" />

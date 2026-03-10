@@ -3,17 +3,17 @@
 
     import { route } from 'ziggy-js';
 
-    import InputError from '@/Components/InputError.vue';
-    import InputLabel from '@/Components/InputLabel.vue';
-    import PrimaryButton from '@/Components/PrimaryButton.vue';
-    import TextInput from '@/Components/TextInput.vue';
+    import InputError from '@/Components/UI/InputError.vue';
+    import InputLabel from '@/Components/UI/InputLabel.vue';
+    import PrimaryButton from '@/Components/UI/PrimaryButton.vue';
+    import TextInput from '@/Components/UI/TextInput.vue';
     import GuestLayout from '@/Layouts/GuestLayout.vue';
 
     interface RegisterForm {
         name: string;
         email: string;
-        password?: string;
-        password_confirmation?: string;
+        password: string;
+        password_confirmation: string;
     }
 
     const form = useForm<RegisterForm>({
@@ -32,12 +32,16 @@
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head title="Join the Garden" />
 
-        <form @submit.prevent="submit">
+        <div class="mb-8 text-center">
+            <h2 class="text-2xl font-bold text-zinc-100 lg:text-3xl">Create Account</h2>
+            <p class="mt-2 text-sm text-zinc-500">Join our community of plant lovers 🌿</p>
+        </div>
+
+        <form @submit.prevent="submit" class="space-y-5">
             <div>
-                <InputLabel for="name" value="Name" />
-
+                <InputLabel for="name" value="Full Name" class="text-zinc-400" />
                 <TextInput
                     id="name"
                     type="text"
@@ -45,72 +49,74 @@
                     v-model="form.name"
                     required
                     autofocus
+                    placeholder="John Doe"
                     autocomplete="name"
                 />
-
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
-
+            <div>
+                <InputLabel for="email" value="Email Address" class="text-zinc-400" />
                 <TextInput
                     id="email"
                     type="email"
                     class="mt-1 block w-full"
                     v-model="form.email"
                     required
+                    placeholder="name@example.com"
                     autocomplete="username"
                 />
-
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <InputLabel for="password" value="Password" class="text-zinc-400" />
+                    <TextInput
+                        id="password"
+                        type="password"
+                        class="mt-1 block w-full"
+                        v-model="form.password"
+                        required
+                        placeholder="••••••••"
+                        autocomplete="new-password"
+                    />
+                    <InputError class="mt-1" :message="form.errors.password" />
+                </div>
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
+                <div>
+                    <InputLabel for="password_confirmation" value="Confirm" class="text-zinc-400" />
+                    <TextInput
+                        id="password_confirmation"
+                        type="password"
+                        class="mt-1 block w-full"
+                        v-model="form.password_confirmation"
+                        required
+                        placeholder="••••••••"
+                        autocomplete="new-password"
+                    />
+                    <InputError class="mt-1" :message="form.errors.password_confirmation" />
+                </div>
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                    Already registered?
-                </Link>
-
+            <div class="pt-4">
                 <PrimaryButton
-                    class="ms-4"
+                    class="w-full"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Register
+                    Create Account
                 </PrimaryButton>
+            </div>
+
+            <div class="text-center text-sm text-zinc-500">
+                Already part of the garden?
+                <Link
+                    :href="route('login')"
+                    class="font-bold text-emerald-600 transition-colors hover:text-emerald-500"
+                >
+                    Log in here
+                </Link>
             </div>
         </form>
     </GuestLayout>
