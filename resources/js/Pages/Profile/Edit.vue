@@ -14,29 +14,39 @@
 </script>
 
 <template>
-    <Head title="Profile" />
+    <Head title="Account Settings" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">Profile</h2>
-        </template>
+        <template #header> Settings </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <UpdateProfileInformationForm
-                        :must-verify-email="mustVerifyEmail"
-                        :status="status"
-                        class="max-w-xl"
-                    />
+        <div class="py-6">
+            <div class="mx-auto max-w-7xl space-y-8 sm:px-6 lg:px-8">
+                <div
+                    class="overflow-hidden border border-white/5 bg-[#242b1f]/40 shadow-2xl backdrop-blur-md transition-all hover:border-white/10 sm:rounded-3xl"
+                >
+                    <div class="p-6 sm:p-10">
+                        <UpdateProfileInformationForm
+                            :must-verify-email="mustVerifyEmail"
+                            :status="status"
+                            class="max-w-xl"
+                        />
+                    </div>
                 </div>
 
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <UpdatePasswordForm class="max-w-xl" />
+                <div
+                    class="overflow-hidden border border-white/5 bg-[#242b1f]/40 shadow-2xl backdrop-blur-md transition-all hover:border-white/10 sm:rounded-3xl"
+                >
+                    <div class="p-6 sm:p-10">
+                        <UpdatePasswordForm class="max-w-xl" />
+                    </div>
                 </div>
 
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <DeleteUserForm class="max-w-xl" />
+                <div
+                    class="overflow-hidden border border-red-500/10 bg-[#242b1f]/40 shadow-2xl backdrop-blur-md transition-all hover:border-red-500/20 sm:rounded-3xl"
+                >
+                    <div class="p-6 sm:p-10">
+                        <DeleteUserForm class="max-w-xl" />
+                    </div>
                 </div>
             </div>
         </div>

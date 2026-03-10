@@ -10,8 +10,15 @@
 <template>
     <Link
         :href="href"
-        class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+        class="block w-full px-4 py-2.5 text-start text-sm font-medium leading-5 transition duration-200 ease-in-out focus:outline-none"
+        :class="
+            active
+                ? 'bg-emerald-500/10 text-[#c5d86d]'
+                : 'text-zinc-400 hover:bg-white/5 hover:text-[#c5d86d] focus:bg-white/5 focus:text-[#c5d86d]'
+        "
     >
-        <slot />
+        <div class="flex items-center gap-3">
+            <slot />
+        </div>
     </Link>
 </template>

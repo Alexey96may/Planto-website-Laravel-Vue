@@ -1,153 +1,203 @@
 <script setup lang="ts">
-    import { computed } from 'vue';
+    import { computed, ref } from 'vue';
 
-    import { Link } from '@inertiajs/vue3';
-    import { usePage } from '@inertiajs/vue3';
+    import { Link, usePage } from '@inertiajs/vue3';
 
+    import {
+        ExternalLink,
+        FolderTree,
+        LayoutDashboard,
+        Leaf,
+        LogOut,
+        Map,
+        Menu,
+        MessageSquare,
+        Settings,
+        ShoppingCart,
+        Sparkles,
+        Users,
+        X,
+    } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
-    const currentComponent = computed(() => page.component);
-
     const page = usePage();
+    const currentComponent = computed(() => page.component);
+    const isMobileMenuOpen = ref(false);
 
-    defineSlots<{
-        default(props: {}): any;
-    }>();
+    const navItems = [
+        {
+            name: 'Dashboard',
+            route: 'admin.dashboard',
+            icon: LayoutDashboard,
+            component: 'Admin/Dashboard',
+        },
+        {
+            name: 'Products',
+            route: 'admin.products.index',
+            icon: Leaf,
+            component: 'Admin/Products/Index',
+        },
+        {
+            name: 'Categories',
+            route: 'admin.categories.index',
+            icon: FolderTree,
+            component: 'Admin/Сategories/Index',
+        },
+        {
+            name: 'Orders',
+            route: 'admin.orders.index',
+            icon: ShoppingCart,
+            component: 'admin.orders.*',
+        },
+        {
+            name: 'Comments',
+            route: 'admin.comments.index',
+            icon: MessageSquare,
+            component: 'admin.comments.*',
+            badge: 'pending_comments_count',
+        },
+        { name: 'Users', route: 'admin.users.index', icon: Users, component: 'Admin/Users/Index' },
+        {
+            name: 'Navigation',
+            route: 'admin.navigation.index',
+            icon: Map,
+            component: 'admin.navigation.*',
+        },
+        {
+            name: 'Features',
+            route: 'admin.features.index',
+            icon: Sparkles,
+            component: 'admin.features.*',
+        },
+        {
+            name: 'Settings',
+            route: 'admin.settings.index',
+            icon: Settings,
+            component: 'Admin/Settings/Index',
+        },
+    ];
+
+    const checkActive = (item: any) => {
+        if (item.component.includes('*')) {
+            return route().current(item.component);
+        }
+        return currentComponent.value === item.component;
+    };
 </script>
 
 <template>
-    <Toast />
-    <div class="min-h-screen bg-gray-100 flex">
-        <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
-            <div class="p-6 text-2xl font-bold border-b border-gray-800">
-                🌿 Planto <span class="text-green-500">Admin</span>
+    <div class="flex min-h-screen flex-col bg-[#0f120e] text-zinc-300 lg:flex-row">
+        <div
+            class="sticky top-0 z-[60] flex items-center justify-between border-b border-white/5 bg-[#161b14] p-4 lg:hidden"
+        >
+            <div class="flex items-center gap-2 font-black italic text-white">
+                <Leaf class="h-6 w-6 text-[#c5d86d]" />
+                PLANTO <span class="text-[#c5d86d]">ADMIN</span>
             </div>
-            <nav class="mt-6">
-                <Link
-                    :href="route('admin.dashboard')"
-                    class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :class="{
-                        'bg-gray-800 border-l-4 border-green-500':
-                            currentComponent === 'Admin/Dashboard',
-                    }"
-                >
-                    🏠 Dashboard
-                </Link>
+            <button
+                @click="isMobileMenuOpen = !isMobileMenuOpen"
+                class="p-2 text-zinc-400 outline-none"
+            >
+                <Menu v-if="!isMobileMenuOpen" />
+                <X v-else />
+            </button>
+        </div>
 
-                <Link
-                    :href="route('admin.products.index')"
-                    class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :class="{
-                        'bg-gray-800 border-l-4 border-green-500':
-                            currentComponent === 'Admin/Products/Index',
-                    }"
-                >
-                    📦 Products
-                </Link>
+        <aside
+            :class="[isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0']"
+            class="fixed inset-y-0 left-0 z-50 w-72 overflow-y-auto border-r border-white/5 bg-[#161b14] transition-transform duration-300 lg:static lg:block"
+        >
+            <div class="h-16 lg:hidden"></div>
 
-                <Link
-                    :href="route('admin.categories.index')"
-                    class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :class="{
-                        'bg-gray-800 border-l-4 border-green-500':
-                            currentComponent === 'Admin/Сategories/Index',
-                    }"
-                >
-                    📂 Categories
-                </Link>
+            <div class="mb-4 hidden items-center gap-3 border-b border-white/5 p-8 lg:flex">
+                <div class="rounded-xl bg-[#c5d86d]/20 p-2">
+                    <Leaf class="h-6 w-6 text-[#c5d86d]" />
+                </div>
+                <span class="text-lg font-black italic tracking-tighter text-white">
+                    PLANTO <span class="text-[#c5d86d]">ADMIN</span>
+                </span>
+            </div>
 
-                <Link
-                    class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :href="route('admin.orders.index')"
-                    :active="route().current('admin.orders.*')"
-                >
-                    🛒 Orders
-                </Link>
-
-                <Link
-                    class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :href="route('admin.comments.index')"
-                    :active="route().current('admin.comments.*')"
-                >
-                    💬 Comments
-                    <span v-if="!$page.props.pending_comments_count">{{
-                        $page.props.pending_comments_count
-                    }}</span>
-                    <span
-                        v-else
-                        class="inline-flex items-center justify-center px-2 py-1 ml-1 text-xs font-bold leading-none text-red-500 animate-bounce"
+            <nav class="space-y-1 px-4 py-4 lg:py-0">
+                <div v-for="item in navItems" :key="item.name">
+                    <Link
+                        :href="route(item.route)"
+                        class="group flex items-center justify-between rounded-xl px-4 py-3 transition-all duration-200"
+                        :class="[
+                            checkActive(item)
+                                ? 'bg-[#c5d86d] font-bold text-[#0f120e] shadow-lg shadow-[#c5d86d]/10'
+                                : 'text-zinc-400 hover:bg-white/5 hover:text-white',
+                        ]"
+                        @click="isMobileMenuOpen = false"
                     >
-                        ({{ $page.props.pending_comments_count }})
-                    </span>
-                </Link>
+                        <div class="flex items-center gap-3">
+                            <component
+                                :is="item.icon"
+                                class="h-5 w-5"
+                                :class="
+                                    checkActive(item)
+                                        ? ''
+                                        : 'text-zinc-500 group-hover:text-[#c5d86d]'
+                                "
+                            />
+                            {{ item.name }}
+                        </div>
 
-                <Link
-                    :href="route('admin.users.index')"
-                    class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :class="{
-                        'bg-gray-800 border-l-4 border-green-500':
-                            currentComponent === 'Admin/Users/Index',
-                    }"
-                >
-                    👥 Users
-                </Link>
+                        <span
+                            v-if="item.badge && $page.props[item.badge]"
+                            class="animate-pulse rounded-md px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter"
+                            :class="
+                                checkActive(item)
+                                    ? 'bg-[#0f120e] text-[#c5d86d]'
+                                    : 'bg-red-500/20 text-red-500'
+                            "
+                        >
+                            {{ $page.props[item.badge] }}
+                        </span>
+                    </Link>
+                </div>
 
-                <Link
-                    :href="route('admin.navigation.index')"
-                    class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :active="route().current('admin.navigation.*')"
-                >
-                    🗺️ Navigation
-                </Link>
-
-                <Link
-                    :href="route('admin.features.index')"
-                    class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :active="route().current('admin.features.*')"
-                >
-                    ✨ Features
-                </Link>
-
-                <Link
-                    :href="route('admin.settings.index')"
-                    class="block py-3 px-6 hover:bg-gray-800 transition"
-                    :class="{
-                        'bg-gray-800 border-l-4 border-green-500':
-                            currentComponent === 'Admin/Settings/Index',
-                    }"
-                >
-                    ⚙️ Settings
-                </Link>
-
-                <div class="border-t border-gray-800 mt-6 pt-6">
+                <div class="mt-8 border-t border-white/5 px-4 pb-10 pt-8">
                     <Link
                         href="/"
-                        class="block py-3 px-6 text-gray-400 hover:text-white transition"
+                        class="flex items-center gap-3 text-sm text-zinc-500 transition hover:text-white"
                     >
-                        🌐 View Website
+                        <ExternalLink class="h-4 w-4" />
+                        View Website
                     </Link>
                 </div>
             </nav>
         </aside>
 
-        <main class="flex-1">
-            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-8">
-                <div class="text-gray-600 font-medium italic">
-                    Welcome back, {{ $page.props.auth.user.name }}
+        <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
+            <header
+                class="sticky top-0 z-30 hidden h-20 items-center justify-between border-b border-white/5 bg-[#0f120e]/80 px-10 backdrop-blur-md lg:flex"
+            >
+                <div class="text-sm font-medium text-zinc-500">
+                    Welcome back,
+                    <span class="ml-1 text-white">{{ $page.props.auth.user.name }}</span>
                 </div>
                 <Link
                     :href="route('logout')"
                     method="post"
                     as="button"
-                    class="text-sm text-red-500 hover:underline"
+                    class="flex items-center gap-2 rounded-xl border border-red-500/20 px-4 py-2 text-sm font-bold text-red-500 transition-all hover:bg-red-500 hover:text-white"
                 >
-                    Logout
+                    <LogOut class="h-4 w-4" /> Logout
                 </Link>
             </header>
 
-            <div class="p-8">
-                <slot />
-            </div>
-        </main>
+            <main class="p-4 lg:p-10">
+                <div class="mx-auto max-w-[1600px]">
+                    <slot />
+                </div>
+            </main>
+        </div>
+
+        <div
+            v-if="isMobileMenuOpen"
+            @click="isMobileMenuOpen = false"
+            class="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+        ></div>
     </div>
 </template>

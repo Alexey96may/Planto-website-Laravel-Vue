@@ -24,16 +24,12 @@
         const parent = containerRef.value.parentElement;
         if (!parent) return;
 
-        // Доступная ширина (берем 100%, если нужно 50% — поправь)
         const maxAllowedWidth = parent.offsetWidth * 0.5;
 
-        // Получаем реальный gap из CSS (Tailwind gap-5 = 20px)
         const gap = parseInt(window.getComputedStyle(ghostRef.value).columnGap) || 0;
 
-        // Замеряем реальную ширину кнопки "More"
         const moreButtonWidth = moreBtnRef.value.offsetWidth + gap;
 
-        // Все элементы кроме первого (который является кнопкой More для замера)
         const ghostItems = Array.from(ghostRef.value.querySelectorAll('.nav__item--ghost')).slice(
             1,
         );
@@ -45,8 +41,6 @@
             const itemWidth = (ghostItems[i] as HTMLElement).offsetWidth + gap;
             const isLast = i === ghostItems.length - 1;
 
-            // Если это не последний элемент, мы должны проверить,
-            // влезет ли он вместе с будущей кнопкой "More"
             const neededWidth = isLast
                 ? totalWidth + itemWidth
                 : totalWidth + itemWidth + moreButtonWidth;
@@ -59,15 +53,11 @@
             }
         }
 
-        // Фикс: если мы не вместили последний элемент из-за кнопки More,
-        // но кнопка More на самом деле не нужна (так как это был бы последний элемент),
-        // проверяем еще раз.
         if (count < ghostItems.length) {
             const lastItemIdx = ghostItems.length - 1;
             const lastItemTotalWidth =
                 totalWidth + (ghostItems[count] as HTMLElement).offsetWidth + gap;
 
-            // Если это реально последний айтем и он влезает БЕЗ кнопки More
             if (count === lastItemIdx && lastItemTotalWidth <= maxAllowedWidth) {
                 count++;
             }
