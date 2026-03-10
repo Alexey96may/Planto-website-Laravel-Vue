@@ -3,6 +3,16 @@
 
     import { Head, Link, router } from '@inertiajs/vue3';
 
+    import {
+        AlertTriangle,
+        Edit3,
+        Layers,
+        Package,
+        Plus,
+        Search,
+        Trash2,
+        Zap,
+    } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
     import Pagination from '@/Components/Shared/Pagination.vue';
@@ -15,26 +25,15 @@
         products: PaginatedResponse<ProductWithCategory>;
     }>();
 
-    //todo
+    const isUpdating = ref(false);
+
     const deleteProduct = (id: number): void => {
-        if (confirm('Are you sure you want to delete this item?')) {
+        if (confirm('Are you sure you want to delete this unit?')) {
             router.delete(route('admin.products.destroy', id), {
                 preserveScroll: true,
-                onSuccess: () => {
-                    // todo toast.success('Товар успешно удален');
-                },
-                onError: (errors) => {
-                    // todo
-                    console.error('Delete failed:', errors);
-
-                    const errorMessage = Object.values(errors)[0] || 'Что-то пошло не так';
-                    // todo toast.error(errorMessage);
-                },
             });
         }
     };
-
-    const isUpdating = ref(false);
 
     const updateProductField = (
         product: ProductWithCategory,
@@ -44,27 +43,20 @@
         let finalValue = value;
         isUpdating.value = true;
 
-        if (['stock', 'trending_order'].includes(field)) {
+        if (['stock', 'trending_order'].includes(field as string)) {
             finalValue = value === '' ? 0 : Number(value);
         }
 
-        if (product[field as keyof ProductWithCategory] === finalValue) return;
-
-        const url = route('admin.products.update-trending', product.id);
+        if (product[field] === finalValue) {
+            isUpdating.value = false;
+            return;
+        }
 
         router.patch(
             route('admin.products.update-trending', product.id),
             { [field]: finalValue },
             {
                 preserveScroll: true,
-                onSuccess: () => {
-                    // toDo Toast: "Сохранено!"
-                    console.log(`${field} обновлен`);
-                },
-                onError: (errors) => {
-                    const msg = Object.values(errors)[0] || 'Ошибка при обновлении';
-                    alert(msg); // toDo oИли Toast
-                },
                 onFinish: () => (isUpdating.value = false),
             },
         );
@@ -76,135 +68,192 @@
         event: Event,
     ) => {
         const target = event.target as HTMLInputElement;
-        if (target) {
+        if (target.type === 'checkbox') {
             updateProductField(product, field, target.checked);
+        } else {
+            updateProductField(product, field, target.value);
         }
     };
 </script>
 
 <template>
     <AdminLayout>
-        <Head title="Управление товарами" />
+        <Head title="Inventory Management" />
 
-        <div class="p-6 bg-white rounded-xl shadow-sm">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold">Products ({{ products.total }})</h1>
+        <div class="mx-auto max-w-7xl space-y-8">
+            <div
+                class="flex flex-col flex-wrap gap-6 px-2 md:flex-row md:items-center md:justify-between"
+            >
+                <div>
+                    <h1 class="text-4xl font-black uppercase italic tracking-tighter text-white">
+                        Inventory <span class="text-[#c5d86d]">Control</span>
+                    </h1>
+                    <p class="mt-1 text-sm italic text-zinc-500">
+                        Managing {{ products.total }} unique product units.
+                    </p>
+                </div>
+
                 <Link
                     :href="route('admin.products.create')"
-                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                    class="group flex items-center gap-2 rounded-2xl bg-[#c5d86d] px-6 py-3 text-xs font-black uppercase tracking-widest text-black transition-all hover:bg-[#d4e685] hover:shadow-[0_0_20px_rgba(197,216,109,0.3)] active:scale-95"
                 >
-                    + Add product
+                    <Plus class="h-4 w-4 stroke-[3px]" />
+                    New Product
                 </Link>
             </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b bg-gray-50">
-                            <th class="p-4">Photo</th>
-                            <th class="p-4">Title</th>
-                            <th class="p-4 text-center">Trend</th>
-                            <th class="p-4 text-center">Order</th>
-                            <th class="p-4">Category</th>
-                            <th class="p-4">Price</th>
-                            <th class="p-4 text-center">In Stock</th>
-                            <th class="p-4 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="product in products.data"
-                            :key="product.id"
-                            class="border-b hover:bg-gray-50 transition"
-                        >
-                            <td class="p-4">
-                                <AppImage
-                                    :src="product.image_url"
-                                    class="w-12 h-12 rounded-lg object-cover"
-                                ></AppImage>
-                            </td>
-                            <td class="p-4 font-medium">{{ product.title }}</td>
-
-                            <td class="p-4 text-center">
-                                <input
-                                    type="checkbox"
-                                    :checked="product.is_trending"
-                                    :disabled="isUpdating"
-                                    @change="handleChange(product, 'is_trending', $event)"
-                                    class="w-4 h-4 text-green-600 rounded focus:ring-green-500"
-                                />
-                            </td>
-
-                            <td class="p-4 text-center">
-                                <input
-                                    type="number"
-                                    :value="product.trending_order"
-                                    @blur="handleChange(product, 'trending_order', $event)"
-                                    class="w-16 p-1 border rounded text-center text-sm"
-                                />
-                            </td>
-
-                            <td class="p-4">
-                                <span class="px-2 py-1 bg-gray-100 rounded text-sm">
-                                    {{ product.category?.title || 'Uncategorized' }}
-                                </span>
-                            </td>
-                            <td class="p-4 font-bold">{{ formatUSD(product.price) }} ₽</td>
-
-                            <td class="p-4 text-center">
-                                <div class="flex flex-col items-center">
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        :value="product.stock"
-                                        @blur="handleChange(product, 'stock', $event)"
-                                        :class="[
-                                            'w-20 p-1 border rounded text-center text-sm transition-colors focus:ring-2 outline-none',
-                                            product.stock <= 0
-                                                ? 'border-red-500 bg-red-50 text-red-700'
-                                                : 'border-gray-300',
-                                            product.stock > 0 && product.stock <= 5
-                                                ? 'border-orange-400 bg-orange-50'
-                                                : '',
-                                        ]"
-                                    />
-                                    <span
-                                        v-if="product.stock <= 0"
-                                        class="text-[10px] text-red-600 font-bold uppercase mt-1"
+            <div
+                class="overflow-hidden rounded-[1rem] border border-white/5 bg-[#161b14]/60 shadow-2xl backdrop-blur-sm md:rounded-[2.5rem]"
+            >
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-left">
+                        <thead>
+                            <tr
+                                class="border-b border-white/5 bg-white/[0.02] text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            >
+                                <th class="px-8 py-6">Visual</th>
+                                <th class="px-6 py-6">Identity / Info</th>
+                                <th class="px-6 py-6 text-center">Trend Status</th>
+                                <th class="px-6 py-6 text-center">Stock Level</th>
+                                <th class="px-6 py-6 text-right font-mono">Price</th>
+                                <th class="px-8 py-6 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5">
+                            <tr
+                                v-for="product in products.data"
+                                :key="product.id"
+                                class="group transition-colors hover:bg-white/[0.02]"
+                            >
+                                <td class="px-8 py-6">
+                                    <div
+                                        class="relative h-14 w-14 overflow-hidden rounded-xl border border-white/10 bg-black shadow-inner transition-colors group-hover:border-[#c5d86d]/30"
                                     >
-                                        Empty
-                                    </span>
-                                    <span
-                                        v-else-if="product.stock <= 5"
-                                        class="text-[10px] text-orange-600 font-bold uppercase mt-1"
+                                        <AppImage
+                                            :src="product.image_url"
+                                            class="h-full w-full object-cover opacity-80 transition-opacity group-hover:opacity-100"
+                                        />
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-6">
+                                    <div class="space-y-1">
+                                        <div
+                                            class="text-sm font-bold uppercase tracking-tight text-white"
+                                        >
+                                            {{ product.title }}
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span
+                                                class="inline-flex items-center gap-1 rounded-md border border-white/5 bg-white/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tighter text-zinc-500"
+                                            >
+                                                <Layers class="h-2.5 w-2.5" />
+                                                {{ product.category?.title || 'General' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-6 text-center">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <label
+                                            class="relative inline-flex cursor-pointer items-center"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                :checked="product.is_trending"
+                                                @change="
+                                                    handleChange(product, 'is_trending', $event)
+                                                "
+                                                class="peer sr-only"
+                                            />
+                                            <div
+                                                class="h-6 w-11 rounded-full border border-white/5 bg-zinc-800 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all peer-checked:bg-[#c5d86d] peer-checked:after:translate-x-full peer-checked:after:bg-[#0f120e]"
+                                            ></div>
+                                        </label>
+                                        <input
+                                            type="number"
+                                            :value="product.trending_order"
+                                            @blur="handleChange(product, 'trending_order', $event)"
+                                            class="w-12 rounded-lg border border-white/5 bg-black/40 p-1 text-center font-mono text-[10px] text-zinc-400 outline-none focus:border-[#c5d86d]/50"
+                                            title="Order in trending list"
+                                        />
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-6">
+                                    <div class="flex flex-col items-center gap-1">
+                                        <div class="relative">
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                :value="product.stock"
+                                                @blur="handleChange(product, 'stock', $event)"
+                                                :class="[
+                                                    'w-20 rounded-xl border bg-black/40 py-2 text-center text-sm font-black outline-none transition-all',
+                                                    product.stock <= 0
+                                                        ? 'border-red-500/50 text-red-400'
+                                                        : product.stock <= 5
+                                                          ? 'border-amber-500/50 text-amber-400'
+                                                          : 'border-white/5 text-[#c5d86d]',
+                                                ]"
+                                            />
+                                            <Package
+                                                v-if="product.stock > 0"
+                                                class="absolute -right-6 top-1/2 h-3 w-3 -translate-y-1/2 opacity-20"
+                                            />
+                                        </div>
+                                        <span
+                                            v-if="product.stock <= 0"
+                                            class="flex animate-pulse items-center gap-1 text-[9px] font-black uppercase tracking-widest text-red-500/70"
+                                        >
+                                            <AlertTriangle class="h-2 w-2" /> Out of Stock
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-6 text-right">
+                                    <div
+                                        class="text-base font-black italic tracking-tighter text-white"
                                     >
-                                        Few
-                                    </span>
-                                </div>
-                            </td>
+                                        {{ formatUSD(product.price) }}
+                                    </div>
+                                </td>
 
-                            <td class="p-4 text-right space-x-2">
-                                <Link
-                                    :href="route('admin.products.edit', product.id)"
-                                    :data="{ page: products.current_page }"
-                                    class="text-blue-600 hover:underline"
-                                    >Change</Link
-                                >
-                                <button
-                                    @click="deleteProduct(product.id)"
-                                    class="text-red-600 hover:underline"
-                                >
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                <td class="px-8 py-6 text-right">
+                                    <div class="flex justify-end gap-2">
+                                        <Link
+                                            :href="route('admin.products.edit', product.id)"
+                                            :data="{ page: products.current_page }"
+                                            class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 bg-white/5 text-zinc-400 transition-all hover:border-blue-500/30 hover:bg-blue-500 hover:text-white"
+                                        >
+                                            <Edit3 class="h-4 w-4" />
+                                        </Link>
+                                        <button
+                                            @click="deleteProduct(product.id)"
+                                            class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 bg-white/5 text-zinc-400 transition-all hover:border-red-500/30 hover:bg-red-500 hover:text-white"
+                                        >
+                                            <Trash2 class="h-4 w-4" />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <div class="mt-6">
-                <Pagination :links="products.links" />
+                <div class="border-t border-white/5 bg-white/[0.01] px-8 py-6">
+                    <Pagination :links="products.links" />
+                </div>
             </div>
         </div>
     </AdminLayout>
 </template>
+
+<style scoped>
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>

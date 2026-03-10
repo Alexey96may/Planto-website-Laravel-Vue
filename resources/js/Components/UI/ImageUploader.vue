@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import { onMounted } from 'vue';
 
+    import { ImageIcon, ImagePlus, Loader2, UploadCloud, X } from 'lucide-vue-next';
+
     import { useImageUpload } from '@/composables/useImageUpload';
 
     const props = defineProps<{
@@ -47,19 +49,22 @@
 </script>
 
 <template>
-    <div class="w-full">
+    <div class="group w-full">
         <label
             v-if="label"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            :class="error ? 'text-red-600' : 'text-gray-700'"
-            >{{ label }}</label
+            class="mb-3 ml-1 block text-[10px] font-black uppercase tracking-[0.2em] transition-colors"
+            :class="error ? 'text-red-500' : 'text-zinc-500 group-focus-within:text-[#c5d86d]'"
         >
+            {{ label }}
+        </label>
 
         <div
-            class="relative border-2 border-dashed rounded-lg p-4 transition-all duration-200 flex flex-col items-center justify-center min-h-[150px] cursor-pointer"
+            class="group/zone relative flex min-h-[220px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[2rem] border-2 border-dashed transition-all duration-500"
             :class="[
-                isDragging ? 'border-indigo-500 bg-indigo-50' : 'bg-gray-50',
-                error ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-indigo-400',
+                isDragging
+                    ? 'scale-[0.99] border-[#c5d86d] bg-[#c5d86d]/5'
+                    : 'border-white/5 bg-[#0f120e] hover:border-white/20 hover:bg-white/[0.02]',
+                error ? 'border-red-500/50 bg-red-500/5' : '',
             ]"
             @dragover.prevent="onDragOver"
             @dragleave.prevent="onDragLeave"
@@ -74,50 +79,90 @@
                 @change="handleFileChange"
             />
 
-            <div v-if="imagePreview" class="relative">
-                <img :src="imagePreview" class="max-h-40 rounded-lg shadow-sm" />
-                <button
-                    @click.stop="removeImage"
-                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600"
+            <div v-if="imagePreview" class="relative flex h-full w-full flex-col items-center p-4">
+                <div class="group/preview relative">
+                    <img
+                        :src="imagePreview"
+                        class="max-h-48 w-auto rounded-2xl object-cover shadow-2xl transition-transform duration-500 group-hover/preview:scale-[1.02]"
+                    />
+
+                    <div
+                        class="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/40 opacity-0 backdrop-blur-[2px] transition-opacity group-hover/preview:opacity-100"
+                    >
+                        <ImagePlus class="h-8 w-8 text-white opacity-70" />
+                    </div>
+
+                    <button
+                        @click.stop="removeImage"
+                        type="button"
+                        class="absolute -right-3 -top-3 z-10 rounded-xl bg-red-500 p-2 text-white shadow-xl transition-all duration-300 hover:rotate-90 hover:bg-red-600"
+                    >
+                        <X class="h-4 w-4" />
+                    </button>
+                </div>
+                <p
+                    class="mt-4 text-[10px] font-bold uppercase italic tracking-widest text-zinc-500 transition-colors group-hover/zone:text-[#c5d86d]"
                 >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
+                    Click to replace photo
+                </p>
             </div>
 
-            <div v-else-if="existingImage" class="relative text-center">
-                <img :src="existingImage" class="max-h-40 rounded-lg opacity-80" />
-                <p class="text-xs text-gray-500 mt-2">Current photo (click to change)</p>
+            <div
+                v-else
+                class="p-8 text-center transition-transform duration-500 group-hover/zone:scale-110"
+            >
+                <div
+                    class="relative mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/5 bg-white/5 transition-all group-hover/zone:border-[#c5d86d]/30 group-hover/zone:bg-[#c5d86d]/5"
+                >
+                    <UploadCloud
+                        class="h-8 w-8 transition-colors"
+                        :class="
+                            error ? 'text-red-400' : 'text-zinc-600 group-hover/zone:text-[#c5d86d]'
+                        "
+                    />
+
+                    <div
+                        v-if="isCompressing"
+                        class="absolute -bottom-1 -right-1 rounded-lg bg-[#c5d86d] p-1"
+                    >
+                        <Loader2 class="h-3 w-3 animate-spin text-[#0f120e]" />
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <p class="text-sm font-bold uppercase italic tracking-tight text-white">
+                        Drop your leaf here
+                    </p>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+                        PNG, JPG, JPEG
+                    </p>
+                </div>
             </div>
 
-            <div v-else class="text-center">
-                <svg
-                    :class="error ? 'text-red-400' : 'text-gray-400'"
-                    class="mx-auto h-10 w-10 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    ></path>
-                </svg>
-                <p class="mt-1 text-sm text-gray-600 font-medium">Click or drag</p>
-                <p class="text-xs text-gray-400">PNG, JPG, GIF</p>
+            <div
+                v-if="isCompressing"
+                class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#0f120e]/80 backdrop-blur-sm"
+            >
+                <Loader2 class="mb-4 h-10 w-10 animate-spin text-[#c5d86d]" />
                 <span
-                    v-show="isCompressing"
-                    class="text-sm text-green-600 font-medium animate-bounce"
-                    >Photo optimizing...</span
+                    class="animate-pulse text-xs font-black uppercase tracking-[0.3em] text-[#c5d86d]"
                 >
+                    Optimizing pixels...
+                </span>
             </div>
         </div>
 
-        <p v-if="error" class="mt-1 text-xs text-red-600 italic">
-            {{ error }}
-        </p>
+        <transition
+            enter-active-class="transition duration-200 ease-out"
+            enter-from-class="transform -translate-y-2 opacity-0"
+            enter-to-class="transform translate-y-0 opacity-100"
+        >
+            <p
+                v-if="error"
+                class="ml-2 mt-3 flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-red-500"
+            >
+                <X class="h-3 w-3" /> {{ error }}
+            </p>
+        </transition>
     </div>
 </template>

@@ -1,8 +1,19 @@
 <script setup lang="ts">
     import { ref } from 'vue';
 
-    import { Head, Link, router, useForm } from '@inertiajs/vue3';
+    import { Head, Link, useForm } from '@inertiajs/vue3';
 
+    import {
+        ChevronLeft,
+        DollarSign,
+        Package,
+        PlusCircle,
+        Sparkles,
+        Tag,
+        Type,
+        X,
+        Zap,
+    } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
     import ImageUploader from '@/Components/UI/ImageUploader.vue';
@@ -31,178 +42,239 @@
             onSuccess: () => {
                 form.reset();
                 uploader.value?.clearImage();
-                // todo
-                alert('Продукт успешно создан!');
-            },
-            onError: (errors) => {
-                // todo
-                console.error('Error while creating:', errors);
             },
         });
     };
 
-    const handleImageChange = (event: Event): void => {
-        const target = event.target as HTMLInputElement;
-
-        if (target.files && target.files.length > 0) {
-            form.image = target.files[0];
-
-            // Бонус: если хочешь сразу показать превью выбранной картинки
-            // const reader = new FileReader();
-            // reader.onload = (e) => { /* логика для previewUrl.value = e.target.result */ };
-            // reader.readAsDataURL(target.files[0]);
-        }
-    };
-
-    const handleImageSelected = (file: File) => {
+    const handleImageSelected = (file: File | null) => {
         form.image = file;
     };
 </script>
 
 <template>
     <AdminLayout>
-        <Head title="Add product" />
+        <Head title="Initialize New Unit" />
 
-        <div class="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow">
-            <h1 class="text-2xl font-bold mb-6">Новое растение</h1>
-
-            <form @submit.prevent="submit" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium">Название</label>
-                    <input
-                        v-model="form.title"
-                        type="text"
-                        class="w-full border rounded-lg p-2"
-                        required
-                    />
-                    <div v-if="form.errors.title" class="text-red-500 text-xs">
-                        {{ form.errors.title }}
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium mb-1">Фото товара</label>
-                    <input
-                        type="file"
-                        @input="handleImageChange"
-                        class="w-full border rounded-lg p-2"
-                        accept="image/*"
-                    />
-                    <progress v-if="form.progress" :value="form.progress.percentage" max="100">
-                        {{ form.progress.percentage }}%
-                    </progress>
-                    <div v-if="form.errors.image" class="text-red-500 text-xs">
-                        {{ form.errors.image }}
-                    </div>
-                </div>
-
-                <ImageUploader
-                    ref="uploader"
-                    v-model="form.image"
-                    label="Product image"
-                    :error="form.errors.image"
-                />
-
-                <div>
-                    <label class="block text-sm font-medium">Категория</label>
-                    <select v-model="form.category_id" class="w-full border rounded-lg p-2">
-                        <option :value="null">Без категории</option>
-                        <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                            {{ cat.title }}
-                        </option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium">Цена</label>
-                    <input
-                        v-model="form.price"
-                        type="number"
-                        class="w-full border rounded-lg p-2"
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium">Описание</label>
-                    <textarea
-                        v-model="form.description"
-                        class="w-full border rounded-lg p-2"
-                        rows="3"
-                    ></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700"
-                        >Начальный остаток</label
+        <div class="mx-auto max-w-4xl space-y-8">
+            <div class="flex flex-wrap items-center justify-between gap-6 px-2">
+                <div class="space-y-1">
+                    <Link
+                        :href="route('admin.products.index')"
+                        class="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 transition-colors hover:text-[#c5d86d]"
                     >
-                    <input
-                        type="number"
-                        v-model="form.stock"
-                        min="0"
-                        placeholder="Введите количество"
-                        class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 transition"
-                        :class="{ 'border-red-500 bg-red-50': form.stock <= 0 }"
-                    />
-                    <p v-if="form.errors.stock" class="text-red-500 text-xs mt-1">
-                        {{ form.errors.stock }}
-                    </p>
-                    <p class="text-[10px] text-gray-500 mt-1 italic">
-                        {{
-                            form.stock > 0
-                                ? 'Товар будет доступен к покупке'
-                                : 'Товар будет скрыт (нет в наличии)'
-                        }}
-                    </p>
+                        <ChevronLeft class="h-3 w-3" /> Back to Archive
+                    </Link>
+                    <h1 class="text-3xl font-black uppercase italic tracking-tighter text-white">
+                        New <span class="text-[#c5d86d]">Inventory</span> Unit
+                    </h1>
                 </div>
 
                 <div
-                    class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-100 mb-4"
+                    class="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#c5d86d]/20 bg-[#c5d86d]/10 text-[#c5d86d]"
                 >
-                    <div class="flex items-center space-x-3">
-                        <input
-                            id="is_trending"
-                            v-model="form.is_trending"
-                            type="checkbox"
-                            class="w-5 h-5 text-green-600 rounded border-gray-300 focus:ring-green-500"
-                        />
-                        <label
-                            for="is_trending"
-                            class="text-sm font-medium text-gray-700 cursor-pointer"
+                    <Sparkles class="h-6 w-6" />
+                </div>
+            </div>
+
+            <form @submit.prevent="submit" class="grid grid-cols-1 gap-8 2xl:grid-cols-3">
+                <div class="space-y-6 lg:col-span-1">
+                    <div class="rounded-[2.5rem] border border-white/5 bg-[#161b14] p-6 shadow-2xl">
+                        <h3
+                            class="mb-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
                         >
-                            Сразу в блок "Тренды"
-                        </label>
+                            Visual Setup
+                        </h3>
+
+                        <ImageUploader
+                            ref="uploader"
+                            v-model="form.image"
+                            label="Unit Blueprint"
+                            :error="form.errors.image"
+                            @on-file-select="handleImageSelected"
+                        />
+
+                        <div v-if="form.progress" class="mt-4">
+                            <div class="h-1 w-full overflow-hidden rounded-full bg-white/5">
+                                <div
+                                    class="h-full bg-[#c5d86d] transition-all duration-300"
+                                    :style="{ width: form.progress.percentage + '%' }"
+                                ></div>
+                            </div>
+                            <p
+                                class="mt-2 text-center text-[9px] font-black uppercase tracking-widest text-zinc-500"
+                            >
+                                Uploading: {{ form.progress.percentage }}%
+                            </p>
+                        </div>
                     </div>
 
-                    <div v-if="form.is_trending" class="transition-all">
-                        <label class="block text-sm font-medium text-gray-700"
-                            >Порядок сортировки</label
+                    <div class="rounded-[2rem] border border-white/5 bg-black/40 p-6">
+                        <p
+                            class="text-[9px] font-bold uppercase italic leading-relaxed tracking-tighter text-zinc-500"
                         >
-                        <input
-                            v-model="form.trending_order"
-                            type="number"
-                            class="mt-1 w-full border rounded-lg p-2 bg-white"
-                            placeholder="0"
-                        />
+                            Notice: Newly created items are set to "Active" by default if stock > 0.
+                        </p>
                     </div>
                 </div>
 
-                <div class="flex justify-end space-x-2">
-                    <Link
-                        :href="route('admin.products.index')"
-                        class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                <div class="space-y-6 lg:col-span-2">
+                    <div
+                        class="space-y-6 rounded-[2.5rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl"
                     >
-                        Cancel
-                    </Link>
-                    <button
-                        type="submit"
-                        :disabled="form.processing"
-                        class="px-4 py-2 bg-green-600 text-white rounded-lg"
-                    >
-                        {{ form.processing ? 'Сохранение...' : 'Создать' }}
-                    </button>
+                        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <div class="space-y-2 md:col-span-2">
+                                <label
+                                    class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                >
+                                    <Type class="h-3 w-3 text-[#c5d86d]" /> Identity Title
+                                </label>
+                                <input
+                                    v-model="form.title"
+                                    type="text"
+                                    required
+                                    class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-bold text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
+                                    placeholder="e.g. Monstera Deliciosa v.2"
+                                />
+                                <div
+                                    v-if="form.errors.title"
+                                    class="text-[10px] font-bold uppercase text-red-500"
+                                >
+                                    {{ form.errors.title }}
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label
+                                    class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                >
+                                    <Tag class="h-3 w-3 text-[#c5d86d]" /> Type
+                                </label>
+                                <select
+                                    v-model="form.category_id"
+                                    class="w-full appearance-none rounded-2xl border border-white/5 bg-black/50 p-4 font-bold text-zinc-300 outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                >
+                                    <option value="">Uncategorized</option>
+                                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                                        {{ cat.title }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label
+                                    class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                >
+                                    <DollarSign class="h-3 w-3 text-[#c5d86d]" /> Valuation
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        v-model="form.price"
+                                        type="number"
+                                        required
+                                        class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 pl-10 font-mono font-bold text-[#c5d86d] outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                    />
+                                    <span
+                                        class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-zinc-600"
+                                        >$</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label
+                                class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                >Specifications & Care</label
+                            >
+                            <textarea
+                                v-model="form.description"
+                                rows="4"
+                                class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-sm leading-relaxed text-zinc-400 outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                placeholder="Enter technical details and product description..."
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div
+                            class="space-y-4 rounded-[2rem] border border-white/5 bg-[#161b14] p-6"
+                        >
+                            <label
+                                class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                            >
+                                <Package class="h-3 w-3 text-blue-400" /> Initial Stock
+                            </label>
+                            <input
+                                type="number"
+                                v-model="form.stock"
+                                min="0"
+                                class="w-full rounded-xl border border-white/10 bg-black p-3 text-center text-xl font-black text-white outline-none transition-all focus:border-blue-500/50"
+                            />
+                            <p
+                                class="text-center text-[9px] font-bold uppercase tracking-widest text-zinc-500"
+                            >
+                                Status: {{ form.stock > 0 ? 'Deploying to Store' : 'Draft Mode' }}
+                            </p>
+                        </div>
+
+                        <div
+                            class="space-y-4 rounded-[2rem] border border-white/5 bg-[#161b14] p-6"
+                        >
+                            <div class="flex items-center justify-between">
+                                <label
+                                    class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                >
+                                    <Zap class="h-3 w-3 text-amber-400" /> Hot Item
+                                </label>
+                                <div
+                                    @click="form.is_trending = !form.is_trending"
+                                    class="relative h-5 w-10 cursor-pointer rounded-full bg-zinc-800 transition-colors"
+                                    :class="{ 'bg-amber-500': form.is_trending }"
+                                >
+                                    <div
+                                        class="absolute left-1 top-1 h-3 w-3 rounded-full bg-white transition-transform duration-200"
+                                        :class="{ 'translate-x-5': form.is_trending }"
+                                    ></div>
+                                </div>
+                            </div>
+
+                            <div v-if="form.is_trending" class="pt-2">
+                                <input
+                                    v-model="form.trending_order"
+                                    type="number"
+                                    class="w-full rounded-xl border border-white/10 bg-black p-2 text-center text-sm font-bold text-amber-400"
+                                    placeholder="Order"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-end gap-6 px-2 pt-4">
+                        <Link
+                            :href="route('admin.products.index')"
+                            class="text-xs font-black uppercase tracking-widest text-zinc-500 transition-colors hover:text-white"
+                        >
+                            Discard
+                        </Link>
+                        <button
+                            type="submit"
+                            :disabled="form.processing"
+                            class="flex items-center gap-2 rounded-2xl bg-[#c5d86d] px-10 py-4 text-xs font-black uppercase tracking-[0.2em] text-black shadow-xl shadow-[#c5d86d]/5 transition-all hover:bg-[#d4e685] active:scale-95 disabled:opacity-50"
+                        >
+                            <PlusCircle class="h-4 w-4" />
+                            {{ form.processing ? 'Uploading...' : 'Initialize Unit' }}
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
     </AdminLayout>
 </template>
+
+<style scoped>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
