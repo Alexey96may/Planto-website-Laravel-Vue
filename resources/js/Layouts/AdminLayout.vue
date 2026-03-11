@@ -175,7 +175,9 @@
             >
                 <div class="text-sm font-medium text-zinc-500">
                     Welcome back,
-                    <span class="ml-1 text-white">{{ $page.props.auth.user.name }}</span>
+                    <Link :href="route('dashboard')" class="ml-1 text-white">{{
+                        $page.props.auth.user.name
+                    }}</Link>
                 </div>
                 <Link
                     :href="route('logout')"

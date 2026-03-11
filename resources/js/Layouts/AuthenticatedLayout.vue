@@ -44,6 +44,12 @@
                                 >
                                     My Garden
                                 </NavLink>
+                                <NavLink
+                                    :href="route('orders.user')"
+                                    :active="route().current('orders.user')"
+                                >
+                                    My Orders
+                                </NavLink>
                             </div>
                         </div>
 

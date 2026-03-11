@@ -178,6 +178,7 @@ export interface OrderItem {
     quantity: number;
     created_at: string;
     updated_at: string;
+    product?: Product;
 }
 
 export type OrderStatus = 'new' | 'processing' | 'completed' | 'cancelled';

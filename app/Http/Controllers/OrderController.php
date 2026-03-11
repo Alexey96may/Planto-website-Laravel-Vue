@@ -12,7 +12,8 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Auth::user()->orders()->with('items')->latest()->get();
+        $user = Auth::user();
+        $orders = $user->orders()->with('items.product')->latest()->get();
 
         return Inertia::render('Orders/UserOrders', [
             'orders' => $orders

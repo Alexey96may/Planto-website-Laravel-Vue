@@ -1,8 +1,18 @@
 <script setup lang="ts">
-    import { useForm, usePage } from '@inertiajs/vue3';
+    import { Head, useForm, usePage } from '@inertiajs/vue3';
+
+    import {
+        ArrowRight,
+        CreditCard,
+        Mail,
+        MapPin,
+        MessageSquare,
+        Phone,
+        ShoppingBag,
+        User,
+    } from 'lucide-vue-next';
 
     import AppImage from '@/Components/UI/AppImage.vue';
-    // Или AuthenticatedLayout, если только для своих
     import GuestLayout from '@/Layouts/GuestLayout.vue';
     import { CartItem, CheckoutForm, SharedData } from '@/types';
 
@@ -23,12 +33,8 @@
     const submit = () => {
         form.post(route('checkout.store'), {
             preserveScroll: true,
-            onSuccess: () => {
-                console.log('The order has been successfully created.');
-            },
             onError: (errors) => {
-                // Фокусируемся на первом поле с ошибкой
-                const firstError = Object.keys(form.errors)[0];
+                const firstError = Object.keys(errors)[0];
                 const element = document.getElementsByName(firstError)[0];
                 element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             },
@@ -37,98 +43,261 @@
 </script>
 
 <template>
-    <div class="max-w-2xl mx-auto p-6 bg-white shadow rounded-lg mt-10">
-        <h1 class="text-2xl font-bold mb-6">Оформление заказа</h1>
+    <GuestLayout>
+        <Head title="Secure Checkout" />
 
-        <form @submit.prevent="submit" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium">Your name</label>
-                <input v-model="form.name" type="text" class="w-full border rounded p-2" required />
-                <div v-if="form.errors.name" class="text-red-500 text-xs">
-                    {{ form.errors.name }}
-                </div>
+        <div class="mx-auto max-w-5xl px-2 py-6 md:px-4 md:py-12">
+            <div class="mb-12 text-center">
+                <h1 class="text-4xl font-black uppercase italic tracking-tighter text-white">
+                    Final <span class="text-[#c5d86d]">Checkout</span>
+                </h1>
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
+                    Secure Transaction Protocol
+                </p>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium">Telephone</label>
-                <input
-                    v-model="form.phone"
-                    type="text"
-                    placeholder="+7 (___) ___-__-__"
-                    class="w-full border rounded p-2"
-                    required
-                />
-                <div v-if="form.errors.phone" class="text-red-500 text-xs">
-                    {{ form.errors.phone }}
-                </div>
-            </div>
-
-            <div>
-                <input v-model="form.email" type="email" placeholder="Your Email" />
-                <div v-if="form.errors.email" class="text-red-500 text-xs">
-                    {{ form.errors.email }}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium">Delivery address</label>
-                <textarea
-                    v-model="form.address"
-                    class="w-full border rounded p-2"
-                    required
-                    rows="3"
-                ></textarea>
-                <div v-if="form.errors.address" class="text-red-500 text-xs">
-                    {{ form.errors.address }}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium">Comment on delivery</label>
-                <textarea
-                    v-model="form.comment"
-                    class="w-full border rounded p-2"
-                    rows="3"
-                ></textarea>
-            </div>
-
-            <div class="mt-4" v-if="!$page.props.auth.user">
-                <label class="flex items-center">
-                    <input
-                        type="checkbox"
-                        v-model="form.create_account"
-                        class="rounded border-gray-300 text-pink-600 shadow-sm focus:ring-pink-500"
-                    />
-                    <span class="ml-2 text-sm text-gray-600"
-                        >Create a personal account to track your order status.</span
+            <form @submit.prevent="submit" class="grid grid-cols-1 gap-8">
+                <div class="space-y-6">
+                    <section
+                        class="rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl md:rounded-[2rem]"
                     >
-                </label>
-            </div>
+                        <h2
+                            class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-widest text-[#c5d86d]"
+                        >
+                            <User class="h-4 w-4" /> Personal Information
+                        </h2>
 
-            <div class="border-t pt-4">
-                <h3 class="font-bold mb-2">Your order:</h3>
-                <div v-for="item in cartItems" :key="item.id" class="flex items-center">
-                    <AppImage :src="item.image" class="w-16 h-16 object-cover"></AppImage>
+                        <div class="space-y-4">
+                            <div class="space-y-2">
+                                <label
+                                    class="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    >Full Name</label
+                                >
+                                <div class="relative">
+                                    <User
+                                        class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
+                                    />
+                                    <input
+                                        v-model="form.name"
+                                        name="name"
+                                        type="text"
+                                        class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                        placeholder="John Doe"
+                                        required
+                                    />
+                                </div>
+                                <p
+                                    v-if="form.errors.name"
+                                    class="px-2 text-[10px] font-bold uppercase text-red-500"
+                                >
+                                    {{ form.errors.name }}
+                                </p>
+                            </div>
 
-                    <div>
-                        <h4>{{ item.title }}</h4>
-                        <p>{{ item.quantity }} x {{ item.price }} $</p>
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <div class="space-y-2">
+                                    <label
+                                        class="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                        >Phone</label
+                                    >
+                                    <div class="relative">
+                                        <Phone
+                                            class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
+                                        />
+                                        <input
+                                            v-model="form.phone"
+                                            name="phone"
+                                            type="tel"
+                                            class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            placeholder="+7 (___) ___"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label
+                                        class="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                        >Email</label
+                                    >
+                                    <div class="relative">
+                                        <Mail
+                                            class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
+                                        />
+                                        <input
+                                            v-model="form.email"
+                                            name="email"
+                                            type="email"
+                                            class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            placeholder="email@example.com"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl md:rounded-[2rem]"
+                    >
+                        <h2
+                            class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-widest text-[#c5d86d]"
+                        >
+                            <MapPin class="h-4 w-4" /> Logistics
+                        </h2>
+
+                        <div class="space-y-4">
+                            <div class="space-y-2">
+                                <label
+                                    class="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    >Delivery Address</label
+                                >
+                                <textarea
+                                    v-model="form.address"
+                                    name="address"
+                                    rows="3"
+                                    class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                    placeholder="Enter your full address..."
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label
+                                    class="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    >Comment</label
+                                >
+                                <div class="relative">
+                                    <MessageSquare
+                                        class="absolute left-4 top-5 h-4 w-4 text-zinc-600"
+                                    />
+                                    <textarea
+                                        v-model="form.comment"
+                                        name="comment"
+                                        rows="2"
+                                        class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                        placeholder="Gate code, floor, etc."
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            v-if="!$page.props.auth.user"
+                            class="mt-6 border-t border-white/5 pt-6"
+                        >
+                            <label class="group flex cursor-pointer items-center gap-3">
+                                <div
+                                    class="relative flex h-5 w-5 items-center justify-center rounded border border-white/10 bg-black/40 transition-all group-hover:border-[#c5d86d]/50"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        v-model="form.create_account"
+                                        class="peer absolute h-full w-full cursor-pointer opacity-0"
+                                    />
+                                    <div
+                                        class="h-2 w-2 rounded-sm bg-[#c5d86d] opacity-0 transition-opacity peer-checked:opacity-100"
+                                    ></div>
+                                </div>
+                                <span
+                                    class="text-[11px] font-bold uppercase tracking-tight text-zinc-400 transition-colors group-hover:text-white"
+                                >
+                                    Create a system account for tracking
+                                </span>
+                            </label>
+                        </div>
+                    </section>
+                </div>
+
+                <div>
+                    <div class="top-8 space-y-6">
+                        <section
+                            class="rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl md:rounded-[2rem]"
+                        >
+                            <h2
+                                class="mb-6 text-xs font-black uppercase tracking-widest text-white"
+                            >
+                                Order <span class="text-[#c5d86d]">Manifest</span>
+                            </h2>
+
+                            <div class="custom-scrollbar max-h-[300px] space-y-4">
+                                <div
+                                    v-for="item in cartItems"
+                                    :key="item.id"
+                                    class="flex flex-col flex-wrap items-center gap-4 rounded-2xl border border-white/[0.02] bg-black/20 p-3"
+                                >
+                                    <div class="flex flex-wrap items-center gap-4">
+                                        <AppImage
+                                            :src="item.image"
+                                            class="h-16 w-16 rounded-xl border border-white/5 object-cover"
+                                        />
+                                        <div class="min-w-[50px] flex-1">
+                                            <h4 class="text-xs font-bold text-white">
+                                                {{ item.title }}
+                                            </h4>
+                                            <p class="font-mono text-[10px] text-[#c5d86d]">
+                                                {{ item.quantity }} x ${{ item.price }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs font-black text-white">
+                                        ${{ (item.quantity * Number(item.price)).toFixed(2) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 space-y-3 border-t border-white/5 pt-6">
+                                <div
+                                    class="flex flex-wrap justify-between gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                                >
+                                    <span>Subtotal</span>
+                                    <span>${{ total }}</span>
+                                </div>
+                                <div
+                                    class="flex flex-wrap justify-between gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                                >
+                                    <span>Delivery</span>
+                                    <span class="text-[#c5d86d]">FREE</span>
+                                </div>
+                                <div
+                                    class="flex flex-wrap justify-between gap-2 border-t border-white/10 pt-4"
+                                >
+                                    <span
+                                        class="text-xs font-black uppercase tracking-[0.3em] text-white"
+                                        >Total Amount</span
+                                    >
+                                    <span class="text-xl font-black text-[#c5d86d]"
+                                        >${{ total }}</span
+                                    >
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                :disabled="form.processing"
+                                class="mt-8 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#c5d86d] py-4 text-[10px] font-black uppercase tracking-[0.2em] text-black transition-all hover:scale-[1.02] hover:bg-[#d4e685] active:scale-95 disabled:opacity-50"
+                            >
+                                <CreditCard v-if="!form.processing" class="h-4 w-4" />
+                                <span>{{ form.processing ? 'Syncing...' : 'Initiate Order' }}</span>
+                                <ArrowRight v-if="!form.processing" class="h-4 w-4" />
+                            </button>
+                        </section>
                     </div>
                 </div>
-            </div>
-
-            <div class="border-t pt-4">
-                <h3 class="font-bold mb-2">Total amount:</h3>
-                <p>{{ total }} $</p>
-            </div>
-
-            <button
-                type="submit"
-                :disabled="form.processing"
-                class="w-full bg-green-600 text-white py-3 rounded font-bold hover:bg-green-700 disabled:opacity-50"
-            >
-                {{ form.processing ? 'Processing...' : 'Confirm order' }}
-            </button>
-        </form>
-    </div>
+            </form>
+        </div>
+    </GuestLayout>
 </template>
+
+<style scoped>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(197, 216, 109, 0.2);
+        border-radius: 10px;
+    }
+</style>
