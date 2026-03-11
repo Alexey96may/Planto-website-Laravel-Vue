@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { ref, watch } from 'vue';
 
     import { Link, usePage } from '@inertiajs/vue3';
 
@@ -7,20 +7,28 @@
     import { ChevronDownIcon, LogOutIcon, UserCircleIcon } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
-    import ApplicationLogo from '@/Components/UI/ApplicationLogo.vue';
+    import AppImage from '@/Components/UI/AppImage.vue';
     import Dropdown from '@/Components/UI/Dropdown.vue';
     import DropdownLink from '@/Components/UI/DropdownLink.vue';
     import NavLink from '@/Components/UI/NavLink.vue';
     import ResponsiveNavLink from '@/Components/UI/ResponsiveNavLink.vue';
 
     const showingNavigationDropdown = ref(false);
+
+    watch(showingNavigationDropdown, (isActive) => {
+        if (isActive) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    });
 </script>
 
 <template>
     <div
         class="font-sans text-zinc-300 antialiased selection:bg-[#c5d86d] selection:text-[#1a1f16]"
     >
-        <div class="min-h-screen bg-[#1a1f16]">
+        <div class="min-h-screen bg-plant-shop">
             <nav class="sticky top-0 z-50 border-b border-white/5 bg-[#1a1f16]/60 backdrop-blur-xl">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex h-20 items-center justify-between">
@@ -72,11 +80,13 @@
                                             class="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-all hover:border-[#c5d86d]/30 hover:bg-white/10 focus:outline-none"
                                         >
                                             <div
-                                                class="flex h-6 w-6 items-center justify-center rounded-full bg-[#c5d86d]/20"
+                                                class="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-[#c5d86d]/20"
                                             >
-                                                <span class="text-[10px] text-[#c5d86d]">{{
-                                                    $page.props.auth.user.name.charAt(0)
-                                                }}</span>
+                                                <AppImage
+                                                    :src="$page.props.auth.user.avatar_url || ''"
+                                                    alt="User photo"
+                                                >
+                                                </AppImage>
                                             </div>
                                             {{ $page.props.auth.user.name }}
                                             <ChevronDownIcon class="h-4 w-4 text-zinc-500" />
@@ -121,64 +131,121 @@
                         <div class="-me-2 flex items-center sm:hidden">
                             <button
                                 @click="showingNavigationDropdown = !showingNavigationDropdown"
-                                class="rounded-2xl p-3 text-zinc-400 transition-all hover:bg-white/5 active:scale-90"
+                                class="relative h-10 w-10 rounded-2xl p-2 text-zinc-400 transition-all hover:bg-white/5 active:scale-90"
                             >
-                                <svg
-                                    class="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        :class="{
-                                            hidden: showingNavigationDropdown,
-                                            'inline-flex': !showingNavigationDropdown,
-                                        }"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        :class="{
-                                            hidden: !showingNavigationDropdown,
-                                            'inline-flex': showingNavigationDropdown,
-                                        }"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
+                                <div class="relative flex items-center justify-center">
+                                    <span
+                                        :class="
+                                            showingNavigationDropdown
+                                                ? 'translate-y-0 rotate-45'
+                                                : '-translate-y-1.5'
+                                        "
+                                        class="absolute block h-0.5 w-5 transform bg-current transition duration-300 ease-in-out"
+                                    ></span>
+                                    <span
+                                        :class="
+                                            showingNavigationDropdown ? 'opacity-0' : 'opacity-100'
+                                        "
+                                        class="absolute block h-0.5 w-5 transform bg-current transition duration-300 ease-in-out"
+                                    ></span>
+                                    <span
+                                        :class="
+                                            showingNavigationDropdown
+                                                ? 'translate-y-0 -rotate-45'
+                                                : 'translate-y-1.5'
+                                        "
+                                        class="absolute block h-0.5 w-5 transform bg-current transition duration-300 ease-in-out"
+                                    ></span>
+                                </div>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div
-                    v-show="showingNavigationDropdown"
-                    class="border-t border-white/5 bg-[#1a1f16]/95 backdrop-blur-md sm:hidden"
+                <Transition
+                    enter-active-class="transition duration-300 ease-out"
+                    enter-from-class="translate-y-[-10px] opacity-0"
+                    enter-to-class="translate-y-0 opacity-100"
+                    leave-active-class="transition duration-200 ease-in"
+                    leave-from-class="translate-y-0 opacity-100"
+                    leave-to-class="translate-y-[-10px] opacity-0"
                 >
-                    <div class="space-y-2 px-4 pb-6 pt-4">
-                        <ResponsiveNavLink :href="'/'">Store</ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
-                            >My Garden</ResponsiveNavLink
-                        >
-                        <div class="mt-4 border-t border-white/5 pt-4">
-                            <div class="px-4 py-2 text-xs font-bold uppercase text-zinc-600">
-                                Manage
-                            </div>
-                            <ResponsiveNavLink :href="route('profile.edit')"
-                                >Profile Settings</ResponsiveNavLink
+                    <div
+                        v-if="showingNavigationDropdown"
+                        class="fixed inset-x-0 bottom-0 top-20 z-40 overflow-y-auto border-b border-white/5 bg-[#1a1f16]/95 p-4 pb-20 backdrop-blur-xl sm:hidden"
+                        style="top: 80px; height: calc(100vh - 80px)"
+                    >
+                        <div class="space-y-1 rounded-xl bg-emerald-700/40 p-2 text-emerald-100">
+                            <ResponsiveNavLink
+                                :href="route('home')"
+                                :active="route().current('home')"
                             >
+                                Store
+                            </ResponsiveNavLink>
+
+                            <ResponsiveNavLink
+                                v-if="$page.props.auth.user.role === 'admin'"
+                                :href="route('admin.dashboard')"
+                                :active="route().current('admin.dashboard')"
+                                class="text-[#c5d86d]"
+                            >
+                                Admin Panel
+                            </ResponsiveNavLink>
+
+                            <ResponsiveNavLink
+                                :href="route('dashboard')"
+                                :active="route().current('dashboard')"
+                            >
+                                My Garden
+                            </ResponsiveNavLink>
+
+                            <ResponsiveNavLink
+                                :href="route('orders.user')"
+                                :active="route().current('orders.user')"
+                            >
+                                My Orders
+                            </ResponsiveNavLink>
+                        </div>
+
+                        <div class="mt-4 border-t border-white/5 pt-4">
+                            <div class="flex items-center px-4 py-3">
+                                <div
+                                    class="h-10 w-10 overflow-hidden rounded-xl border border-[#c5d86d]/30"
+                                >
+                                    <AppImage :src="$page.props.auth.user.avatar_url || ''" />
+                                </div>
+                                <div class="ms-3">
+                                    <div class="text-sm font-bold text-white">
+                                        {{ $page.props.auth.user.name }}
+                                    </div>
+                                    <div class="text-xs font-medium text-zinc-500">
+                                        {{ $page.props.auth.user.email }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-2 space-y-1">
+                                <ResponsiveNavLink
+                                    :href="route('profile.edit')"
+                                    :active="route().current('profile.edit')"
+                                >
+                                    Profile Settings
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    :href="route('logout')"
+                                    method="post"
+                                    as="button"
+                                    class="w-full text-left text-red-400"
+                                >
+                                    Log Out
+                                </ResponsiveNavLink>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </Transition>
             </nav>
 
-            <header class="relative overflow-hidden" v-if="$slots.header">
+            <header class="relative overflow-hidden bg-plant-shop" v-if="$slots.header">
                 <div
                     class="absolute left-1/2 top-0 h-px w-full -translate-x-1/2 bg-gradient-to-r from-transparent via-[#c5d86d]/20 to-transparent"
                 ></div>
@@ -190,7 +257,7 @@
                 </div>
             </header>
 
-            <main class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+            <main class="mx-auto max-w-7xl bg-plant-shop px-4 pb-20 sm:px-6 lg:px-8">
                 <slot />
             </main>
         </div>

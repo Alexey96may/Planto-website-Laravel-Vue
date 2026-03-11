@@ -49,7 +49,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')->with('success', 'Информация обновлена!');
+        return redirect()->back()->with('success', 'The information has been updated!');
     }
 
     /**

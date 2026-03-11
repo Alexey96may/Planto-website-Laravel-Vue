@@ -1,9 +1,22 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { computed, ref } from 'vue';
 
-    import { Head, useForm } from '@inertiajs/vue3';
+    import { Head, useForm, usePage } from '@inertiajs/vue3';
+
+    import {
+        Camera,
+        CheckCircle2,
+        History,
+        Mail,
+        MessageSquare,
+        Save,
+        ShieldCheck,
+        Star,
+        User,
+    } from 'lucide-vue-next';
 
     import AppImage from '@/Components/UI/AppImage.vue';
+    import AppRating from '@/Components/UI/AppRating.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { AuthProps, Comment, CommentForm, UserForm } from '@/types';
 
@@ -28,15 +41,12 @@
 
     const onFileChange = (e: Event) => {
         const target = e.target as HTMLInputElement;
-
         const file = target.files?.[0];
         if (file) {
             formAvatar.avatar = file;
-
             if (imageUrl.value && imageUrl.value.startsWith('blob:')) {
                 URL.revokeObjectURL(imageUrl.value);
             }
-
             imageUrl.value = URL.createObjectURL(file);
         }
     };
@@ -44,13 +54,8 @@
     const submitInfo = (): void => {
         formAvatar.post(route('profile.update'), {
             preserveScroll: true,
-
             onSuccess: () => {
                 formAvatar.avatar = null;
-                imageUrl.value = null;
-            },
-            onError: (errors) => {
-                console.error('Error updating profile:', errors);
             },
         });
     };
@@ -58,44 +63,80 @@
     const submitComment = (): void => {
         form.post(route('comments.update'), {
             preserveScroll: true,
-            onSuccess: () => {
-                form.reset();
-            },
-            onError: (errors) => {
-                console.log('Oops, something went wrong with the comment.', errors);
-            },
+            onSuccess: () => form.reset(),
         });
     };
+
+    const isAdmin = computed(() => props.auth.user.role === 'admin');
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="System Dashboard" />
 
     <AuthenticatedLayout>
-        <div class="min-h-screen bg-[#1a1f16] text-gray-200 py-12 px-4 sm:px-6 lg:px-8 font-sans">
-            <div class="max-w-4xl mx-auto space-y-8">
-                <header class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-white tracking-tight">Breath Natureal</h2>
-                    <p class="mt-2 text-gray-400">Welcome to Planto Shop, {{ formAvatar.name }}!</p>
+        <div
+            class="min-h-screen bg-plant-shop px-4 py-12 font-sans selection:bg-[#c5d86d] selection:text-black sm:px-6 lg:px-8"
+        >
+            <div class="mx-auto max-w-5xl space-y-8">
+                <header class="mb-12 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+                    <div>
+                        <div class="mb-2 flex items-center gap-3">
+                            <span
+                                v-if="isAdmin"
+                                class="rounded bg-[#c5d86d] px-2 py-0.5 text-[10px] font-black uppercase text-black"
+                                >Administrator</span
+                            >
+                            <span
+                                v-else
+                                class="rounded bg-white/10 px-2 py-0.5 text-[10px] font-black uppercase text-zinc-400"
+                                >Standard User</span
+                            >
+                        </div>
+                        <h2
+                            class="text-5xl font-black uppercase italic tracking-tighter text-white"
+                        >
+                            User <span class="text-[#c5d86d]">Core</span>
+                        </h2>
+                        <p class="font-medium tracking-tight text-zinc-500">
+                            Accessing terminal for {{ formAvatar.name }}...
+                        </p>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div
+                            class="min-w-[120px] rounded-2xl border border-white/5 bg-[#1a1f16] p-4"
+                        >
+                            <p class="mb-1 text-[10px] font-black uppercase text-zinc-600">
+                                Feedback count
+                            </p>
+                            <p class="text-2xl font-black text-white">{{ myComments.length }}</p>
+                        </div>
+                    </div>
                 </header>
 
                 <section
-                    class="bg-[#242b1f] rounded-[2rem] p-8 shadow-xl border border-white/5 reveal"
+                    class="group relative overflow-hidden rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8"
                 >
-                    <form @submit.prevent="submitInfo" class="space-y-6">
-                        <div class="flex flex-col items-center sm:flex-row gap-8">
-                            <div class="relative group">
-                                <AppImage
-                                    :src="imageUrl || ''"
-                                    class="w-32 h-32 rounded-3xl object-cover border-2 border-[#c5d86d]/30 group-hover:border-[#c5d86d] transition-all duration-300"
-                                ></AppImage>
-                                <div
-                                    class="absolute -inset-1 bg-[#c5d86d]/20 rounded-3xl blur opacity-0 group-hover:opacity-100 transition"
-                                ></div>
-                            </div>
+                    <div
+                        class="absolute right-0 top-0 -mr-32 -mt-32 h-64 w-64 bg-[#c5d86d]/5 blur-[100px]"
+                    ></div>
 
-                            <div class="flex-1 space-y-4 w-full">
-                                <div class="flex flex-col gap-2">
+                    <form @submit.prevent="submitInfo" class="relative z-10 space-y-8">
+                        <div class="flex flex-col items-start gap-12 lg:flex-row">
+                            <div class="group/avatar relative mx-auto lg:mx-0">
+                                <div
+                                    class="h-40 w-40 overflow-hidden rounded-[1rem] border-2 border-white/5 shadow-2xl transition-all duration-500 group-hover/avatar:border-[#c5d86d]/50 md:rounded-[2rem]"
+                                >
+                                    <AppImage
+                                        :src="imageUrl || ''"
+                                        class="h-full w-full object-cover transition-transform duration-700 group-hover/avatar:scale-110"
+                                    />
+                                </div>
+                                <label
+                                    for="avatar-input"
+                                    class="absolute -bottom-2 -right-2 cursor-pointer rounded-2xl bg-[#c5d86d] p-3 shadow-xl shadow-black/50 transition-transform hover:scale-110"
+                                >
+                                    <Camera class="h-5 w-5 text-black" />
                                     <input
                                         type="file"
                                         id="avatar-input"
@@ -103,147 +144,161 @@
                                         accept="image/*"
                                         class="hidden"
                                     />
-                                    <label
-                                        for="avatar-input"
-                                        class="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-[#c5d86d] text-[#1a1f16] font-bold hover:bg-[#b3c65a] cursor-pointer transition"
-                                    >
-                                        Edit photo
-                                    </label>
-                                    <p v-if="formAvatar.errors.avatar" class="text-red-400 text-xs">
-                                        {{ formAvatar.errors.avatar }}
-                                    </p>
+                                </label>
+                            </div>
+
+                            <div class="w-full flex-1 space-y-6">
+                                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                    <div class="space-y-2">
+                                        <label
+                                            class="ml-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                                            >Identity Name</label
+                                        >
+                                        <div class="relative">
+                                            <User
+                                                class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
+                                            />
+                                            <input
+                                                v-model="formAvatar.name"
+                                                type="text"
+                                                class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label
+                                            class="ml-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                                            >Secure Email</label
+                                        >
+                                        <div class="relative">
+                                            <Mail
+                                                class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
+                                            />
+                                            <input
+                                                v-model="formAvatar.email"
+                                                type="email"
+                                                class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="space-y-1">
-                                        <label
-                                            class="text-xs uppercase tracking-widest text-gray-500 font-bold"
-                                            >Имя</label
-                                        >
-                                        <input
-                                            v-model="formAvatar.name"
-                                            type="text"
-                                            class="w-full bg-[#1a1f16] border-none rounded-xl focus:ring-2 focus:ring-[#c5d86d] text-white"
-                                        />
-                                        <p
-                                            v-if="formAvatar.errors.name"
-                                            class="text-red-500 text-xs mt-1"
-                                        >
-                                            {{ formAvatar.errors.name }}
-                                        </p>
-                                    </div>
-                                    <div class="space-y-1">
-                                        <label
-                                            class="text-xs uppercase tracking-widest text-gray-500 font-bold"
-                                            >Email</label
-                                        >
-                                        <input
-                                            v-model="formAvatar.email"
-                                            type="email"
-                                            class="w-full bg-[#1a1f16] border-none rounded-xl focus:ring-2 focus:ring-[#c5d86d] text-white"
-                                        />
-                                        <p
-                                            v-if="formAvatar.errors.email"
-                                            class="text-red-500 text-xs mt-1"
-                                        >
-                                            {{ formAvatar.errors.email }}
-                                        </p>
-                                    </div>
+                                <div
+                                    class="flex items-center justify-end gap-2 border-t border-white/5 pt-6"
+                                >
+                                    <button
+                                        type="submit"
+                                        :disabled="formAvatar.processing"
+                                        class="flex items-center gap-3 rounded-2xl bg-emerald-500 px-8 py-4 text-[10px] font-black uppercase tracking-widest text-black transition-all hover:bg-emerald-200 disabled:opacity-50"
+                                    >
+                                        <Save class="h-4 w-4" />
+                                        {{ formAvatar.processing ? 'Syncing...' : 'Update' }}
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="pt-4 border-t border-white/5 flex flex-col items-center gap-4">
-                            <button
-                                type="submit"
-                                :disabled="formAvatar.processing"
-                                class="w-full sm:w-auto px-12 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition disabled:opacity-50"
-                            >
-                                {{ formAvatar.processing ? 'Saving...' : 'Save settings' }}
-                            </button>
-                            <Transition
-                                enter-active-class="transition"
-                                enter-from-class="opacity-0"
-                            >
-                                <p
-                                    v-if="formAvatar.recentlySuccessful"
-                                    class="text-[#c5d86d] text-sm"
-                                >
-                                    ✨ Данные успешно обновлены!
-                                </p>
-                            </Transition>
                         </div>
                     </form>
                 </section>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 gap-8 italic lg:grid-cols-12">
                     <section
-                        class="bg-[#242b1f] rounded-[2rem] p-8 shadow-xl border border-white/5 reveal"
+                        class="rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8 lg:col-span-5"
                     >
-                        <h3 class="text-xl font-bold text-white mb-6">Feedback</h3>
-                        <form @submit.prevent="submitComment" class="space-y-4">
+                        <h3
+                            class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] text-white"
+                        >
+                            <MessageSquare class="h-4 w-4 text-[#c5d86d]" /> New Feedback
+                        </h3>
+
+                        <form @submit.prevent="submitComment" class="space-y-6">
                             <textarea
                                 v-model="form.body"
                                 :disabled="form.processing"
-                                rows="3"
-                                class="w-full bg-[#1a1f16] border-none rounded-2xl focus:ring-2 focus:ring-[#c5d86d] text-white placeholder-gray-600"
-                                placeholder="What do you think about Planto?"
+                                rows="4"
+                                class="w-full resize-none rounded-3xl border border-white/5 bg-black/40 p-5 text-sm text-white placeholder-zinc-700 outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
+                                placeholder="Report your experience with the system..."
                             ></textarea>
 
-                            <div class="space-y-2">
-                                <div
-                                    class="flex justify-between text-xs font-bold text-gray-500 uppercase"
-                                >
-                                    <span>Rating</span>
-                                    <span class="text-[#c5d86d] text-base"
-                                        >{{ form.rating }} ⭐</span
+                            <div class="rounded-2xl border border-white/5 bg-black/20 p-4">
+                                <div class="mb-4 flex items-center justify-between">
+                                    <span
+                                        class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                        >Signal Rating</span
                                     >
+                                    <div class="flex items-center gap-1 text-[#c5d86d]">
+                                        <span class="text-lg font-black">{{ form.rating }}</span>
+                                        <Star class="h-4 w-4 fill-current" />
+                                    </div>
                                 </div>
                                 <input
                                     type="range"
                                     v-model="form.rating"
-                                    :disabled="form.processing"
-                                    min="0.5"
+                                    min="1"
                                     max="5"
                                     step="0.5"
-                                    class="w-full h-1.5 bg-[#1a1f16] rounded-lg appearance-none cursor-pointer accent-[#c5d86d]"
+                                    class="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-zinc-800 accent-[#c5d86d]"
                                 />
                             </div>
 
                             <button
                                 type="submit"
                                 :disabled="form.processing || !form.body"
-                                class="w-full py-3 bg-[#c5d86d] text-[#1a1f16] font-bold rounded-xl hover:bg-[#b3c65a] transition"
+                                class="w-full rounded-2xl bg-[#c5d86d] py-4 text-[10px] font-black uppercase tracking-widest text-black transition-all hover:scale-[1.02] active:scale-95"
                             >
-                                {{ formAvatar.processing ? 'Publication...' : 'Publish' }}
+                                Publish Transmission
                             </button>
                         </form>
                     </section>
 
                     <section
-                        class="bg-[#242b1f] rounded-[2rem] p-8 shadow-xl border border-white/5 overflow-y-auto max-h-[400px] reveal"
+                        class="flex flex-col rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8 lg:col-span-7"
                     >
-                        <h3 class="text-xl font-bold text-white mb-6">My reviews</h3>
-                        <div v-if="myComments.length === 0" class="text-gray-500 text-center py-8">
-                            Пока пусто...
-                        </div>
-
-                        <div
-                            v-for="comment in myComments"
-                            :key="comment.id"
-                            class="mb-4 p-4 bg-[#1a1f16] rounded-2xl border border-white/5"
+                        <h3
+                            class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] text-white"
                         >
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-[#c5d86d] font-bold"
-                                    >{{ comment.rating }} ⭐</span
+                            <History class="h-4 w-4 text-[#c5d86d]" /> Archive_Log
+                        </h3>
+
+                        <div class="custom-scrollbar max-h-[400px] space-y-4 overflow-y-auto pr-2">
+                            <div
+                                v-if="myComments.length === 0"
+                                class="flex flex-col items-center justify-center py-20 text-zinc-600"
+                            >
+                                <ShieldCheck class="mb-4 h-12 w-12 opacity-10" />
+                                <p
+                                    class="text-center text-[10px] font-black uppercase tracking-widest"
                                 >
-                                <span
-                                    class="text-[10px] px-2 py-1 rounded-full border border-white/10 text-gray-400 uppercase tracking-tighter"
-                                >
-                                    {{ comment.is_active ? 'Ok' : 'Wait' }}
-                                </span>
+                                    No previous logs found in the database
+                                </p>
                             </div>
-                            <p class="text-sm text-gray-300 leading-relaxed">{{ comment.body }}</p>
+
+                            <div
+                                v-for="comment in myComments"
+                                :key="comment.id"
+                                class="group relative rounded-[1.5rem] border border-white/5 bg-black/40 p-5 transition-all hover:border-[#c5d86d]/30"
+                            >
+                                <div class="mb-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5">
+                                        <AppRating :rating="comment.rating" />
+                                        <span class="text-[1rem] text-emerald-500"
+                                            >({{ comment.rating }})</span
+                                        >
+                                    </div>
+                                    <span
+                                        class="rounded border border-white/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-tighter"
+                                        :class="
+                                            comment.is_active
+                                                ? 'border-[#c5d86d]/20 text-[#c5d86d]'
+                                                : 'text-zinc-600'
+                                        "
+                                    >
+                                        {{ comment.is_active ? 'Verified' : 'Pending' }}
+                                    </span>
+                                </div>
+                                <p class="text-xs font-medium leading-relaxed text-zinc-400">
+                                    {{ comment.body }}
+                                </p>
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -251,3 +306,16 @@
         </div>
     </AuthenticatedLayout>
 </template>
+
+<style scoped>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(197, 216, 109, 0.2);
+        border-radius: 10px;
+    }
+</style>

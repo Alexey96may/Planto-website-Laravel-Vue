@@ -63,7 +63,7 @@
                     <div
                         v-for="order in orders"
                         :key="order.id"
-                        class="group relative overflow-hidden rounded-[0.5rem] border border-white/5 bg-[#161b14] p-6 shadow-2xl transition-all hover:border-[#c5d86d]/30 md:rounded-[1.5rem]"
+                        class="group relative overflow-hidden rounded-[0.5rem] border border-white/5 bg-emerald-950 p-6 shadow-2xl transition-all hover:border-[#c5d86d]/30 md:rounded-[1.5rem]"
                     >
                         <div
                             class="absolute left-0 top-0 h-full w-1"
