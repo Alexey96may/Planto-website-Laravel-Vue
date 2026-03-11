@@ -15,6 +15,7 @@
         Settings,
         ShoppingCart,
         Sparkles,
+        UserRound,
         Users,
         X,
     } from 'lucide-vue-next';
@@ -157,7 +158,14 @@
                     </Link>
                 </div>
 
-                <div class="mt-8 border-t border-white/5 px-4 pb-10 pt-8">
+                <div class="mt-8 flex flex-col gap-4 border-t border-white/5 px-4 pb-10 pt-8">
+                    <Link
+                        :href="route('dashboard')"
+                        class="flex items-center gap-3 text-sm text-zinc-500 transition hover:text-white"
+                    >
+                        <UserRound class="h-4 w-4" />
+                        My Dashboard
+                    </Link>
                     <Link
                         href="/"
                         class="flex items-center gap-3 text-sm text-zinc-500 transition hover:text-white"
