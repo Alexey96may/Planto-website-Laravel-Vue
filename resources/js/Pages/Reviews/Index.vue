@@ -5,6 +5,7 @@
 
     import CommentsFilter from '@/Components/Shared/CommentsFilter.vue';
     import Pagination from '@/Components/Shared/Pagination.vue';
+    import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { PaginatedResponse, Review } from '@/types';
@@ -80,53 +81,59 @@
             <div
                 v-for="(review, index) in reviews.data"
                 :key="review.id"
-                class="review-card group relative overflow-hidden rounded-[1rem] border border-zinc-100 bg-white p-4 shadow-sm transition-all hover:shadow-xl sm:rounded-[2.5rem] sm:p-8 lg:p-12"
+                class="review-card group relative overflow-hidden rounded-[1rem] border border-white/5 bg-[#161b14] p-6 shadow-2xl transition-all hover:border-[#c5d86d]/20 sm:p-10 xl:rounded-[2rem]"
                 :style="{ animationDelay: `${index * 100}ms` }"
             >
+                <div
+                    class="absolute -right-4 -top-6 select-none font-serif text-[12rem] text-[#c5d86d]/5"
+                >
+                    “
+                </div>
+
                 <div class="relative z-10">
                     <div
-                        class="mb-8 flex items-center justify-between border-b border-zinc-50 pb-2 sm:pb-4 lg:pb-6"
+                        class="mb-8 flex items-center justify-between border-b border-white/5 pb-6"
                     >
                         <div class="flex items-center gap-4">
                             <div
-                                class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-200 text-xl font-bold text-emerald-800 shadow-inner"
+                                class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#c5d86d]/20 bg-zinc-800"
                             >
-                                {{ getInitials(review.user?.name || 'A') }}
+                                <AppImage
+                                    v-if="review.user?.avatar_url"
+                                    :src="review.user?.avatar_url"
+                                    class="h-full w-full object-cover"
+                                />
+                                <span v-else class="text-xl font-black text-[#c5d86d]">
+                                    {{ getInitials(review.user?.name) }}
+                                </span>
                             </div>
 
-                            <div>
-                                <h3 class="text-lg font-bold text-zinc-900">
+                            <div class="flex flex-col gap-1">
+                                <h3 class="text-lg font-black uppercase tracking-tight text-white">
                                     {{ review.user?.name || 'Anonymous' }}
                                 </h3>
 
-                                <time
-                                    class="text-xs font-semibold uppercase tracking-widest text-zinc-500"
-                                >
-                                    {{
-                                        new Date(review.created_at).toLocaleDateString('en-US', {
-                                            month: 'long',
-                                            day: 'numeric',
-                                            year: 'numeric',
-                                        })
-                                    }}
-                                </time>
-
-                                <div
-                                    class="mt-2 rounded-lg bg-emerald-700 px-4 py-2 ring-1 ring-zinc-400 md:hidden"
-                                >
+                                <div class="inline-block md:hidden">
                                     <AppRating :rating="review.rating" />
                                 </div>
+
+                                <time
+                                    class="mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500"
+                                >
+                                    {{ new Date(review.created_at).toLocaleDateString('en-US') }}
+                                </time>
                             </div>
                         </div>
 
                         <div
-                            class="hidden rounded-full bg-plant-shop px-4 py-2 ring-1 ring-zinc-400 md:block"
+                            class="hidden rounded-xl border border-white/10 bg-white/5 px-4 py-2 md:block"
                         >
                             <AppRating :rating="review.rating" />
                         </div>
                     </div>
 
-                    <p class="indent-8 text-lg leading-relaxed text-zinc-700 lg:text-xl">
+                    <p class="text-sm italic leading-relaxed text-zinc-300 lg:text-xl">
+                        <span class="mr-1 font-serif text-2xl text-[#c5d86d]">“</span>
                         {{ review.body }}
                     </p>
                 </div>

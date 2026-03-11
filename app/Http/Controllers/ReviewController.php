@@ -27,7 +27,7 @@ class ReviewController extends Controller
         $limit = SettingService::get('reviews_limit', 10);
         $sort = $request->input('sort', 'newest');
 
-        $query = Comment::with('user:id,name')
+        $query = Comment::with('user:id,name,avatar')
             ->where('is_active', true);
 
         $query = match ($sort) {
