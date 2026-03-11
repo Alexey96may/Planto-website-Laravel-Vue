@@ -15,14 +15,14 @@ class NewsletterController extends Controller
         $validated = $request->validate([
             'email' => 'required|email|unique:newsletters,email'
         ], [
-            'email.unique' => 'Этот адрес уже подписан!'
+            'email.unique' => 'This address is already subscribed!'
         ]);
 
         $subscriber = Newsletter::create($validated);
         
         Mail::to($subscriber->email)->send(new WelcomeNewsletter());
 
-        return back()->with('message', 'Письмо отправлено!');
+        return back()->with('message', 'The letter has been sent!');
     }
 
     
@@ -40,6 +40,6 @@ class NewsletterController extends Controller
                 ->queue(new CustomNewsletter($request->subject, $request->message));
         }
 
-        return back()->with('success', 'Рассылка запущена! Писем в очереди: ' . $subscribers->count());
+        return back()->with('success', 'The mailing list has been launched! Emails in the queue:' . $subscribers->count());
     }
 }

@@ -24,13 +24,13 @@ class CommentController extends Controller
             'is_active' => !$comment->is_active
         ]);
 
-        return back()->with('message', 'Статус комментария изменен');
+        return back()->with('message', 'Comment status has been changed.');
     }
 
     public function destroy(Comment $comment)
     {
         $comment->delete();
 
-        return back()->with('message', 'Отзыв удален');
+        return back()->with('message', 'Review has been deleted.');
     }
 }

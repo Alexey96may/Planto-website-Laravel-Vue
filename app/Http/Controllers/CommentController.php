@@ -22,6 +22,6 @@ class CommentController extends Controller
             'is_active' => false,
         ]);
 
-        return response()->json(['message' => 'Отзыв отправлен на модерацию!']);
+        return response()->json(['message' => 'Your review sent for moderation!']);
     }
 }

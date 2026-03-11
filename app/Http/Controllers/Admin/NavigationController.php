@@ -49,7 +49,7 @@ class NavigationController extends Controller
         Navigation::create($validated);
 
         return redirect()->route('admin.navigation.index')
-                         ->with('message', 'Пункт меню создан');
+                         ->with('message', 'Menu item has been created.');
     }
     
     public function edit(Navigation $navigation)
@@ -97,7 +97,7 @@ class NavigationController extends Controller
         $navigation->delete();
 
         return redirect()->route('admin.navigation.index')
-                        ->with('message', 'Пункт меню и его подпункты удалены');
+                        ->with('message', 'The menu item and its sub-items have been removed.');
     }
 
     public function reorder(Request $request)
@@ -111,6 +111,6 @@ class NavigationController extends Controller
             }
         });
 
-        return back()->with('message', 'Порядок обновлен');
+        return back()->with('message', 'The order has been updated.');
     }
 }

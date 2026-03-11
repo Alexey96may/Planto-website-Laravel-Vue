@@ -27,13 +27,13 @@ class CartController extends Controller
             $validated['quantity'] ?? 1
         );
 
-        return back()->with('success', 'Товар добавлен в корзину');
+        return back()->with('success', 'The product has been added to the cart');
     }
 
     public function destroy(Product $product) {
         CartService::remove($product->id);
 
-        return redirect()->back()->with('success', 'Товар удален');
+        return redirect()->back()->with('success', 'The product has been removed');
     }
 
     public function update(Request $request, $productId)

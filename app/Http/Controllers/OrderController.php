@@ -26,7 +26,7 @@ class OrderController extends Controller
         $items = $cartData['items'];
 
         if (empty($items)) {
-            return redirect()->back()->withErrors(['cart' => 'Корзина пуста!']);
+            return redirect()->back()->withErrors(['cart' => 'Your cart is empty!']);
         }
 
         $request->validate([
@@ -46,11 +46,11 @@ class OrderController extends Controller
                     $product = \App\Models\Product::lockForUpdate()->find($item['product_id']);
 
                     if (!$product) {
-                        throw new \Exception("Товар из вашей корзины больше не существует.");
+                        throw new \Exception("The item in your cart no longer exists.");
                     }
 
                     if ($product->stock < $item['quantity']) {
-                        throw new \Exception("Недостаточно товара '{$product->title}' на складе (в наличии {$product->stock} шт.).");
+                        throw new \Exception("Not enough product '{$product->title}' in stock (5 pieces {$product->stock} in stock).");
                     }
 
                     $sum = $product->price * $item['quantity'];
@@ -86,7 +86,7 @@ class OrderController extends Controller
                 return $order;
             });
 
-            return to_route('home')->with('success', 'Заказ оформлен!');
+            return to_route('home')->with('success', 'The order has been placed!');
 
         } catch (\Exception $e) {
             Log::error("Checkout error: " . $e->getMessage());

@@ -18,7 +18,7 @@ class CheckoutController extends Controller
 
         if (empty($validItems)) {
             return redirect()->route('cart.index')
-                ->with('error', 'В вашей корзине нет доступных для заказа товаров.');
+                ->with('error', 'There are no items available for order in your cart');
         }
         
         $totalSum = array_sum(array_column($validItems, 'total_price'));

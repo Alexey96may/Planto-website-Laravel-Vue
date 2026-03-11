@@ -32,7 +32,7 @@ class HomeController extends Controller
             
             'comments'     => CommentService::getLatestActive(),
             'features'     => FeatureService::getActive(),
-            'status'         => 'Сегодня работаем до 22:00', //todo
+            'status'         => 'Today we work until 10:00 pm', //todo
         ]);
     }
 }

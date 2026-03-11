@@ -44,7 +44,11 @@
 
     const currentCategory = ref<string | null>(props.currentCategory);
 
+    const isFiltering = ref(false);
+
     const applyFilters = (): void => {
+        isFiltering.value = true;
+
         const params = {
             category: currentCategory.value,
             search: search.value || undefined,
@@ -58,6 +62,10 @@
             preserveState: true,
             preserveScroll: true,
             replace: true,
+
+            onFinish: () => {
+                isFiltering.value = false;
+            },
         });
     };
 
@@ -91,19 +99,30 @@
         currentCategory.value = categotySlug;
         debouncedApplyFilters();
     };
+
+    const resetFilters = () => {
+        search.value = '';
+        minPrice.value = '';
+        maxPrice.value = '';
+        currentCategory.value = null;
+        sort.value = 'popular';
+
+        applyFilters();
+    };
 </script>
 
 <template>
     <Head title="Plant Catalog" />
 
-    <div class="w-full bg-plant-shop pt-8 pb-10">
-        <div class="max-w-7xl mx-auto px-4">
-            <p class="text-zinc-500 font-extralight pb-4 text-xs whitespace-nowrap text-right px-4">
+    <div class="w-full bg-plant-shop pb-10 pt-8">
+        <div class="mx-auto max-w-7xl px-4">
+            <p class="whitespace-nowrap px-4 pb-4 text-right text-xs font-extralight text-zinc-500">
                 Showing: <span class="text-zinc-200">{{ products.total }} products</span>
             </p>
-            <div class="flex flex-col xl:flex-row gap-2">
+            <div class="flex flex-col gap-2 xl:flex-row">
                 <aside
-                    class="w-full xl:w-64 px-4 py-6 shadow-sm shadow-emerald-400/50 rounded-lg bg-plant-green"
+                    class="w-full rounded-lg bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50 transition-all duration-500 xl:w-64"
+                    :class="{ 'pointer-events-none opacity-50 blur-[2px]': isFiltering }"
                 >
                     <SearchInput v-model="search" @apply-search="debouncedApplyFilters" />
 
@@ -115,24 +134,24 @@
                     />
 
                     <div
-                        class="mb-10 flex items-center justify-between group cursor-pointer"
+                        class="group mb-10 flex cursor-pointer items-center justify-between"
                         @click="
                             inStockOnly = !inStockOnly;
                             debouncedApplyFilters();
                         "
                     >
                         <span
-                            class="text-sm font-medium text-zinc-300 group-hover:text-emerald-600 transition-colors"
+                            class="text-sm font-medium text-zinc-300 transition-colors group-hover:text-emerald-600"
                         >
                             In Stock Only
                         </span>
 
                         <div
-                            class="relative w-10 h-5 transition-colors duration-200 ease-in-out rounded-full"
+                            class="relative h-5 w-10 rounded-full transition-colors duration-200 ease-in-out"
                             :class="inStockOnly ? 'bg-emerald-600' : 'bg-zinc-600'"
                         >
                             <div
-                                class="absolute top-1 left-1 w-3 h-3 transition-transform duration-200 ease-in-out transform bg-white rounded-full"
+                                class="absolute left-1 top-1 h-3 w-3 transform rounded-full bg-white transition-transform duration-200 ease-in-out"
                                 :class="inStockOnly ? 'translate-x-5' : 'translate-x-0'"
                             ></div>
                         </div>
@@ -146,16 +165,15 @@
                 </aside>
 
                 <main
-                    class="flex-grow bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50 rounded-lg"
+                    class="flex-grow rounded-lg bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50"
                 >
-                    <div class="flex justify-between items-end mb-8">
+                    <div class="mb-8 flex items-end justify-between">
                         <SortFilter v-model="sort" @change="debouncedApplyFilters" />
 
                         <div>
-                            <Link
-                                :href="route('shop')"
-                                :preserve-scroll="true"
-                                class="group overflow-hidden flex items-center justify-center gap-2 w-full px-3 py-2 text-sm rounded-xl border border-zinc-600 text-zinc-300 hover:bg-orange-800/10 transition-all duration-300"
+                            <button
+                                @click="resetFilters"
+                                class="group flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl border border-zinc-600 px-3 py-2 text-sm text-zinc-300 transition-all duration-300 hover:bg-orange-800/10"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -173,43 +191,97 @@
                                 </svg>
 
                                 <span
-                                    class="text-xs font-bold uppercase tracking-widest text-ellipsis whitespace-nowrap"
+                                    class="text-ellipsis whitespace-nowrap text-xs font-bold uppercase tracking-widest"
                                 >
                                     Reset
                                 </span>
-                            </Link>
+                            </button>
                         </div>
                     </div>
 
-                    <div
-                        v-if="products.data.length > 0"
-                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-center gap-4 sm:gap-8"
-                    >
-                        <PlantCard
-                            v-for="plant in products.data"
-                            :key="plant.id"
-                            :plant="plant"
-                            :current_page="products.current_page"
-                            :processing-id="processingId === plant.id"
-                            :is-in-cart="cartIds.includes(plant.id)"
-                            @add-to-cart="handleAddToCart"
-                        />
-                    </div>
+                    <transition name="fade-layout" mode="out-in">
+                        <div :key="currentCategory || 'all'">
+                            <div v-if="products.data.length > 0">
+                                <transition-group
+                                    tag="div"
+                                    name="staggered-fade"
+                                    class="grid grid-cols-1 justify-center gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
+                                    :css="true"
+                                >
+                                    <PlantCard
+                                        v-for="plant in products.data"
+                                        :key="plant.id"
+                                        :plant="plant"
+                                        :current_page="products.current_page"
+                                        :processing-id="processingId === plant.id"
+                                        :is-in-cart="cartIds.includes(plant.id)"
+                                        @add-to-cart="handleAddToCart"
+                                    />
+                                </transition-group>
+                            </div>
 
-                    <div v-else class="text-center py-20 bg-plant-shop rounded-3xl">
-                        <p class="text-xl text-gray-300">
-                            There are no products in this category yet...
-                        </p>
-                        <Link
-                            :href="route('shop')"
-                            :preserve-scroll="true"
-                            class="text-emerald-600 hover:text-emerald-800 transition duration-300 underline mt-4 inline-block"
-                            >Return to all products</Link
-                        >
-                    </div>
+                            <div v-else class="rounded-3xl bg-plant-shop py-20 text-center">
+                                <p class="text-xl text-gray-300">
+                                    There are no products in this category yet...
+                                </p>
+                                <button
+                                    @click="resetFilters"
+                                    class="mt-4 inline-block text-emerald-600 underline transition duration-300 hover:text-emerald-800"
+                                >
+                                    Return to all products
+                                </button>
+                            </div>
+                        </div>
+                    </transition>
                 </main>
             </div>
         </div>
         <Pagination :links="products.links" />
     </div>
 </template>
+
+<style scoped>
+    .staggered-fade-move {
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .staggered-fade-enter-active {
+        transition: all 0.5s ease-out;
+        transition-delay: calc(var(--index) * 0.05s);
+    }
+
+    .staggered-fade-leave-active {
+        transition: all 0.3s ease-in;
+        position: absolute;
+        z-index: 0;
+    }
+
+    .staggered-fade-enter-from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+
+    .staggered-fade-leave-to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    .staggered-fade-leave-active {
+        max-width: 300px;
+    }
+
+    .fade-layout-enter-active,
+    .fade-layout-leave-active {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .fade-layout-enter-from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    .fade-layout-leave-to {
+        opacity: 0;
+        transform: scale(1.02);
+    }
+</style>

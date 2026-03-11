@@ -38,7 +38,7 @@ class FeatureController extends Controller
 
         Feature::create($validated);
 
-        return redirect()->route('admin.features.index')->with('message', 'Карточка успешно создана!');
+        return redirect()->route('admin.features.index')->with('message', 'The card has been successfully created!');
     }
 
     public function update(Request $request, Feature $feature)
@@ -64,7 +64,7 @@ class FeatureController extends Controller
 
         $feature->update($validated);
 
-        return back()->with('message', 'Карточка обновлена');
+        return back()->with('message', 'The card has been updated.');
     }
 
     public function destroy(Feature $feature)
@@ -75,7 +75,7 @@ class FeatureController extends Controller
         
         $feature->delete();
 
-        return back()->with('message', 'Карточка удалена');
+        return back()->with('message', 'The card has been deleted.');
     }
 
     public function create()
