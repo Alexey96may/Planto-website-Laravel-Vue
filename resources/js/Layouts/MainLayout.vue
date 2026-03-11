@@ -3,6 +3,7 @@
 
     import Footer from '@/Components/Sections/Footer.vue';
     import Header from '@/Components/Sections/Header.vue';
+    import AppToast from '@/Components/Shared/Toast.vue';
 
     defineSlots<{
         default(props: {}): any;
@@ -32,5 +33,6 @@
         </main>
 
         <Footer />
+        <AppToast />
     </div>
 </template>

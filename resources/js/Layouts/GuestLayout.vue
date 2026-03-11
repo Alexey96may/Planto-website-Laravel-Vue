@@ -4,6 +4,8 @@
     import { HomeIcon } from '@heroicons/vue/24/outline';
     import IconLogo from 'img/icons/logo.svg?component';
 
+    import AppToast from '@/Components/Shared/Toast.vue';
+
     defineSlots<{
         default(props: {}): any;
     }>();
@@ -39,6 +41,7 @@
                 class="overflow-hidden rounded-[1rem] border border-zinc-700 bg-zinc-900/40 p-8 shadow-2xl backdrop-blur-xl sm:rounded-[2.5rem] sm:p-12"
             >
                 <slot />
+                <AppToast />
             </div>
 
             <div class="mt-8 text-center">

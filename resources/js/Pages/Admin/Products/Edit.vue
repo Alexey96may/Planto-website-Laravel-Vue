@@ -181,6 +181,7 @@
                                     <input
                                         v-model="form.price"
                                         type="number"
+                                        step="0.01"
                                         class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 pl-10 font-mono font-bold text-[#c5d86d] outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
                                     />
                                     <span

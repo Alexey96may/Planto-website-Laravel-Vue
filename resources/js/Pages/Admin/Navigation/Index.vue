@@ -18,6 +18,7 @@
     import { route } from 'ziggy-js';
 
     import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { useFlash } from '@/composables/useFlash';
     import { NavigationItem } from '@/types';
 
     defineOptions({ layout: AdminLayout });
@@ -46,11 +47,35 @@
         );
     };
 
-    const deleteItem = (id: number): void => {
-        if (confirm('Delete this item and all nested menus?')) {
-            router.delete(route('admin.navigation.destroy', id), {
-                preserveScroll: true,
-            });
+    const { notifyWithUndo } = useFlash();
+
+    let isDeleting = ref<number | null>(null);
+
+    const deleteItem = async (id: number): Promise<void> => {
+        if (isDeleting.value === id) return;
+
+        isDeleting.value = id;
+        try {
+            const confirmed = await notifyWithUndo(
+                'Purging Navigation item from the core...',
+                5000,
+            );
+
+            if (confirmed) {
+                router.delete(route('admin.navigation.destroy', id), {
+                    preserveScroll: true,
+                    onFinish: () => {
+                        isDeleting.value = null;
+                    },
+                    onError: () => {
+                        isDeleting.value = null;
+                    },
+                });
+            } else {
+                isDeleting.value = null;
+            }
+        } catch (e) {
+            isDeleting.value = null;
         }
     };
 </script>

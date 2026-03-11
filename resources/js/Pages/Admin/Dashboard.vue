@@ -8,9 +8,7 @@
         PackageIcon,
         PlusIcon,
         SendIcon,
-        SettingsIcon,
         ShoppingCartIcon,
-        SparklesIcon,
         UsersIcon,
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';

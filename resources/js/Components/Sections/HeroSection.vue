@@ -156,13 +156,13 @@
                 </swiper>
 
                 <button
-                    class="prev-btn absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-90 disabled:opacity-0 group-hover:left-4"
+                    class="prev-btn absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-90 disabled:opacity-0 group-hover:left-4"
                 >
                     <ChevronLeftIcon class="h-6 w-6" />
                 </button>
 
                 <button
-                    class="next-btn absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-90 disabled:opacity-0 group-hover:right-4"
+                    class="next-btn absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-90 disabled:opacity-0 group-hover:right-4"
                 >
                     <ChevronRightIcon class="h-6 w-6" />
                 </button>

@@ -1,11 +1,10 @@
 <script setup lang="ts">
-    import { computed, ref } from 'vue';
+    import { computed, ref, watch } from 'vue';
 
-    import { Head, useForm, usePage } from '@inertiajs/vue3';
+    import { Head, useForm } from '@inertiajs/vue3';
 
     import {
         Camera,
-        CheckCircle2,
         History,
         Mail,
         MessageSquare,
@@ -17,6 +16,7 @@
 
     import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
+    import ImageUploader from '@/Components/UI/ImageUploader.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { AuthProps, Comment, CommentForm, UserForm } from '@/types';
 
@@ -39,6 +39,17 @@
 
     const imageUrl = ref<string | null>(props.auth.user.avatar_url);
 
+    watch(
+        () => props.auth.user.avatar_url,
+        (newUrl) => {
+            if (newUrl && !formAvatar.processing) {
+                imageUrl.value = newUrl;
+            }
+        },
+    );
+
+    const uploader = ref<InstanceType<typeof ImageUploader> | null>(null);
+
     const onFileChange = (e: Event) => {
         const target = e.target as HTMLInputElement;
         const file = target.files?.[0];
@@ -54,8 +65,18 @@
     const submitInfo = (): void => {
         formAvatar.post(route('profile.update'), {
             preserveScroll: true,
+            preserveState: true,
             onSuccess: () => {
+                imageUrl.value = props.auth.user.avatar_url;
+
+                if (imageUrl.value && imageUrl.value.startsWith('blob:')) {
+                    URL.revokeObjectURL(imageUrl.value);
+                }
+
                 formAvatar.avatar = null;
+            },
+            onError: () => {
+                imageUrl.value = props.auth.user.avatar_url;
             },
         });
     };
@@ -68,6 +89,15 @@
     };
 
     const isAdmin = computed(() => props.auth.user.role === 'admin');
+
+    const handleFileSelect = (file: File | null) => {
+        formAvatar.avatar = file;
+        if (file) {
+            imageUrl.value = URL.createObjectURL(file);
+        } else {
+            imageUrl.value = props.auth.user.avatar_url;
+        }
+    };
 </script>
 
 <template>
@@ -123,28 +153,21 @@
 
                     <form @submit.prevent="submitInfo" class="relative z-10 space-y-8">
                         <div class="flex flex-col items-start gap-12 lg:flex-row">
-                            <div class="group/avatar relative mx-auto lg:mx-0">
+                            <div class="group/avatar relative mx-auto">
                                 <div
-                                    class="h-40 w-40 overflow-hidden rounded-[1rem] border-2 border-white/5 shadow-2xl transition-all duration-500 group-hover/avatar:border-[#c5d86d]/50 md:rounded-[2rem]"
+                                    class="transition-all duration-500 group-hover/avatar:border-[#c5d86d]/50"
                                 >
-                                    <AppImage
-                                        :src="imageUrl || ''"
-                                        class="h-full w-full object-cover transition-transform duration-700 group-hover/avatar:scale-110"
-                                    />
+                                    <div class="group/avatar relative mx-auto h-48 w-48 shrink-0">
+                                        <ImageUploader
+                                            ref="uploader"
+                                            v-model="formAvatar.avatar"
+                                            label="Avatar"
+                                            :error="formAvatar.errors.avatar"
+                                            :existingImage="imageUrl"
+                                            @on-file-select="handleFileSelect"
+                                        />
+                                    </div>
                                 </div>
-                                <label
-                                    for="avatar-input"
-                                    class="absolute -bottom-2 -right-2 cursor-pointer rounded-2xl bg-[#c5d86d] p-3 shadow-xl shadow-black/50 transition-transform hover:scale-110"
-                                >
-                                    <Camera class="h-5 w-5 text-black" />
-                                    <input
-                                        type="file"
-                                        id="avatar-input"
-                                        @change="onFileChange"
-                                        accept="image/*"
-                                        class="hidden"
-                                    />
-                                </label>
                             </div>
 
                             <div class="w-full flex-1 space-y-6">

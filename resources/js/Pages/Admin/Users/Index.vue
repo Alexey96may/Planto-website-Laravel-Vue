@@ -21,9 +21,6 @@
             { role: newRole },
             {
                 preserveScroll: true,
-                onSuccess: () => {
-                    /* Toast "Role updated!" */
-                },
             },
         );
     };

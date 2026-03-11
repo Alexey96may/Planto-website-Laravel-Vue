@@ -1,48 +1,83 @@
 <script setup lang="ts">
     import { computed } from 'vue';
 
+    import { AlertCircle, AlertTriangle, CheckCircle2, Info, X } from 'lucide-vue-next';
+
     import { useFlash } from '@/composables/useFlash';
 
-    const { show, message, type } = useFlash();
+    const { show, message, type, isCountingDown, undoRequested, timerDuration } = useFlash();
 
-    const config = {
-        success: { bg: 'bg-green-500', icon: '✅' },
-        error: { bg: 'bg-red-500', icon: '❌' },
-        warning: { bg: 'bg-yellow-500', icon: '⚠️' },
-        info: { bg: 'bg-blue-500', icon: 'ℹ️' },
+    const icons = {
+        success: CheckCircle2,
+        error: AlertCircle,
+        warning: AlertTriangle,
+        info: Info,
     };
 
-    const current = computed(() => config[type.value]);
+    const iconComponent = computed(() => icons[type.value] || Info);
+
+    const typeStyles = {
+        success: 'border-[#c5d86d]/20 bg-[#161b14]/90 text-[#c5d86d]',
+        error: 'border-red-500/20 bg-red-950/90 text-red-400',
+        warning: 'border-amber-500/20 bg-amber-950/90 text-amber-400',
+        info: 'border-blue-500/20 bg-blue-950/90 text-blue-400',
+    };
 </script>
 
 <template>
     <Teleport to="body">
         <Transition
-            enter-active-class="transition duration-300 ease-out"
-            enter-from-class="transform translate-y-2 opacity-0"
-            enter-to-class="transform translate-y-0 opacity-100"
-            leave-active-class="transition duration-200 ease-in"
-            leave-from-class="opacity-100"
-            leave-to-class="opacity-0"
+            enter-active-class="transform transition duration-500 ease-out"
+            enter-from-class="translate-y-12 opacity-0 scale-95"
+            enter-to-class="translate-y-0 opacity-100 scale-100"
+            leave-active-class="transition duration-300 ease-in"
+            leave-from-class="opacity-100 scale-100"
+            leave-to-class="opacity-0 scale-90"
         >
             <div
                 v-if="show"
-                class="fixed top-5 right-5 z-[100] p-4 rounded-lg shadow-xl text-white min-w-[300px]"
-                :class="current.bg"
+                :key="message"
+                class="fixed bottom-8 right-8 z-[9999] flex min-w-[320px] flex-col overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-md"
+                :class="typeStyles[type]"
             >
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <span class="mr-3 text-xl">{{ current.icon }}</span>
-                        <span class="font-medium">{{ message }}</span>
+                <div class="flex items-center gap-4 px-6 py-4">
+                    <component :is="iconComponent" class="h-5 w-5 shrink-0" />
+                    <div class="flex-1 text-xs font-black uppercase tracking-widest">
+                        {{ message }}
                     </div>
+
                     <button
-                        @click="show = false"
-                        class="ml-4 opacity-70 hover:opacity-100 text-xl font-bold"
+                        v-if="isCountingDown"
+                        @click="undoRequested = true"
+                        class="ml-2 rounded-lg bg-white/10 px-3 py-1.5 text-[10px] font-black uppercase transition-all hover:bg-white/20 active:scale-95"
                     >
-                        &times;
+                        Undo
                     </button>
+                    <button v-else @click="show = false" class="opacity-50 hover:opacity-100">
+                        <X class="h-4 w-4" />
+                    </button>
+                </div>
+
+                <div v-if="isCountingDown" class="relative h-1 w-full bg-white/10">
+                    <div
+                        class="absolute inset-y-0 left-0 bg-[#c5d86d] shadow-[0_0_10px_#c5d86d]"
+                        :style="{
+                            animation: `shrink ${timerDuration}ms linear forwards`,
+                        }"
+                    ></div>
                 </div>
             </div>
         </Transition>
     </Teleport>
 </template>
+
+<style>
+    @keyframes shrink {
+        from {
+            width: 100%;
+        }
+        to {
+            width: 0%;
+        }
+    }
+</style>

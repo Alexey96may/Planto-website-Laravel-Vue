@@ -81,7 +81,7 @@
             <div
                 v-for="(review, index) in reviews.data"
                 :key="review.id"
-                class="review-card group relative overflow-hidden rounded-[1rem] border border-white/5 bg-[#161b14] p-6 shadow-2xl transition-all hover:border-[#c5d86d]/20 sm:p-10 xl:rounded-[2rem]"
+                class="review-card group relative overflow-hidden rounded-[1rem] border border-white/25 bg-[#161b14] p-6 shadow-2xl transition-all hover:border-[#c5d86d]/20 sm:p-10 xl:rounded-[2rem]"
                 :style="{ animationDelay: `${index * 100}ms` }"
             >
                 <div

@@ -4,9 +4,10 @@
     import { Link, usePage } from '@inertiajs/vue3';
 
     import IconLogo from 'img/icons/logo.svg?component';
-    import { ChevronDownIcon, LogOutIcon, UserCircleIcon } from 'lucide-vue-next';
+    import { ChevronDownIcon } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import AppToast from '@/Components/Shared/Toast.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import Dropdown from '@/Components/UI/Dropdown.vue';
     import DropdownLink from '@/Components/UI/DropdownLink.vue';
@@ -261,6 +262,8 @@
                 <slot />
             </main>
         </div>
+
+        <AppToast />
     </div>
 </template>
 

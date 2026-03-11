@@ -14,6 +14,7 @@
 
     import AppImage from '@/Components/UI/AppImage.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
+    import { useFlash } from '@/composables/useFlash';
     import { CartItems, ProductWithCategory } from '@/types';
     import { calculateTotal, formatUSD } from '@/utils/money';
 
@@ -64,15 +65,39 @@
         }
     };
 
-    const removeFromCart = () => {
-        if (confirm('Are you sure you want to remove this plant?')) {
-            router.delete(route('cart.remove', props.product.id), { preserveScroll: true });
-        }
-    };
-
     const buttonText = computed(() =>
         props.cart_items[props.product.id] ? 'Update Quantity' : 'Add to Cart',
     );
+
+    const { notifyWithUndo } = useFlash();
+
+    let isDeleting = ref<number | null>(null);
+
+    const removeFromCart = async (): Promise<void> => {
+        if (isDeleting.value === props.product.id) return;
+
+        isDeleting.value = props.product.id;
+
+        try {
+            const confirmed = await notifyWithUndo('Purging product from cart...', 5000);
+
+            if (confirmed) {
+                router.delete(route('cart.remove', props.product.id), {
+                    preserveScroll: true,
+                    onFinish: () => {
+                        isDeleting.value = null;
+                    },
+                    onError: () => {
+                        isDeleting.value = null;
+                    },
+                });
+            } else {
+                isDeleting.value = null;
+            }
+        } catch (e) {
+            isDeleting.value = null;
+        }
+    };
 </script>
 
 <template>

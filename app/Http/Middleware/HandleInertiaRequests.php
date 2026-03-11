@@ -49,6 +49,7 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn() => $request->session()->get('success'),
                 'error'   => fn() => $request->session()->get('error'),
                 'message' => fn() => $request->session()->get('message'),
+                'warning' => fn() => $request->session()->get('warning'),
             ],
             'pending_comments_count' => fn() => \App\Models\Comment::where('is_approved', false)->count(),
         ];

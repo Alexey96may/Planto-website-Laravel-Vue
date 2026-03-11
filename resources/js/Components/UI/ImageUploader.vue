@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { onMounted } from 'vue';
 
-    import { ImageIcon, ImagePlus, Loader2, UploadCloud, X } from 'lucide-vue-next';
+    import { ImagePlus, Loader2, UploadCloud, X } from 'lucide-vue-next';
 
     import { useImageUpload } from '@/composables/useImageUpload';
 
@@ -59,7 +59,7 @@
         </label>
 
         <div
-            class="group/zone relative flex min-h-[220px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[2rem] border-2 border-dashed transition-all duration-500"
+            class="group/zone relative flex h-[280px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[2rem] border-2 border-dashed transition-all duration-500"
             :class="[
                 isDragging
                     ? 'scale-[0.99] border-[#c5d86d] bg-[#c5d86d]/5'
@@ -79,11 +79,14 @@
                 @change="handleFileChange"
             />
 
-            <div v-if="imagePreview" class="relative flex h-full w-full flex-col items-center p-4">
-                <div class="group/preview relative">
+            <div
+                v-if="imagePreview"
+                class="relative flex h-full w-full flex-col items-center justify-center p-8"
+            >
+                <div class="group/preview relative flex h-full w-full items-center justify-center">
                     <img
                         :src="imagePreview"
-                        class="max-h-48 w-auto rounded-2xl object-cover shadow-2xl transition-transform duration-500 group-hover/preview:scale-[1.02]"
+                        class="h-full w-full rounded-2xl object-cover shadow-2xl transition-transform duration-500 group-hover/preview:scale-[1.02]"
                     />
 
                     <div
@@ -145,7 +148,7 @@
             >
                 <Loader2 class="mb-4 h-10 w-10 animate-spin text-[#c5d86d]" />
                 <span
-                    class="animate-pulse text-xs font-black uppercase tracking-[0.3em] text-[#c5d86d]"
+                    class="animate-pulse text-center text-xs font-black uppercase tracking-[0.3em] text-[#c5d86d]"
                 >
                     Optimizing pixels...
                 </span>

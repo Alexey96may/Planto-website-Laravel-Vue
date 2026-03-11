@@ -43,9 +43,6 @@
     const updateStatus = () => {
         form.patch(route('admin.orders.update', props.order.id), {
             preserveScroll: true,
-            onSuccess: () => {
-                // Здесь сработает наш Toast компонент автоматически, если настроен Flash-message
-            },
         });
     };
 

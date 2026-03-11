@@ -47,7 +47,6 @@
     });
 
     const filteredParents = computed<NavigationCreate[]>(() => {
-        // Исключаем текущий элемент из списка родителей, чтобы не создать петлю
         return props.parentOptions.filter(
             (p: NavigationCreate) => p.location === form.location && p.id !== props.item.id,
         );

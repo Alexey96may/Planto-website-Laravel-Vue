@@ -21,6 +21,8 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import AppToast from '@/Components/Shared/Toast.vue';
+
     const page = usePage();
     const currentComponent = computed(() => page.component);
     const isMobileMenuOpen = ref(false);
@@ -200,6 +202,7 @@
             <main class="p-4 lg:p-10">
                 <div class="mx-auto max-w-[1600px]">
                     <slot />
+                    <AppToast />
                 </div>
             </main>
         </div>

@@ -39,9 +39,8 @@
 
     const submit = () => {
         form.post(route('admin.products.store'), {
-            onSuccess: () => {
-                form.reset();
-                uploader.value?.clearImage();
+            onError: (e) => {
+                console.warn(e);
             },
         });
     };
@@ -124,6 +123,7 @@
                         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div class="space-y-2 md:col-span-2">
                                 <label
+                                    for="productTitle"
                                     class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
                                 >
                                     <Type class="h-3 w-3 text-[#c5d86d]" /> Identity Title
@@ -131,6 +131,7 @@
                                 <input
                                     v-model="form.title"
                                     type="text"
+                                    id="productTitle"
                                     required
                                     class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-bold text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
                                     placeholder="e.g. Monstera Deliciosa v.2"
@@ -145,12 +146,14 @@
 
                             <div class="space-y-2">
                                 <label
+                                    for="productCategory"
                                     class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
                                 >
                                     <Tag class="h-3 w-3 text-[#c5d86d]" /> Type
                                 </label>
                                 <select
                                     v-model="form.category_id"
+                                    id="productCategory"
                                     class="w-full appearance-none rounded-2xl border border-white/5 bg-black/50 p-4 font-bold text-zinc-300 outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                 >
                                     <option value="">Uncategorized</option>
@@ -162,6 +165,7 @@
 
                             <div class="space-y-2">
                                 <label
+                                    for="productPrice"
                                     class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
                                 >
                                     <DollarSign class="h-3 w-3 text-[#c5d86d]" /> Valuation
@@ -169,6 +173,8 @@
                                 <div class="relative">
                                     <input
                                         v-model="form.price"
+                                        id="productPrice"
+                                        step="0.01"
                                         type="number"
                                         required
                                         class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 pl-10 font-mono font-bold text-[#c5d86d] outline-none focus:ring-1 focus:ring-[#c5d86d]/50"

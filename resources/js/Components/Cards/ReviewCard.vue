@@ -23,7 +23,11 @@
     <figure class="comment top__comment" aria-label="Review">
         <div class="comment__author author" aria-label="Comment author">
             <div class="author__photo" aria-label="Author`s photo">
-                <AppImage :src="comment.user.avatar_url || defaultAvatarLink" alt="Author photo" />
+                <AppImage
+                    class="object-cover"
+                    :src="comment.user.avatar_url || defaultAvatarLink"
+                    alt="Author photo"
+                />
             </div>
 
             <div class="author__info" aria-label="Author`s info">

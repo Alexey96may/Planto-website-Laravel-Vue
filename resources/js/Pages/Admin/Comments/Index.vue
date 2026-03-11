@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import { ref } from 'vue';
+
     import { Head, router } from '@inertiajs/vue3';
 
     import { Calendar, Eye, EyeOff, MessageSquare, Star, Trash2, User } from 'lucide-vue-next';
@@ -6,6 +8,7 @@
     import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { useFlash } from '@/composables/useFlash';
     import { Review } from '@/types';
 
     defineOptions({
@@ -15,6 +18,8 @@
     const props = defineProps<{
         comments: Review[];
     }>();
+
+    const { notifyWithUndo } = useFlash();
 
     const toggleStatus = (id: number) => {
         router.patch(
@@ -26,11 +31,30 @@
         );
     };
 
-    const deleteComment = (id: number) => {
-        if (confirm('Delete this review forever?')) {
-            router.delete(route('admin.comments.destroy', id), {
-                preserveScroll: true,
-            });
+    let isDeleting = ref<number | null>(null);
+
+    const deleteComment = async (id: number) => {
+        if (isDeleting.value === id) return;
+
+        isDeleting.value = id;
+        try {
+            const confirmed = await notifyWithUndo('Purging the comment from the core...', 5000);
+
+            if (confirmed) {
+                router.delete(route('admin.comments.destroy', id), {
+                    preserveScroll: true,
+                    onFinish: () => {
+                        isDeleting.value = null;
+                    },
+                    onError: () => {
+                        isDeleting.value = null;
+                    },
+                });
+            } else {
+                isDeleting.value = null;
+            }
+        } catch (e) {
+            isDeleting.value = null;
         }
     };
 

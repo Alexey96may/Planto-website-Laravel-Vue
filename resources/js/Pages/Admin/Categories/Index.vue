@@ -3,24 +3,17 @@
 
     import { Head, useForm } from '@inertiajs/vue3';
 
-    import {
-        Check,
-        FolderTree,
-        Hash,
-        LayoutList,
-        Pencil,
-        Plus,
-        RefreshCcw,
-        Trash2,
-        X,
-    } from 'lucide-vue-next';
+    import { Check, Hash, LayoutList, Pencil, Plus, RefreshCcw, Trash2, X } from 'lucide-vue-next';
 
     import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { useFlash } from '@/composables/useFlash';
     import { Category, CategoryForm } from '@/types';
 
     const props = defineProps<{
         categories: Category[];
     }>();
+
+    const { notifyWithUndo } = useFlash();
 
     const isEditing = ref<Category | null>(null);
 
@@ -53,9 +46,31 @@
         form.reset();
     };
 
-    const deleteCategory = (category: Category) => {
-        if (confirm(`Are you sure you want to delete "${category.title}"?`)) {
-            form.delete(route('admin.categories.destroy', category.id));
+    let isDeleting = ref<number | null>(null);
+
+    const deleteCategory = async (category: Category) => {
+        if (isDeleting.value === category.id) return;
+
+        isDeleting.value = category.id;
+
+        try {
+            const confirmed = await notifyWithUndo('Purging category from core...', 5000);
+
+            if (confirmed) {
+                form.delete(route('admin.categories.destroy', category.id), {
+                    preserveScroll: true,
+                    onFinish: () => {
+                        isDeleting.value = null;
+                    },
+                    onError: () => {
+                        isDeleting.value = null;
+                    },
+                });
+            } else {
+                isDeleting.value = null;
+            }
+        } catch (e) {
+            isDeleting.value = null;
         }
     };
 </script>

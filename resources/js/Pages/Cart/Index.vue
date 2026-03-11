@@ -8,6 +8,7 @@
 
     import AppImage from '@/Components/UI/AppImage.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
+    import { useFlash } from '@/composables/useFlash';
     import { CartData, CartItem } from '@/types';
     import { debounce } from '@/utils/helpers';
 
@@ -19,14 +20,32 @@
         layout: MainLayout,
     });
 
-    const removeFromCart = (productId: number) => {
-        if (confirm('Are you sure you want to delete this item?')) {
-            router.delete(route('cart.remove', productId), {
-                preserveScroll: true,
-                onSuccess: () => {
-                    // Здесь можно добавить уведомление об успехе
-                },
-            });
+    const { notifyWithUndo, notify } = useFlash();
+
+    let isDeleting = ref<number | null>(null);
+
+    const removeFromCart = async (productId: number): Promise<void> => {
+        if (isDeleting.value === productId) return;
+
+        isDeleting.value = productId;
+        try {
+            const confirmed = await notifyWithUndo('Purging product from cart...', 5000);
+
+            if (confirmed) {
+                router.delete(route('cart.remove', productId), {
+                    preserveScroll: true,
+                    onFinish: () => {
+                        isDeleting.value = null;
+                    },
+                    onError: () => {
+                        isDeleting.value = null;
+                    },
+                });
+            } else {
+                isDeleting.value = null;
+            }
+        } catch (e) {
+            isDeleting.value = null;
         }
     };
 
@@ -36,7 +55,7 @@
         if (newQuantity < 1) return;
 
         if (newQuantity > item.stock) {
-            alert("Sorry, we don't have that many plants 🌿");
+            notify("Sorry, we don't have that many plants 🌿", 'error');
             return;
         }
 

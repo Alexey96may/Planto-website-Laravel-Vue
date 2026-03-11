@@ -5,8 +5,6 @@
 
     import { AlertTriangleIcon, Trash2Icon } from 'lucide-vue-next';
 
-    // Добавим иконок для веса
-
     import DangerButton from '@/Components/UI/DangerButton.vue';
     import InputError from '@/Components/UI/InputError.vue';
     import InputLabel from '@/Components/UI/InputLabel.vue';

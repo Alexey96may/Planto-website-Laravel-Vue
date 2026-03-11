@@ -26,7 +26,7 @@ class CategoryController extends Controller
 
         Category::create($validated);
 
-        return back()->with('success', 'The category was created');
+        return back()->with('success', 'The category was created!');
     }
 
     public function update(Request $request, Category $category)
@@ -42,13 +42,13 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return back()->with('success', 'Категория обновлена');
+        return back()->with('success', 'Category updated.');
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
 
-        return back()->with('success', 'Категория удалена. Связанные товары теперь Без категории.');
+        return back()->with('success', 'Category removed. Related products are now Uncategorized.');
     }
 }

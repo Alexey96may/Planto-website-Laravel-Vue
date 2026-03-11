@@ -353,6 +353,7 @@ export interface SharedData extends PageProps {
         success: string | null;
         error: string | null;
         message: string | null;
+        warning: string | null;
     };
     pending_comments_count: number;
 }

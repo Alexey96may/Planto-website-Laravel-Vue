@@ -12,7 +12,6 @@
         Layers,
         Link as LinkIcon,
         PlusCircle,
-        Save,
         Tag,
         Type,
     } from 'lucide-vue-next';

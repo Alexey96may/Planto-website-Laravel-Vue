@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import { ref } from 'vue';
+
     import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
     import {
@@ -14,6 +16,7 @@
 
     import AppImage from '@/Components/UI/AppImage.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { useFlash } from '@/composables/useFlash';
     import { Feature } from '@/types';
 
     defineOptions({
@@ -24,11 +27,32 @@
         features: Feature[];
     }>();
 
-    const deleteFeature = (id: number): void => {
-        if (confirm('Delete this slider card?')) {
-            router.delete(route('admin.features.destroy', id), {
-                preserveScroll: true,
-            });
+    const { notifyWithUndo } = useFlash();
+
+    let isDeleting = ref<number | null>(null);
+
+    const deleteFeature = async (id: number): Promise<void> => {
+        if (isDeleting.value === id) return;
+
+        isDeleting.value = id;
+        try {
+            const confirmed = await notifyWithUndo('Purging the feature from the core...', 5000);
+
+            if (confirmed) {
+                router.delete(route('admin.features.destroy', id), {
+                    preserveScroll: true,
+                    onFinish: () => {
+                        isDeleting.value = null;
+                    },
+                    onError: () => {
+                        isDeleting.value = null;
+                    },
+                });
+            } else {
+                isDeleting.value = null;
+            }
+        } catch (e) {
+            isDeleting.value = null;
         }
     };
 </script>
