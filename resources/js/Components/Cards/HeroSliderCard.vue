@@ -69,18 +69,21 @@
 <style lang="scss" scoped>
     @use '../../../scss/bootstrap' as b;
 
-    @media (max-width: b.$mediaMobile) {
-        .card {
-            max-width: 18rem;
+    .card {
+        margin-top: 20%;
+
+        @media (max-width: b.$mediaMobile) {
             gap: 0.65rem;
-            padding-bottom: 2.5rem;
+            padding-bottom: 4rem;
+            max-width: unset;
         }
     }
 
-    .card {
-        margin-top: 20%;
-    }
     .card__img-wrapper {
         margin-top: -20%;
+
+        @media (max-width: b.$mediaMobile) {
+            max-width: unset;
+        }
     }
 </style>

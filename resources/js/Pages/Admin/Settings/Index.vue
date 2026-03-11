@@ -6,13 +6,13 @@
     import {
         AlertCircle,
         CheckCircle2,
-        FileText,
         Globe,
         Layout,
         ListOrdered,
         Phone,
         Save,
         Share2,
+        Video,
     } from 'lucide-vue-next';
 
     import AdminLayout from '@/Layouts/AdminLayout.vue';
@@ -276,50 +276,72 @@
                             <div class="grid grid-cols-1 gap-6">
                                 <div class="space-y-2">
                                     <label
-                                        class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                        >Facebook URL</label
+                                        class="text-[10px] font-black uppercase tracking-widest text-[#c5d86d]"
                                     >
-                                    <div class="relative">
+                                        Live Demo / Video Presentation
+                                    </label>
+                                    <div class="group relative">
+                                        <div
+                                            class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 transition-colors group-focus-within:text-[#c5d86d]"
+                                        >
+                                            <Video class="h-4 w-4" />
+                                        </div>
+                                        <input
+                                            v-model="form.live_demo_url"
+                                            type="text"
+                                            placeholder="https://youtube.com/watch?v=..."
+                                            class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 pl-12 font-medium text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
+                                        />
+                                    </div>
+                                    <p
+                                        class="text-[9px] font-bold uppercase tracking-tight text-zinc-600"
+                                    >
+                                        This link will be used for the "Watch Demo" buttons on the
+                                        landing page.
+                                    </p>
+                                </div>
+
+                                <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                                    <div class="space-y-2">
+                                        <label
+                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                            >Facebook</label
+                                        >
                                         <input
                                             v-model="form.link_fb"
                                             type="text"
-                                            placeholder="https://facebook.com/..."
-                                            class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-medium text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                         />
                                     </div>
-                                </div>
 
-                                <div class="space-y-2">
-                                    <label
-                                        class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                        >X / Twitter URL</label
-                                    >
-                                    <div class="relative">
+                                    <div class="space-y-2">
+                                        <label
+                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                            >X / Twitter</label
+                                        >
                                         <input
                                             v-model="form.link_x"
                                             type="text"
-                                            placeholder="https://x.com/..."
-                                            class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-medium text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                         />
                                     </div>
-                                </div>
 
-                                <div class="space-y-2">
-                                    <label
-                                        class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                        >LinkedIn URL</label
-                                    >
-                                    <div class="relative">
+                                    <div class="space-y-2">
+                                        <label
+                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                            >LinkedIn</label
+                                        >
                                         <input
                                             v-model="form.link_li"
                                             type="text"
-                                            placeholder="https://linkedin.com/in/..."
-                                            class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-medium text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                         />
                                     </div>
                                 </div>
 
-                                <div class="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <div
+                                    class="mt-4 grid grid-cols-1 gap-6 border-t border-white/5 pt-6 md:grid-cols-2"
+                                >
                                     <div class="space-y-2">
                                         <label
                                             class="text-[10px] font-black uppercase tracking-widest text-zinc-500"

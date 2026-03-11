@@ -34,8 +34,6 @@
     const isVideoModalOpen = ref(false);
 
     const openVideo = () => {
-        console.log(isVideoModalOpen.value);
-
         if (videoUrl.value) {
             isVideoModalOpen.value = true;
         } else {
@@ -83,11 +81,7 @@
                                 ></IconPlay>
                             </button>
 
-                            <Modal
-                                v-if="isVideoModalOpen"
-                                :show="isVideoModalOpen"
-                                @close="isVideoModalOpen = false"
-                            >
+                            <Modal :show="isVideoModalOpen" @close="isVideoModalOpen = false">
                                 <div class="aspect-video">
                                     <iframe
                                         :src="videoUrl"
@@ -133,7 +127,7 @@
                 </figure>
             </div>
 
-            <div class="slider-container group relative w-full lg:w-[40%]">
+            <div class="slider-container group relative w-full flex-shrink-0 lg:w-[40%]">
                 <swiper
                     :slides-per-view="1"
                     :space-between="20"
@@ -148,7 +142,7 @@
                         nextEl: '.next-btn',
                     }"
                     :autoplay="{
-                        delay: 4000,
+                        delay: 6000,
                         disableOnInteraction: false,
                         pauseOnMouseEnter: true,
                     }"
@@ -157,7 +151,7 @@
                     class="rounded-3xl"
                 >
                     <swiper-slide v-for="plant in heroPlants" :key="plant.id" class="!flex !h-auto">
-                        <HeroSliderCard :plant="plant" class="h-full w-full" />
+                        <HeroSliderCard :plant="plant" class="xl:aspect-[128 / 157] w-full" />
                     </swiper-slide>
                 </swiper>
 
@@ -192,16 +186,17 @@
 
     .hero__container {
         @include b.flex(space-between, flex-start);
-        gap: b.$mainGap;
+        gap: 2rem;
 
-        @media (max-width: 1115px) {
+        @media (max-width: 1300px) {
             flex-direction: column;
+            align-items: center;
         }
     }
 
     .hero__info {
         @include b.flex(flex-start, flex-start, column);
-        gap: 10.25rem;
+        gap: 5rem;
         max-width: calc(1rem * (892px / b.$basicFontSize));
         padding-top: 3.8rem;
 
@@ -221,7 +216,8 @@
     .hero__title {
         font-size: 4.9rem;
         font-weight: 600;
-        line-height: 1.32;
+        line-height: 1;
+        margin-bottom: 1.5rem;
 
         @media (max-width: b.$mediaMobile) {
             font-size: 2.4rem;
@@ -231,7 +227,7 @@
     .hero__descr {
         font-size: 0.96rem;
         font-weight: 500;
-        margin-bottom: 0.85rem;
+        margin-bottom: 1.5rem;
         line-height: 1.22;
 
         @media (max-width: b.$mediaMobile) {
@@ -281,6 +277,8 @@
     }
 
     .hero__comment {
+        aspect-ratio: 41 / 24;
+
         @media (max-width: 1115px) {
             display: none;
         }
@@ -292,21 +290,17 @@
     }
 
     :deep(.swiper) {
-        /* Основной цвет активной точки и прогресс-бара */
-        --swiper-pagination-color: #10b981 !important; /* твой emerald-500 */
+        --swiper-pagination-color: #10b981 !important;
 
-        /* Цвет неактивных точек */
-        --swiper-pagination-bullet-inactive-color: #888896 !important; /* zinc-600 */
+        --swiper-pagination-bullet-inactive-color: #b4b4bb !important;
 
-        /* Непрозрачность неактивных точек */
-        --swiper-pagination-bullet-inactive-opacity: 0.7;
+        --swiper-pagination-bullet-inactive-opacity: 0.8;
 
-        /* Расстояние между точками */
         --swiper-pagination-bullet-horizontal-gap: 6px;
     }
 
     :deep(.swiper-pagination) {
-        bottom: 2.5rem !important;
+        bottom: 1.5rem !important;
     }
 
     :deep(.swiper-pagination-bullet-active) {
@@ -317,8 +311,6 @@
 
     :deep(.swiper) {
         height: 100%;
-
-        padding-bottom: 5.2rem !important;
     }
 
     :deep(.swiper-wrapper) {
