@@ -12,7 +12,7 @@ class AdminUserController extends Controller
     public function index()
     {
         return Inertia::render('Admin/Users/Index', [
-            'users' => User::select('id', 'name', 'email', 'role', 'created_at')
+            'users' => User::select('id', 'name', 'email', 'role', 'created_at', 'avatar')
                            ->latest()
                            ->get()
         ]);

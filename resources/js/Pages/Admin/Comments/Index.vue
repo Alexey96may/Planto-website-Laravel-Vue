@@ -3,6 +3,7 @@
 
     import { Calendar, Eye, EyeOff, MessageSquare, Star, Trash2, User } from 'lucide-vue-next';
 
+    import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { Review } from '@/types';
@@ -64,16 +65,22 @@
                 <div class="mb-4 flex flex-wrap items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
                         <div
-                            class="flex h-10 w-10 items-center justify-center rounded-full bg-[#c5d86d]/10 text-[#c5d86d]"
+                            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-[#c5d86d]/10 text-[#c5d86d]"
                         >
-                            <User class="h-5 w-5" />
+                            <AppImage
+                                :src="comment.user?.avatar_url || ''"
+                                :alt="comment.user?.name || 'User'"
+                            ></AppImage>
                         </div>
                         <div>
                             <div class="font-bold leading-none text-white">
                                 {{ comment.user?.name || 'Guest' }}
                             </div>
-                            <div class="mt-1 text-[10px] uppercase tracking-widest text-zinc-500">
-                                {{ formatDate(comment.created_at) }}
+                            <div
+                                class="mt-1 flex items-center gap-1 text-[10px] uppercase tracking-widest text-zinc-500"
+                            >
+                                <Calendar class="h-3 w-3"></Calendar>
+                                <span>{{ formatDate(comment.created_at) }}</span>
                             </div>
                         </div>
                     </div>

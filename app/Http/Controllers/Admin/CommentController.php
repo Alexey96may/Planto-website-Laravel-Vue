@@ -12,7 +12,7 @@ class CommentController extends Controller
     public function index()
     {
         return Inertia::render('Admin/Comments/Index', [
-            'comments' => Comment::with('user:id,name,email')
+            'comments' => Comment::with('user:id,name,email,avatar')
                 ->latest()
                 ->get()
         ]);

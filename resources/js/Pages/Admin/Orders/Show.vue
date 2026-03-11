@@ -202,7 +202,12 @@
                                         <div
                                             class="text-sm font-bold uppercase tracking-tight text-white transition-colors group-hover:text-[#c5d86d]"
                                         >
-                                            {{ item.product_name }}
+                                            <Link
+                                                v-if="item.product"
+                                                :href="'/shop/plant-' + item.product?.id"
+                                                aria-label="To {{ item.product_name }}"
+                                                >{{ item.product_name }}
+                                            </Link>
                                         </div>
                                     </td>
                                     <td class="py-6 text-center">
