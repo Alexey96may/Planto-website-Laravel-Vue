@@ -125,11 +125,17 @@
                                     class="flex items-center justify-between gap-2 border-b border-white/[0.05] pb-2 text-xs font-medium last:border-0 last:pb-0"
                                 >
                                     <Link
-                                        :href="'/shop/plant-' + item.product?.id"
+                                        v-if="item.product"
+                                        :href="'/shop/plant-' + item.product.id"
                                         class="text-zinc-300 decoration-[#c5d86d]/30 underline-offset-4 transition-colors hover:text-[#c5d86d] hover:underline"
                                     >
                                         {{ item.product_name }}
                                     </Link>
+                                    <span
+                                        v-else
+                                        class="text-zinc-300 decoration-[#c5d86d]/30 underline-offset-4 transition-colors hover:text-[#c5d86d] hover:underline"
+                                        >x{{ item.product_name }}</span
+                                    >
                                     <span class="font-mono text-[#c5d86d]"
                                         >x{{ item.quantity }}</span
                                     >

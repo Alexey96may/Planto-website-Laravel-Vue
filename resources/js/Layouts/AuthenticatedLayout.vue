@@ -24,7 +24,7 @@
             <nav class="sticky top-0 z-50 border-b border-white/5 bg-[#1a1f16]/60 backdrop-blur-xl">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex h-20 items-center justify-between">
-                        <div class="flex items-center gap-10">
+                        <div class="flex items-center gap-2">
                             <div
                                 class="flex shrink-0 transform items-center transition hover:scale-105"
                             >
@@ -37,13 +37,23 @@
                             </div>
 
                             <div class="hidden space-x-6 sm:flex">
-                                <NavLink :href="'/'" :active="false"> Store </NavLink>
+                                <NavLink :href="route('home')" :active="false"> Store </NavLink>
+
+                                <NavLink
+                                    v-if="$page.props.auth.user.role === 'admin'"
+                                    :href="route('admin.dashboard')"
+                                    :active="route().current('admin.dashboard')"
+                                >
+                                    Admin Panel
+                                </NavLink>
+
                                 <NavLink
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
                                     My Garden
                                 </NavLink>
+
                                 <NavLink
                                     :href="route('orders.user')"
                                     :active="route().current('orders.user')"
