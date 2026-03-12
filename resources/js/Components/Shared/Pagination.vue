@@ -3,25 +3,38 @@
 
     import { PaginationLink } from '@/types';
 
-    const { links = [] } = defineProps<{
+    const { links = [], disabled = false } = defineProps<{
         links?: PaginationLink[];
+        disabled?: boolean;
     }>();
 </script>
 
 <template>
-    <div v-if="links.length > 3" class="flex justify-center mt-12 space-x-1">
-        <Link
-            v-for="(link, k) in links"
-            :key="k"
-            :href="link.url || '#'"
-            v-html="link.label"
-            class="px-4 py-2 rounded-lg text-sm transition-all"
-            :class="{
-                'bg-emerald-600 text-white shadow-md': link.active,
-                'text-gray-300 hover:bg-gray-100/80 hover:text-gray-700': !link.active && link.url,
-                'text-gray-500 cursor-default': !link.url,
-            }"
-            preserve-scroll
-        />
+    <div
+        v-if="links.length > 3"
+        class="mt-12 flex justify-center space-x-2 transition-all duration-300"
+        :class="{ 'pointer-events-none opacity-50': disabled }"
+    >
+        <template v-for="(link, k) in links" :key="k">
+            <div
+                v-if="!link.url"
+                v-html="link.label"
+                class="rounded-xl border border-white/5 bg-black/20 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-zinc-600"
+            />
+
+            <Link
+                v-else
+                :href="link.url"
+                v-html="link.label"
+                class="rounded-xl border px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-all"
+                :class="{
+                    'border-[#c5d86d] bg-[#c5d86d] text-black shadow-[0_0_20px_rgba(197,216,109,0.3)]':
+                        link.active,
+                    'border-white/5 bg-black/40 text-zinc-400 hover:scale-105 hover:border-[#c5d86d]/50 hover:text-white active:scale-95':
+                        !link.active,
+                }"
+                preserve-scroll
+            />
+        </template>
     </div>
 </template>

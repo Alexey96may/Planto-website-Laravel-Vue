@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { onMounted, onUnmounted, ref } from 'vue';
 
     import { Head, Link, router } from '@inertiajs/vue3';
 
@@ -8,6 +8,7 @@
 
     import Pagination from '@/Components/Shared/Pagination.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
+    import ProductAdminSkeleton from '@/Components/UI/ProductAdminSkeleton.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { useFlash } from '@/composables/useFlash';
     import { PaginatedResponse, ProductWithCategory } from '@/types';
@@ -87,6 +88,27 @@
             isDeleting.value = null;
         }
     };
+
+    const isLoading = ref(false);
+    let unregisterStart: () => void;
+    let unregisterFinish: () => void;
+
+    onMounted(() => {
+        unregisterStart = router.on('start', () => {
+            isLoading.value = true;
+        });
+
+        unregisterFinish = router.on('finish', () => {
+            setTimeout(() => {
+                isLoading.value = false;
+            }, 300);
+        });
+    });
+
+    onUnmounted(() => {
+        if (unregisterStart) unregisterStart();
+        if (unregisterFinish) unregisterFinish();
+    });
 </script>
 
 <template>
@@ -129,8 +151,13 @@
                     <div class="text-right">Actions</div>
                 </div>
 
-                <div class="divide-y divide-white/5">
+                <div class="min-h-[600px] divide-y divide-white/5">
+                    <template v-if="isLoading">
+                        <ProductAdminSkeleton v-for="i in products.per_page" :key="i" />
+                    </template>
+
                     <transition-group
+                        v-else
                         enter-active-class="transition duration-500 ease-out"
                         enter-from-class="transform translate-x-4 opacity-0"
                         leave-active-class="transition duration-300 ease-in"

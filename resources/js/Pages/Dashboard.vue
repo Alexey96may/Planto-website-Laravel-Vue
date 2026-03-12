@@ -256,7 +256,7 @@
                                 <input
                                     type="range"
                                     v-model="form.rating"
-                                    min="1"
+                                    min="0.5"
                                     max="5"
                                     step="0.5"
                                     class="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-zinc-800 accent-[#c5d86d]"

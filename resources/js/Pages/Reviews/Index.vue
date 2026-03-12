@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, ref, watch } from 'vue';
+    import { onMounted, onUnmounted, ref, watch } from 'vue';
 
     import { Head, router } from '@inertiajs/vue3';
 
@@ -9,6 +9,7 @@
     import Pagination from '@/Components/Shared/Pagination.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
+    import ReviewSkeleton from '@/Components/UI/ReviewSkeleton.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { PaginatedResponse, Review } from '@/types';
 
@@ -21,6 +22,20 @@
         averageRating: number;
         filters?: { sort: string };
     }>();
+
+    const isLoading = ref(false);
+    let unregisterStart: () => void;
+    let unregisterFinish: () => void;
+
+    onMounted(() => {
+        unregisterStart = router.on('start', () => (isLoading.value = true));
+        unregisterFinish = router.on('finish', () => (isLoading.value = false));
+    });
+
+    onUnmounted(() => {
+        if (unregisterStart) unregisterStart();
+        if (unregisterFinish) unregisterFinish();
+    });
 
     const selectedSort = ref(props.filters?.sort || 'newest');
 
@@ -85,76 +100,87 @@
         <CommentsFilter v-model="selectedSort" class="mb-8 ml-auto w-full md:w-1/3" />
 
         <div class="grid gap-8">
-            <div
-                v-for="(review, index) in reviews.data"
-                :key="review.id"
-                class="review-card group relative overflow-hidden rounded-[1rem] border border-white/25 bg-[#161b14] p-6 shadow-2xl transition-all hover:border-[#c5d86d]/20 sm:p-10 xl:rounded-[2rem]"
-                :style="{ animationDelay: `${index * 100}ms` }"
-            >
-                <div
-                    class="absolute -right-4 -top-6 select-none font-serif text-[12rem] text-[#c5d86d]/5"
-                >
-                    “
-                </div>
+            <TransitionGroup name="list-fade">
+                <template v-if="isLoading">
+                    <ReviewSkeleton v-for="i in reviews.data.length || 3" :key="'skeleton-' + i" />
+                </template>
 
-                <div class="relative z-10">
+                <template v-else>
                     <div
-                        class="mb-8 flex items-center justify-between border-b border-white/5 pb-6"
+                        v-for="(review, index) in reviews.data"
+                        :key="review.id"
+                        class="review-card group relative overflow-hidden rounded-[1rem] border border-white/25 bg-[#161b14] p-6 shadow-2xl transition-all hover:border-[#c5d86d]/20 sm:p-10 xl:rounded-[2rem]"
+                        :style="{ animationDelay: `${index * 100}ms` }"
                     >
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#c5d86d]/20 bg-zinc-800"
-                            >
-                                <AppImage
-                                    v-if="review.user?.avatar_url"
-                                    :src="review.user?.avatar_url"
-                                    class="h-full w-full object-cover"
-                                />
-                                <span v-else class="text-xl font-black text-[#c5d86d]">
-                                    {{ getInitials(review.user?.name) }}
-                                </span>
-                            </div>
+                        <div
+                            class="absolute -right-4 -top-6 select-none font-serif text-[12rem] text-[#c5d86d]/5"
+                        >
+                            “
+                        </div>
 
-                            <div class="flex flex-col gap-1">
-                                <h3 class="text-lg font-black uppercase tracking-tight text-white">
-                                    {{ review.user?.name || 'Anonymous' }}
-                                </h3>
+                        <div class="relative z-10">
+                            <div
+                                class="mb-8 flex items-center justify-between border-b border-white/5 pb-6"
+                            >
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#c5d86d]/20 bg-zinc-800"
+                                    >
+                                        <AppImage
+                                            v-if="review.user?.avatar_url"
+                                            :src="review.user?.avatar_url"
+                                            class="h-full w-full object-cover"
+                                        />
+                                        <span v-else class="text-xl font-black text-[#c5d86d]">
+                                            {{ getInitials(review.user?.name) }}
+                                        </span>
+                                    </div>
+
+                                    <div class="flex flex-col gap-1">
+                                        <h3
+                                            class="text-lg font-black uppercase tracking-tight text-white"
+                                        >
+                                            {{ review.user?.name || 'Anonymous' }}
+                                        </h3>
+
+                                        <div
+                                            class="flex items-center gap-1 rounded-full border border-white/5 bg-black/20 px-3 py-1.5 md:hidden"
+                                        >
+                                            <AppRating :rating="review.rating" />
+                                            <span
+                                                class="ml-2 text-xs font-black italic text-white"
+                                                >{{ review.rating?.toFixed(1) }}</span
+                                            >
+                                        </div>
+
+                                        <time
+                                            class="mt-2 flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500"
+                                        >
+                                            <Calendar class="h-3 w-3"></Calendar>
+                                            <span>{{ formatDate(review.created_at) }}</span>
+                                        </time>
+                                    </div>
+                                </div>
 
                                 <div
-                                    class="flex items-center gap-1 rounded-full border border-white/5 bg-black/20 px-3 py-1.5 md:hidden"
+                                    class="hidden items-center gap-1 rounded-full border border-white/5 bg-black/20 px-3 py-1.5 md:flex"
                                 >
                                     <AppRating :rating="review.rating" />
+
                                     <span class="ml-2 text-xs font-black italic text-white">{{
                                         review.rating?.toFixed(1)
                                     }}</span>
                                 </div>
-
-                                <time
-                                    class="mt-2 flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500"
-                                >
-                                    <Calendar class="h-3 w-3"></Calendar>
-                                    <span>{{ formatDate(review.created_at) }}</span>
-                                </time>
                             </div>
-                        </div>
 
-                        <div
-                            class="hidden items-center gap-1 rounded-full border border-white/5 bg-black/20 px-3 py-1.5 md:flex"
-                        >
-                            <AppRating :rating="review.rating" />
-
-                            <span class="ml-2 text-xs font-black italic text-white">{{
-                                review.rating?.toFixed(1)
-                            }}</span>
+                            <p class="text-sm italic leading-relaxed text-zinc-300 lg:text-xl">
+                                <span class="mr-1 font-serif text-2xl text-[#c5d86d]">“</span>
+                                {{ review.body }}
+                            </p>
                         </div>
                     </div>
-
-                    <p class="text-sm italic leading-relaxed text-zinc-300 lg:text-xl">
-                        <span class="mr-1 font-serif text-2xl text-[#c5d86d]">“</span>
-                        {{ review.body }}
-                    </p>
-                </div>
-            </div>
+                </template>
+            </TransitionGroup>
         </div>
 
         <div v-if="reviews.data.length === 0" class="py-32 text-center">
@@ -168,20 +194,28 @@
         </div>
     </div>
 
-    <Pagination :links="reviews.links" />
+    <Pagination :disabled="isLoading" :links="reviews.links" />
 </template>
 
 <style scoped>
-    .review-card {
-        animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        opacity: 0;
-        transform: translateY(30px);
+    .list-fade-enter-active,
+    .list-fade-leave-active {
+        transition: all 0.4s ease;
     }
 
-    @keyframes reveal {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .list-fade-enter-from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .list-fade-leave-to {
+        opacity: 0;
+        transform: translateY(-20px);
+        position: absolute;
+        width: 100%;
+    }
+
+    .review-card {
+        will-change: transform, opacity;
     }
 </style>

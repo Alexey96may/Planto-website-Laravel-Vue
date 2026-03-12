@@ -31,6 +31,7 @@
         categories: Category[];
         currentCategory: string | null;
         filters: ProductFilters;
+        loading?: boolean;
     }>();
 
     const page = usePage<SharedData>();
@@ -256,6 +257,7 @@
                                 v-for="(plant, index) in products.data"
                                 :key="plant.id"
                                 :plant="plant"
+                                :is-loading="isFiltering"
                                 :style="{ '--index': index }"
                                 :current_page="products.current_page"
                                 :processing-id="processingId === plant.id"
@@ -279,7 +281,7 @@
                 </main>
             </div>
         </div>
-        <Pagination :links="products.links" />
+        <Pagination :disabled="isFiltering" :links="products.links" />
     </div>
 </template>
 
