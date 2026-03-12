@@ -118,6 +118,11 @@
                             v-for="item in cart.items"
                             :key="item.product_id"
                             class="group relative flex items-center gap-4 rounded-[1.5rem] border border-zinc-800 bg-zinc-900/50 p-4 transition-all hover:border-zinc-700 sm:gap-6 sm:p-6"
+                            :class="[
+                                isDeleting === item.product_id
+                                    ? 'pointer-events-none scale-95 opacity-50'
+                                    : '',
+                            ]"
                         >
                             <div
                                 class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-2xl bg-zinc-800 sm:h-32 sm:w-32"

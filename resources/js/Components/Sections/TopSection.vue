@@ -31,7 +31,7 @@
 
 <template>
     <section class="top" id="top" aria-label="Top selling section">
-        <div class="container top__container">
+        <div class="top__container container">
             <h2 class="title top__title">
                 <Link v-if="sectionLink" :href="sectionLink" :aria-label="sectionTitle">
                     {{ sectionTitle }}
@@ -43,10 +43,12 @@
 
             <div class="top__cards" aria-label="Cards field">
                 <PlantTopCard
-                    v-for="plant in topPlants"
+                    v-for="(plant, index) in topPlants"
                     :key="plant.id"
+                    class="reveal-item"
                     :plant="plant"
                     :is-in-cart="cartIds.includes(plant.id)"
+                    :style="{ transitionDelay: `${index * 300}ms` }"
                     :is-processing="processingId === plant.id"
                     @add-to-cart="emit('add-to-cart', $event)"
                 ></PlantTopCard>
@@ -77,5 +79,25 @@
     .top__cards {
         @include b.flex(center, center, row, wrap);
         column-gap: calc(1rem * (41px / b.$basicFontSize));
+    }
+
+    .reveal-item {
+        opacity: 0;
+        transform: translate3d(0, 25px, 0);
+        transition:
+            opacity 0.6s ease-out,
+            transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+
+        -webkit-font-smoothing: antialiased;
+        backface-visibility: hidden;
+        will-change: transform, opacity;
+        outline: 1px solid transparent;
+        background-clip: padding-box;
+        -webkit-perspective: 1000px;
+    }
+
+    .reveal-visible .reveal-item {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
 </style>

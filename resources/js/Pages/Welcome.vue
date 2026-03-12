@@ -9,6 +9,7 @@
     import Top from '@/Components/Sections/TopSection.vue';
     import Trendy from '@/Components/Sections/TrendySection.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
+    import { useScrollReveal } from '@/composables/useScrollReveal';
     import {
         Feature,
         Product,
@@ -60,6 +61,11 @@
             },
         );
     };
+
+    useScrollReveal({
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px',
+    });
 </script>
 
 <template>
@@ -67,10 +73,11 @@
 
     <MainLayout :full="true">
         <template #hero>
-            <Hero :heroPlants="heroPlants" :comment="comments[0] || null" />
+            <Hero class="reveal" :heroPlants="heroPlants" :comment="comments[0] || null" />
         </template>
         <template #trendy>
             <Trendy
+                class="reveal"
                 v-if="trendyPlants.length"
                 :trendyPlants="trendyPlants"
                 :cart-ids="cartIds"
@@ -80,13 +87,38 @@
         </template>
 
         <Top
+            class="reveal"
             v-if="topPlants.length"
             :topPlants="topPlants"
             :cart-ids="cartIds"
             :processing-id="processingId"
             @add-to-cart="handleAddToCart"
         />
-        <Review v-if="comments.length" :comments="comments" />
-        <Best :features="features" />
+        <Review v-if="comments.length" :comments="comments" class="reveal" />
+        <Best :features="features" class="reveal" />
     </MainLayout>
 </template>
+
+<style>
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+        transition:
+            opacity 0.8s cubic-bezier(0.21, 0.45, 0.32, 0.9),
+            transform 0.8s cubic-bezier(0.21, 0.45, 0.32, 0.9);
+        will-change: transform, opacity;
+    }
+
+    .reveal-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .reveal {
+            transition: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+        }
+    }
+</style>

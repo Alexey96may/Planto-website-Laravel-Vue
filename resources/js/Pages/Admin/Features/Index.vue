@@ -82,57 +82,70 @@
             </Link>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 xl:grid-cols-2 2xl:grid-cols-3">
-            <div
-                v-for="feature in features"
-                :key="feature.id"
-                class="group relative overflow-hidden rounded-[2rem] border border-white/5 bg-[#161b14]/60 backdrop-blur-sm transition-all duration-300 hover:border-[#c5d86d]/30"
+        <div>
+            <transition-group
+                enter-active-class="transition duration-500 ease-out"
+                enter-from-class="transform translate-x-4 opacity-0"
+                leave-active-class="transition duration-300 ease-in"
+                leave-to-class="transform -translate-x-10 opacity-0"
+                move-class="transition duration-500"
+                class="grid grid-cols-1 gap-6 xl:grid-cols-2 2xl:grid-cols-3"
+                tag="div"
             >
-                <div class="relative h-48 w-full overflow-hidden bg-black/40">
-                    <AppImage
-                        v-if="feature.image_url"
-                        :src="feature.image_url"
-                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div
-                        v-else
-                        class="flex h-full w-full flex-col items-center justify-center text-zinc-700"
-                    >
-                        <ImageIcon class="mb-2 h-10 w-10" />
-                        <span class="text-xs font-black uppercase">No Preview</span>
+                <div
+                    v-for="feature in features"
+                    :key="feature.id"
+                    class="group relative overflow-hidden rounded-[2rem] border border-white/5 bg-[#161b14]/60 backdrop-blur-sm transition-all duration-300 hover:border-[#c5d86d]/30"
+                    :class="[
+                        isDeleting === feature.id ? 'pointer-events-none scale-95 opacity-50' : '',
+                    ]"
+                >
+                    <div class="relative h-48 w-full overflow-hidden bg-black/40">
+                        <AppImage
+                            v-if="feature.image_url"
+                            :src="feature.image_url"
+                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div
+                            v-else
+                            class="flex h-full w-full flex-col items-center justify-center text-zinc-700"
+                        >
+                            <ImageIcon class="mb-2 h-10 w-10" />
+                            <span class="text-xs font-black uppercase">No Preview</span>
+                        </div>
+
+                        <div
+                            class="absolute left-4 top-4 flex items-center gap-2 rounded-full border border-white/10 bg-[#0f120e]/80 px-3 py-1 text-xs font-bold text-white backdrop-blur-md"
+                        >
+                            <ArrowUpDown class="h-3 w-3 text-[#c5d86d]" />
+                            Order: {{ feature.order }}
+                        </div>
                     </div>
 
-                    <div
-                        class="absolute left-4 top-4 flex items-center gap-2 rounded-full border border-white/10 bg-[#0f120e]/80 px-3 py-1 text-xs font-bold text-white backdrop-blur-md"
-                    >
-                        <ArrowUpDown class="h-3 w-3 text-[#c5d86d]" />
-                        Order: {{ feature.order }}
+                    <div class="p-6">
+                        <h3 class="mb-4 truncate text-lg font-bold italic text-white">
+                            {{ feature.title }}
+                        </h3>
+
+                        <div class="flex items-center gap-2">
+                            <Link
+                                :href="route('admin.features.edit', feature.id)"
+                                class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white/5 py-3 text-sm font-bold text-zinc-300 transition-all hover:bg-white/10"
+                            >
+                                <Pencil class="h-4 w-4" />
+                                Edit
+                            </Link>
+
+                            <button
+                                @click="deleteFeature(feature.id)"
+                                class="rounded-xl bg-red-500/10 p-3 text-red-500 transition-all hover:bg-red-500 hover:text-white"
+                            >
+                                <Trash2 class="h-4 w-4" />
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="p-6">
-                    <h3 class="mb-4 truncate text-lg font-bold italic text-white">
-                        {{ feature.title }}
-                    </h3>
-
-                    <div class="flex items-center gap-2">
-                        <Link
-                            :href="route('admin.features.edit', feature.id)"
-                            class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white/5 py-3 text-sm font-bold text-zinc-300 transition-all hover:bg-white/10"
-                        >
-                            <Pencil class="h-4 w-4" />
-                            Edit
-                        </Link>
-
-                        <button
-                            @click="deleteFeature(feature.id)"
-                            class="rounded-xl bg-red-500/10 p-3 text-red-500 transition-all hover:bg-red-500 hover:text-white"
-                        >
-                            <Trash2 class="h-4 w-4" />
-                        </button>
-                    </div>
-                </div>
-            </div>
+            </transition-group>
 
             <div
                 v-if="features.length === 0"
@@ -144,3 +157,14 @@
         </div>
     </div>
 </template>
+
+<style scoped>
+    .v-move {
+        transition: transform 0.5s ease;
+    }
+
+    .v-leave-active {
+        position: absolute;
+        width: 100%;
+    }
+</style>

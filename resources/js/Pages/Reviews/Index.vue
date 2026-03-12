@@ -3,6 +3,8 @@
 
     import { Head, router } from '@inertiajs/vue3';
 
+    import { Calendar } from 'lucide-vue-next';
+
     import CommentsFilter from '@/Components/Shared/CommentsFilter.vue';
     import Pagination from '@/Components/Shared/Pagination.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
@@ -35,6 +37,11 @@
     });
 
     const getInitials = (name: string) => (name ? name.charAt(0).toUpperCase() : 'A');
+
+    const formatDate = (dateStr?: string) => {
+        if (!dateStr) return '';
+        return new Date(dateStr).toLocaleDateString();
+    };
 </script>
 
 <template>
@@ -113,22 +120,32 @@
                                     {{ review.user?.name || 'Anonymous' }}
                                 </h3>
 
-                                <div class="inline-block md:hidden">
+                                <div
+                                    class="flex items-center gap-1 rounded-full border border-white/5 bg-black/20 px-3 py-1.5 md:hidden"
+                                >
                                     <AppRating :rating="review.rating" />
+                                    <span class="ml-2 text-xs font-black italic text-white">{{
+                                        review.rating?.toFixed(1)
+                                    }}</span>
                                 </div>
 
                                 <time
-                                    class="mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500"
+                                    class="mt-2 flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500"
                                 >
-                                    {{ new Date(review.created_at).toLocaleDateString('en-US') }}
+                                    <Calendar class="h-3 w-3"></Calendar>
+                                    <span>{{ formatDate(review.created_at) }}</span>
                                 </time>
                             </div>
                         </div>
 
                         <div
-                            class="hidden rounded-xl border border-white/10 bg-white/5 px-4 py-2 md:block"
+                            class="hidden items-center gap-1 rounded-full border border-white/5 bg-black/20 px-3 py-1.5 md:flex"
                         >
                             <AppRating :rating="review.rating" />
+
+                            <span class="ml-2 text-xs font-black italic text-white">{{
+                                review.rating?.toFixed(1)
+                            }}</span>
                         </div>
                     </div>
 

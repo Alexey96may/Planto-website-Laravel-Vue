@@ -99,7 +99,12 @@
                     </div>
                 </div>
 
-                <figure class="comment hero__comment" aria-label="Main comment" v-if="comment">
+                <figure
+                    class="comment hero__comment reveal-item"
+                    style="transition-delay: 500ms"
+                    aria-label="Main comment"
+                    v-if="comment"
+                >
                     <div class="comment__author author" aria-label="Comment author">
                         <div class="author__photo" aria-label="Author`s photo">
                             <AppImage
@@ -320,5 +325,24 @@
 
     :deep(.swiper-slide) {
         height: auto !important;
+    }
+
+    .reveal-item {
+        opacity: 0;
+        transform: translate3d(0, 25px, 0);
+        transition:
+            opacity 0.6s ease-out,
+            transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        -webkit-font-smoothing: antialiased;
+        backface-visibility: hidden;
+        will-change: transform, opacity;
+        outline: 1px solid transparent;
+        background-clip: padding-box;
+        -webkit-perspective: 1000px;
+    }
+
+    .reveal-visible .reveal-item {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
 </style>

@@ -192,71 +192,70 @@
             <div
                 class="overflow-hidden rounded-[2rem] border border-white/5 bg-[#161b14]/40 backdrop-blur-sm"
             >
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse text-left">
-                        <thead>
-                            <tr class="border-b border-white/5 bg-white/[0.01]">
-                                <th
-                                    class="p-6 text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                >
-                                    Collection Name
-                                </th>
-                                <th
-                                    class="hidden p-6 text-[10px] font-black uppercase tracking-widest text-zinc-500 sm:table-cell"
-                                >
-                                    Slug
-                                </th>
-                                <th
-                                    class="p-6 text-right text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                >
-                                    Control
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-white/5">
-                            <tr
+                <div class="overflow-hidden">
+                    <div
+                        class="hidden grid-cols-[1fr_200px_120px] border-b border-white/5 bg-white/[0.01] px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 sm:grid"
+                    >
+                        <div>Collection Name</div>
+                        <div>Slug</div>
+                        <div class="text-right">Control</div>
+                    </div>
+
+                    <div class="relative divide-y divide-white/5">
+                        <transition-group
+                            enter-active-class="transition duration-500 ease-out"
+                            enter-from-class="transform translate-x-4 opacity-0"
+                            leave-active-class="transition duration-300 ease-in"
+                            leave-to-class="transform -translate-x-10 opacity-0"
+                            move-class="transition duration-500"
+                            tag="div"
+                        >
+                            <div
                                 v-for="category in categories"
                                 :key="category.id"
-                                class="group transition-colors duration-300 hover:bg-white/[0.02]"
+                                :class="[
+                                    'group grid grid-cols-1 items-center gap-4 px-8 py-6 transition-all duration-300 hover:bg-white/[0.02] sm:grid-cols-[1fr_200px_120px]',
+                                    isDeleting === category.id
+                                        ? 'pointer-events-none scale-95 opacity-50'
+                                        : '',
+                                ]"
                             >
-                                <td class="p-6">
-                                    <div class="flex items-center gap-4">
-                                        <div
-                                            class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 bg-white/5 font-mono font-bold text-[#c5d86d] transition-all duration-500 group-hover:scale-110 group-hover:bg-[#c5d86d]/10"
-                                        >
-                                            #
-                                        </div>
-                                        <span
-                                            class="font-bold text-zinc-200 transition-colors group-hover:text-white"
-                                        >
-                                            {{ category.title }}
-                                        </span>
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/5 bg-white/5 font-mono font-bold text-[#c5d86d] transition-all duration-500 group-hover:scale-110 group-hover:bg-[#c5d86d]/10"
+                                    >
+                                        #
                                     </div>
-                                </td>
-                                <td
-                                    class="hidden p-6 font-mono text-xs italic text-zinc-600 sm:table-cell"
+                                    <span
+                                        class="truncate font-bold text-zinc-200 transition-colors group-hover:text-white"
+                                    >
+                                        {{ category.title }}
+                                    </span>
+                                </div>
+
+                                <div
+                                    class="hidden truncate font-mono text-xs italic text-zinc-600 sm:block"
                                 >
                                     {{ category.slug }}
-                                </td>
-                                <td class="p-6">
-                                    <div class="flex justify-end gap-2">
-                                        <button
-                                            @click="editCategory(category)"
-                                            class="rounded-xl bg-white/5 p-3 text-zinc-500 transition-all hover:bg-white/10 hover:text-[#c5d86d]"
-                                        >
-                                            <Pencil class="h-4 w-4" />
-                                        </button>
-                                        <button
-                                            @click="deleteCategory(category)"
-                                            class="rounded-xl bg-white/5 p-3 text-zinc-600 transition-all hover:bg-red-500/10 hover:text-red-500"
-                                        >
-                                            <Trash2 class="h-4 w-4" />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                </div>
+
+                                <div class="flex justify-end gap-2">
+                                    <button
+                                        @click="editCategory(category)"
+                                        class="rounded-xl bg-white/5 p-3 text-zinc-500 transition-all hover:bg-white/10 hover:text-[#c5d86d]"
+                                    >
+                                        <Pencil class="h-4 w-4" />
+                                    </button>
+                                    <button
+                                        @click="deleteCategory(category)"
+                                        class="rounded-xl bg-white/5 p-3 text-zinc-600 transition-all hover:bg-red-500/10 hover:text-red-500"
+                                    >
+                                        <Trash2 class="h-4 w-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        </transition-group>
+                    </div>
                 </div>
             </div>
         </div>
@@ -275,5 +274,14 @@
         to {
             transform: rotate(360deg);
         }
+    }
+
+    .v-move {
+        transition: transform 0.5s ease;
+    }
+
+    .v-leave-active {
+        position: absolute;
+        width: 100%;
     }
 </style>

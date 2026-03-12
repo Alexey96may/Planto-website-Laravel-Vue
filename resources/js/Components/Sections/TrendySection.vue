@@ -30,7 +30,7 @@
 </script>
 
 <template>
-    <section class="trendy" id="trendy" aria-label="Trendy plants section">
+    <section class="trendy reveal" id="trendy" aria-label="Trendy plants section">
         <div class="trendy__container container">
             <h2 class="trendy__title">
                 <Link :href="sectionLink" :aria-label="sectionTitle" v-if="sectionLink">
@@ -41,12 +41,14 @@
 
             <div class="trendy__cards">
                 <TrendyCard
-                    v-for="plant in trendyPlants"
+                    v-for="(plant, index) in trendyPlants"
                     :key="plant.id"
                     :plant="plant"
                     :is-in-cart="cartIds.includes(plant.id)"
                     :is-processing="processingId === plant.id"
+                    :style="{ transitionDelay: `${index * 500}ms` }"
                     @add-to-cart="emit('add-to-cart', $event)"
+                    class="reveal-item"
                 ></TrendyCard>
             </div>
         </div>
@@ -85,5 +87,25 @@
     .trendy__cards {
         @include b.flex(flex-start, flex-start, column);
         gap: calc(1rem * (139px / b.$basicFontSize));
+    }
+
+    .reveal-item {
+        opacity: 0;
+        transform: translate3d(0, 25px, 0);
+        transition:
+            opacity 0.6s ease-out,
+            transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+
+        -webkit-font-smoothing: antialiased;
+        backface-visibility: hidden;
+        will-change: transform, opacity;
+        outline: 1px solid transparent;
+        background-clip: padding-box;
+        -webkit-perspective: 1000px;
+    }
+
+    .reveal-visible .reveal-item {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
 </style>

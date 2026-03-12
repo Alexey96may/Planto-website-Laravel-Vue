@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { ref, watch } from 'vue';
 
     import { Head, Link, router } from '@inertiajs/vue3';
 
@@ -29,6 +29,14 @@
 
     const list = ref([...props.menuItems]);
     const isSaving = ref(false);
+
+    watch(
+        () => props.menuItems,
+        (newItems) => {
+            list.value = [...newItems];
+        },
+        { deep: true },
+    );
 
     const saveOrder = () => {
         isSaving.value = true;
@@ -78,6 +86,12 @@
             isDeleting.value = null;
         }
     };
+
+    const triggerHaptic = () => {
+        if (window.navigator && window.navigator.vibrate) {
+            window.navigator.vibrate(15);
+        }
+    };
 </script>
 
 <template>
@@ -98,7 +112,7 @@
                 <button
                     @click="saveOrder"
                     :disabled="isSaving"
-                    class="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-[#c5d86d]/20 bg-white/5 px-6 py-3 font-black text-[#c5d86d] transition-all hover:bg-white/10 disabled:opacity-50 sm:flex-none"
+                    class="flex flex-1 items-center justify-center gap-2 rounded-lg border border-[#c5d86d]/20 bg-white/5 px-6 py-3 font-black text-[#c5d86d] transition-all hover:bg-white/10 disabled:opacity-50 sm:flex-none lg:rounded-2xl"
                 >
                     <Save class="h-4 w-4" :class="{ 'animate-pulse': isSaving }" />
                     {{ isSaving ? 'SAVING...' : 'SAVE ORDER' }}
@@ -106,7 +120,7 @@
 
                 <Link
                     :href="route('admin.navigation.create')"
-                    class="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#c5d86d] px-6 py-3 font-black text-[#0f120e] shadow-lg shadow-[#c5d86d]/10 transition-all hover:bg-[#d4e685] sm:flex-none"
+                    class="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#c5d86d] px-6 py-3 font-black text-[#0f120e] shadow-lg shadow-[#c5d86d]/10 transition-all hover:bg-[#d4e685] sm:flex-none lg:rounded-2xl"
                 >
                     <Plus class="h-5 w-5" />
                     ADD ITEM
@@ -115,7 +129,7 @@
         </div>
 
         <div
-            class="overflow-x-auto rounded-[1.5rem] border border-white/5 bg-[#161b14]/60 backdrop-blur-sm lg:rounded-[2.5rem]"
+            class="overflow-x-auto rounded-[1.5rem] border border-white/5 bg-[#161b14]/60 backdrop-blur-sm xl:rounded-[2.5rem]"
         >
             <div
                 class="hidden grid-cols-12 gap-4 border-b border-white/5 bg-white/[0.02] p-6 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 md:grid"
@@ -131,14 +145,19 @@
                 v-model="list"
                 item-key="id"
                 handle=".drag-handle"
-                ghost-class="opacity-0"
+                @start="triggerHaptic"
+                ghost-class="ghost-element"
                 drag-class="scale-[1.02]"
                 class="divide-y divide-white/5"
+                tag="div"
             >
                 <template #item="{ element }">
-                    <div class="group">
+                    <div class="group flex flex-col">
                         <div
-                            class="grid grid-cols-1 items-center gap-y-4 p-5 transition-colors hover:bg-white/[0.03] md:grid-cols-12 md:gap-4 md:p-6"
+                            :class="[
+                                'grid grid-cols-1 items-center gap-y-4 p-5 transition-colors hover:bg-white/[0.03] md:grid-cols-12 md:gap-4 md:p-6',
+                                isDeleting === element.id ? 'pointer-events-none opacity-50' : '',
+                            ]"
                         >
                             <div
                                 class="col-span-1 flex items-center justify-between md:justify-start"
@@ -212,6 +231,11 @@
                                 v-for="child in element.children"
                                 :key="child.id"
                                 class="grid grid-cols-1 items-center gap-3 border-b border-white/[0.02] p-4 pl-8 last:border-0 md:grid-cols-12 md:gap-4 md:pl-20"
+                                :class="[
+                                    isDeleting === child.id
+                                        ? 'pointer-events-none scale-95 opacity-50'
+                                        : '',
+                                ]"
                             >
                                 <div class="col-span-1 flex items-center gap-3 md:col-span-5">
                                     <span class="italic text-zinc-600">↳</span>
@@ -264,3 +288,51 @@
         </div>
     </div>
 </template>
+
+<style scoped>
+    .v-move {
+        transition: transform 0.5s ease;
+    }
+
+    .v-leave-to {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    .v-leave-active {
+        position: absolute;
+        width: 100%;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sortable-chosen {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .sortable-drag {
+        opacity: 1 !important;
+        background: #1a2018 !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        transform: rotate(1deg);
+        cursor: grabbing;
+    }
+
+    .drag-handle:hover {
+        background-color: rgba(197, 216, 109, 0.1);
+        transform: scale(1.05);
+    }
+
+    .drag-handle:active {
+        transform: scale(0.95);
+    }
+
+    .ghost-element {
+        background: rgba(197, 216, 109, 0.05) !important;
+        border: 1px dashed rgba(197, 216, 109, 0.3) !important;
+        opacity: 0.8;
+    }
+
+    .ghost-element * {
+        visibility: hidden;
+    }
+</style>

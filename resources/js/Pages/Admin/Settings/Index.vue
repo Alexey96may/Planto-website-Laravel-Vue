@@ -151,264 +151,296 @@
 
                 <main class="flex-1">
                     <form @submit.prevent="submit" class="space-y-8 pb-24">
-                        <section
-                            v-show="activeTab === 'general'"
-                            class="animate-in fade-in slide-in-from-bottom-4 space-y-6 rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl duration-500 md:rounded-[2.5rem]"
-                        >
-                            <h2
-                                class="mb-8 flex items-center gap-3 text-sm font-black uppercase tracking-[0.3em] text-[#c5d86d]"
-                            >
-                                <Globe class="h-4 w-4" /> Global Identity
-                            </h2>
-
-                            <div class="space-y-4">
-                                <div class="grid grid-cols-1 gap-6">
-                                    <div class="space-y-2">
-                                        <label
-                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                            >Site Name</label
-                                        >
-                                        <input
-                                            v-model="form.site_name"
-                                            type="text"
-                                            class="w-full rounded-sm border border-white/5 bg-black/50 p-4 font-bold text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50 md:rounded-2xl"
-                                        />
-                                    </div>
-                                    <div
-                                        class="flex items-center gap-4 rounded-sm border border-white/5 bg-black/30 p-4 md:rounded-2xl"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            id="is_open_check"
-                                            v-model="form.is_open"
-                                            class="h-5 w-5 rounded border-emerald-400 bg-emerald-800 text-emerald-800 focus:ring-[#31be44]"
-                                        />
-                                        <label
-                                            for="is_open_check"
-                                            class="cursor-pointer text-xs font-bold uppercase tracking-tighter text-zinc-300"
-                                            >Public access enabled</label
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section
-                            v-show="activeTab === 'contacts'"
-                            class="animate-in fade-in slide-in-from-bottom-4 space-y-6 rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl duration-500 md:rounded-[2.5rem]"
-                        >
-                            <h2
-                                class="mb-8 flex items-center gap-3 text-sm font-black uppercase tracking-[0.3em] text-[#c5d86d]"
-                            >
-                                <Phone class="h-4 w-4" /> Communications
-                            </h2>
-                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                <div class="space-y-2">
-                                    <label
-                                        class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                        >Phone Line</label
-                                    >
-                                    <input
-                                        v-model="form.contact_phone"
-                                        type="text"
-                                        class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-mono text-white"
-                                    />
-                                </div>
-                                <div class="space-y-2">
-                                    <label
-                                        class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                        >Support Email</label
-                                    >
-                                    <input
-                                        v-model="form.contact_email"
-                                        type="email"
-                                        class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-bold text-white"
-                                    />
-                                </div>
-                                <div class="space-y-2 md:col-span-2">
-                                    <label
-                                        class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                        >Physical HQ Address</label
-                                    >
-                                    <textarea
-                                        v-model="form.contact_address"
-                                        rows="3"
-                                        class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-zinc-400 outline-none"
-                                    ></textarea>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section
-                            v-show="activeTab === 'display'"
-                            class="animate-in fade-in slide-in-from-bottom-4 space-y-6 rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl duration-500 md:rounded-[2.5rem]"
-                        >
-                            <h2
-                                class="mb-8 flex items-center gap-3 text-sm font-black uppercase tracking-[0.3em] text-[#c5d86d]"
-                            >
-                                <ListOrdered class="h-4 w-4" /> Quantum Limits
-                            </h2>
-                            <div class="grid grid-cols-2 gap-6 md:grid-cols-3">
-                                <div v-for="field in limitFields" :key="field" class="space-y-2">
-                                    <label
-                                        class="block truncate text-[9px] font-black uppercase tracking-tighter text-zinc-600"
-                                        >{{ field.replace(/_/g, ' ') }}</label
-                                    >
-                                    <input
-                                        v-model="form[field]"
-                                        type="number"
-                                        class="w-full rounded-xl border border-white/5 bg-black/50 p-3 text-center font-mono font-bold text-[#c5d86d]"
-                                    />
-                                </div>
-                            </div>
-                        </section>
-
-                        <section
-                            v-show="activeTab === 'social'"
-                            class="animate-in fade-in slide-in-from-bottom-4 space-y-6 rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl duration-500 md:rounded-[2.5rem]"
-                        >
-                            <h2
-                                class="mb-8 flex items-center gap-3 text-sm font-black uppercase tracking-[0.3em] text-[#c5d86d]"
-                            >
-                                <Share2 class="h-4 w-4" /> Social Presence
-                            </h2>
-
-                            <div class="grid grid-cols-1 gap-6">
-                                <div class="space-y-2">
-                                    <label
-                                        class="text-[10px] font-black uppercase tracking-widest text-[#c5d86d]"
-                                    >
-                                        Live Demo / Video Presentation
-                                    </label>
-                                    <div class="group relative">
-                                        <div
-                                            class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 transition-colors group-focus-within:text-[#c5d86d]"
-                                        >
-                                            <Video class="h-4 w-4" />
-                                        </div>
-                                        <input
-                                            v-model="form.live_demo_url"
-                                            type="text"
-                                            placeholder="https://youtube.com/watch?v=..."
-                                            class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 pl-12 font-medium text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
-                                        />
-                                    </div>
-                                    <p
-                                        class="text-[9px] font-bold uppercase tracking-tight text-zinc-600"
-                                    >
-                                        This link will be used for the "Watch Demo" buttons on the
-                                        landing page.
-                                    </p>
-                                </div>
-
-                                <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-                                    <div class="space-y-2">
-                                        <label
-                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                            >Facebook</label
-                                        >
-                                        <input
-                                            v-model="form.link_fb"
-                                            type="text"
-                                            class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
-                                        />
-                                    </div>
-
-                                    <div class="space-y-2">
-                                        <label
-                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                            >X / Twitter</label
-                                        >
-                                        <input
-                                            v-model="form.link_x"
-                                            type="text"
-                                            class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
-                                        />
-                                    </div>
-
-                                    <div class="space-y-2">
-                                        <label
-                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                            >LinkedIn</label
-                                        >
-                                        <input
-                                            v-model="form.link_li"
-                                            type="text"
-                                            class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="mt-4 grid grid-cols-1 gap-6 border-t border-white/5 pt-6 md:grid-cols-2"
+                        <transition name="tab-fade" mode="out-in">
+                            <div :key="activeTab">
+                                <section
+                                    v-show="activeTab === 'general'"
+                                    class="animate-in fade-in slide-in-from-bottom-4 space-y-6 rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl duration-500 md:rounded-[2.5rem]"
                                 >
-                                    <div class="space-y-2">
-                                        <label
-                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                            >Footer Main Text</label
-                                        >
-                                        <input
-                                            v-model="form.footer_main_text"
-                                            type="text"
-                                            class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-sm text-white"
-                                        />
-                                    </div>
-                                    <div class="space-y-2">
-                                        <label
-                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
-                                            >Copyright Line</label
-                                        >
-                                        <input
-                                            v-model="form.footer_rights"
-                                            type="text"
-                                            class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-sm text-white"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section
-                            v-show="activeTab === 'sections'"
-                            class="animate-in fade-in slide-in-from-bottom-4 space-y-8 rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl duration-500 md:rounded-[2.5rem]"
-                        >
-                            <h2
-                                class="mb-4 flex items-center gap-3 text-sm font-black uppercase tracking-[0.3em] text-[#c5d86d]"
-                            >
-                                <Layout class="h-4 w-4" /> Layout Modules
-                            </h2>
-
-                            <div
-                                v-for="section in ['trendy', 'selling', 'reviews', 'o2']"
-                                :key="section"
-                                class="space-y-4 rounded-3xl border border-white/5 bg-black/20 p-6"
-                            >
-                                <div class="mb-2 flex items-center gap-2">
-                                    <span
-                                        class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400"
-                                        >{{ section }} Block</span
+                                    <h2
+                                        class="mb-8 flex items-center gap-3 text-sm font-black uppercase tracking-[0.3em] text-[#c5d86d]"
                                     >
-                                </div>
-                                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                    <input
-                                        v-model="
-                                            form[`section_${section}_title` as keyof SettingsForm]
-                                        "
-                                        type="text"
-                                        placeholder="Title"
-                                        class="w-full rounded-xl border border-white/5 bg-black p-3 text-sm text-white"
-                                    />
-                                    <input
-                                        v-model="
-                                            form[`section_${section}_link` as keyof SettingsForm]
-                                        "
-                                        type="text"
-                                        placeholder="Route / Link"
-                                        class="w-full rounded-xl border border-white/5 bg-black p-3 text-sm text-zinc-500"
-                                    />
-                                </div>
+                                        <Globe class="h-4 w-4" /> Global Identity
+                                    </h2>
+
+                                    <div class="space-y-4">
+                                        <div class="grid grid-cols-1 gap-6">
+                                            <div class="space-y-2">
+                                                <label
+                                                    class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    >Site Name</label
+                                                >
+                                                <input
+                                                    v-model="form.site_name"
+                                                    type="text"
+                                                    class="w-full rounded-sm border border-white/5 bg-black/50 p-4 font-bold text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50 md:rounded-2xl"
+                                                />
+                                            </div>
+                                            <div
+                                                class="flex items-center gap-4 rounded-sm border border-white/5 bg-black/30 p-4 md:rounded-2xl"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    id="is_open_check"
+                                                    v-model="form.is_open"
+                                                    class="h-5 w-5 rounded border-emerald-400 bg-emerald-800 text-emerald-800 focus:ring-[#31be44]"
+                                                />
+                                                <label
+                                                    for="is_open_check"
+                                                    class="cursor-pointer text-xs font-bold uppercase tracking-tighter text-zinc-300"
+                                                    >Public access enabled</label
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section
+                                    v-show="activeTab === 'contacts'"
+                                    class="animate-in fade-in slide-in-from-bottom-4 space-y-6 rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl duration-500 md:rounded-[2.5rem]"
+                                >
+                                    <h2
+                                        class="mb-8 flex items-center gap-3 text-sm font-black uppercase tracking-[0.3em] text-[#c5d86d]"
+                                    >
+                                        <Phone class="h-4 w-4" /> Communications
+                                    </h2>
+                                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                        <div class="space-y-2">
+                                            <label
+                                                class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                >Phone Line</label
+                                            >
+                                            <input
+                                                v-model="form.contact_phone"
+                                                type="text"
+                                                class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-mono text-white"
+                                            />
+                                        </div>
+                                        <div class="space-y-2">
+                                            <label
+                                                class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                >Support Email</label
+                                            >
+                                            <input
+                                                v-model="form.contact_email"
+                                                type="email"
+                                                class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-bold text-white"
+                                            />
+                                        </div>
+                                        <div class="space-y-2 md:col-span-2">
+                                            <label
+                                                class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                >Physical HQ Address</label
+                                            >
+                                            <textarea
+                                                v-model="form.contact_address"
+                                                rows="3"
+                                                class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-zinc-400 outline-none"
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section
+                                    v-show="activeTab === 'display'"
+                                    class="animate-in fade-in slide-in-from-bottom-4 space-y-6 rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl duration-500 md:rounded-[2.5rem]"
+                                >
+                                    <h2
+                                        class="mb-8 flex items-center gap-3 text-sm font-black uppercase tracking-[0.3em] text-[#c5d86d]"
+                                    >
+                                        <ListOrdered class="h-4 w-4" /> Quantum Limits
+                                    </h2>
+                                    <div class="grid grid-cols-2 gap-6 md:grid-cols-3">
+                                        <transition-group
+                                            enter-active-class="transition duration-500 ease-out"
+                                            enter-from-class="transform translate-x-4 opacity-0"
+                                            leave-active-class="transition duration-300 ease-in"
+                                            leave-to-class="transform -translate-x-10 opacity-0"
+                                            move-class="transition duration-500"
+                                        >
+                                            <div
+                                                v-for="field in limitFields"
+                                                :key="field"
+                                                class="space-y-2"
+                                            >
+                                                <label
+                                                    class="block truncate text-[9px] font-black uppercase tracking-tighter text-zinc-600"
+                                                    >{{ field.replace(/_/g, ' ') }}</label
+                                                >
+                                                <input
+                                                    v-model="form[field]"
+                                                    type="number"
+                                                    class="w-full rounded-xl border border-white/5 bg-black/50 p-3 text-center font-mono font-bold text-[#c5d86d]"
+                                                />
+                                            </div>
+                                        </transition-group>
+                                    </div>
+                                </section>
+
+                                <section
+                                    v-show="activeTab === 'social'"
+                                    class="animate-in fade-in slide-in-from-bottom-4 space-y-6 rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl duration-500 md:rounded-[2.5rem]"
+                                >
+                                    <h2
+                                        class="mb-8 flex items-center gap-3 text-sm font-black uppercase tracking-[0.3em] text-[#c5d86d]"
+                                    >
+                                        <Share2 class="h-4 w-4" /> Social Presence
+                                    </h2>
+
+                                    <div class="grid grid-cols-1 gap-6">
+                                        <div class="space-y-2">
+                                            <label
+                                                class="text-[10px] font-black uppercase tracking-widest text-[#c5d86d]"
+                                            >
+                                                Live Demo / Video Presentation
+                                            </label>
+                                            <div class="group relative">
+                                                <div
+                                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 transition-colors group-focus-within:text-[#c5d86d]"
+                                                >
+                                                    <Video class="h-4 w-4" />
+                                                </div>
+                                                <input
+                                                    v-model="form.live_demo_url"
+                                                    type="text"
+                                                    placeholder="https://youtube.com/watch?v=..."
+                                                    class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 pl-12 font-medium text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
+                                                />
+                                            </div>
+                                            <p
+                                                class="text-[9px] font-bold uppercase tracking-tight text-zinc-600"
+                                            >
+                                                This link will be used for the "Watch Demo" buttons
+                                                on the landing page.
+                                            </p>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                                            <div class="space-y-2">
+                                                <label
+                                                    class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    >Facebook</label
+                                                >
+                                                <input
+                                                    v-model="form.link_fb"
+                                                    type="text"
+                                                    class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                                />
+                                            </div>
+
+                                            <div class="space-y-2">
+                                                <label
+                                                    class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    >X / Twitter</label
+                                                >
+                                                <input
+                                                    v-model="form.link_x"
+                                                    type="text"
+                                                    class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                                />
+                                            </div>
+
+                                            <div class="space-y-2">
+                                                <label
+                                                    class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    >LinkedIn</label
+                                                >
+                                                <input
+                                                    v-model="form.link_li"
+                                                    type="text"
+                                                    class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="mt-4 grid grid-cols-1 gap-6 border-t border-white/5 pt-6 md:grid-cols-2"
+                                        >
+                                            <div class="space-y-2">
+                                                <label
+                                                    class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    >Footer Main Text</label
+                                                >
+                                                <input
+                                                    v-model="form.footer_main_text"
+                                                    type="text"
+                                                    class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-sm text-white"
+                                                />
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label
+                                                    class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    >Copyright Line</label
+                                                >
+                                                <input
+                                                    v-model="form.footer_rights"
+                                                    type="text"
+                                                    class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-sm text-white"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section
+                                    v-show="activeTab === 'sections'"
+                                    class="animate-in fade-in slide-in-from-bottom-4 space-y-8 rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl duration-500 md:rounded-[2.5rem]"
+                                >
+                                    <h2
+                                        class="mb-4 flex items-center gap-3 text-sm font-black uppercase tracking-[0.3em] text-[#c5d86d]"
+                                    >
+                                        <Layout class="h-4 w-4" /> Layout Modules
+                                    </h2>
+                                    <transition-group
+                                        enter-active-class="transition duration-500 ease-out"
+                                        enter-from-class="transform translate-x-4 opacity-0"
+                                        leave-active-class="transition duration-300 ease-in"
+                                        leave-to-class="transform -translate-x-10 opacity-0"
+                                        move-class="transition duration-500"
+                                    >
+                                        <div
+                                            v-for="section in [
+                                                'trendy',
+                                                'selling',
+                                                'reviews',
+                                                'o2',
+                                            ]"
+                                            :key="section"
+                                            class="space-y-4 rounded-3xl border border-white/5 bg-black/20 p-6"
+                                        >
+                                            <div class="mb-2 flex items-center gap-2">
+                                                <span
+                                                    class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400"
+                                                    >{{ section }} Block</span
+                                                >
+                                            </div>
+                                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                                <input
+                                                    v-model="
+                                                        form[
+                                                            `section_${section}_title` as keyof SettingsForm
+                                                        ]
+                                                    "
+                                                    type="text"
+                                                    placeholder="Title"
+                                                    class="w-full rounded-xl border border-white/5 bg-black p-3 text-sm text-white"
+                                                />
+                                                <input
+                                                    v-model="
+                                                        form[
+                                                            `section_${section}_link` as keyof SettingsForm
+                                                        ]
+                                                    "
+                                                    type="text"
+                                                    placeholder="Route / Link"
+                                                    class="w-full rounded-xl border border-white/5 bg-black p-3 text-sm text-zinc-500"
+                                                />
+                                            </div>
+                                        </div>
+                                    </transition-group>
+                                </section>
                             </div>
-                        </section>
+                        </transition>
 
                         <div
                             class="z-50 flex w-full max-w-4xl flex-wrap items-center justify-between gap-6 rounded-xl border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur-xl md:rounded-3xl"
@@ -446,3 +478,29 @@
         </div>
     </AdminLayout>
 </template>
+
+<style scoped lang="scss">
+    .v-move {
+        transition: transform 0.5s ease;
+    }
+
+    .v-leave-active {
+        position: absolute;
+        width: 100%;
+    }
+
+    .tab-fade-enter-active,
+    .tab-fade-leave-active {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tab-fade-enter-from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    .tab-fade-leave-to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+</style>

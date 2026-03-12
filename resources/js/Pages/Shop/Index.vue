@@ -47,8 +47,6 @@
     const isFiltering = ref(false);
 
     const applyFilters = (): void => {
-        isFiltering.value = true;
-
         const params = {
             category: currentCategory.value,
             search: search.value || undefined,
@@ -62,6 +60,10 @@
             preserveState: true,
             preserveScroll: true,
             replace: true,
+
+            onBefore: () => {
+                isFiltering.value = true;
+            },
 
             onFinish: () => {
                 isFiltering.value = false;
@@ -97,6 +99,7 @@
 
     const handleChangeCategory = (categotySlug: string | null) => {
         currentCategory.value = categotySlug;
+
         debouncedApplyFilters();
     };
 
@@ -106,9 +109,29 @@
         maxPrice.value = '';
         currentCategory.value = null;
         sort.value = 'popular';
+        inStockOnly.value = true;
 
-        applyFilters();
+        debouncedApplyFilters();
     };
+
+    watch(
+        () => props.currentCategory,
+        (newVal) => {
+            currentCategory.value = newVal;
+        },
+    );
+
+    router.on('start', (event) => {
+        if (event.detail.visit.url.pathname.includes('/shop')) {
+            isFiltering.value = true;
+        }
+    });
+
+    router.on('finish', () => {
+        setTimeout(() => {
+            isFiltering.value = false;
+        }, 100);
+    });
 </script>
 
 <template>
@@ -165,8 +188,29 @@
                 </aside>
 
                 <main
-                    class="flex-grow rounded-lg bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50"
+                    class="relative min-h-[500px] flex-grow rounded-lg bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50"
                 >
+                    <transition
+                        enter-active-class="transition duration-300 ease-out"
+                        leave-active-class="transition duration-200 ease-in"
+                        enter-from-class="opacity-0"
+                        leave-to-class="opacity-0"
+                    >
+                        <div
+                            v-if="isFiltering"
+                            class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-plant-green/60 backdrop-blur-[2px]"
+                        >
+                            <div class="flex flex-col items-center">
+                                <div
+                                    class="h-12 w-12 animate-spin rounded-full border-4 border-emerald-600/30 border-t-emerald-600"
+                                ></div>
+                                <span class="mt-4 animate-pulse font-medium text-emerald-500"
+                                    >Growing your catalog...</span
+                                >
+                            </div>
+                        </div>
+                    </transition>
+
                     <div class="mb-8 flex items-end justify-between">
                         <SortFilter v-model="sort" @change="debouncedApplyFilters" />
 
@@ -199,40 +243,39 @@
                         </div>
                     </div>
 
-                    <transition name="fade-layout" mode="out-in">
-                        <div :key="currentCategory || 'all'">
-                            <div v-if="products.data.length > 0">
-                                <transition-group
-                                    tag="div"
-                                    name="staggered-fade"
-                                    class="grid grid-cols-1 justify-center gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
-                                    :css="true"
-                                >
-                                    <PlantCard
-                                        v-for="plant in products.data"
-                                        :key="plant.id"
-                                        :plant="plant"
-                                        :current_page="products.current_page"
-                                        :processing-id="processingId === plant.id"
-                                        :is-in-cart="cartIds.includes(plant.id)"
-                                        @add-to-cart="handleAddToCart"
-                                    />
-                                </transition-group>
-                            </div>
+                    <div
+                        v-if="products.data.length > 0"
+                        :class="{ 'opacity-50 transition-opacity duration-300': isFiltering }"
+                    >
+                        <transition-group
+                            tag="div"
+                            name="staggered-fade"
+                            class="relative grid grid-cols-1 justify-center justify-items-center gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
+                        >
+                            <PlantCard
+                                v-for="(plant, index) in products.data"
+                                :key="plant.id"
+                                :plant="plant"
+                                :style="{ '--index': index }"
+                                :current_page="products.current_page"
+                                :processing-id="processingId === plant.id"
+                                :is-in-cart="cartIds.includes(plant.id)"
+                                @add-to-cart="handleAddToCart"
+                            />
+                        </transition-group>
+                    </div>
 
-                            <div v-else class="rounded-3xl bg-plant-shop py-20 text-center">
-                                <p class="text-xl text-gray-300">
-                                    There are no products in this category yet...
-                                </p>
-                                <button
-                                    @click="resetFilters"
-                                    class="mt-4 inline-block text-emerald-600 underline transition duration-300 hover:text-emerald-800"
-                                >
-                                    Return to all products
-                                </button>
-                            </div>
-                        </div>
-                    </transition>
+                    <div v-else class="rounded-3xl bg-plant-shop py-20 text-center">
+                        <p class="text-xl text-gray-300">
+                            There are no products in this category yet...
+                        </p>
+                        <button
+                            @click="resetFilters"
+                            class="mt-4 inline-block text-emerald-600 underline transition duration-300 hover:text-emerald-800"
+                        >
+                            Return to all products
+                        </button>
+                    </div>
                 </main>
             </div>
         </div>
@@ -272,16 +315,18 @@
 
     .fade-layout-enter-active,
     .fade-layout-leave-active {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition:
+            opacity 0.4s ease,
+            transform 0.4s ease;
     }
 
     .fade-layout-enter-from {
         opacity: 0;
-        transform: scale(0.98);
+        transform: translateY(10px);
     }
 
     .fade-layout-leave-to {
         opacity: 0;
-        transform: scale(1.02);
+        transform: translateY(-10px);
     }
 </style>

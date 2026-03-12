@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { onMounted, onUnmounted, ref } from 'vue';
+    import { computed, onMounted, onUnmounted, ref } from 'vue';
 
     const props = defineProps<{
         modelValue: string;
@@ -15,12 +15,11 @@
         { value: 'price_desc', label: 'Price: High to Low' },
     ];
 
-    const selectedLabel = ref(
-        options.find((o) => o.value === props.modelValue)?.label || 'Сортировка',
-    );
+    const selectedLabel = computed(() => {
+        return options.find((o) => o.value === props.modelValue)?.label || 'Sorting';
+    });
 
     const selectOption = (option: { value: string; label: string }) => {
-        selectedLabel.value = option.label;
         emit('update:modelValue', option.value);
         emit('change', option.value);
         isOpen.value = false;
@@ -37,15 +36,15 @@
 </script>
 
 <template>
-    <div class="custom-select relative inline-block text-left w-[200px]">
+    <div class="custom-select relative inline-block w-[200px] text-left">
         <button
             @click="isOpen = !isOpen"
             type="button"
-            class="flex items-center justify-between w-full px-3 py-2 text-sm font-bold text-zinc-200 bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-200 rounded-xl transition-all"
+            class="flex w-full items-center justify-between rounded-xl border border-zinc-200 bg-zinc-800/50 px-3 py-2 text-sm font-bold text-zinc-200 transition-all hover:bg-zinc-800"
         >
             <span class="truncate">{{ selectedLabel }}</span>
             <svg
-                class="w-4 h-4 ml-2 transition-transform duration-300 text-emerald-500"
+                class="ml-2 h-4 w-4 text-emerald-500 transition-transform duration-300"
                 :class="{ 'rotate-180': isOpen }"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -70,17 +69,17 @@
         >
             <div
                 v-if="isOpen"
-                class="absolute z-50 w-full mt-2 origin-top-right bg-zinc-900 border border-emerald-500/10 rounded-xl shadow-2xl overflow-hidden"
+                class="absolute z-50 mt-2 w-full origin-top-right overflow-hidden rounded-xl border border-emerald-500/10 bg-zinc-900 shadow-2xl"
             >
                 <div class="py-1">
                     <button
                         v-for="option in options"
                         :key="option.value"
                         @click="selectOption(option)"
-                        class="block w-full px-4 py-2.5 text-sm text-left transition-colors hover:bg-emerald-500/10"
+                        class="block w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-emerald-500/10"
                         :class="
                             modelValue === option.value
-                                ? 'text-emerald-400 bg-emerald-500/5'
+                                ? 'bg-emerald-500/5 text-emerald-400'
                                 : 'text-zinc-400 hover:text-white'
                         "
                     >
