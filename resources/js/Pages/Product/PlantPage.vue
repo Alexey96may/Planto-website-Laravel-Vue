@@ -9,10 +9,12 @@
         PlusIcon,
         ShoppingBagIcon,
         TrashIcon,
+        XMarkIcon,
     } from '@heroicons/vue/24/outline';
     import { route } from 'ziggy-js';
 
     import AppImage from '@/Components/UI/AppImage.vue';
+    import Modal from '@/Components/UI/Modal.vue';
     import ParallaxCard from '@/Components/UI/ParallaxCard.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { useFlash } from '@/composables/useFlash';
@@ -30,6 +32,10 @@
     const count = ref(props.cart_items[props.product.id] || 1);
     const totalPriceRaw = computed(() => calculateTotal(props.product.price, count.value));
     const formattedPrice = computed(() => formatUSD(totalPriceRaw.value));
+
+    const isZoomed = ref(false);
+    const openModal = () => (isZoomed.value = true);
+    const closeModal = () => (isZoomed.value = false);
 
     watch(
         () => props.cart_items[props.product.id],
@@ -116,7 +122,8 @@
 
             <div class="mt-8 grid gap-12 lg:grid-cols-2 lg:items-center">
                 <ParallaxCard
-                    class="aspect-square rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 shadow-2xl"
+                    @click="openModal"
+                    class="aspect-square cursor-pointer rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 shadow-2xl"
                 >
                     <AppImage
                         :src="product?.image_url"
@@ -223,6 +230,23 @@
             </div>
         </div>
     </div>
+
+    <Modal :show="isZoomed" @close="closeModal" maxWidth="xl">
+        <div class="relative flex items-center justify-center overflow-hidden bg-plant-shop p-1">
+            <button
+                @click="closeModal"
+                class="absolute right-4 top-4 z-50 rounded-full border bg-orange-700/80 p-2 text-orange-200 transition-colors hover:bg-orange-900/80"
+            >
+                <XMarkIcon class="h-6 w-6" />
+            </button>
+
+            <img
+                :src="product?.image_url"
+                class="w-auto rounded-md object-contain"
+                :alt="product.title"
+            />
+        </div>
+    </Modal>
 </template>
 
 <style scoped>

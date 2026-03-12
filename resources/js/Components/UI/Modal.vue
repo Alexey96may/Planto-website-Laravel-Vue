@@ -3,7 +3,7 @@
 
     interface Props {
         show?: boolean;
-        maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+        maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
         closeable?: boolean;
     }
 
@@ -23,14 +23,16 @@
         () => props.show,
         (isVisible: boolean) => {
             if (isVisible) {
+                const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+                document.body.style.paddingRight = `${scrollBarWidth}px`;
                 document.body.style.overflow = 'hidden';
-                showSlot.value = true;
 
+                showSlot.value = true;
                 dialog.value?.showModal();
             } else {
-                document.body.style.overflow = '';
-
                 setTimeout(() => {
+                    document.body.style.overflow = '';
+                    document.body.style.paddingRight = '';
                     dialog.value?.close();
                     showSlot.value = false;
                 }, 200);
@@ -69,6 +71,7 @@
             lg: 'sm:max-w-lg',
             xl: 'sm:max-w-xl',
             '2xl': 'sm:max-w-2xl',
+            full: 'sm:max-w-none',
         };
         return classMap[props.maxWidth] ?? classMap['2xl'];
     });
@@ -90,6 +93,7 @@
             >
                 <div v-show="show" class="fixed inset-0 transform transition-all" @click="close">
                     <div class="absolute inset-0 bg-gray-500 opacity-75" />
+                    <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" />
                 </div>
             </Transition>
 
@@ -103,12 +107,37 @@
             >
                 <div
                     v-show="show"
-                    class="mb-6 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:mx-auto sm:w-full"
-                    :class="maxWidthClass"
+                    class="mb-6 transform overflow-hidden rounded-lg bg-black shadow-xl transition-all sm:mx-auto sm:w-full"
+                    :class="[props.maxWidth === 'full' ? 'w-auto' : 'sm:w-full', maxWidthClass]"
                 >
-                    <slot v-if="showSlot" />
+                    <div class="custom-scrollbar overflow-y-auto">
+                        <slot v-if="showSlot" />
+                    </div>
                 </div>
             </Transition>
         </div>
     </dialog>
 </template>
+
+<style scoped>
+    div::-webkit-scrollbar {
+        display: none;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #313136;
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #10b981;
+    }
+</style>

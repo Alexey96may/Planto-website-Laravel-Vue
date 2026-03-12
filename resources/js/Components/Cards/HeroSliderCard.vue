@@ -1,25 +1,18 @@
 <script setup lang="ts">
-    import { computed } from 'vue';
-
     import { Link, usePage } from '@inertiajs/vue3';
 
     import { route } from 'ziggy-js';
 
     import AppExploreButton from '@/Components/UI/AppExploreButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
-    import { ProductWithCategory, SharedData } from '@/types';
+    import ParallaxCard from '@/Components/UI/ParallaxCard.vue';
+    import { ProductWithCategory } from '@/types';
 
     interface Props {
         plant?: ProductWithCategory;
     }
 
     const { plant = {} as ProductWithCategory } = defineProps<Props>();
-
-    const page = usePage<SharedData>();
-
-    const isInCart = computed(() => {
-        return page.props?.cart_ids.includes(plant.id);
-    });
 </script>
 
 <template>
@@ -28,11 +21,13 @@
             class="card__img-wrapper relative aspect-[1/1] w-full sm:h-64"
             aria-label="Slider card image"
         >
-            <AppImage
-                :src="plant.image_url"
-                :alt="plant.title"
-                class="h-full w-full object-contain transition-transform duration-500 hover:scale-105"
-            />
+            <ParallaxCard :with-glare="false">
+                <AppImage
+                    :src="plant.image_url"
+                    :alt="plant.title"
+                    class="parallax-image h-full w-full object-contain drop-shadow-md transition-transform duration-500 md:drop-shadow-xl"
+                />
+            </ParallaxCard>
         </div>
 
         <div class="flex flex-col gap-2">
@@ -85,5 +80,11 @@
         @media (max-width: b.$mediaMobile) {
             max-width: unset;
         }
+    }
+
+    .parallax-image {
+        transform: rotateX(calc(var(--my) * -6deg)) translateX(calc(var(--mx) * -10px)) scale(1.1);
+        transition: transform 0.1s ease-out;
+        will-change: transform;
     }
 </style>

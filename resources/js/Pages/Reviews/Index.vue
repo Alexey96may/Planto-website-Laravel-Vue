@@ -136,16 +136,14 @@
                                         </span>
                                     </div>
 
-                                    <div class="flex flex-col gap-1">
+                                    <div class="flex flex-col gap-2 md:gap-1">
                                         <h3
                                             class="text-lg font-black uppercase tracking-tight text-white"
                                         >
                                             {{ review.user?.name || 'Anonymous' }}
                                         </h3>
 
-                                        <div
-                                            class="flex items-center gap-1 rounded-full border border-white/5 bg-black/20 px-3 py-1.5 md:hidden"
-                                        >
+                                        <div class="flex items-center gap-1 md:hidden">
                                             <AppRating :rating="review.rating" />
                                             <span
                                                 class="ml-2 text-xs font-black italic text-white"
@@ -154,7 +152,7 @@
                                         </div>
 
                                         <time
-                                            class="mt-2 flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500"
+                                            class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400"
                                         >
                                             <Calendar class="h-3 w-3"></Calendar>
                                             <span>{{ formatDate(review.created_at) }}</span>

@@ -7,6 +7,7 @@
     import AppBuyButton from '@/Components/UI/AppBuyButton.vue';
     import AppExploreButton from '@/Components/UI/AppExploreButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
+    import ParallaxCard from '@/Components/UI/ParallaxCard.vue';
     import { Product } from '@/types';
 
     interface Props {
@@ -25,11 +26,13 @@
 <template>
     <figure class="card trendy-card" aria-label="Trendy card">
         <div class="card__img-wrapper w-full" aria-label="Trendy card image">
-            <AppImage
-                :src="plant.image_url"
-                :alt="plant.title"
-                class="h-full w-full object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-110"
-            />
+            <ParallaxCard :with-glare="false" class="cursor-move">
+                <AppImage
+                    :src="plant.image_url"
+                    :alt="plant.title"
+                    class="parallax-image filte h-full w-full object-contain drop-shadow-md transition-transform duration-500 hover:scale-110 md:drop-shadow-2xl"
+                />
+            </ParallaxCard>
         </div>
         <div class="card__info" aria-label="Card information">
             <h3 class="card__title card__title--white" aria-label="Slider card title">
@@ -213,5 +216,13 @@
         .card__info {
             order: 1;
         }
+    }
+
+    .parallax-image {
+        transform: rotateX(calc(var(--my) * -6deg)) rotateY(calc(var(--mx) * 6deg))
+            translateX(calc(var(--mx) * -10px)) translateY(calc(var(--my) * -10px)) scale(1.1);
+
+        transition: transform 0.1s ease-out;
+        will-change: transform;
     }
 </style>

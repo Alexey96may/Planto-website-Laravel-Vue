@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Head, Link } from '@inertiajs/vue3';
+    import { Link } from '@inertiajs/vue3';
 
     import IconBag from 'img/icons/bag.svg?component';
     import IconLogo from 'img/icons/logo.svg?component';
@@ -13,11 +13,17 @@
     <div>
         <header class="header" id="header" aria-label="Header">
             <div class="header__container container">
-                <div class="logo mr-auto lg:mr-0" aria-label="Logo field">
-                    <IconLogo class="logo__image" aria-label="Logo image" />
-                    <span class="logo__text" aria-label="Logo text">{{
-                        $page.props.settings?.site_name
-                    }}</span>
+                <div class="mr-auto lg:mr-0" aria-label="Logo field">
+                    <Link
+                        class="logo opacity-80 transition-opacity duration-300 hover:opacity-100"
+                        :href="route('home')"
+                        aria-label="To home page"
+                    >
+                        <IconLogo class="logo__image opacity-100" aria-label="Logo image" />
+                        <span class="logo__text opacity-100" aria-label="Logo text">{{
+                            $page.props.settings?.site_name
+                        }}</span>
+                    </Link>
                 </div>
 
                 <NavigationHeader />

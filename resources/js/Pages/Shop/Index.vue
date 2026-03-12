@@ -145,7 +145,7 @@
             </p>
             <div class="flex flex-col gap-2 xl:flex-row">
                 <aside
-                    class="w-full rounded-lg bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50 transition-all duration-500 xl:w-64"
+                    class="w-full rounded-lg border border-emerald-800/50 bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50 transition-all duration-500 xl:w-64"
                     :class="{ 'pointer-events-none opacity-50 blur-[2px]': isFiltering }"
                 >
                     <SearchInput v-model="search" @apply-search="debouncedApplyFilters" />
@@ -189,7 +189,7 @@
                 </aside>
 
                 <main
-                    class="relative min-h-[500px] flex-grow rounded-lg bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50"
+                    class="relative min-h-[500px] flex-grow rounded-lg border border-emerald-800/50 bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50"
                 >
                     <transition
                         enter-active-class="transition duration-300 ease-out"

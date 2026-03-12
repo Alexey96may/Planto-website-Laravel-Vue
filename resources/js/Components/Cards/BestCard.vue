@@ -7,6 +7,7 @@
 
     import AppExploreButton from '@/Components/UI/AppExploreButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
+    import ParallaxCard from '@/Components/UI/ParallaxCard.vue';
     import { Feature } from '@/types';
 
     const {
@@ -32,11 +33,13 @@
         <div
             class="best__card-image relative mx-auto -mt-24 mb-6 aspect-square h-auto w-full max-w-48 flex-1 flex-grow-0 lg:h-96 lg:w-1/2 lg:max-w-none lg:flex-shrink-0"
         >
-            <AppImage
-                :src="feature.image_url"
-                :alt="feature.title"
-                class="h-full w-full object-contain drop-shadow-sm"
-            />
+            <ParallaxCard :with-glare="false" class="cursor-move">
+                <AppImage
+                    :src="feature.image_url"
+                    :alt="feature.title"
+                    class="parallax-image h-full w-full object-contain drop-shadow-sm"
+                />
+            </ParallaxCard>
         </div>
 
         <div class="flex w-full flex-grow flex-col gap-4 lg:w-1/2 lg:flex-shrink-0 lg:pt-8">
@@ -128,5 +131,13 @@
     .mb-8,
     .mt-auto {
         will-change: transform, opacity, filter;
+    }
+
+    .parallax-image {
+        transform: rotateX(calc(var(--my) * -6deg)) rotateY(calc(var(--mx) * 6deg))
+            translateX(calc(var(--mx) * -10px)) translateY(calc(var(--my) * -10px)) scale(1.1);
+
+        transition: transform 0.1s ease-out;
+        will-change: transform;
     }
 </style>

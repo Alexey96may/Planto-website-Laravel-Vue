@@ -3,6 +3,7 @@
 
     import AppBuyButton from '@/Components/UI/AppBuyButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
+    import ParallaxCard from '@/Components/UI/ParallaxCard.vue';
     import { Product } from '@/types';
 
     interface Props {
@@ -21,11 +22,13 @@
 <template>
     <figure class="card top__card" aria-label="Top card">
         <div class="card__img-wrapper" aria-label="Top card image">
-            <AppImage
-                :src="plant.image_url"
-                class="transition-transform duration-500 hover:scale-110"
-                :alt="plant.title"
-            ></AppImage>
+            <ParallaxCard :with-glare="false" class="cursor-move">
+                <AppImage
+                    :src="plant.image_url"
+                    class="parallax-image drop-shadow-md transition-transform duration-500 hover:scale-110 md:drop-shadow-lg"
+                    :alt="plant.title"
+                ></AppImage>
+            </ParallaxCard>
         </div>
 
         <h3 class="card__title" aria-label="Card title">
@@ -80,5 +83,11 @@
         .card__price {
             opacity: b.$opacity;
         }
+    }
+
+    .parallax-image {
+        transform: rotateX(calc(var(--my) * -6deg)) translateX(calc(var(--mx) * -10px)) scale(1.1);
+        transition: transform 0.1s ease-out;
+        will-change: transform;
     }
 </style>
