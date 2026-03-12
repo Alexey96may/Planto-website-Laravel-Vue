@@ -13,6 +13,7 @@
     import { route } from 'ziggy-js';
 
     import AppImage from '@/Components/UI/AppImage.vue';
+    import ParallaxCard from '@/Components/UI/ParallaxCard.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { useFlash } from '@/composables/useFlash';
     import { CartItems, ProductWithCategory } from '@/types';
@@ -114,21 +115,22 @@
             </Link>
 
             <div class="mt-8 grid gap-12 lg:grid-cols-2 lg:items-center">
-                <div
-                    class="group relative aspect-square overflow-hidden rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 shadow-2xl"
+                <ParallaxCard
+                    class="aspect-square rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 shadow-2xl"
                 >
                     <AppImage
                         :src="product?.image_url"
                         :alt="product.title"
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        class="parallax-image h-full w-full object-cover"
                     />
+
                     <div
                         v-if="product.stock < 5 && product.stock > 0"
-                        class="absolute right-6 top-6 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5 text-[0.5rem] font-bold uppercase tracking-widest text-orange-500 backdrop-blur-md md:text-xs"
+                        class="absolute right-6 top-6 z-20 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5 text-[0.5rem] font-bold uppercase tracking-widest text-orange-500 backdrop-blur-md md:text-xs"
                     >
                         Only {{ product.stock }} left
                     </div>
-                </div>
+                </ParallaxCard>
 
                 <div class="flex flex-col">
                     <div class="mb-6">
@@ -222,3 +224,34 @@
         </div>
     </div>
 </template>
+
+<style scoped>
+    .parallax-container {
+        perspective: 1200px;
+        transform-style: preserve-3d;
+    }
+
+    .parallax-image {
+        transform: rotateX(calc(var(--my) * -6deg)) rotateY(calc(var(--mx) * 6deg))
+            translateX(calc(var(--mx) * -10px)) translateY(calc(var(--my) * -10px)) scale(1.1);
+
+        transition: transform 0.1s ease-out;
+        will-change: transform;
+    }
+
+    .parallax-glare {
+        width: 150%;
+        height: 150%;
+        top: -25%;
+        left: -25%;
+
+        transform: translateX(calc(var(--mx) * 10%)) translateY(calc(var(--my) * 10%));
+
+        filter: blur(40px);
+    }
+
+    .parallax-container:not(:hover) .parallax-image {
+        transition: transform 0.6s cubic-bezier(0.2, 0, 0.3, 1);
+        transform: rotateX(0deg) rotateY(0deg) translateX(0) translateY(0) scale(1);
+    }
+</style>
