@@ -77,7 +77,7 @@
 
         <div
             v-if="averageRating"
-            class="relative z-[3] mb-8 flex flex-col items-center gap-8 rounded-[1rem] border border-emerald-400/50 bg-plant-green p-10 sm:justify-between lg:flex-row lg:rounded-[2rem]"
+            class="relative z-[3] mb-8 flex flex-col items-center gap-8 rounded-[1rem] border border-emerald-400/50 p-10 backdrop-blur-lg sm:justify-between lg:flex-row lg:rounded-[2rem]"
         >
             <div class="flex flex-col items-center gap-6 sm:flex-row">
                 <span class="text-7xl font-black text-emerald-500">
