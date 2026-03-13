@@ -67,6 +67,7 @@
     .parallax-container {
         perspective: 1200px;
         transform-style: preserve-3d;
+        contain: layout paint;
     }
 
     :deep(.parallax-target) {
