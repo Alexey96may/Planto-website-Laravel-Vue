@@ -16,7 +16,7 @@
     const isHome = computed(() => page.component === 'Welcome');
 
     const headerClasses = computed(() => {
-        return isHome.value ? 'bg-transparent border-transparent' : 'bg-plant-green';
+        return isHome.value ? 'bg-transparent border-transparent py-8' : 'backdrop-blur-xl py-6';
     });
 </script>
 
@@ -66,8 +66,6 @@
     @use '../../../scss/bootstrap' as b;
 
     .header {
-        padding: 2.37rem 0;
-
         @media (max-width: b.$mediaMobile) {
             padding: 1.2rem 0;
         }
