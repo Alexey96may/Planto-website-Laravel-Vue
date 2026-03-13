@@ -15,13 +15,21 @@
     const mouseX = ref(0);
     const mouseY = ref(0);
     const isHovering = ref(false);
+    let frameId: number | null = null;
 
     const handleMouseMove = (e: MouseEvent) => {
-        if (!cardRef.value) return;
-        const rect = cardRef.value.getBoundingClientRect();
+        if (frameId) {
+            cancelAnimationFrame(frameId);
+        }
 
-        mouseX.value = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        mouseY.value = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        frameId = requestAnimationFrame(() => {
+            if (!cardRef.value) return;
+
+            const rect = cardRef.value.getBoundingClientRect();
+
+            mouseX.value = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            mouseY.value = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        });
     };
 
     const parallaxStyle = computed(() => {
