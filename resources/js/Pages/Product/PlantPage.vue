@@ -16,6 +16,7 @@
     import AppImage from '@/Components/UI/AppImage.vue';
     import Modal from '@/Components/UI/Modal.vue';
     import ParallaxCard from '@/Components/UI/ParallaxCard.vue';
+    import WindEffect from '@/Components/UI/WindEffect.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { useFlash } from '@/composables/useFlash';
     import { CartItems, ProductWithCategory } from '@/types';
@@ -112,15 +113,19 @@
 
     <div class="w-full bg-plant-shop">
         <div class="mx-auto max-w-6xl px-6 py-10 lg:py-16">
+            <WindEffect :particleCount="30" :windStrength="1" />
+
             <Link
                 :href="backUrl"
-                class="group inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-emerald-500"
+                class="group relative z-[3] inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-emerald-500"
             >
                 <ChevronLeftIcon class="h-4 w-4 transition-transform group-hover:-translate-x-1" />
                 Back to Catalog
             </Link>
 
-            <div class="mt-8 grid gap-12 lg:grid-cols-2 lg:items-center">
+            <div
+                class="relative z-[3] mt-8 grid gap-12 rounded-[1rem] border border-emerald-400/50 bg-plant-green px-4 py-8 lg:grid-cols-2 lg:items-center lg:rounded-[2rem] lg:px-6 lg:py-12"
+            >
                 <ParallaxCard
                     @click="openModal"
                     class="aspect-square cursor-pointer rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 shadow-2xl"

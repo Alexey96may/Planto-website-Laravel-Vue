@@ -7,6 +7,7 @@
     import { ChevronDownIcon } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import Footer from '@/Components/Sections/Footer.vue';
     import AppToast from '@/Components/Shared/Toast.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import Dropdown from '@/Components/UI/Dropdown.vue';
@@ -264,6 +265,8 @@
         </div>
 
         <AppToast />
+
+        <Footer />
     </div>
 </template>
 

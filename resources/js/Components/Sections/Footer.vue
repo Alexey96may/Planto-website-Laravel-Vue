@@ -32,8 +32,8 @@
 </script>
 
 <template>
-    <footer class="footer" id="footer" aria-label="Footer">
-        <div class="container footer__container">
+    <footer class="footer relative z-[3]" id="footer" aria-label="Footer">
+        <div class="footer__container container">
             <div class="footer__top" aria-label="Footer top side">
                 <div class="footer__info" aria-label="Footer information">
                     <div class="logo" aria-label="Logo field">
@@ -68,7 +68,7 @@
                             :value="form.processing ? 'Sending...' : 'Subscribe'"
                             :disabled="form.processing"
                         />
-                        <span v-if="form.errors.email" class="text-red-500 text-sm">
+                        <span v-if="form.errors.email" class="text-sm text-red-500">
                             {{ form.errors.email }}
                         </span>
                     </form>
@@ -124,7 +124,7 @@
     @use '../../../scss/bootstrap' as b;
 
     .footer {
-        background-color: #222c1d;
+        background-color: #1b2316;
         padding: calc(1rem * (90px / b.$basicFontSize)) 0 calc(1rem * (88px / b.$basicFontSize));
 
         @media (max-width: b.$mediaMobile) {

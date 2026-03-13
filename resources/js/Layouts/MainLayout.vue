@@ -4,6 +4,7 @@
     import Footer from '@/Components/Sections/Footer.vue';
     import Header from '@/Components/Sections/Header.vue';
     import AppToast from '@/Components/Shared/Toast.vue';
+    import { SharedData } from '@/types';
 
     defineSlots<{
         default(props: {}): any;
@@ -13,20 +14,18 @@
 
     defineProps({ full: { type: Boolean, default: false } });
 
-    const page = usePage();
+    const page = usePage<SharedData>();
 </script>
 
 <template>
     <Toast />
     <div class="app-wrapper">
-        <div class="main-bg" v-if="full">
+        <div class="main-bg relative z-[1]" v-if="full">
             <Header :cartCount="page.props.cart_count" />
             <slot name="hero" />
             <slot name="trendy" />
         </div>
-        <div v-else>
-            <Header :cartCount="page.props.cart_count" />
-        </div>
+        <Header v-else :cartCount="page.props.cart_count" />
 
         <main class="content">
             <slot />

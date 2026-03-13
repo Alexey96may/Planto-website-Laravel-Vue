@@ -12,6 +12,7 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import WindEffect from '@/Components/UI/WindEffect.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { FullOrder, OrderStatus } from '@/types';
     import { formatUSD } from '@/utils/money';
@@ -35,17 +36,19 @@
     <Head title="Order Archive" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="text-xl font-black uppercase italic tracking-tighter text-white">
+        <main class="px-6 py-16 lg:py-24">
+            <WindEffect :particleCount="35" :windStrength="1.5" />
+
+            <h2
+                class="relative z-[3] mb-16 text-3xl font-black uppercase italic tracking-tighter text-white"
+            >
                 Terminal / <span class="text-[#c5d86d]">Order_History</span>
             </h2>
-        </template>
 
-        <div class="py-4 sm:py-8 lg:py-12">
-            <div class="mx-auto max-w-5xl px-2 sm:px-4 lg:px-6">
+            <div class="relative z-[3] mx-auto max-w-5xl sm:px-4 lg:px-6">
                 <div
                     v-if="orders.length === 0"
-                    class="flex flex-col items-center justify-center rounded-[2rem] border border-dashed border-white/10 bg-[#161b14] p-20 text-center"
+                    class="flex flex-col items-center justify-center rounded-[2rem] border border-dashed border-white/10 p-20 text-center backdrop-blur-sm"
                 >
                     <ShoppingBag class="mb-4 h-12 w-12 text-zinc-700" />
                     <p class="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
@@ -59,11 +62,11 @@
                     </Link>
                 </div>
 
-                <div v-else class="space-y-6">
+                <div v-else class="space-y-12">
                     <div
                         v-for="order in orders"
                         :key="order.id"
-                        class="group relative overflow-hidden rounded-[0.5rem] border border-white/5 bg-emerald-950 p-6 shadow-2xl transition-all hover:border-[#c5d86d]/30 md:rounded-[1.5rem]"
+                        class="group relative overflow-hidden rounded-[0.5rem] border border-emerald-400/50 bg-plant-shop p-6 shadow-2xl transition-all hover:border-[#c5d86d]/30 md:rounded-[1.5rem]"
                     >
                         <div
                             class="absolute left-0 top-0 h-full w-1"
@@ -153,7 +156,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </AuthenticatedLayout>
 </template>
 

@@ -11,6 +11,7 @@
     import PriceFilter from '@/Components/Shared/PriceFilter.vue';
     import SearchInput from '@/Components/Shared/SearchFilter.vue';
     import SortFilter from '@/Components/Shared/SortFilter.vue';
+    import WindEffect from '@/Components/UI/WindEffect.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import {
         Category,
@@ -143,9 +144,12 @@
             <p class="whitespace-nowrap px-4 pb-4 text-right text-xs font-extralight text-zinc-500">
                 Showing: <span class="text-zinc-200">{{ products.total }} products</span>
             </p>
-            <div class="flex flex-col gap-2 xl:flex-row">
+
+            <WindEffect :particleCount="35" :windStrength="1.5" />
+
+            <div class="relative z-[3] flex flex-col gap-2 xl:flex-row">
                 <aside
-                    class="w-full rounded-lg border border-emerald-800/50 bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50 transition-all duration-500 xl:w-64"
+                    class="w-full rounded-lg border border-emerald-400/50 bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50 transition-all duration-500 xl:w-64"
                     :class="{ 'pointer-events-none opacity-50 blur-[2px]': isFiltering }"
                 >
                     <SearchInput v-model="search" @apply-search="debouncedApplyFilters" />
@@ -189,7 +193,7 @@
                 </aside>
 
                 <main
-                    class="relative min-h-[500px] flex-grow rounded-lg border border-emerald-800/50 bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50"
+                    class="relative min-h-[500px] flex-grow rounded-lg border border-emerald-400/50 bg-plant-green px-4 py-6 shadow-sm shadow-emerald-400/50"
                 >
                     <transition
                         enter-active-class="transition duration-300 ease-out"
@@ -281,7 +285,7 @@
                 </main>
             </div>
         </div>
-        <Pagination :disabled="isFiltering" :links="products.links" />
+        <Pagination class="z-[3]" :disabled="isFiltering" :links="products.links" />
     </div>
 </template>
 

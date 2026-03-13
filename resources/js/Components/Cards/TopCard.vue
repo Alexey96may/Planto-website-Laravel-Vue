@@ -87,7 +87,7 @@
 
     .parallax-image {
         transform: rotateX(calc(var(--my) * -6deg)) translateX(calc(var(--mx) * -10px)) scale(1.1);
-        transition: transform 0.1s ease-out;
+        transition: transform 0.3s ease-out;
         will-change: transform;
     }
 </style>

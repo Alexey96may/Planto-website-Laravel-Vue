@@ -3,20 +3,11 @@
 
     import { Head, useForm } from '@inertiajs/vue3';
 
-    import {
-        Camera,
-        History,
-        Mail,
-        MessageSquare,
-        Save,
-        ShieldCheck,
-        Star,
-        User,
-    } from 'lucide-vue-next';
+    import { History, Mail, MessageSquare, Save, ShieldCheck, Star, User } from 'lucide-vue-next';
 
-    import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
     import ImageUploader from '@/Components/UI/ImageUploader.vue';
+    import WindEffect from '@/Components/UI/WindEffect.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { AuthProps, Comment, CommentForm, UserForm } from '@/types';
 
@@ -105,10 +96,14 @@
 
     <AuthenticatedLayout>
         <div
-            class="min-h-screen bg-plant-shop px-4 py-12 font-sans selection:bg-[#c5d86d] selection:text-black sm:px-6 lg:px-8"
+            class="min-h-screen bg-plant-shop px-4 py-16 font-sans selection:bg-[#c5d86d] selection:text-black sm:px-6 lg:px-8 lg:py-24"
         >
-            <div class="mx-auto max-w-5xl space-y-8">
-                <header class="mb-12 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div class="mx-auto max-w-5xl">
+                <WindEffect :particleCount="35" :windStrength="1.5" />
+
+                <header
+                    class="relative z-[3] mb-16 flex flex-col justify-between gap-4 md:flex-row md:items-end"
+                >
                     <div>
                         <div class="mb-2 flex items-center gap-3">
                             <span
@@ -119,11 +114,11 @@
                             <span
                                 v-else
                                 class="rounded bg-white/10 px-2 py-0.5 text-[10px] font-black uppercase text-zinc-400"
-                                >Standard User</span
+                                >User</span
                             >
                         </div>
                         <h2
-                            class="text-5xl font-black uppercase italic tracking-tighter text-white"
+                            class="mb-2 text-5xl font-black uppercase italic tracking-tighter text-white"
                         >
                             User <span class="text-[#c5d86d]">Core</span>
                         </h2>
@@ -134,7 +129,7 @@
 
                     <div class="flex gap-4">
                         <div
-                            class="min-w-[120px] rounded-2xl border border-white/5 bg-[#1a1f16] p-4"
+                            class="min-w-[120px] rounded-xl border border-emerald-400/50 p-4 backdrop-blur-sm"
                         >
                             <p class="mb-1 text-[10px] font-black uppercase text-zinc-600">
                                 Feedback count
@@ -145,12 +140,8 @@
                 </header>
 
                 <section
-                    class="group relative overflow-hidden rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8"
+                    class="group relative z-[3] mb-16 overflow-hidden rounded-[1rem] border border-emerald-400/50 p-4 backdrop-blur-xl md:p-8 lg:rounded-[2rem]"
                 >
-                    <div
-                        class="absolute right-0 top-0 -mr-32 -mt-32 h-64 w-64 bg-[#c5d86d]/5 blur-[100px]"
-                    ></div>
-
                     <form @submit.prevent="submitInfo" class="relative z-10 space-y-8">
                         <div class="flex flex-col items-start gap-12 lg:flex-row">
                             <div class="group/avatar relative mx-auto">
@@ -223,9 +214,9 @@
                     </form>
                 </section>
 
-                <div class="grid grid-cols-1 gap-8 italic lg:grid-cols-12">
+                <div class="relative z-[3] grid grid-cols-1 gap-8 italic lg:grid-cols-12">
                     <section
-                        class="rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8 lg:col-span-5"
+                        class="rounded-[1rem] border border-emerald-400/50 p-4 shadow-2xl backdrop-blur-xl md:p-8 lg:col-span-5 lg:rounded-[2rem]"
                     >
                         <h3
                             class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] text-white"
@@ -238,14 +229,14 @@
                                 v-model="form.body"
                                 :disabled="form.processing"
                                 rows="4"
-                                class="w-full resize-none rounded-3xl border border-white/5 bg-black/40 p-5 text-sm text-white placeholder-zinc-700 outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
+                                class="w-full resize-none rounded-xl border border-white/5 bg-black/40 p-5 text-sm text-white placeholder-zinc-600 outline-none transition-all focus:ring-1 focus:ring-emerald-500/50"
                                 placeholder="Report your experience with the system..."
                             ></textarea>
 
                             <div class="rounded-2xl border border-white/5 bg-black/20 p-4">
                                 <div class="mb-4 flex items-center justify-between">
                                     <span
-                                        class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                        class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
                                         >Signal Rating</span
                                     >
                                     <div class="flex items-center gap-1 text-[#c5d86d]">
@@ -259,7 +250,7 @@
                                     min="0.5"
                                     max="5"
                                     step="0.5"
-                                    class="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-zinc-800 accent-[#c5d86d]"
+                                    class="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-emerald-700 accent-[#c5d86d]"
                                 />
                             </div>
 
@@ -274,7 +265,7 @@
                     </section>
 
                     <section
-                        class="flex flex-col rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8 lg:col-span-7"
+                        class="flex flex-col rounded-[1rem] border border-emerald-400/50 p-4 shadow-2xl backdrop-blur-xl md:p-8 lg:col-span-7 lg:rounded-[2rem]"
                     >
                         <h3
                             class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] text-white"

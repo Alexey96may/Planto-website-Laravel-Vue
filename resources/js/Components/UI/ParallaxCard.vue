@@ -74,7 +74,7 @@
         transform: rotateX(calc(var(--my) * -1 * var(--intensity)))
             rotateY(calc(var(--mx) * var(--intensity))) translateX(calc(var(--mx) * -10px))
             translateY(calc(var(--my) * -10px)) scale(1.1);
-        transition: transform 0.1s ease-out;
+        transition: transform 0.5s ease-out;
         will-change: transform;
     }
 
