@@ -156,7 +156,7 @@
                 </div>
             </header>
 
-            <WindEffect :particleCount="35" :windStrength="1.5" />
+            <WindEffect :particleCount="20" :windStrength="1" :gravity="0.000005" />
 
             <div class="relative z-[3] flex flex-col gap-2 xl:flex-row">
                 <aside
