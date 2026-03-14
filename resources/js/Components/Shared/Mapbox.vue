@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { onMounted, ref, shallowRef, watch } from 'vue';
+    import { onMounted, onUnmounted, ref, shallowRef } from 'vue';
 
     import { usePage } from '@inertiajs/vue3';
 
@@ -14,7 +14,6 @@
     const page = usePage<SharedData>();
 
     const contactAddress = page.props.settings?.contact_address || 'Address not specified';
-    // const coords = page.props.settings?.contact_coords || [37.6173, 55.7558];
 
     const mapContainer = ref<HTMLElement | null>(null);
     const map = shallowRef<mapboxgl.Map | null>(null);
@@ -29,12 +28,11 @@
             const data = await response.json();
 
             if (data.features && data.features.length > 0) {
-                // Mapbox возвращает [lng, lat] — как раз то, что нам нужно
                 return data.features[0].center;
             }
             return null;
         } catch (e) {
-            console.error('Ошибка геокодинга:', e);
+            console.error('Geocoding error:', e);
             return null;
         }
     };
@@ -44,22 +42,18 @@
 
         mapboxgl.accessToken = mapboxToken;
 
-        // 1. Сначала получаем координаты
         const coords = await getCoords(contactAddress);
 
-        // Если не нашли (например, адрес пустой), используем дефолт
         const finalCoords = coords || [37.6173, 55.7558];
 
-        // 2. Инициализируем карту
         map.value = new mapboxgl.Map({
             container: mapContainer.value,
-            style: 'mapbox://styles/mapbox/dark-v11', // Твой стиль тут
+            style: 'mapbox://styles/mapbox/dark-v11',
             center: finalCoords,
             zoom: 16,
             pitch: 45,
         });
 
-        // 3. Ставим маркер
         const el = document.createElement('div');
         el.className = 'map-marker';
         el.innerHTML = `
@@ -70,6 +64,12 @@
   `;
 
         new mapboxgl.Marker(el).setLngLat(finalCoords).addTo(map.value);
+    });
+
+    onUnmounted(() => {
+        if (map.value) {
+            map.value.remove();
+        }
     });
 </script>
 
