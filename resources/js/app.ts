@@ -1,7 +1,9 @@
 import { DefineComponent, createApp, h } from 'vue';
+import { onMounted } from 'vue';
 
 import { createInertiaApp } from '@inertiajs/vue3';
 
+import { Howler } from 'howler';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from 'ziggy-js';
 
@@ -29,4 +31,19 @@ createInertiaApp({
     progress: {
         color: '#4B5563',
     },
+});
+
+onMounted(() => {
+    const resumeAudio = async (): Promise<void> => {
+        if (Howler.ctx && Howler.ctx.state === 'suspended') {
+            Howler.ctx.resume().then(() => {
+                console.log('AudioContext resumed successfully 🔊');
+                window.removeEventListener('click', resumeAudio);
+                window.removeEventListener('keydown', resumeAudio);
+            });
+        }
+    };
+
+    window.addEventListener('click', resumeAudio);
+    window.addEventListener('keydown', resumeAudio);
 });

@@ -9,12 +9,15 @@
     import ImageUploader from '@/Components/UI/ImageUploader.vue';
     import WindEffect from '@/Components/UI/WindEffect.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import { useSound } from '@/composables/useSound';
     import { AuthProps, Comment, CommentForm, UserForm } from '@/types';
 
     const props = defineProps<{
         myComments: Comment[];
         auth: AuthProps;
     }>();
+
+    const { playClick, playCancel, playSuccess } = useSound();
 
     const form = useForm<CommentForm>({
         body: '',
@@ -39,20 +42,6 @@
         },
     );
 
-    const uploader = ref<InstanceType<typeof ImageUploader> | null>(null);
-
-    const onFileChange = (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        const file = target.files?.[0];
-        if (file) {
-            formAvatar.avatar = file;
-            if (imageUrl.value && imageUrl.value.startsWith('blob:')) {
-                URL.revokeObjectURL(imageUrl.value);
-            }
-            imageUrl.value = URL.createObjectURL(file);
-        }
-    };
-
     const submitInfo = (): void => {
         formAvatar.post(route('profile.update'), {
             preserveScroll: true,
@@ -64,10 +53,13 @@
                     URL.revokeObjectURL(imageUrl.value);
                 }
 
+                playSuccess();
+
                 formAvatar.avatar = null;
             },
             onError: () => {
                 imageUrl.value = props.auth.user.avatar_url;
+                playCancel();
             },
         });
     };
@@ -75,7 +67,14 @@
     const submitComment = (): void => {
         form.post(route('comments.update'), {
             preserveScroll: true,
-            onSuccess: () => form.reset(),
+
+            onSuccess: () => {
+                form.reset();
+                playSuccess();
+            },
+            onError: () => {
+                playCancel();
+            },
         });
     };
 
@@ -202,6 +201,7 @@
                                 >
                                     <button
                                         type="submit"
+                                        @mousedown="playClick"
                                         :disabled="formAvatar.processing"
                                         class="flex items-center gap-3 rounded-2xl bg-emerald-500 px-8 py-4 text-[10px] font-black uppercase tracking-widest text-black transition-all hover:bg-emerald-200 disabled:opacity-50"
                                     >
@@ -246,6 +246,7 @@
                                 </div>
                                 <input
                                     type="range"
+                                    @change="playClick"
                                     v-model="form.rating"
                                     min="0.5"
                                     max="5"
@@ -256,8 +257,9 @@
 
                             <button
                                 type="submit"
+                                @mousedown="playClick"
                                 :disabled="form.processing || !form.body"
-                                class="w-full rounded-2xl bg-[#c5d86d] py-4 text-[10px] font-black uppercase tracking-widest text-black transition-all hover:scale-[1.02] active:scale-95"
+                                class="w-full cursor-pointer rounded-2xl bg-emerald-400 py-4 text-[10px] font-black uppercase tracking-widest text-black transition-all hover:scale-[1.02] active:scale-95"
                             >
                                 Publish Transmission
                             </button>

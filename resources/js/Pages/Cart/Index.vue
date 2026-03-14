@@ -9,9 +9,12 @@
     import AppImage from '@/Components/UI/AppImage.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { useFlash } from '@/composables/useFlash';
+    import { useSound } from '@/composables/useSound';
     import { CartData, CartItem } from '@/types';
     import { debounce } from '@/utils/helpers';
     import { formatUSD } from '@/utils/money';
+
+    const { playCancel, playClick, playSlideMove } = useSound();
 
     const props = defineProps<{
         cart: CartData;
@@ -23,13 +26,13 @@
 
     const { notifyWithUndo, notify } = useFlash();
 
-    let isDeleting = ref<number | null>(null);
+    let deletingIds = ref<Set<number>>(new Set());
     const isUpdating = ref<number | null>(null);
 
     const removeFromCart = async (productId: number): Promise<void> => {
-        if (isDeleting.value === productId) return;
+        if (deletingIds.value.has(productId)) return;
+        deletingIds.value.add(productId);
 
-        isDeleting.value = productId;
         try {
             const confirmed = await notifyWithUndo('Purging product from cart...', 5000);
 
@@ -37,17 +40,21 @@
                 router.delete(route('cart.remove', productId), {
                     preserveScroll: true,
                     onFinish: () => {
-                        isDeleting.value = null;
+                        deletingIds.value.delete(productId);
+                    },
+                    onSuccess: () => {
+                        playSlideMove();
                     },
                     onError: () => {
-                        isDeleting.value = null;
+                        deletingIds.value.delete(productId);
+                        playCancel();
                     },
                 });
             } else {
-                isDeleting.value = null;
+                deletingIds.value.delete(productId);
             }
         } catch (e) {
-            isDeleting.value = null;
+            deletingIds.value.delete(productId);
         }
     };
 
@@ -117,9 +124,9 @@
                         <div
                             v-for="item in cart.items"
                             :key="item.product_id"
-                            class="group relative flex items-center gap-4 rounded-[1.5rem] border border-zinc-800 bg-zinc-900/50 p-4 transition-all hover:border-zinc-700 sm:gap-6 sm:p-6"
+                            class="group relative flex items-center gap-4 rounded-[1.5rem] border border-zinc-800 bg-zinc-900/50 p-4 transition-all duration-300 hover:border-zinc-700 sm:gap-6 sm:p-6"
                             :class="[
-                                isDeleting === item.product_id
+                                deletingIds.has(item.product_id)
                                     ? 'pointer-events-none scale-95 opacity-50'
                                     : '',
                             ]"
@@ -142,6 +149,7 @@
                                     </h3>
                                     <button
                                         @click="removeFromCart(item.product_id)"
+                                        @mousedown="playCancel"
                                         class="text-zinc-500 transition-colors hover:text-red-400"
                                         title="Remove item"
                                     >
@@ -173,6 +181,7 @@
                                         >
                                             <button
                                                 @click="updateQuantity(item, item.quantity - 1)"
+                                                @mousedown="playClick"
                                                 :disabled="item.quantity <= 1"
                                                 class="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white disabled:opacity-20"
                                             >
@@ -187,6 +196,7 @@
                                                 >{{ item.quantity }}</span
                                             >
                                             <button
+                                                @mousedown="playClick"
                                                 @click="updateQuantity(item, item.quantity + 1)"
                                                 :disabled="item.quantity >= item.stock"
                                                 class="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white disabled:opacity-20"
@@ -244,6 +254,7 @@
 
                             <Link
                                 v-if="hasAvailableItems"
+                                @mousedown="playClick"
                                 :href="route('checkout.index')"
                                 class="mt-8 block w-full rounded-[1.2rem] bg-emerald-600 p-4 text-center font-bold text-white transition-all hover:bg-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] active:scale-[0.98]"
                             >

@@ -6,6 +6,7 @@
     import IconLogo from 'img/icons/logo.svg?component';
 
     import NavigationFooter from '@/Components/Shared/NavigationFooter.vue';
+    import { useSound } from '@/composables/useSound';
     import { SharedData } from '@/types';
 
     interface NewsletterForm {
@@ -16,23 +17,34 @@
         email: '',
     });
 
+    const { playSuccess, playClick, playCancel } = useSound();
+
     const submit = () => {
+        playClick();
+
         form.post(route('newsletter.store'), {
             preserveScroll: true,
             onSuccess: () => {
                 form.reset();
-                alert('Вы успешно подписаны!'); //todo
+                playSuccess();
+            },
+            onError: () => {
+                playCancel();
             },
         });
     };
 
     const page = usePage<SharedData>();
 
-    const footerMenuItems = computed(() => page.props.navigation?.footer || []);
+    const isHome = computed(() => page.component === 'Welcome');
+
+    const footerClasses = computed(() => {
+        return isHome.value ? 'bg-[#222c1d]' : 'bg-[#1b2316]';
+    });
 </script>
 
 <template>
-    <footer class="footer relative z-[3]" id="footer" aria-label="Footer">
+    <footer class="footer relative z-[3]" :class="footerClasses" id="footer" aria-label="Footer">
         <div class="footer__container container">
             <div class="footer__top" aria-label="Footer top side">
                 <div class="footer__info" aria-label="Footer information">
@@ -59,7 +71,7 @@
                             type="email"
                             placeholder="Your email"
                             class="footer__form-text"
-                            :class="{ 'border-red-500': form.errors.email }"
+                            :class="{ '!border-red-500': form.errors.email }"
                         />
                         <input
                             class="button footer__form-button"
@@ -68,10 +80,11 @@
                             :value="form.processing ? 'Sending...' : 'Subscribe'"
                             :disabled="form.processing"
                         />
-                        <span v-if="form.errors.email" class="text-sm text-red-500">
-                            {{ form.errors.email }}
-                        </span>
                     </form>
+
+                    <span v-if="form.errors.email" class="mt-2 text-sm text-red-700">
+                        {{ form.errors.email }}
+                    </span>
                 </div>
             </div>
 
@@ -124,7 +137,6 @@
     @use '../../../scss/bootstrap' as b;
 
     .footer {
-        background-color: #1b2316;
         padding: calc(1rem * (90px / b.$basicFontSize)) 0 calc(1rem * (88px / b.$basicFontSize));
 
         @media (max-width: b.$mediaMobile) {

@@ -3,6 +3,8 @@
 
     import IconBag from 'img/icons/bag.svg?component';
 
+    import { useSound } from '@/composables/useSound';
+
     interface Props {
         isInCart?: boolean;
         isProcessing?: boolean;
@@ -40,6 +42,8 @@
             },
         ];
     });
+
+    const { playClick } = useSound();
 </script>
 
 <template>
@@ -49,6 +53,7 @@
         :disabled="isInCart || disabled || isProcessing"
         :aria-label="areaLabel"
         @click="handleClick"
+        @mousedown="playClick"
     >
         <IconBag
             class="button-image"

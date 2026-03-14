@@ -1,11 +1,15 @@
 <script setup lang="ts">
     import { computed, onMounted, onUnmounted, ref } from 'vue';
 
+    import { useSound } from '@/composables/useSound';
+
     const props = defineProps<{
         modelValue: string;
     }>();
 
     const emit = defineEmits(['update:modelValue', 'change']);
+
+    const { playClick } = useSound();
 
     const isOpen = ref(false);
     const options = [
@@ -22,6 +26,7 @@
     const selectOption = (option: { value: string; label: string }) => {
         emit('update:modelValue', option.value);
         emit('change', option.value);
+        playClick();
         isOpen.value = false;
     };
 
@@ -39,6 +44,7 @@
     <div class="custom-select relative inline-block w-[200px] text-left">
         <button
             @click="isOpen = !isOpen"
+            @mousedown="playClick"
             type="button"
             class="flex w-full items-center justify-between rounded-xl border border-zinc-200 bg-zinc-800/50 px-3 py-2 text-sm font-bold text-zinc-200 transition-all hover:bg-zinc-800"
         >

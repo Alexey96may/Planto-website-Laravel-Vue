@@ -17,6 +17,7 @@
     import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
     import Modal from '@/Components/UI/Modal.vue';
+    import { useSound } from '@/composables/useSound';
     import { ProductWithCategory, Review, SharedData } from '@/types';
 
     const modules = [Pagination, Navigation, Autoplay];
@@ -38,6 +39,15 @@
             isVideoModalOpen.value = true;
         } else {
             console.warn('Video link is missed!');
+        }
+    };
+
+    const { playSlideMove } = useSound();
+
+    const handlePaginationClick = (event: MouseEvent) => {
+        const target = event.target as HTMLElement;
+        if (target.classList.contains('swiper-pagination-bullet')) {
+            playSlideMove();
         }
     };
 </script>
@@ -132,7 +142,10 @@
                 </figure>
             </div>
 
-            <div class="slider-container group relative w-full flex-shrink-0 lg:w-[40%]">
+            <div
+                class="slider-container group relative w-full flex-shrink-0 lg:w-[40%]"
+                @mousedown="handlePaginationClick"
+            >
                 <swiper
                     :slides-per-view="1"
                     :space-between="20"
@@ -161,12 +174,14 @@
                 </swiper>
 
                 <button
+                    @mousedown="playSlideMove"
                     class="prev-btn absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-90 disabled:opacity-0 group-hover:left-4"
                 >
                     <ChevronLeftIcon class="h-6 w-6" />
                 </button>
 
                 <button
+                    @mousedown="playSlideMove"
                     class="next-btn absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-90 disabled:opacity-0 group-hover:right-4"
                 >
                     <ChevronRightIcon class="h-6 w-6" />

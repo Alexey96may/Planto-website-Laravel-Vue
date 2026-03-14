@@ -19,6 +19,7 @@
     import WindEffect from '@/Components/UI/WindEffect.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { useFlash } from '@/composables/useFlash';
+    import { useSound } from '@/composables/useSound';
     import { CartItems, ProductWithCategory } from '@/types';
     import { calculateTotal, formatUSD } from '@/utils/money';
 
@@ -35,8 +36,16 @@
     const formattedPrice = computed(() => formatUSD(totalPriceRaw.value));
 
     const isZoomed = ref(false);
-    const openModal = () => (isZoomed.value = true);
-    const closeModal = () => (isZoomed.value = false);
+    const openModal = () => {
+        playClick();
+        isZoomed.value = true;
+    };
+    const closeModal = () => {
+        playClick();
+        isZoomed.value = false;
+    };
+
+    const { playCancel, playClick, moneyClick } = useSound();
 
     watch(
         () => props.cart_items[props.product.id],
@@ -47,28 +56,51 @@
 
     const add = () => {
         if (count.value >= props.product.stock) return;
+
+        playClick();
         count.value++;
     };
 
     const remove = () => {
-        if (count.value > 1) count.value--;
+        if (count.value > 1) {
+            playClick();
+            return count.value--;
+        }
     };
 
     const addOrUpdateCart = () => {
         const id = props.product?.id;
         const isInCart = !!props.cart_items[id];
+        playClick();
 
         if (isInCart) {
             router.patch(
                 route('cart.update', id),
                 { quantity: count.value },
-                { preserveScroll: true },
+
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        moneyClick();
+                    },
+                    onError: () => {
+                        playCancel();
+                    },
+                },
             );
         } else {
             router.post(
                 route('cart.add'),
                 { product_id: id, quantity: count.value },
-                { preserveScroll: true },
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        moneyClick();
+                    },
+                    onError: () => {
+                        playCancel();
+                    },
+                },
             );
         }
     };
@@ -84,6 +116,8 @@
     const removeFromCart = async (): Promise<void> => {
         if (isDeleting.value === props.product.id) return;
 
+        playClick();
+
         isDeleting.value = props.product.id;
 
         try {
@@ -97,6 +131,7 @@
                     },
                     onError: () => {
                         isDeleting.value = null;
+                        playCancel();
                     },
                 });
             } else {
@@ -213,6 +248,7 @@
                         <button
                             v-if="cart_items[product.id]"
                             @click="removeFromCart"
+                            @mousedown="playCancel"
                             class="flex items-center gap-2 text-sm font-bold text-zinc-500 transition-colors hover:text-red-500"
                         >
                             <TrashIcon class="h-4 w-4" />

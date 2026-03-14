@@ -9,6 +9,7 @@
     import Top from '@/Components/Sections/TopSection.vue';
     import Trendy from '@/Components/Sections/TrendySection.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
+    import { useCart } from '@/composables/useCart';
     import { useScrollReveal } from '@/composables/useScrollReveal';
     import {
         Feature,
@@ -44,23 +45,7 @@
     const page = usePage<SharedData>();
     const cartIds = computed(() => page.props.cart_ids || []);
 
-    const processingId = ref<number | null>(null);
-
-    const handleAddToCart = (product: Product) => {
-        router.post(
-            route('cart.add'),
-            { product_id: product.id, quantity: 1 },
-            {
-                preserveScroll: true,
-                onBefore: () => {
-                    processingId.value = product.id;
-                },
-                onFinish: () => {
-                    processingId.value = null;
-                },
-            },
-        );
-    };
+    const { addToCart, processingId } = useCart();
 
     useScrollReveal({
         threshold: 0.15,
@@ -82,7 +67,7 @@
                 :trendyPlants="trendyPlants"
                 :cart-ids="cartIds"
                 :processing-id="processingId"
-                @add-to-cart="handleAddToCart"
+                @add-to-cart="addToCart"
             />
         </template>
 
@@ -92,7 +77,7 @@
             :topPlants="topPlants"
             :cart-ids="cartIds"
             :processing-id="processingId"
-            @add-to-cart="handleAddToCart"
+            @add-to-cart="addToCart"
         />
         <Review v-if="comments.length" :comments="comments" class="reveal" />
         <Best :features="features" class="reveal" />

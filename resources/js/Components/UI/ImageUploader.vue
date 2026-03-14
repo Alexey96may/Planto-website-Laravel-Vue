@@ -4,6 +4,7 @@
     import { ImagePlus, Loader2, UploadCloud, X } from 'lucide-vue-next';
 
     import { useImageUpload } from '@/composables/useImageUpload';
+    import { useSound } from '@/composables/useSound';
 
     const props = defineProps<{
         modelValue: File | null;
@@ -32,6 +33,8 @@
         emit('on-file-select', file);
         emit('update:modelValue', file);
     });
+
+    const { playClick } = useSound();
 
     defineExpose({ clearImage });
 
@@ -97,6 +100,7 @@
 
                     <button
                         @click.stop="removeImage"
+                        @mousedown="playClick"
                         type="button"
                         class="absolute -right-3 -top-3 z-10 rounded-xl bg-red-500 p-2 text-white shadow-xl transition-all duration-300 hover:rotate-90 hover:bg-red-600"
                     >

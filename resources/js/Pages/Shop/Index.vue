@@ -13,6 +13,8 @@
     import SortFilter from '@/Components/Shared/SortFilter.vue';
     import WindEffect from '@/Components/UI/WindEffect.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
+    import { useCart } from '@/composables/useCart';
+    import { useSound } from '@/composables/useSound';
     import {
         Category,
         PaginatedResponse,
@@ -44,6 +46,8 @@
     const sort = ref<SortOption | string>(props.filters?.sort || 'popular');
     const inStockOnly = ref<boolean>(props.filters.in_stock !== 'false');
 
+    const { playSlideMove, playClick, playCancel } = useSound();
+
     const currentCategory = ref<string | null>(props.currentCategory);
 
     const isFiltering = ref(false);
@@ -66,7 +70,12 @@
             onBefore: () => {
                 isFiltering.value = true;
             },
-
+            onSuccess: () => {
+                playSlideMove();
+            },
+            onError: () => {
+                playCancel();
+            },
             onFinish: () => {
                 isFiltering.value = false;
             },
@@ -81,23 +90,7 @@
         debouncedApplyFilters();
     });
 
-    const processingId = ref<number | null>(null);
-
-    const handleAddToCart = (product: Product) => {
-        router.post(
-            route('cart.add'),
-            { product_id: product.id, quantity: 1 },
-            {
-                preserveScroll: true,
-                onBefore: () => {
-                    processingId.value = product.id;
-                },
-                onFinish: () => {
-                    processingId.value = null;
-                },
-            },
-        );
-    };
+    const { addToCart, processingId } = useCart();
 
     const handleChangeCategory = (categotySlug: string | null) => {
         currentCategory.value = categotySlug;
@@ -106,6 +99,8 @@
     };
 
     const resetFilters = () => {
+        playClick();
+
         search.value = '';
         minPrice.value = '';
         maxPrice.value = '';
@@ -176,6 +171,7 @@
                         class="group mb-10 flex cursor-pointer items-center justify-between"
                         @click="
                             inStockOnly = !inStockOnly;
+                            playClick();
                             debouncedApplyFilters();
                         "
                     >
@@ -198,6 +194,7 @@
 
                     <ShopCategory
                         @change-category="handleChangeCategory"
+                        @click="playClick"
                         :categories="categories"
                         :currentCategory="currentCategory"
                     />
@@ -277,7 +274,7 @@
                                 :current_page="products.current_page"
                                 :processing-id="processingId === plant.id"
                                 :is-in-cart="cartIds.includes(plant.id)"
-                                @add-to-cart="handleAddToCart"
+                                @add-to-cart="addToCart"
                             />
                         </transition-group>
                     </div>
@@ -296,6 +293,7 @@
                 </main>
             </div>
         </div>
+
         <Pagination class="z-[3]" :disabled="isFiltering" :links="products.links" />
     </div>
 </template>

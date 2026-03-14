@@ -11,6 +11,7 @@
     import { Swiper, SwiperSlide } from 'swiper/vue';
 
     import PlantBestCard from '@/Components/Cards/BestCard.vue';
+    import { useSound } from '@/composables/useSound';
     import { Feature, SharedData } from '@/types';
 
     const modules = [EffectFade, Pagination, Autoplay];
@@ -88,6 +89,15 @@
     const onSwiper = (swiper: any) => {
         swiperInstance.value = swiper;
     };
+
+    const { playSlideMove } = useSound();
+
+    const handlePaginationClick = (event: MouseEvent) => {
+        const target = event.target as HTMLElement;
+        if (target.classList.contains('bottom-button')) {
+            playSlideMove();
+        }
+    };
 </script>
 
 <template>
@@ -103,7 +113,11 @@
                 </component>
             </h2>
 
-            <div class="slider review__slider" aria-label="Slider">
+            <div
+                class="slider review__slider"
+                aria-label="Slider"
+                @mousedown="handlePaginationClick"
+            >
                 <swiper
                     :modules="modules"
                     :slides-per-view="1"

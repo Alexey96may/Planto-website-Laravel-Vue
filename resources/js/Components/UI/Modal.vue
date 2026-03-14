@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
+    import { useSound } from '@/composables/useSound';
+
     interface Props {
         show?: boolean;
         maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
@@ -75,6 +77,16 @@
         };
         return classMap[props.maxWidth] ?? classMap['2xl'];
     });
+
+    const { playModalOpen, playModalClose } = useSound();
+
+    watch(
+        () => props.show,
+        (newVal) => {
+            if (newVal) playModalOpen();
+            else playModalClose();
+        },
+    );
 </script>
 
 <template>

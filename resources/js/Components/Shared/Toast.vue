@@ -4,6 +4,7 @@
     import { AlertCircle, AlertTriangle, CheckCircle2, Info, X } from 'lucide-vue-next';
 
     import { useFlash } from '@/composables/useFlash';
+    import { useSound } from '@/composables/useSound';
 
     const { show, message, type, isCountingDown, undoRequested, timerDuration } = useFlash();
 
@@ -22,6 +23,8 @@
         warning: 'border-amber-500/20 bg-amber-950/90 text-amber-400',
         info: 'border-blue-500/20 bg-blue-950/90 text-blue-400',
     };
+
+    const { playClick } = useSound();
 </script>
 
 <template>
@@ -48,12 +51,18 @@
 
                     <button
                         v-if="isCountingDown"
+                        @mousedown="playClick"
                         @click="undoRequested = true"
                         class="ml-2 rounded-lg bg-white/10 px-3 py-1.5 text-[10px] font-black uppercase transition-all hover:bg-white/20 active:scale-95"
                     >
                         Undo
                     </button>
-                    <button v-else @click="show = false" class="opacity-50 hover:opacity-100">
+                    <button
+                        v-else
+                        @mousedown="playClick"
+                        @click="show = false"
+                        class="opacity-50 hover:opacity-100"
+                    >
                         <X class="h-4 w-4" />
                     </button>
                 </div>
