@@ -4,13 +4,15 @@
     import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
     import { useScroll, useScrollLock, useSwipe } from '@vueuse/core';
 
+    import { useSound } from '@/composables/useSound';
+
     const isOpen = ref(false);
     const target = ref<HTMLElement | null>(null);
 
+    const { playClick, playSlideMove } = useSound();
+
     const { isSwiping, direction, lengthX } = useSwipe(target, {
         onSwipeEnd(e, direction) {
-            // Если свайпнули вправо и расстояние больше 50px
-            // В useSwipe: свайп вправо дает отрицательный lengthX
             if (direction === 'right' && lengthX.value < -50) {
                 isOpen.value = false;
             }
@@ -18,10 +20,8 @@
     });
 
     const containerStyle = computed(() => {
-        // Если мы в процессе свайпа и двигаем вправо (lengthX < 0)
         if (isSwiping.value && lengthX.value < 0) {
             return {
-                // Инвертируем значение, чтобы двигать панель вправо
                 transform: `translateX(${-lengthX.value}px)`,
                 transition: 'none',
             };
@@ -39,7 +39,6 @@
         isLocked.value = val;
     });
 
-    // 1. Привязываем хук к нашему рефу target
     const scrollY = ref(0);
     const scrollHeight = ref(0);
     const clientHeight = ref(0);
@@ -54,7 +53,7 @@
     const scrollProgress = computed(() => {
         const maxScroll = scrollHeight.value - clientHeight.value;
         if (maxScroll <= 0) return 0;
-        // Ограничиваем от 0 до 100, чтобы бегунок не улетал
+
         return Math.min(100, Math.max(0, (scrollY.value / maxScroll) * 100));
     });
 </script>
@@ -63,26 +62,27 @@
     <button
         type="button"
         @click="toggleMenu"
-        class="pointer-events-auto relative z-[90] p-2 text-emerald-700 outline-none focus:outline-none"
+        @mousedown="playSlideMove"
+        class="pointer-events-auto relative z-[90] block text-white opacity-75 outline-none focus:outline-none"
         aria-label="Toggle menu"
     >
-        <div class="flex w-6 flex-col gap-1.5">
+        <div class="flex h-[26px] w-[32px] flex-col gap-2">
             <span
                 :class="[
-                    'h-0.5 w-full bg-current transition-all duration-300',
-                    isOpen ? 'translate-y-2 rotate-45' : '',
+                    'h-[4px] w-full rounded-sm bg-current transition-all duration-300',
+                    isOpen ? 'translate-y-[12px] rotate-45' : '',
                 ]"
             ></span>
             <span
                 :class="[
-                    'h-0.5 w-full bg-current transition-all duration-300',
+                    'ml-auto h-[4px] w-[70%] rounded-sm bg-current transition-all duration-300',
                     isOpen ? 'opacity-0' : '',
                 ]"
             ></span>
             <span
                 :class="[
-                    'h-0.5 w-full bg-current transition-all duration-300',
-                    isOpen ? '-translate-y-2 -rotate-45' : '',
+                    'h-[4px] w-0 rounded-sm bg-current transition-all duration-300',
+                    isOpen ? 'w-[32px] -translate-y-[12px] -rotate-45' : '',
                 ]"
             ></span>
         </div>
@@ -134,12 +134,13 @@
                                 </div>
 
                                 <div
-                                    class="pointer-events-none absolute right-0 top-0 z-[60] flex w-full justify-end px-8 py-12"
+                                    class="pointer-events-none absolute right-0 top-0 z-[60] flex w-full justify-end px-6 py-9 sm:py-6"
                                 >
                                     <button
                                         type="button"
+                                        @mousedown="playClick"
                                         @click="isOpen = false"
-                                        class="pointer-events-auto text-emerald-700 outline-none transition-transform hover:scale-110"
+                                        class="pointer-events-auto text-white opacity-75 outline-none transition-transform hover:scale-110"
                                     >
                                         <div class="relative h-6 w-6">
                                             <span

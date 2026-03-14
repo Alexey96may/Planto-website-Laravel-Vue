@@ -73,7 +73,7 @@
 
     .header__container {
         @include b.flex(space-between, center);
-        gap: clamp(1rem, 3vw, 3rem);
+        gap: clamp(1.5rem, 3vw, 3rem);
     }
 
     .header__socials {

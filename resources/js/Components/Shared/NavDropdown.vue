@@ -6,6 +6,7 @@
     import { onClickOutside } from '@vueuse/core';
     import IconArrowMore from 'img/icons/arrow-more.svg?component';
 
+    import { useSound } from '@/composables/useSound';
     import { NavigationItem } from '@/types';
     import { getHref } from '@/utils/navigation';
 
@@ -26,8 +27,11 @@
     });
 
     const toggleMenu = (): void => {
+        playClick();
         isOpened.value = !isOpened.value;
     };
+
+    const { playClick } = useSound();
 </script>
 
 <template>

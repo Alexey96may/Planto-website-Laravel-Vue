@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import { computed, onMounted, onUnmounted, ref } from 'vue';
 
+    import { useSound } from '@/composables/useSound';
+
     const props = defineProps<{ modelValue: string }>();
     const emit = defineEmits(['update:modelValue']);
 
@@ -17,6 +19,7 @@
 
     const selectOption = (val: string) => {
         emit('update:modelValue', val);
+        playClick();
         isOpen.value = false;
     };
 
@@ -25,6 +28,8 @@
     };
     onMounted(() => window.addEventListener('click', close));
     onUnmounted(() => window.removeEventListener('click', close));
+
+    const { playClick } = useSound();
 </script>
 
 <template>
@@ -32,6 +37,7 @@
         <button
             @click.stop="isOpen = !isOpen"
             type="button"
+            @mousedown="playClick"
             class="group flex w-full items-center justify-between rounded-xl border border-emerald-400/30 bg-plant-shop/80 px-6 py-3 text-xs font-black uppercase tracking-widest text-white backdrop-blur-md transition-all duration-200 hover:border-emerald-400/60 hover:bg-plant-shop/100 focus:outline-none lg:w-full lg:rounded-full"
         >
             <span class="truncate">{{ selectedLabel }}</span>

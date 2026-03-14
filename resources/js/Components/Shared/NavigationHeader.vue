@@ -65,6 +65,7 @@
 
         visibleCount.value = count > 0 ? count : 1;
     };
+
     let observer: ResizeObserver;
 
     onMounted(() => {
@@ -83,7 +84,7 @@
 
 <template>
     <nav
-        class="nav relative order-1 flex items-center justify-between lg:order-none lg:w-full"
+        class="nav relative order-1 flex items-center justify-between gap-5 lg:order-none lg:w-full"
         id="nav"
         aria-label="Navigation"
         ref="containerRef"
@@ -116,7 +117,7 @@
             />
         </ul>
 
-        <div class="lg:hidden">
+        <div class="leading-none lg:hidden">
             <MobileMenu>
                 <template v-for="item in menuItems" :key="'mobile-' + item.id">
                     <div v-if="item.children?.length" class="flex flex-col gap-2">

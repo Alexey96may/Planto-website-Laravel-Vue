@@ -147,7 +147,9 @@
                                 <div
                                     class="transition-all duration-500 group-hover/avatar:border-[#c5d86d]/50"
                                 >
-                                    <div class="group/avatar relative mx-auto h-48 w-48 shrink-0">
+                                    <div
+                                        class="group/avatar relative mx-auto shrink-0 lg:h-48 lg:w-48"
+                                    >
                                         <ImageUploader
                                             ref="uploader"
                                             v-model="formAvatar.avatar"
