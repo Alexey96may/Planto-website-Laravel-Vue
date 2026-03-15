@@ -128,7 +128,7 @@
                             v-for="child in item.children"
                             :key="child.id"
                             :href="getHref(child)"
-                            class="border-l border-emerald-500/30 py-1 pl-4 hover:text-emerald-400"
+                            class="border-l border-emerald-500/50 py-1 pl-4 hover:text-emerald-400"
                         >
                             {{ child.title }}
                         </Link>

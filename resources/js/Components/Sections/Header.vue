@@ -21,9 +21,9 @@
 </script>
 
 <template>
-    <header :class="headerClasses" class="header relative z-[9999]" id="header" aria-label="Header">
+    <header :class="headerClasses" class="header relative z-[999]" id="header" aria-label="Header">
         <div class="header__container container">
-            <div class="mr-auto lg:mr-0" aria-label="Logo field">
+            <div class="relative z-20 mr-auto lg:mr-0" aria-label="Logo field">
                 <Link
                     class="logo opacity-80 transition-opacity duration-300 hover:opacity-100"
                     :href="route('home')"
@@ -36,9 +36,9 @@
                 </Link>
             </div>
 
-            <NavigationHeader />
+            <NavigationHeader class="relative z-10" />
 
-            <div class="header__socials" aria-label="Socials field">
+            <div class="header__socials relative z-20" aria-label="Socials field">
                 <Link
                     :href="$page.props.auth.user ? route('dashboard') : route('register')"
                     :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Register'"
@@ -47,7 +47,7 @@
                     <IconUser class="header__social-img" aria-label="Profile" />
                 </Link>
 
-                <Link :href="route('cart.index')" aria-label="To cart" class="relative">
+                <Link :href="route('cart.index')" aria-label="To cart" class="relative z-20">
                     <IconBag class="header__social-img" aria-label="Bag image" />
                     <span
                         v-if="$page.props.cart_count > 0"
@@ -79,7 +79,6 @@
     .header__socials {
         @include b.flex(space-between, center);
         gap: clamp(b.$mainGap, 3vw, 59px);
-        z-index: 9;
 
         a {
             display: block;

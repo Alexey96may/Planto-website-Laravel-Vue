@@ -8,7 +8,7 @@ $darkBgColor: rgba(255, 255, 255, 0.05);
 $mainBgColor: #1b2316;
 
 // Fonts
-$mainFontFamily: "Inter", "Open Sans", sans-serif;
+$mainFontFamily: 'Inter', 'Open Sans', sans-serif;
 $basicFontSize: 24px;
 
 //  Container
@@ -28,9 +28,9 @@ $mainMargin: 1rem;
 $mainGap: 1.4rem;
 
 // Medias
-$mediaPC: 1400px;
-$mediaSmallPC: 1200px;
-$mediaTablet: 992px;
+$mediaPC: 1536px;
+$mediaSmallPC: 1280px;
+$mediaTablet: 1024px;
 $mediaSmallTablet: 768px;
-$mediaMobile: 576px;
+$mediaMobile: 640px;
 $mediaSmallMobile: 320px;
