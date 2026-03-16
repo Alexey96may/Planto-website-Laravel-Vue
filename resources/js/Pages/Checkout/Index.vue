@@ -46,7 +46,7 @@
     <GuestLayout>
         <Head title="Secure Checkout" />
 
-        <div class="mx-auto max-w-5xl px-2 py-6 md:px-4 md:py-12">
+        <div class="mx-auto max-w-7xl px-2 py-6 md:px-4 md:py-12">
             <div class="mb-12 text-center">
                 <h1 class="text-4xl font-black uppercase italic tracking-tighter text-white">
                     Final <span class="text-[#c5d86d]">Checkout</span>
@@ -59,7 +59,7 @@
             <form @submit.prevent="submit" class="grid grid-cols-1 gap-8">
                 <div class="space-y-6">
                     <section
-                        class="rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl md:rounded-[2rem]"
+                        class="rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8"
                     >
                         <h2
                             class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-widest text-[#c5d86d]"
@@ -81,7 +81,7 @@
                                         v-model="form.name"
                                         name="name"
                                         type="text"
-                                        class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                        class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                         placeholder="John Doe"
                                         required
                                     />
@@ -108,7 +108,7 @@
                                             v-model="form.phone"
                                             name="phone"
                                             type="tel"
-                                            class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                             placeholder="+7 (___) ___"
                                             required
                                         />
@@ -127,7 +127,7 @@
                                             v-model="form.email"
                                             name="email"
                                             type="email"
-                                            class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                             placeholder="email@example.com"
                                             required
                                         />
@@ -138,7 +138,7 @@
                     </section>
 
                     <section
-                        class="rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl md:rounded-[2rem]"
+                        class="rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8"
                     >
                         <h2
                             class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-widest text-[#c5d86d]"
@@ -156,7 +156,7 @@
                                     v-model="form.address"
                                     name="address"
                                     rows="3"
-                                    class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                    class="w-full rounded-xl border border-white/5 bg-black/40 p-4 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                     placeholder="Enter your full address..."
                                     required
                                 ></textarea>
@@ -175,7 +175,7 @@
                                         v-model="form.comment"
                                         name="comment"
                                         rows="2"
-                                        class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                        class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                         placeholder="Gate code, floor, etc."
                                     ></textarea>
                                 </div>
@@ -212,7 +212,7 @@
                 <div>
                     <div class="top-8 space-y-6">
                         <section
-                            class="rounded-[1rem] border border-white/5 bg-[#161b14] p-8 shadow-2xl md:rounded-[2rem]"
+                            class="rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8"
                         >
                             <h2
                                 class="mb-6 text-xs font-black uppercase tracking-widest text-white"
@@ -220,11 +220,11 @@
                                 Order <span class="text-[#c5d86d]">Manifest</span>
                             </h2>
 
-                            <div class="custom-scrollbar max-h-[300px] space-y-4">
+                            <div class="custom-scrollbar space-y-4">
                                 <div
                                     v-for="item in cartItems"
                                     :key="item.id"
-                                    class="flex flex-col flex-wrap items-center gap-4 rounded-2xl border border-white/[0.02] bg-black/20 p-3"
+                                    class="flex flex-col flex-wrap items-start gap-4 rounded-xl border border-white/[0.02] bg-black/20 p-4"
                                 >
                                     <div class="flex flex-wrap items-center gap-4">
                                         <AppImage
@@ -275,9 +275,12 @@
                             <button
                                 type="submit"
                                 :disabled="form.processing"
-                                class="mt-8 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#c5d86d] py-4 text-[10px] font-black uppercase tracking-[0.2em] text-black transition-all hover:scale-[1.02] hover:bg-[#d4e685] active:scale-95 disabled:opacity-50"
+                                class="mt-8 flex w-full items-center justify-center gap-3 rounded-xl bg-emerald-500 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-black transition-all hover:scale-[1.02] hover:bg-emerald-700 active:scale-95 disabled:opacity-50"
                             >
-                                <CreditCard v-if="!form.processing" class="h-4 w-4" />
+                                <CreditCard
+                                    v-if="!form.processing"
+                                    class="hidden h-4 w-4 sm:block"
+                                />
                                 <span>{{ form.processing ? 'Syncing...' : 'Initiate Order' }}</span>
                                 <ArrowRight v-if="!form.processing" class="h-4 w-4" />
                             </button>

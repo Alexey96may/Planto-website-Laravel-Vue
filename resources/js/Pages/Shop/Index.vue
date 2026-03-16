@@ -224,7 +224,7 @@
                         </div>
                     </transition>
 
-                    <div class="mb-8 flex items-end justify-between">
+                    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
                         <SortFilter v-model="sort" @change="debouncedApplyFilters" />
 
                         <div>

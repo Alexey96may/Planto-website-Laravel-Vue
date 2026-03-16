@@ -24,7 +24,7 @@
             ></div>
         </div>
 
-        <div class="relative z-10 mb-8 transition-transform duration-500 hover:scale-105">
+        <div class="relative z-10 mb-14 transition-transform duration-500 hover:scale-105">
             <Link href="/" class="flex items-center gap-2 sm:gap-4">
                 <IconLogo
                     class="inline-block h-10 w-10 fill-current text-emerald-600 drop-shadow-[0_0_5px_rgba(16,185,129,0.2)] sm:h-20 sm:w-20"
@@ -36,9 +36,9 @@
             </Link>
         </div>
 
-        <div class="relative z-10 w-full max-w-md">
+        <div class="relative z-10 w-full max-w-lg">
             <div
-                class="overflow-hidden rounded-[1rem] border border-zinc-700 bg-zinc-900/40 p-8 shadow-2xl backdrop-blur-xl sm:rounded-[2.5rem] sm:p-12"
+                class="overflow-hidden rounded-[1rem] border border-zinc-700 bg-zinc-900/40 p-4 shadow-2xl backdrop-blur-xl sm:rounded-[2.5rem] sm:p-12 md:p-8"
             >
                 <slot />
                 <AppToast />
