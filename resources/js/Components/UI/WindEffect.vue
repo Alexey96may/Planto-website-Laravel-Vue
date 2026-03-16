@@ -1,10 +1,13 @@
 <script setup lang="ts">
-    import { onMounted, onUnmounted, ref } from 'vue';
+    import { onMounted, onUnmounted, ref, watch } from 'vue';
 
     import gsap from 'gsap';
     import { Howl } from 'howler';
 
     import leafSound from '@/../audio/sounds/leaf.mp3';
+    import { useUiSettings } from '@/composables/useUiSettings';
+
+    const { isEffectsEnabled } = useUiSettings();
 
     type CanvasContext = CanvasRenderingContext2D;
 
@@ -152,6 +155,7 @@
     let ctx: CanvasRenderingContext2D | null = null;
 
     const animate = () => {
+        if (!isEffectsEnabled.value) return;
         if (!canvasRef.value || !ctx) return;
 
         const canvas = canvasRef.value;
@@ -206,10 +210,18 @@
         }
         leafSfx.unload();
     });
+
+    watch(isEffectsEnabled, (val) => {
+        if (val) animate();
+        else {
+            ctx?.clearRect(0, 0, canvasRef.value!.width, canvasRef.value!.height);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        }
+    });
 </script>
 
 <template>
-    <canvas ref="canvasRef" class="wind-effect-canvas"></canvas>
+    <canvas v-show="isEffectsEnabled" ref="canvasRef" class="wind-effect-canvas"></canvas>
 </template>
 
 <style scoped>

@@ -6,6 +6,7 @@
     import IconLogo from 'img/icons/logo.svg?component';
 
     import NavigationFooter from '@/Components/Shared/NavigationFooter.vue';
+    import AppVisualEffectsToggle from '@/Components/UI/AppVisualEffectsToggle.vue';
     import { useSound } from '@/composables/useSound';
     import { SharedData } from '@/types';
 
@@ -85,6 +86,8 @@
                     <span v-if="form.errors.email" class="mt-2 text-sm text-red-700">
                         {{ form.errors.email }}
                     </span>
+
+                    <AppVisualEffectsToggle />
                 </div>
             </div>
 

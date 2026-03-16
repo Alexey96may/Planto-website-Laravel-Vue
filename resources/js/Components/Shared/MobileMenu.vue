@@ -11,18 +11,18 @@
     const isOpen = ref(false);
     const target = ref<HTMLElement | null>(null);
 
-    const { playClick, playSlideMove } = useSound();
+    const { playSlideMove } = useSound();
 
     const { isSwiping, direction, lengthX } = useSwipe(target, {
         onSwipeEnd(e, direction) {
-            if (direction === 'right' && lengthX.value < -50) {
+            if (direction === 'left' && lengthX.value > 50) {
                 isOpen.value = false;
             }
         },
     });
 
     const containerStyle = computed(() => {
-        if (isSwiping.value && lengthX.value < 0) {
+        if (isSwiping.value && lengthX.value > 0) {
             return {
                 transform: `translateX(${-lengthX.value}px)`,
                 transition: 'none',
@@ -53,13 +53,6 @@
         clientHeight.value = el.clientHeight;
     };
 
-    const scrollProgress = computed(() => {
-        const maxScroll = scrollHeight.value - clientHeight.value;
-        if (maxScroll <= 0) return 0;
-
-        return Math.min(100, Math.max(0, (scrollY.value / maxScroll) * 100));
-    });
-
     watch(isOpen, async (val) => {
         if (val) {
             await nextTick();
@@ -67,7 +60,7 @@
             const items = document.querySelectorAll('.mobile-nav-wrapper > *');
 
             gsap.set(items, {
-                x: 120,
+                x: -120,
                 opacity: 0,
             });
 
@@ -88,78 +81,88 @@
         type="button"
         @click="toggleMenu"
         @mousedown="playSlideMove"
-        class="relative z-[110] block text-white opacity-75 outline-none focus:outline-none"
+        class="relative z-[200] block text-white opacity-75 outline-none focus:outline-none"
         aria-label="Toggle menu"
     >
-        <div class="flex h-[26px] w-[32px] flex-col gap-2">
+        <div class="flex h-[18px] w-[24px] flex-col gap-[6px] md:h-[26px] md:w-[32px] md:gap-[8px]">
             <span
                 :class="[
-                    'h-[4px] w-full rounded-sm bg-current transition-all duration-300',
-                    isOpen ? 'translate-y-[12px] rotate-45' : '',
+                    'h-[2px] w-full rounded-sm bg-current transition-all duration-300 md:h-[4px]',
+                    isOpen ? 'translate-y-[8px] rotate-45 md:translate-y-[12px]' : '',
                 ]"
             ></span>
             <span
                 :class="[
-                    'ml-auto h-[4px] w-[70%] rounded-sm bg-current transition-all duration-300',
+                    'ml-auto h-[2px] w-[70%] rounded-sm bg-current transition-all duration-300 md:h-[4px]',
                     isOpen ? 'opacity-0' : '',
                 ]"
             ></span>
             <span
                 :class="[
-                    'h-[4px] w-0 rounded-sm bg-current transition-all duration-300',
-                    isOpen ? 'w-[32px] -translate-y-[12px] -rotate-45' : '',
+                    'h-[2px] w-0 rounded-sm bg-current transition-all duration-300 md:h-[4px]',
+                    isOpen
+                        ? 'w-[24px] -translate-y-[8px] -rotate-45 md:w-[32px] md:-translate-y-[12px]'
+                        : '',
                 ]"
             ></span>
         </div>
     </button>
+    <Teleport to="body">
+        <TransitionRoot :show="isOpen" as="template" appear>
+            <div class="relative z-[100]">
+                <TransitionChild
+                    as="template"
+                    enter="duration-300 ease-out"
+                    enter-from="opacity-0"
+                    enter-to="opacity-100"
+                    leave="duration-200 ease-in"
+                    leave-from="opacity-100"
+                    leave-to="opacity-0"
+                >
+                    <div
+                        @click="isOpen = false"
+                        class="fixed inset-0 bg-black/30 backdrop-blur-md"
+                    />
+                </TransitionChild>
 
-    <TransitionRoot :show="isOpen" as="template" appear>
-        <div class="relative z-[100]">
-            <TransitionChild
-                as="template"
-                enter="duration-300 ease-out"
-                enter-from="opacity-0"
-                enter-to="opacity-100"
-                leave="duration-200 ease-in"
-                leave-from="opacity-100"
-                leave-to="opacity-0"
-            >
-                <div @click="isOpen = false" class="fixed inset-0 bg-black/30 backdrop-blur-md" />
-            </TransitionChild>
-
-            <div class="pointer-events-none fixed inset-0 z-10 overflow-hidden">
-                <div class="flex min-h-full items-stretch justify-end">
-                    <TransitionChild
-                        as="template"
-                        enter="duration-300 ease-out"
-                        enter-from="translate-x-full"
-                        enter-to="translate-x-0"
-                        leave="duration-300 ease-in"
-                        leave-from="translate-x-0"
-                        leave-to="translate-x-full"
-                    >
-                        <div
-                            ref="target"
-                            :style="containerStyle"
-                            @scroll="handleScroll"
-                            class="scrollbar-hide pointer-events-auto relative ml-auto flex h-screen w-full max-w-xs flex-col overflow-y-auto bg-zinc-800 shadow-2xl"
+                <div class="pointer-events-none fixed inset-0 z-10">
+                    <div class="flex min-h-full items-stretch justify-start">
+                        <TransitionChild
+                            as="template"
+                            enter="duration-300 ease-out"
+                            enter-from="-translate-x-full"
+                            enter-to="translate-x-0"
+                            leave="duration-300 ease-in"
+                            leave-from="translate-x-0"
+                            leave-to="-translate-x-full"
                         >
-                            <div class="relative w-full flex-1">
-                                <nav
-                                    class="mobile-nav-wrapper flex flex-col gap-6 p-8 pt-24 text-xl font-medium text-zinc-200"
-                                >
-                                    <slot />
-                                </nav>
+                            <div
+                                ref="target"
+                                :style="containerStyle"
+                                @scroll="handleScroll"
+                                class="scrollbar-hide pointer-events-auto relative flex h-screen w-full flex-col overflow-y-auto bg-plant-green/80 shadow-2xl sm:mr-auto sm:max-w-xs"
+                            >
+                                <div class="relative w-full flex-1">
+                                    <div
+                                        class="pointer-events-none sticky top-0 z-50 h-20 w-full bg-gradient-to-b from-plant-green via-plant-green to-transparent sm:h-24"
+                                    ></div>
+                                    <nav
+                                        class="mobile-nav-wrapper flex flex-col gap-6 p-8 pt-0 text-sm font-medium text-zinc-200 md:text-xl"
+                                    >
+                                        <slot />
+                                    </nav>
+                                </div>
                             </div>
-                        </div>
-                    </TransitionChild>
+                        </TransitionChild>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </TransitionRoot>
+            </div> </TransitionRoot
+    ></Teleport>
 </template>
 
 <style lang="scss" scoped>
+    @use '../../../scss/bootstrap' as b;
+
     .scrollbar-hide::-webkit-scrollbar {
         display: none !important;
         width: 0 !important;
@@ -169,5 +172,15 @@
     .scrollbar-hide {
         -ms-overflow-style: none !important; /* IE and Edge */
         scrollbar-width: none !important; /* Firefox */
+    }
+
+    @media (min-width: b.$mediaTablet) {
+        .relative.z-\[100\] {
+            display: none !important;
+        }
+
+        :deep(body) {
+            overflow: auto !important;
+        }
     }
 </style>

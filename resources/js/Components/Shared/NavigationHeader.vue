@@ -4,9 +4,11 @@
     import { Link, usePage } from '@inertiajs/vue3';
 
     import IconArrowMore from 'img/icons/arrow-more.svg?component';
+    import { route } from 'ziggy-js';
 
     import MobileMenu from '@/Components/Shared/MobileMenu.vue';
     import NavDropdown from '@/Components/Shared/NavDropdown.vue';
+    import AppVisualEffectsToggle from '@/Components/UI/AppVisualEffectsToggle.vue';
     import { SharedData } from '@/types';
     import { getHref } from '@/utils/navigation';
 
@@ -119,28 +121,50 @@
 
         <div class="leading-none lg:hidden">
             <MobileMenu>
-                <template v-for="item in menuItems" :key="'mobile-' + item.id">
-                    <div v-if="item.children?.length" class="flex flex-col gap-2">
-                        <span class="text-sm uppercase tracking-wider text-zinc-500">{{
-                            item.title
-                        }}</span>
+                <div class="mobile-nav-wrapper flex flex-col gap-6 pb-6 sm:gap-8">
+                    <template v-for="item in menuItems" :key="'mobile-' + item.id">
+                        <div v-if="item.children?.length" class="flex flex-col gap-2 sm:gap-4">
+                            <span
+                                class="ml-1 text-[0.5rem] font-bold uppercase tracking-[0.2em] text-zinc-400/70 sm:text-xs"
+                            >
+                                {{ item.title }}
+                            </span>
+
+                            <div class="ml-1 flex flex-col gap-1 border-l-2 border-zinc-600">
+                                <Link
+                                    v-for="child in item.children"
+                                    :key="child.id"
+                                    :href="getHref(child)"
+                                    class="group relative py-1 pl-5 text-sm text-zinc-300 transition-all duration-300 hover:text-emerald-400 active:bg-emerald-500/10 active:text-emerald-400 sm:py-2 sm:text-lg"
+                                >
+                                    <span
+                                        class="absolute left-[-2px] top-0 h-full w-[2px] scale-y-0 bg-emerald-500 transition-transform group-hover:scale-y-100"
+                                    ></span>
+
+                                    {{ child.title }}
+                                </Link>
+                            </div>
+                        </div>
+
                         <Link
-                            v-for="child in item.children"
-                            :key="child.id"
-                            :href="getHref(child)"
-                            class="border-l border-emerald-500/50 py-1 pl-4 hover:text-emerald-400"
+                            v-else
+                            :href="getHref(item)"
+                            class="text-lg font-medium text-zinc-100 hover:text-emerald-400 active:translate-x-2 sm:text-2xl"
                         >
-                            {{ child.title }}
+                            {{ item.title }}
                         </Link>
-                    </div>
+                    </template>
+
+                    <AppVisualEffectsToggle />
+
                     <Link
-                        v-else
-                        :href="getHref(item)"
-                        class="transition-colors hover:text-emerald-400"
+                        :href="$page.props.auth.user ? route('dashboard') : route('register')"
+                        :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Register'"
+                        class="block font-medium text-zinc-100 hover:underline sm:!hidden"
                     >
-                        {{ item.title }}
+                        User Panel
                     </Link>
-                </template>
+                </div>
             </MobileMenu>
         </div>
 
