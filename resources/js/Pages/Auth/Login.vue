@@ -98,9 +98,10 @@
             </div>
 
             <div class="flex items-center justify-between">
-                <label class="group flex cursor-pointer items-center">
+                <label class="group flex cursor-pointer items-center" for="remember">
                     <Checkbox
                         name="remember"
+                        id="remember"
                         v-model:checked="form.remember"
                         class="border-zinc-700 bg-zinc-800 text-emerald-600 focus:ring-emerald-500/20"
                     />

@@ -137,11 +137,13 @@
                             <div class="space-y-2 md:col-span-2">
                                 <label
                                     class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    for="title"
                                 >
                                     <Type class="h-3 w-3 text-[#c5d86d]" /> Product Title
                                 </label>
                                 <input
                                     v-model="form.title"
+                                    id="title"
                                     type="text"
                                     class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-bold text-white outline-none transition-all placeholder:text-zinc-700 focus:ring-1 focus:ring-[#c5d86d]/50"
                                     placeholder="Enter unit name..."
@@ -157,11 +159,13 @@
                             <div class="space-y-2">
                                 <label
                                     class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    for="category_id"
                                 >
                                     <Tag class="h-3 w-3 text-[#c5d86d]" /> Classification
                                 </label>
                                 <select
                                     v-model="form.category_id"
+                                    id="category_id"
                                     class="w-full appearance-none rounded-2xl border border-white/5 bg-black/50 p-4 font-bold text-zinc-300 outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                 >
                                     <option :value="''">Uncategorized</option>
@@ -174,12 +178,14 @@
                             <div class="space-y-2">
                                 <label
                                     class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    for="price"
                                 >
                                     <DollarSign class="h-3 w-3 text-[#c5d86d]" /> Credits (Price)
                                 </label>
                                 <div class="relative">
                                     <input
                                         v-model="form.price"
+                                        id="price"
                                         type="number"
                                         step="0.01"
                                         class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 pl-10 font-mono font-bold text-[#c5d86d] outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
@@ -195,10 +201,12 @@
                         <div class="space-y-2">
                             <label
                                 class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                for="description"
                                 >Detailed Manifest (Description)</label
                             >
                             <textarea
                                 v-model="form.description"
+                                id="description"
                                 rows="4"
                                 class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-sm leading-relaxed text-zinc-400 outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
                                 placeholder="Describe the item specifications..."
@@ -212,6 +220,7 @@
                         >
                             <label
                                 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                for="stock"
                             >
                                 <Package class="h-3 w-3 text-blue-400" /> Stock Level
                             </label>
@@ -219,6 +228,7 @@
                                 type="number"
                                 v-model="form.stock"
                                 min="0"
+                                id="stock"
                                 class="w-full rounded-xl border border-white/10 bg-black p-3 text-center text-xl font-black text-white outline-none transition-all focus:border-blue-500/50"
                                 :class="{
                                     'border-red-500 bg-red-500/5 text-red-500': form.stock <= 0,
@@ -238,12 +248,14 @@
                             <div class="flex items-center justify-between">
                                 <label
                                     class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    for="is_trending"
                                 >
                                     <Zap class="h-3 w-3 text-amber-400" /> Trending status
                                 </label>
                                 <input
                                     type="checkbox"
                                     v-model="form.is_trending"
+                                    id="is_trending"
                                     class="peer sr-only"
                                 />
                                 <div

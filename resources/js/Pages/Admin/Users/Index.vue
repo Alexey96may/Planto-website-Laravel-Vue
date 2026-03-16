@@ -97,6 +97,7 @@
                             <div class="space-y-2">
                                 <label
                                     class="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-600"
+                                    for="role"
                                 >
                                     Access Level
                                 </label>
@@ -106,6 +107,7 @@
                                     />
                                     <select
                                         :value="user.role"
+                                        id="role"
                                         @change="
                                             (e) =>
                                                 changeRole(

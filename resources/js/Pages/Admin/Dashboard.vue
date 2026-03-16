@@ -176,10 +176,12 @@
                         <div>
                             <label
                                 class="mb-2 ml-1 block text-xs font-black uppercase tracking-widest text-zinc-500"
+                                for="subject"
                                 >Email Subject</label
                             >
                             <input
                                 v-model="form.subject"
+                                id="subject"
                                 type="text"
                                 class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white outline-none transition focus:border-transparent focus:ring-2 focus:ring-[#c5d86d]"
                                 placeholder="Summer sale is coming..."
@@ -197,10 +199,12 @@
                     <div>
                         <label
                             class="mb-2 ml-1 block text-xs font-black uppercase tracking-widest text-zinc-500"
+                            for="message"
                             >Message Body</label
                         >
                         <textarea
                             v-model="form.message"
+                            id="message"
                             rows="5"
                             class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white outline-none transition focus:border-transparent focus:ring-2 focus:ring-[#c5d86d]"
                             placeholder="Tell your subscribers something beautiful..."

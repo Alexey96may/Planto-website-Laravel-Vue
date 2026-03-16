@@ -168,10 +168,12 @@
                                             <div class="space-y-2">
                                                 <label
                                                     class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    for="site_name"
                                                     >Site Name</label
                                                 >
                                                 <input
                                                     v-model="form.site_name"
+                                                    id="site_name"
                                                     type="text"
                                                     class="w-full rounded-sm border border-white/5 bg-black/50 p-4 font-bold text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50 md:rounded-2xl"
                                                 />
@@ -208,21 +210,25 @@
                                         <div class="space-y-2">
                                             <label
                                                 class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                for="contact_phone"
                                                 >Phone Line</label
                                             >
                                             <input
                                                 v-model="form.contact_phone"
                                                 type="text"
+                                                id="contact_phone"
                                                 class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-mono text-white"
                                             />
                                         </div>
                                         <div class="space-y-2">
                                             <label
                                                 class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                for="contact_email"
                                                 >Support Email</label
                                             >
                                             <input
                                                 v-model="form.contact_email"
+                                                id="contact_email"
                                                 type="email"
                                                 class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 font-bold text-white"
                                             />
@@ -230,10 +236,12 @@
                                         <div class="space-y-2 md:col-span-2">
                                             <label
                                                 class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                for="contact_address"
                                                 >Physical HQ Address</label
                                             >
                                             <textarea
                                                 v-model="form.contact_address"
+                                                id="contact_address"
                                                 rows="3"
                                                 class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-zinc-400 outline-none"
                                             ></textarea>
@@ -265,10 +273,12 @@
                                             >
                                                 <label
                                                     class="block truncate text-[9px] font-black uppercase tracking-tighter text-zinc-600"
+                                                    for="field"
                                                     >{{ field.replace(/_/g, ' ') }}</label
                                                 >
                                                 <input
                                                     v-model="form[field]"
+                                                    id="field"
                                                     type="number"
                                                     class="w-full rounded-xl border border-white/5 bg-black/50 p-3 text-center font-mono font-bold text-[#c5d86d]"
                                                 />
@@ -291,6 +301,7 @@
                                         <div class="space-y-2">
                                             <label
                                                 class="text-[10px] font-black uppercase tracking-widest text-[#c5d86d]"
+                                                for="live_demo_url"
                                             >
                                                 Live Demo / Video Presentation
                                             </label>
@@ -302,6 +313,7 @@
                                                 </div>
                                                 <input
                                                     v-model="form.live_demo_url"
+                                                    id="live_demo_url"
                                                     type="text"
                                                     placeholder="https://youtube.com/watch?v=..."
                                                     class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 pl-12 font-medium text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
@@ -319,11 +331,13 @@
                                             <div class="space-y-2">
                                                 <label
                                                     class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    for="link_fb"
                                                     >Facebook</label
                                                 >
                                                 <input
                                                     v-model="form.link_fb"
                                                     type="text"
+                                                    id="link_fb"
                                                     class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                                 />
                                             </div>
@@ -331,10 +345,12 @@
                                             <div class="space-y-2">
                                                 <label
                                                     class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    for="link_x"
                                                     >X / Twitter</label
                                                 >
                                                 <input
                                                     v-model="form.link_x"
+                                                    id="link_x"
                                                     type="text"
                                                     class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                                 />
@@ -343,10 +359,12 @@
                                             <div class="space-y-2">
                                                 <label
                                                     class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    for="link_li"
                                                     >LinkedIn</label
                                                 >
                                                 <input
                                                     v-model="form.link_li"
+                                                    id="link_li"
                                                     type="text"
                                                     class="w-full rounded-xl border border-white/5 bg-black/50 p-4 text-xs text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                                 />
@@ -359,10 +377,12 @@
                                             <div class="space-y-2">
                                                 <label
                                                     class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    for="footer_main_text"
                                                     >Footer Main Text</label
                                                 >
                                                 <input
                                                     v-model="form.footer_main_text"
+                                                    id="footer_main_text"
                                                     type="text"
                                                     class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-sm text-white"
                                                 />
@@ -370,10 +390,12 @@
                                             <div class="space-y-2">
                                                 <label
                                                     class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                                    for="footer_rights"
                                                     >Copyright Line</label
                                                 >
                                                 <input
                                                     v-model="form.footer_rights"
+                                                    id="footer_rights"
                                                     type="text"
                                                     class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-sm text-white"
                                                 />

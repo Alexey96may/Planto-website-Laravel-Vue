@@ -211,10 +211,14 @@
                             </div>
 
                             <div class="flex items-center justify-center gap-2">
-                                <label class="relative inline-flex cursor-pointer items-center">
+                                <label
+                                    class="relative inline-flex cursor-pointer items-center"
+                                    for="is_trending"
+                                >
                                     <input
                                         type="checkbox"
                                         :checked="product.is_trending"
+                                        id="is_trending"
                                         @change="handleChange(product, 'is_trending', $event)"
                                         class="peer sr-only"
                                     />

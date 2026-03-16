@@ -190,11 +190,13 @@
                         <div class="space-y-2">
                             <label
                                 class="text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                for="description"
                                 >Specifications & Care</label
                             >
                             <textarea
                                 v-model="form.description"
                                 rows="4"
+                                id="description"
                                 class="w-full rounded-2xl border border-white/5 bg-black/50 p-4 text-sm leading-relaxed text-zinc-400 outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                 placeholder="Enter technical details and product description..."
                             ></textarea>
@@ -207,6 +209,7 @@
                         >
                             <label
                                 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                for="stock"
                             >
                                 <Package class="h-3 w-3 text-blue-400" /> Initial Stock
                             </label>
@@ -214,6 +217,7 @@
                                 type="number"
                                 v-model="form.stock"
                                 min="0"
+                                id="stock"
                                 class="w-full rounded-xl border border-white/10 bg-black p-3 text-center text-xl font-black text-white outline-none transition-all focus:border-blue-500/50"
                             />
                             <p
@@ -229,11 +233,13 @@
                             <div class="flex items-center justify-between">
                                 <label
                                     class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    for="is_trending"
                                 >
                                     <Zap class="h-3 w-3 text-amber-400" /> Hot Item
                                 </label>
                                 <div
                                     @click="form.is_trending = !form.is_trending"
+                                    id="is_trending"
                                     class="relative h-5 w-10 cursor-pointer rounded-full bg-zinc-800 transition-colors"
                                     :class="{ 'bg-amber-500': form.is_trending }"
                                 >

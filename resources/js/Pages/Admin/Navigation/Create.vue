@@ -83,11 +83,13 @@
                     <div class="space-y-2">
                         <label
                             class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            for="title"
                         >
                             <Type class="h-3 w-3 text-[#c5d86d]" /> Display Label
                         </label>
                         <input
                             v-model="form.title"
+                            id="title"
                             type="text"
                             required
                             placeholder="e.g. Summer Collection"
@@ -98,11 +100,13 @@
                     <div class="space-y-2">
                         <label
                             class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            for="location"
                         >
                             <Globe class="h-3 w-3 text-[#c5d86d]" /> Menu Location
                         </label>
                         <select
                             v-model="form.location"
+                            id="location"
                             class="w-full appearance-none rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                         >
                             <option value="header">Site Header</option>
@@ -152,10 +156,12 @@
                     >
                         <label
                             class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            for="category_id"
                             >Link to Category</label
                         >
                         <select
                             v-model="form.category_id"
+                            id="category_id"
                             class="w-full rounded-xl border border-white/5 bg-[#0f120e] p-4 text-white outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                         >
                             <option :value="null">-- Select Category --</option>
@@ -171,10 +177,12 @@
                     >
                         <label
                             class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            for="link"
                             >Custom URL or Path</label
                         >
                         <input
                             v-model="form.link"
+                            id="link"
                             type="text"
                             placeholder="/shop/new-arrivals"
                             class="w-full rounded-xl border border-white/5 bg-[#0f120e] p-4 text-white outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
@@ -186,11 +194,13 @@
                     <div class="space-y-2">
                         <label
                             class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            for="parent_id"
                         >
                             <ChevronRight class="h-3 w-3 text-[#c5d86d]" /> Nest Under (Optional)
                         </label>
                         <select
                             v-model="form.parent_id"
+                            id="parent_id"
                             class="w-full appearance-none rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                         >
                             <option :value="null">Root Level</option>
@@ -207,11 +217,13 @@
                     <div class="space-y-2">
                         <label
                             class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            for="order"
                         >
                             <Hash class="h-3 w-3 text-[#c5d86d]" /> Order ID
                         </label>
                         <input
                             v-model="form.order"
+                            id="order"
                             type="number"
                             class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 font-mono text-white outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                         />

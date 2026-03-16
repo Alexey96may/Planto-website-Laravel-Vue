@@ -167,6 +167,7 @@
                                     <div class="space-y-2">
                                         <label
                                             class="ml-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                                            for="name"
                                             >Identity Name</label
                                         >
                                         <div class="relative">
@@ -175,6 +176,7 @@
                                             />
                                             <input
                                                 v-model="formAvatar.name"
+                                                id="name"
                                                 type="text"
                                                 class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
                                             />
@@ -183,6 +185,7 @@
                                     <div class="space-y-2">
                                         <label
                                             class="ml-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                                            for="email"
                                             >Secure Email</label
                                         >
                                         <div class="relative">
@@ -191,6 +194,7 @@
                                             />
                                             <input
                                                 v-model="formAvatar.email"
+                                                id="email"
                                                 type="email"
                                                 class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
                                             />

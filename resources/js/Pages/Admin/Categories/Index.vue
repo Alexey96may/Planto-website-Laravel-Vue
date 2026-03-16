@@ -122,6 +122,7 @@
                     <div class="space-y-4 md:col-span-1">
                         <div>
                             <label
+                                for="title"
                                 class="mb-2 ml-1 block text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
                                 >Category Title</label
                             >
@@ -129,6 +130,7 @@
                                 <input
                                     v-model="form.title"
                                     type="text"
+                                    id="title"
                                     required
                                     class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                                     placeholder="e.g. Rare Succulents"
@@ -144,11 +146,13 @@
                         <div v-if="isEditing">
                             <label
                                 class="mb-2 ml-1 block text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                                for="slug"
                                 >URL Slug (System)</label
                             >
                             <div class="relative">
                                 <input
                                     v-model="form.slug"
+                                    id="slug"
                                     type="text"
                                     class="w-full rounded-2xl border border-white/10 bg-[#0f120e]/50 p-4 text-zinc-400 outline-none transition focus:ring-1 focus:ring-[#c5d86d]"
                                 />

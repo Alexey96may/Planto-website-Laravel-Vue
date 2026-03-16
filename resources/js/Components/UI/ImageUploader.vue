@@ -57,6 +57,7 @@
             v-if="label"
             class="mb-3 ml-1 block text-[10px] font-black uppercase tracking-[0.2em] transition-colors"
             :class="error ? 'text-red-500' : 'text-zinc-500 group-focus-within:text-[#c5d86d]'"
+            for="file"
         >
             {{ label }}
         </label>
@@ -76,6 +77,7 @@
         >
             <input
                 type="file"
+                id="file"
                 ref="fileInput"
                 class="hidden"
                 accept="image/*"

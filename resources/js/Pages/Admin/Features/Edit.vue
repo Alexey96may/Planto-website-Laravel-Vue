@@ -76,11 +76,13 @@
                 <div class="space-y-2">
                     <label
                         class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                        for="title"
                     >
                         <Type class="h-3 w-3" /> Card Title
                     </label>
                     <input
                         v-model="form.title"
+                        id="title"
                         type="text"
                         class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white shadow-inner outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                         placeholder="Enter catchy title..."
@@ -93,11 +95,13 @@
                 <div class="space-y-2">
                     <label
                         class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                        for="description"
                     >
                         <AlignLeft class="h-3 w-3" /> Description
                     </label>
                     <textarea
                         v-model="form.description"
+                        id="description"
                         rows="3"
                         class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white shadow-inner outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                         placeholder="Brief summary for the slider..."
@@ -119,11 +123,13 @@
                     <div class="space-y-2">
                         <label
                             class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            for="link"
                         >
                             <LinkIcon class="h-3 w-3" /> Redirect URL
                         </label>
                         <input
                             v-model="form.link"
+                            id="link"
                             type="text"
                             class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white shadow-inner outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                             placeholder="https://..."
@@ -132,11 +138,13 @@
                     <div class="space-y-2">
                         <label
                             class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            for="order"
                         >
                             <Hash class="h-3 w-3" /> Sorting Order
                         </label>
                         <input
                             v-model="form.order"
+                            id="order"
                             type="number"
                             class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 font-mono text-[#c5d86d] text-white shadow-inner outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                         />

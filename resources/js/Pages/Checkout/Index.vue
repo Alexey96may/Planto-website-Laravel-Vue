@@ -71,6 +71,7 @@
                             <div class="space-y-2">
                                 <label
                                     class="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    for="name"
                                     >Full Name</label
                                 >
                                 <div class="relative">
@@ -79,6 +80,7 @@
                                     />
                                     <input
                                         v-model="form.name"
+                                        id="name"
                                         name="name"
                                         type="text"
                                         class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
@@ -98,6 +100,7 @@
                                 <div class="space-y-2">
                                     <label
                                         class="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                        for="phone"
                                         >Phone</label
                                     >
                                     <div class="relative">
@@ -106,6 +109,7 @@
                                         />
                                         <input
                                             v-model="form.phone"
+                                            id="phone"
                                             name="phone"
                                             type="tel"
                                             class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
@@ -117,6 +121,7 @@
                                 <div class="space-y-2">
                                     <label
                                         class="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                        for="email"
                                         >Email</label
                                     >
                                     <div class="relative">
@@ -125,6 +130,7 @@
                                         />
                                         <input
                                             v-model="form.email"
+                                            id="email"
                                             name="email"
                                             type="email"
                                             class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
@@ -150,11 +156,13 @@
                             <div class="space-y-2">
                                 <label
                                     class="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    for="address"
                                     >Delivery Address</label
                                 >
                                 <textarea
                                     v-model="form.address"
                                     name="address"
+                                    id="address"
                                     rows="3"
                                     class="w-full rounded-xl border border-white/5 bg-black/40 p-4 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
                                     placeholder="Enter your full address..."
@@ -165,6 +173,7 @@
                             <div class="space-y-2">
                                 <label
                                     class="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-500"
+                                    for="comment"
                                     >Comment</label
                                 >
                                 <div class="relative">
@@ -173,6 +182,7 @@
                                     />
                                     <textarea
                                         v-model="form.comment"
+                                        id="comment"
                                         name="comment"
                                         rows="2"
                                         class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
@@ -186,12 +196,16 @@
                             v-if="!$page.props.auth.user"
                             class="mt-6 border-t border-white/5 pt-6"
                         >
-                            <label class="group flex cursor-pointer items-center gap-3">
+                            <label
+                                for="create_account"
+                                class="group flex cursor-pointer items-center gap-3"
+                            >
                                 <div
                                     class="relative flex h-5 w-5 items-center justify-center rounded border border-white/10 bg-black/40 transition-all group-hover:border-[#c5d86d]/50"
                                 >
                                     <input
                                         type="checkbox"
+                                        id="create_account"
                                         v-model="form.create_account"
                                         class="peer absolute h-full w-full cursor-pointer opacity-0"
                                     />
@@ -275,7 +289,7 @@
                             <button
                                 type="submit"
                                 :disabled="form.processing"
-                                class="mt-8 flex w-full items-center justify-center gap-3 rounded-xl bg-emerald-500 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-black transition-all hover:scale-[1.02] hover:bg-emerald-700 active:scale-95 disabled:opacity-50"
+                                class="mt-8 flex w-full items-center justify-center gap-3 rounded-xl bg-emerald-500 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-black transition-all hover:scale-[1.02] hover:bg-emerald-300 active:scale-95 disabled:opacity-50"
                             >
                                 <CreditCard
                                     v-if="!form.processing"

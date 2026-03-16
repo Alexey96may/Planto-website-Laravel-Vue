@@ -69,11 +69,13 @@
                 <div class="space-y-2">
                     <label
                         class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                        for="title"
                     >
                         <Type class="h-3 w-3 text-[#c5d86d]" /> Headline
                     </label>
                     <input
                         v-model="form.title"
+                        id="title"
                         type="text"
                         required
                         class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white outline-none transition placeholder:text-zinc-700 focus:ring-2 focus:ring-[#c5d86d]"
@@ -86,12 +88,14 @@
 
                 <div class="space-y-2">
                     <label
+                        for="description"
                         class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
                     >
                         <AlignLeft class="h-3 w-3 text-[#c5d86d]" /> Content description
                     </label>
                     <textarea
                         v-model="form.description"
+                        id="description"
                         rows="4"
                         class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white outline-none transition placeholder:text-zinc-700 focus:ring-2 focus:ring-[#c5d86d]"
                         placeholder="Describe what makes this feature special..."
@@ -111,11 +115,13 @@
                     <div class="space-y-2">
                         <label
                             class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            for="link"
                         >
                             <LinkIcon class="h-3 w-3 text-[#c5d86d]" /> Action URL
                         </label>
                         <input
                             v-model="form.link"
+                            id="link"
                             type="text"
                             class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 text-white outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                             placeholder="https://yourstore.com/collection"
@@ -124,12 +130,14 @@
                     <div class="space-y-2">
                         <label
                             class="ml-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                            for="order"
                         >
                             <Hash class="h-3 w-3 text-[#c5d86d]" /> Display Order
                         </label>
                         <input
                             v-model="form.order"
                             type="number"
+                            id="order"
                             class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 font-mono text-white outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                         />
                     </div>
