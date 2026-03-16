@@ -35,6 +35,8 @@
     const totalPriceRaw = computed(() => calculateTotal(props.product.price, count.value));
     const formattedPrice = computed(() => formatUSD(totalPriceRaw.value));
 
+    const { playCancel, playClick, moneyClick, playSuccess } = useSound();
+
     const isZoomed = ref(false);
     const openModal = () => {
         playClick();
@@ -44,8 +46,6 @@
         playClick();
         isZoomed.value = false;
     };
-
-    const { playCancel, playClick, moneyClick } = useSound();
 
     watch(
         () => props.cart_items[props.product.id],
@@ -69,9 +69,11 @@
     };
 
     const addOrUpdateCart = () => {
+        playClick();
+        if (props.cart_items[props.product.id] === count.value) return;
+
         const id = props.product?.id;
         const isInCart = !!props.cart_items[id];
-        playClick();
 
         if (isInCart) {
             router.patch(
@@ -105,9 +107,7 @@
         }
     };
 
-    const buttonText = computed(() =>
-        props.cart_items[props.product.id] ? 'Update Quantity' : 'Add to Cart',
-    );
+    const buttonText = computed(() => (props.cart_items[props.product.id] ? 'Update' : 'Add'));
 
     const { notifyWithUndo } = useFlash();
 
@@ -116,18 +116,19 @@
     const removeFromCart = async (): Promise<void> => {
         if (isDeleting.value === props.product.id) return;
 
-        playClick();
-
         isDeleting.value = props.product.id;
 
         try {
-            const confirmed = await notifyWithUndo('Purging product from cart...', 5000);
+            const confirmed = await notifyWithUndo('Purging from cart...', 5000);
 
             if (confirmed) {
                 router.delete(route('cart.remove', props.product.id), {
                     preserveScroll: true,
                     onFinish: () => {
                         isDeleting.value = null;
+                    },
+                    onSuccess: () => {
+                        playSuccess();
                     },
                     onError: () => {
                         isDeleting.value = null;
@@ -141,6 +142,18 @@
             isDeleting.value = null;
         }
     };
+
+    const sumClasses = computed(() => {
+        const cartCount = props.cart_items[props.product.id];
+
+        if (cartCount === undefined) return 'text-emerald-500';
+
+        return {
+            'text-zinc-400 opacity-80 transition-colors duration-300': cartCount === count.value,
+            'text-amber-500 font-medium transition-colors duration-300': cartCount > count.value,
+            'text-emerald-500 transition-colors duration-300': cartCount < count.value,
+        };
+    });
 </script>
 
 <template>
@@ -212,7 +225,7 @@
 
                     <div v-if="product.stock" class="space-y-6">
                         <div
-                            class="flex flex-wrap items-center justify-center gap-6 lg:justify-start"
+                            class="flex flex-wrap items-center justify-start gap-6 lg:justify-start"
                         >
                             <div
                                 class="flex items-center rounded-2xl border border-zinc-800 bg-zinc-900 p-1"
@@ -236,24 +249,36 @@
                                 </button>
                             </div>
 
-                            <button
-                                @click="addOrUpdateCart"
-                                class="group flex flex-grow items-center justify-center gap-3 rounded-2xl bg-emerald-700 px-8 py-4 font-bold text-white transition-all hover:bg-emerald-600 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)] active:scale-[0.98]"
-                            >
-                                <ShoppingBagIcon class="h-6 w-6" />
-                                {{ buttonText }} — {{ formattedPrice }}
-                            </button>
+                            <span :class="sumClasses">{{ formattedPrice }}</span>
                         </div>
 
-                        <button
-                            v-if="cart_items[product.id]"
-                            @click="removeFromCart"
-                            @mousedown="playCancel"
-                            class="flex items-center gap-2 text-sm font-bold text-zinc-500 transition-colors hover:text-red-500"
-                        >
-                            <TrashIcon class="h-4 w-4" />
-                            Remove from cart
-                        </button>
+                        <div class="flex flex-wrap gap-4">
+                            <button
+                                @click="addOrUpdateCart"
+                                class="group flex items-center justify-center gap-3 rounded-2xl bg-emerald-700 px-8 py-4 font-bold text-white transition-all hover:bg-emerald-600 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)] active:scale-[0.98]"
+                            >
+                                <ShoppingBagIcon class="h-6 w-6" />
+                                {{ buttonText }}
+                            </button>
+
+                            <transition
+                                enter-active-class="transition duration-300 ease-out"
+                                leave-active-class="transition duration-200 ease-in"
+                                enter-from-class="opacity-0"
+                                leave-to-class="opacity-0"
+                            >
+                                <button
+                                    v-if="cart_items[product.id]"
+                                    @click="removeFromCart"
+                                    @mousedown="playCancel"
+                                    class="flex items-center gap-2 text-sm font-bold text-zinc-500 transition-colors duration-300 hover:text-amber-500"
+                                    :class="{ 'text-amber-500': isDeleting }"
+                                >
+                                    <TrashIcon class="h-4 w-4" />
+                                    Remove
+                                </button>
+                            </transition>
+                        </div>
                     </div>
 
                     <div
