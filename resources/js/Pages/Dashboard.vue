@@ -1,14 +1,27 @@
 <script setup lang="ts">
     import { computed, ref, watch } from 'vue';
+    import { onMounted, onUnmounted } from 'vue';
 
     import { Head, useForm } from '@inertiajs/vue3';
 
-    import { History, Mail, MessageSquare, Save, ShieldCheck, Star, User } from 'lucide-vue-next';
+    import {
+        Edit3,
+        History,
+        Mail,
+        MessageSquare,
+        Save,
+        ShieldCheck,
+        Star,
+        Trash2,
+        User,
+    } from 'lucide-vue-next';
+    import { route } from 'ziggy-js';
 
     import AppRating from '@/Components/UI/AppRating.vue';
     import ImageUploader from '@/Components/UI/ImageUploader.vue';
     import WindEffect from '@/Components/UI/WindEffect.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import { useFlash } from '@/composables/useFlash';
     import { useSound } from '@/composables/useSound';
     import { AuthProps, Comment, CommentForm, UserForm } from '@/types';
 
@@ -30,6 +43,8 @@
         avatar: null,
         _method: 'patch',
     });
+
+    const { notifyWithUndo } = useFlash();
 
     const imageUrl = ref<string | null>(props.auth.user.avatar_url);
 
@@ -65,14 +80,15 @@
     };
 
     const submitComment = (): void => {
-        form.post(route('comments.update'), {
+        form.post(route('comments.store'), {
             preserveScroll: true,
 
             onSuccess: () => {
                 form.reset();
                 playSuccess();
             },
-            onError: () => {
+            onError: (errors) => {
+                console.error(errors);
                 playCancel();
             },
         });
@@ -88,6 +104,80 @@
             imageUrl.value = props.auth.user.avatar_url;
         }
     };
+
+    const isEditModalOpen = ref(false);
+
+    const editForm = useForm({
+        id: null as number | null,
+        body: '',
+        rating: 5.0,
+    });
+
+    const openEditModal = (comment: Comment) => {
+        editForm.id = comment.id;
+        editForm.body = comment.body;
+        editForm.rating = comment.rating;
+        isEditModalOpen.value = true;
+    };
+
+    const submitUpdate = () => {
+        if (!editForm.id) return;
+
+        editForm.patch(route('comments.update', editForm.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                isEditModalOpen.value = false;
+                playSuccess();
+            },
+            onError: () => playCancel(),
+        });
+    };
+
+    let deletingIds = ref<Set<number>>(new Set());
+
+    const deleteComment = async (id: number) => {
+        deletingIds.value.add(id);
+
+        try {
+            const confirmed = await notifyWithUndo('Review deletion scheduled...', 5000);
+
+            if (confirmed) {
+                form.delete(route('comments.destroy', id), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        playSuccess();
+                        deletingIds.value.delete(id);
+                    },
+                    onError: () => {
+                        playCancel();
+                        deletingIds.value.delete(id);
+                    },
+                });
+            } else {
+                deletingIds.value.delete(id);
+            }
+        } catch (e) {
+            deletingIds.value.delete(id);
+        }
+    };
+
+    watch(isEditModalOpen, (isOpen) => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    });
+
+    const handleEsc = (e: KeyboardEvent) => {
+        if (e.key === 'Escape' && isEditModalOpen.value) {
+            isEditModalOpen.value = false;
+            playCancel();
+        }
+    };
+
+    onMounted(() => window.addEventListener('keydown', handleEsc));
+    onUnmounted(() => window.removeEventListener('keydown', handleEsc));
 </script>
 
 <template>
@@ -220,7 +310,9 @@
                     </form>
                 </section>
 
-                <div class="relative z-[3] grid grid-cols-1 gap-8 italic lg:grid-cols-12">
+                <div
+                    class="relative z-[3] grid grid-cols-1 gap-8 italic lg:grid-cols-12 lg:items-start"
+                >
                     <section
                         class="rounded-[1rem] border border-emerald-400/50 p-4 shadow-2xl backdrop-blur-xl md:p-8 lg:col-span-5 lg:rounded-[2rem]"
                     >
@@ -235,8 +327,8 @@
                                 v-model="form.body"
                                 :disabled="form.processing"
                                 rows="4"
-                                class="w-full resize-none rounded-xl border border-white/5 bg-black/40 p-5 text-sm text-white placeholder-zinc-600 outline-none transition-all focus:ring-1 focus:ring-emerald-500/50"
-                                placeholder="Report your experience with the system..."
+                                class="custom-scrollbar w-full resize-none rounded-xl border border-white/5 bg-black/40 p-5 text-sm text-white placeholder-zinc-600 outline-none transition-all focus:ring-1 focus:ring-emerald-500/50"
+                                placeholder="Report your experience with the Plant Shop..."
                             ></textarea>
 
                             <div class="rounded-2xl border border-white/5 bg-black/20 p-4">
@@ -281,7 +373,7 @@
                             <History class="h-4 w-4 text-[#c5d86d]" /> Archive_Log
                         </h3>
 
-                        <div class="custom-scrollbar max-h-[400px] space-y-4 overflow-y-auto pr-2">
+                        <div class="custom-scrollbar space-y-4 overflow-y-auto pr-2">
                             <div
                                 v-if="myComments.length === 0"
                                 class="flex flex-col items-center justify-center py-20 text-zinc-600"
@@ -297,25 +389,47 @@
                             <div
                                 v-for="comment in myComments"
                                 :key="comment.id"
-                                class="group relative rounded-[1.5rem] border border-white/5 bg-black/40 p-5 transition-all hover:border-[#c5d86d]/30"
+                                class="group relative rounded-[1rem] border border-white/5 bg-black/40 p-5 transition-all hover:border-[#c5d86d]/30"
+                                :class="{
+                                    'pointer-events-none scale-95 opacity-30 grayscale':
+                                        deletingIds.has(comment.id),
+                                }"
                             >
-                                <div class="mb-3 flex items-center justify-between">
+                                <div class="mb-3 flex items-center justify-between gap-2">
                                     <div class="flex items-center gap-1.5">
                                         <AppRating :rating="comment.rating" />
                                         <span class="text-[1rem] text-emerald-500"
                                             >({{ comment.rating }})</span
                                         >
                                     </div>
-                                    <span
-                                        class="rounded border border-white/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-tighter"
-                                        :class="
-                                            comment.is_active
-                                                ? 'border-[#c5d86d]/20 text-[#c5d86d]'
-                                                : 'text-zinc-600'
-                                        "
-                                    >
-                                        {{ comment.is_active ? 'Verified' : 'Pending' }}
-                                    </span>
+
+                                    <div class="flex gap-2">
+                                        <button
+                                            @click="deleteComment(comment.id)"
+                                            class="text-zinc-600 transition-colors duration-200 hover:text-red-400"
+                                        >
+                                            <Trash2 class="h-4 w-4" />
+                                        </button>
+
+                                        <button
+                                            v-if="!comment.is_active"
+                                            @click="openEditModal(comment)"
+                                            class="text-zinc-600 transition-colors duration-200 hover:text-[#c5d86d]"
+                                        >
+                                            <Edit3 class="h-4 w-4" />
+                                        </button>
+
+                                        <span
+                                            class="rounded border border-white/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-tighter"
+                                            :class="
+                                                comment.is_active
+                                                    ? 'border-[#c5d86d]/20 text-[#c5d86d]'
+                                                    : 'text-zinc-600'
+                                            "
+                                        >
+                                            {{ comment.is_active ? 'Verified' : 'Pending' }}
+                                        </span>
+                                    </div>
                                 </div>
                                 <p class="text-xs font-medium leading-relaxed text-zinc-400">
                                     {{ comment.body }}
@@ -326,18 +440,130 @@
                 </div>
             </div>
         </div>
+
+        <Teleport to="body">
+            <Transition name="modal">
+                <div
+                    v-if="isEditModalOpen"
+                    class="fixed inset-0 z-[100] flex items-center justify-center px-4"
+                >
+                    <div
+                        class="absolute inset-0 bg-black/80 backdrop-blur-md"
+                        @click="isEditModalOpen = false"
+                    ></div>
+
+                    <div
+                        class="relative flex max-h-[90vh] w-full max-w-lg flex-col rounded-[2rem] border border-emerald-400/50 bg-plant-shop p-6 shadow-2xl md:p-8"
+                    >
+                        <h3
+                            class="mb-6 flex shrink-0 items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-white"
+                        >
+                            <Edit3 class="h-4 w-4 text-[#c5d86d]" /> Modification Mode
+                        </h3>
+
+                        <form
+                            @submit.prevent="submitUpdate"
+                            class="custom-scrollbar space-y-6 overflow-y-auto pr-2"
+                        >
+                            <div class="space-y-6">
+                                <textarea
+                                    v-model="editForm.body"
+                                    class="custom-scrollbar min-h-[120px] w-full resize-none rounded-xl border border-white/5 bg-black/40 p-5 text-sm text-white outline-none focus:ring-1 focus:ring-emerald-500/50"
+                                ></textarea>
+
+                                <div class="rounded-2xl border border-white/5 bg-black/20 p-4">
+                                    <div class="mb-4 flex items-center justify-between">
+                                        <span
+                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
+                                            >Signal Rating</span
+                                        >
+                                        <div class="flex items-center gap-1 text-[#c5d86d]">
+                                            <span class="text-lg font-black">{{
+                                                editForm.rating
+                                            }}</span>
+                                            <Star class="h-4 w-4 fill-current" />
+                                        </div>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        v-model="editForm.rating"
+                                        min="0.5"
+                                        max="5"
+                                        step="0.5"
+                                        class="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-emerald-700 accent-[#c5d86d]"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="sticky bottom-0 flex gap-4 bg-plant-shop pb-2 pt-4">
+                                <button
+                                    type="button"
+                                    @click="isEditModalOpen = false"
+                                    class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 transition-colors hover:text-white"
+                                >
+                                    Abort
+                                </button>
+                                <button
+                                    type="submit"
+                                    :disabled="editForm.processing"
+                                    class="flex-1 rounded-2xl bg-emerald-400 py-4 text-[10px] font-black uppercase tracking-widest text-black"
+                                >
+                                    Apply_Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </Transition>
+        </Teleport>
     </AuthenticatedLayout>
 </template>
 
 <style scoped>
     .custom-scrollbar::-webkit-scrollbar {
-        width: 4px;
+        width: 5px;
     }
+
     .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(197, 216, 109, 0.2);
+        background: rgba(0, 0, 0, 0.2);
         border-radius: 10px;
+        margin: 10px 0;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(16, 185, 129, 0.2);
+        border-radius: 10px;
+        border: 1px solid rgba(16, 185, 129, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(16, 185, 129, 0.5);
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+    }
+    .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(16, 185, 129, 0.2) transparent;
+    }
+
+    .modal-enter-active,
+    .modal-leave-active {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .modal-enter-from,
+    .modal-leave-to {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+
+    input[type='range']::-webkit-slider-thumb {
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #c5d86d;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(197, 216, 109, 0.5);
     }
 </style>
