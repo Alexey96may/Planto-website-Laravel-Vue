@@ -7,7 +7,7 @@
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 border-t border-zinc-400 pt-8">
+    <div class="flex flex-col gap-6 pt-8">
         <div class="flex items-center justify-start gap-4 text-sm text-zinc-400">
             <span class="font-medium tracking-wide">Visual Effects</span>
 

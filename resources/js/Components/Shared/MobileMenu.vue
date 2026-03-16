@@ -144,8 +144,9 @@
                             >
                                 <div class="relative w-full flex-1">
                                     <div
-                                        class="pointer-events-none sticky top-0 z-50 h-20 w-full bg-gradient-to-b from-plant-green via-plant-green to-transparent sm:h-24"
+                                        class="pointer-events-none sticky top-0 z-50 h-24 w-full bg-gradient-to-b from-plant-green via-plant-green to-transparent sm:h-28"
                                     ></div>
+
                                     <nav
                                         class="mobile-nav-wrapper flex flex-col gap-6 p-8 pt-0 text-sm font-medium text-zinc-200 md:text-xl"
                                     >

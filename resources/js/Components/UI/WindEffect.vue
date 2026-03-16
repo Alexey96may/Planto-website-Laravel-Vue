@@ -69,9 +69,15 @@
         oscillationSpeed: number = Math.random() * 0.02 + 0.01;
 
         constructor(canvasWidth: number, canvasHeight: number) {
+            const isMobile = window.innerWidth < 768;
+
             this.x = Math.random() * canvasWidth;
             this.y = Math.random() * canvasHeight * -2; // Start a little off the top of the screen
-            this.size = Math.random() * 20 + 15;
+
+            this.size = isMobile
+                ? Math.random() * 10 + 10 // Mobile
+                : Math.random() * 20 + 15; // Desktop
+
             this.speedY = Math.random() * (props.maxSpeedY - props.minSpeedY) + props.minSpeedY;
             this.speedX = (Math.random() - 0.5) * props.windStrength * 2;
             this.rotation = Math.random() * 360;
@@ -85,7 +91,7 @@
             const dx = this.x - mouse.x;
             const dy = this.y - mouse.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            const influenceRadius = 100;
+            const influenceRadius = window.innerWidth < 768 ? 50 : 100;
 
             if (distance < influenceRadius && !this.isHit) {
                 this.isHit = true;
@@ -93,10 +99,10 @@
                 leafSfx.play();
 
                 gsap.to(this, {
-                    speedX: gsap.utils.clamp(-3, 3, dx / 12),
-                    speedY: gsap.utils.clamp(-1, 2, dy / 15),
-                    spin: gsap.utils.random(-1.5, 1.5),
-                    duration: 1.5,
+                    speedX: gsap.utils.clamp(-1.5, 1.5, dx / 25),
+                    speedY: gsap.utils.clamp(-1, 1.5, dy / 30),
+                    spin: gsap.utils.random(-1, 1),
+                    duration: 2,
                     ease: 'power1.out',
                     onComplete: () => {
                         this.isHit = false;
@@ -175,6 +181,16 @@
         mouse.y = e.clientY;
     };
 
+    const handleInteraction = (e: MouseEvent | TouchEvent) => {
+        if (e instanceof MouseEvent) {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        } else if (e.touches && e.touches.length > 0) {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        }
+    };
+
     const resizeCanvas = () => {
         if (canvasRef.value) {
             canvasRef.value.width = window.innerWidth;
@@ -194,7 +210,18 @@
         window.addEventListener('resize', resizeCanvas);
         window.addEventListener('mousemove', handleMouseMove);
 
-        for (let i = 0; i < props.particleCount; i++) {
+        window.addEventListener('touchstart', handleInteraction, { passive: true });
+        window.addEventListener('touchmove', handleInteraction, { passive: true });
+
+        window.addEventListener('touchend', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+
+        const isMobile = window.innerWidth < 768;
+        const effectiveCount = isMobile ? Math.floor(props.particleCount / 2) : props.particleCount;
+
+        for (let i = 0; i < effectiveCount; i++) {
             petals.value.push(new Petal(canvasRef.value.width, canvasRef.value.height));
         }
 
@@ -204,6 +231,8 @@
     onUnmounted(() => {
         window.removeEventListener('resize', resizeCanvas);
         window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('touchstart', handleInteraction);
+        window.removeEventListener('touchmove', handleInteraction);
 
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);

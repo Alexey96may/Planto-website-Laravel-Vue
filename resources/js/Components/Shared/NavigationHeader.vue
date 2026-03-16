@@ -155,12 +155,12 @@
                         </Link>
                     </template>
 
-                    <AppVisualEffectsToggle />
+                    <AppVisualEffectsToggle class="border-t border-zinc-600" />
 
                     <Link
                         :href="$page.props.auth.user ? route('dashboard') : route('register')"
                         :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Register'"
-                        class="block font-medium text-zinc-100 hover:underline sm:!hidden"
+                        class="block font-medium text-zinc-400 hover:underline sm:!hidden"
                     >
                         User Panel
                     </Link>

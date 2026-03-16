@@ -63,156 +63,167 @@
 <template>
     <Head title="Customer Reviews" />
 
-    <div class="isolate mx-auto max-w-5xl bg-plant-shop px-6 py-16 lg:py-24">
-        <WindEffect :particleCount="35" :windStrength="1.5" />
+    <div class="bg-plant-shop">
+        <div class="isolate mx-auto max-w-5xl px-6 py-16 lg:py-24">
+            <WindEffect :particleCount="35" :windStrength="1.5" />
 
-        <header class="relative z-[3] mb-16">
-            <div>
-                <h1 class="mb-4 text-4xl font-bold tracking-tight text-zinc-200 lg:text-6xl">
-                    What our <span class="text-emerald-600">customers say</span>
-                </h1>
-                <p class="text-lg text-zinc-500">Real feedback from our plant-loving community.</p>
-            </div>
-        </header>
+            <header class="relative z-[3] mb-16">
+                <div>
+                    <h1 class="mb-4 text-4xl font-bold tracking-tight text-zinc-200 lg:text-6xl">
+                        What our <span class="text-emerald-600">customers say</span>
+                    </h1>
+                    <p class="text-lg text-zinc-500">
+                        Real feedback from our plant-loving community.
+                    </p>
+                </div>
+            </header>
 
-        <div
-            v-if="averageRating"
-            class="relative z-[3] mb-8 flex flex-col items-center gap-8 rounded-[1rem] border border-emerald-400/50 p-10 backdrop-blur-lg sm:justify-between lg:flex-row lg:rounded-[2rem]"
-        >
-            <div class="flex flex-col items-center gap-6 sm:flex-row">
-                <span class="text-7xl font-black text-emerald-500">
-                    {{ averageRating.toFixed(1) }}
-                </span>
-                <div class="flex flex-col gap-1">
-                    <div
-                        class="mb-1 text-xs font-bold uppercase tracking-widest text-emerald-700/80"
-                    >
-                        Average Rating
+            <div
+                v-if="averageRating"
+                class="relative z-[3] mb-8 flex flex-col items-center gap-8 rounded-[1rem] border border-emerald-400/50 p-10 backdrop-blur-lg sm:justify-between lg:flex-row lg:rounded-[2rem]"
+            >
+                <div class="flex flex-col items-center gap-6 sm:flex-row">
+                    <span class="text-7xl font-black text-emerald-500">
+                        {{ averageRating.toFixed(1) }}
+                    </span>
+                    <div class="flex flex-col gap-1">
+                        <div
+                            class="mb-1 text-xs font-bold uppercase tracking-widest text-emerald-700/80"
+                        >
+                            Average Rating
+                        </div>
+                        <AppRating :rating="averageRating" class="origin-left scale-150" />
                     </div>
-                    <AppRating :rating="averageRating" class="origin-left scale-150" />
+                </div>
+
+                <div class="text-center sm:text-right">
+                    <p class="text-sm font-medium text-emerald-600/80">
+                        Based on {{ reviews.total }} verified reviews
+                    </p>
                 </div>
             </div>
 
-            <div class="text-center sm:text-right">
-                <p class="text-sm font-medium text-emerald-600/80">
-                    Based on {{ reviews.total }} verified reviews
-                </p>
-            </div>
-        </div>
+            <main>
+                <div
+                    class="relative z-[3] overflow-hidden rounded-[1rem] border border-emerald-400/50 px-4 py-8 lg:rounded-[2rem] lg:px-6 lg:py-12"
+                >
+                    <CommentsFilter
+                        v-model="selectedSort"
+                        class="z-[1] mb-8 ml-auto w-full md:w-1/3"
+                    />
 
-        <main>
-            <div
-                class="relative z-[3] overflow-hidden rounded-[1rem] border border-emerald-400/50 px-4 py-8 lg:rounded-[2rem] lg:px-6 lg:py-12"
-            >
-                <CommentsFilter v-model="selectedSort" class="z-[1] mb-8 ml-auto w-full md:w-1/3" />
+                    <div class="z-10 grid gap-8">
+                        <TransitionGroup name="list-fade">
+                            <template v-if="isLoading">
+                                <ReviewSkeleton
+                                    v-for="i in reviews.data.length || 3"
+                                    :key="'skeleton-' + i"
+                                    class="review-card group relative rounded-[1rem] border border-emerald-400/20 bg-plant-shop/80 p-6 shadow-[0_0_0_100vw_#1b2316] transition-all hover:border-emerald-400/60 sm:p-10 xl:rounded-[2rem]"
+                                />
+                            </template>
 
-                <div class="z-10 grid gap-8">
-                    <TransitionGroup name="list-fade">
-                        <template v-if="isLoading">
-                            <ReviewSkeleton
-                                v-for="i in reviews.data.length || 3"
-                                :key="'skeleton-' + i"
-                                class="review-card group relative rounded-[1rem] border border-emerald-400/20 bg-plant-shop/80 p-6 shadow-[0_0_0_100vw_#1b2316] transition-all hover:border-emerald-400/60 sm:p-10 xl:rounded-[2rem]"
-                            />
-                        </template>
-
-                        <template v-else>
-                            <div
-                                v-for="(review, index) in reviews.data"
-                                :key="review.id"
-                                class="review-card group relative rounded-[1rem] border border-emerald-400/20 bg-plant-shop/80 p-6 shadow-[0_0_0_100vw_#1b2316] transition-all duration-200 hover:border-emerald-400/60 sm:p-10 xl:rounded-[2rem]"
-                                :style="{ animationDelay: `${index * 100}ms` }"
-                            >
+                            <template v-else>
                                 <div
-                                    class="absolute -right-4 -top-6 select-none font-serif text-[12rem] text-[#c5d86d]/5"
+                                    v-for="(review, index) in reviews.data"
+                                    :key="review.id"
+                                    class="review-card group relative rounded-[1rem] border border-emerald-400/20 bg-plant-shop/80 p-6 shadow-[0_0_0_100vw_#1b2316] transition-all duration-200 hover:border-emerald-400/60 sm:p-10 xl:rounded-[2rem]"
+                                    :style="{ animationDelay: `${index * 100}ms` }"
                                 >
-                                    “
-                                </div>
-
-                                <div class="relative z-10">
                                     <div
-                                        class="mb-8 flex items-center justify-between border-b border-white/20 pb-6"
+                                        class="absolute -right-4 -top-6 select-none font-serif text-[12rem] text-[#c5d86d]/5"
                                     >
-                                        <div
-                                            class="flex w-full flex-col items-center gap-4 sm:flex-row sm:items-center"
-                                        >
-                                            <div
-                                                class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#c5d86d]/20 bg-zinc-800"
-                                            >
-                                                <AppImage
-                                                    v-if="review.user?.avatar_url"
-                                                    :src="review.user?.avatar_url"
-                                                    class="h-full w-full object-cover"
-                                                />
-                                                <span
-                                                    v-else
-                                                    class="text-xl font-black text-[#c5d86d]"
-                                                >
-                                                    {{ getInitials(review.user?.name) }}
-                                                </span>
-                                            </div>
-
-                                            <div class="flex flex-col gap-2 md:gap-1">
-                                                <h3
-                                                    class="text-center text-lg font-black uppercase tracking-tight text-white"
-                                                >
-                                                    {{ review.user?.name || 'Anonymous' }}
-                                                </h3>
-
-                                                <div class="flex items-center gap-1 md:hidden">
-                                                    <AppRating :rating="review.rating" />
-                                                    <span
-                                                        class="ml-2 text-xs font-black italic text-white"
-                                                        >{{ review.rating?.toFixed(1) }}</span
-                                                    >
-                                                </div>
-
-                                                <time
-                                                    class="flex justify-center gap-1 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 md:items-center"
-                                                >
-                                                    <Calendar class="h-3 w-3"></Calendar>
-                                                    <span>{{ formatDate(review.created_at) }}</span>
-                                                </time>
-                                            </div>
-                                        </div>
-
-                                        <div
-                                            class="hidden items-center gap-1 rounded-full border border-white/5 bg-black/20 px-3 py-1.5 md:flex"
-                                        >
-                                            <AppRating :rating="review.rating" />
-
-                                            <span
-                                                class="ml-2 text-xs font-black italic text-white"
-                                                >{{ review.rating?.toFixed(1) }}</span
-                                            >
-                                        </div>
+                                        “
                                     </div>
 
-                                    <p
-                                        class="text-sm italic leading-relaxed text-zinc-300 lg:text-xl"
-                                    >
-                                        <span class="mr-1 font-serif text-2xl text-[#c5d86d]"
-                                            >“</span
+                                    <div class="relative z-10">
+                                        <div
+                                            class="mb-8 flex items-center justify-between border-b border-white/20 pb-6"
                                         >
-                                        {{ review.body }}
-                                    </p>
-                                </div>
-                            </div>
-                        </template>
-                    </TransitionGroup>
-                </div>
-            </div>
+                                            <div
+                                                class="flex w-full flex-col items-center gap-4 sm:flex-row sm:items-center"
+                                            >
+                                                <div
+                                                    class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#c5d86d]/20 bg-zinc-800"
+                                                >
+                                                    <AppImage
+                                                        v-if="review.user?.avatar_url"
+                                                        :src="review.user?.avatar_url"
+                                                        class="h-full w-full object-cover"
+                                                    />
+                                                    <span
+                                                        v-else
+                                                        class="text-xl font-black text-[#c5d86d]"
+                                                    >
+                                                        {{ getInitials(review.user?.name) }}
+                                                    </span>
+                                                </div>
 
-            <div v-if="reviews.data.length === 0" class="py-32 text-center">
-                <div
-                    class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-zinc-800 text-4xl"
-                >
-                    🍃
+                                                <div class="flex flex-col gap-2 md:gap-1">
+                                                    <h3
+                                                        class="text-center text-lg font-black uppercase tracking-tight text-white"
+                                                    >
+                                                        {{ review.user?.name || 'Anonymous' }}
+                                                    </h3>
+
+                                                    <div class="flex items-center gap-1 md:hidden">
+                                                        <AppRating :rating="review.rating" />
+                                                        <span
+                                                            class="ml-2 text-xs font-black italic text-white"
+                                                            >{{ review.rating?.toFixed(1) }}</span
+                                                        >
+                                                    </div>
+
+                                                    <time
+                                                        class="flex justify-center gap-1 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 md:items-center"
+                                                    >
+                                                        <Calendar class="h-3 w-3"></Calendar>
+                                                        <span>{{
+                                                            formatDate(review.created_at)
+                                                        }}</span>
+                                                    </time>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                class="hidden items-center gap-1 rounded-full border border-white/5 bg-black/20 px-3 py-1.5 md:flex"
+                                            >
+                                                <AppRating :rating="review.rating" />
+
+                                                <span
+                                                    class="ml-2 text-xs font-black italic text-white"
+                                                    >{{ review.rating?.toFixed(1) }}</span
+                                                >
+                                            </div>
+                                        </div>
+
+                                        <p
+                                            class="text-sm italic leading-relaxed text-zinc-300 lg:text-xl"
+                                        >
+                                            <span class="mr-1 font-serif text-2xl text-[#c5d86d]"
+                                                >“</span
+                                            >
+                                            {{ review.body }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </template>
+                        </TransitionGroup>
+                    </div>
                 </div>
-                <h2 class="mb-2 text-2xl font-bold text-zinc-300">No reviews yet</h2>
-                <p class="text-zinc-50">Be the first to share your experience with our plants!</p>
-            </div>
-        </main>
+
+                <div v-if="reviews.data.length === 0" class="py-32 text-center">
+                    <div
+                        class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-zinc-800 text-4xl"
+                    >
+                        🍃
+                    </div>
+                    <h2 class="mb-2 text-2xl font-bold text-zinc-300">No reviews yet</h2>
+                    <p class="text-zinc-50">
+                        Be the first to share your experience with our plants!
+                    </p>
+                </div>
+            </main>
+        </div>
     </div>
 
     <Pagination :disabled="isLoading" class="z-[3]" :links="reviews.links" />
