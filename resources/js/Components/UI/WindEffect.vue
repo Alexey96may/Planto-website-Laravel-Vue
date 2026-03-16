@@ -38,15 +38,38 @@
     const images: HTMLImageElement[] = [];
     const isLoaded = ref(false);
 
+    const getCurrentSeason = (): 'winter' | 'spring' | 'summer' | 'autumn' => {
+        const month = new Date().getMonth();
+
+        if (month >= 2 && month <= 4) return 'spring';
+        if (month >= 5 && month <= 7) return 'summer';
+        if (month >= 8 && month <= 10) return 'autumn';
+        return 'winter';
+    };
+
+    const seasonConfig = {
+        winter: 11,
+        spring: 22,
+        summer: 15,
+        autumn: 19,
+    };
+
+    const currentSeason = getCurrentSeason();
+
     const preloadImages = () => {
         let loadedCount = 0;
 
-        for (let i = 1; i <= props.imageCount; i++) {
+        const count = seasonConfig[currentSeason];
+
+        images.length = 0;
+
+        for (let i = 1; i <= count; i++) {
             const img = new Image();
-            img.src = `/images/leaves/leaf-${i}.png`;
+            img.src = `/images/leaves/${currentSeason}/leaf-${i}.png`;
+
             img.onload = () => {
                 loadedCount++;
-                if (loadedCount === props.imageCount) isLoaded.value = true;
+                if (loadedCount === count) isLoaded.value = true;
             };
             images.push(img);
         }
