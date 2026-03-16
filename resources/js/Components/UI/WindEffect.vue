@@ -50,7 +50,7 @@
     const seasonConfig = {
         winter: 11,
         spring: 22,
-        summer: 15,
+        summer: 17,
         autumn: 19,
     };
 
