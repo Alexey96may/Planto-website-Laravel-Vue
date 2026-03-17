@@ -28,9 +28,9 @@
                 v-html="link.label"
                 class="rounded-xl border px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-all"
                 :class="{
-                    'border-[#c5d86d] bg-[#c5d86d] text-black shadow-[0_0_20px_rgba(197,216,109,0.3)]':
+                    'border-emerald-800 bg-emerald-400 text-black shadow-[0_0_20px_rgba(197,216,109,0.3)]':
                         link.active,
-                    'border-white/5 bg-black/40 text-zinc-400 hover:scale-105 hover:border-[#c5d86d]/50 hover:text-white active:scale-95':
+                    'border-white/5 bg-black/40 text-zinc-400 hover:scale-105 hover:border-emerald-400/50 hover:text-white active:scale-95':
                         !link.active,
                 }"
                 preserve-scroll

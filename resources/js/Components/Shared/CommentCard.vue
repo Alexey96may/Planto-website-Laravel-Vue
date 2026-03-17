@@ -2,6 +2,7 @@
     import { Edit3, Trash2 } from 'lucide-vue-next';
 
     import AppRating from '@/Components/UI/AppRating.vue';
+    import { useSound } from '@/composables/useSound';
     import { Comment } from '@/types';
 
     defineProps<{
@@ -13,16 +14,20 @@
         (e: 'edit', comment: Comment): void;
         (e: 'delete', id: number): void;
     }>();
+
+    const { playClick } = useSound();
 </script>
 
 <template>
     <div
-        class="group relative rounded-[1rem] border border-white/5 bg-black/40 p-5 transition-all hover:border-[#c5d86d]/30"
+        class="group relative snap-start snap-always scroll-mt-6 rounded-[1rem] border border-white/5 bg-black/40 p-5 transition-all hover:border-[#c5d86d]/30"
         :class="{
             'pointer-events-none scale-95 opacity-30 grayscale': isDeleting,
         }"
     >
-        <div class="mb-3 flex items-center justify-between gap-2">
+        <div
+            class="mb-4 flex flex-col flex-wrap items-end justify-between gap-2 sm:flex-row sm:items-center"
+        >
             <div class="flex items-center gap-1.5">
                 <AppRating :rating="comment.rating" />
                 <span class="text-[1rem] text-emerald-500">({{ comment.rating }})</span>
@@ -31,6 +36,7 @@
             <div class="flex gap-2">
                 <button
                     @click="emit('delete', comment.id)"
+                    @mousedown="playClick"
                     class="text-zinc-600 transition-colors duration-200 hover:text-red-400"
                     title="Delete log"
                 >
@@ -40,6 +46,7 @@
                 <button
                     v-if="!comment.is_active"
                     @click="emit('edit', comment)"
+                    @mousedown="playClick"
                     class="text-zinc-600 transition-colors duration-200 hover:text-[#c5d86d]"
                     title="Edit transmission"
                 >

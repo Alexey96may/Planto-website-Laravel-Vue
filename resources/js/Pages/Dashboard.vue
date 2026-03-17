@@ -166,7 +166,7 @@
                 <ProfileSettings :auth="auth" />
 
                 <div
-                    class="relative z-[3] grid grid-cols-1 gap-8 italic lg:grid-cols-12 lg:items-start"
+                    class="relative z-[3] grid grid-cols-1 gap-8 italic lg:grid-cols-12"
                     id="feedbackSection"
                 >
                     <section
@@ -271,7 +271,9 @@
                             <History class="h-4 w-4 text-[#c5d86d]" /> Archive_Log
                         </h3>
 
-                        <div class="custom-scrollbar space-y-4 overflow-y-auto pr-2">
+                        <div
+                            class="custom-scrollbar h-[600px] snap-y snap-proximity space-y-4 overflow-y-auto scroll-smooth pr-2"
+                        >
                             <div
                                 v-if="myComments.length === 0"
                                 class="flex flex-col items-center justify-center py-20 text-emerald-800"
@@ -291,6 +293,7 @@
                                 :is-deleting="deletingIds.has(comment.id)"
                                 @edit="openEditModal"
                                 @delete="deleteComment"
+                                class="snap-start snap-always shadow-none"
                             />
                         </div>
                     </section>

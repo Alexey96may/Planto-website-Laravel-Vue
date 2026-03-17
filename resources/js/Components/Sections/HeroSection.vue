@@ -91,16 +91,18 @@
                                 ></IconPlay>
                             </button>
 
-                            <Modal :show="isVideoModalOpen" @close="isVideoModalOpen = false">
-                                <div class="aspect-video">
-                                    <iframe
-                                        :src="videoUrl"
-                                        class="h-full w-full"
-                                        allowfullscreen
-                                        allow="autoplay; encrypted-media"
-                                    ></iframe>
-                                </div>
-                            </Modal>
+                            <teleport to="body">
+                                <Modal :show="isVideoModalOpen" @close="isVideoModalOpen = false">
+                                    <div class="aspect-video">
+                                        <iframe
+                                            :src="videoUrl"
+                                            class="h-full w-full"
+                                            allowfullscreen
+                                            allow="autoplay; encrypted-media"
+                                        ></iframe>
+                                    </div>
+                                </Modal>
+                            </teleport>
 
                             <span class="hero__video-descr" aria-label="Video description"
                                 >Live Demonstration</span

@@ -83,6 +83,7 @@
                 leave-to-class="transform -translate-x-10 opacity-0"
                 move-class="transition duration-500"
                 tag="div"
+                class="space-y-4"
             >
                 <div
                     v-for="comment in comments"
