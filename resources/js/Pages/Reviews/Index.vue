@@ -1,9 +1,10 @@
 <script setup lang="ts">
     import { onMounted, onUnmounted, ref, watch } from 'vue';
 
-    import { Head, router } from '@inertiajs/vue3';
+    import { Head, Link, router } from '@inertiajs/vue3';
 
     import { Calendar } from 'lucide-vue-next';
+    import { route } from 'ziggy-js';
 
     import CommentsFilter from '@/Components/Shared/CommentsFilter.vue';
     import Pagination from '@/Components/Shared/Pagination.vue';
@@ -103,9 +104,10 @@
                 </div>
             </div>
 
-            <main>
+            <main class="relative">
                 <div
-                    class="relative z-[3] overflow-hidden rounded-[1rem] border border-emerald-400/50 px-4 py-8 lg:rounded-[2rem] lg:px-6 lg:py-12"
+                    v-if="reviews.data.length !== 0"
+                    class="relative z-20 overflow-hidden rounded-[1rem] border border-emerald-400/50 bg-plant-green px-4 py-8 lg:rounded-[2rem] lg:px-6 lg:py-12"
                 >
                     <CommentsFilter
                         v-model="selectedSort"
@@ -118,7 +120,7 @@
                                 <ReviewSkeleton
                                     v-for="i in reviews.data.length || 3"
                                     :key="'skeleton-' + i"
-                                    class="review-card group relative rounded-[1rem] border border-emerald-400/20 bg-plant-shop/80 p-6 shadow-[0_0_0_100vw_#1b2316] transition-all hover:border-emerald-400/60 sm:p-10 xl:rounded-[2rem]"
+                                    class="review-card sm:6 relative rounded-[1rem] border border-emerald-400/30 bg-[#1b2316]/60 p-4 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/60 hover:bg-[#1b2316]/80 md:p-10 xl:rounded-[2rem]"
                                 />
                             </template>
 
@@ -126,16 +128,10 @@
                                 <div
                                     v-for="(review, index) in reviews.data"
                                     :key="review.id"
-                                    class="review-card group relative rounded-[1rem] border border-emerald-400/20 bg-plant-shop/80 p-6 shadow-[0_0_0_100vw_#1b2316] transition-all duration-200 hover:border-emerald-400/60 sm:p-10 xl:rounded-[2rem]"
+                                    class="review-card sm:6 group relative rounded-[1rem] border border-emerald-700 bg-plant-shop p-4 transition-all duration-500 md:p-10 xl:rounded-[2rem]"
                                     :style="{ animationDelay: `${index * 100}ms` }"
                                 >
-                                    <div
-                                        class="absolute -right-4 -top-6 select-none font-serif text-[12rem] text-[#c5d86d]/5"
-                                    >
-                                        “
-                                    </div>
-
-                                    <div class="relative z-10">
+                                    <div class="relative z-10 text-white">
                                         <div
                                             class="mb-8 flex items-center justify-between border-b border-white/20 pb-6"
                                         >
@@ -158,7 +154,9 @@
                                                     </span>
                                                 </div>
 
-                                                <div class="flex flex-col gap-2 md:gap-1">
+                                                <div
+                                                    class="flex flex-col gap-2 sm:items-start md:gap-1"
+                                                >
                                                     <h3
                                                         class="text-center text-lg font-black uppercase tracking-tight text-white"
                                                     >
@@ -199,7 +197,8 @@
                                         <p
                                             class="text-sm italic leading-relaxed text-zinc-300 lg:text-xl"
                                         >
-                                            <span class="mr-1 font-serif text-2xl text-[#c5d86d]"
+                                            <span
+                                                class="md:text-md mr-1 font-serif text-[#c5d86d] xl:text-xl"
                                                 >“</span
                                             >
                                             {{ review.body }}
@@ -211,15 +210,29 @@
                     </div>
                 </div>
 
-                <div v-if="reviews.data.length === 0" class="py-32 text-center">
+                <div
+                    v-else
+                    class="relative z-[3] rounded-[1rem] border border-emerald-400/50 bg-plant-green py-12 text-center"
+                >
                     <div
-                        class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-zinc-800 text-4xl"
+                        class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-plant-shop text-4xl"
                     >
                         🍃
                     </div>
                     <h2 class="mb-2 text-2xl font-bold text-zinc-300">No reviews yet</h2>
                     <p class="text-zinc-50">
-                        Be the first to share your experience with our plants!
+                        <Link
+                            :href="
+                                $page.props.auth.user
+                                    ? route('dashboard') + '#feedbackSection'
+                                    : route('register')
+                            "
+                            :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Register'"
+                            class="text-emerald-500 transition-colors duration-200 hover:text-emerald-300"
+                        >
+                            Be the first
+                        </Link>
+                        to share your experience with our plants!
                     </p>
                 </div>
             </main>

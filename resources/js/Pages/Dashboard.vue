@@ -4,23 +4,15 @@
 
     import { Head, useForm } from '@inertiajs/vue3';
 
-    import {
-        Edit3,
-        History,
-        Mail,
-        MessageSquare,
-        Save,
-        ShieldCheck,
-        Star,
-        Trash2,
-        User,
-    } from 'lucide-vue-next';
+    import { History, MessageSquare, ShieldAlert, ShieldCheck, Star } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
-    import AppRating from '@/Components/UI/AppRating.vue';
-    import ImageUploader from '@/Components/UI/ImageUploader.vue';
+    import CommentCard from '@/Components/Shared/CommentCard.vue';
+    import EditCommentModal from '@/Components/Shared/EditCommentModal.vue';
+    import ProfileSettings from '@/Components/Shared/ProfileSettings.vue';
     import WindEffect from '@/Components/UI/WindEffect.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import { useCommentActions } from '@/composables/useCommentActions';
     import { useFlash } from '@/composables/useFlash';
     import { useSound } from '@/composables/useSound';
     import { AuthProps, Comment, CommentForm, UserForm } from '@/types';
@@ -29,6 +21,16 @@
         myComments: Comment[];
         auth: AuthProps;
     }>();
+
+    const {
+        isEditModalOpen,
+        selectedComment,
+        editForm,
+        deletingIds,
+        openEditModal,
+        handleUpdate,
+        deleteComment,
+    } = useCommentActions();
 
     const { playClick, playCancel, playSuccess } = useSound();
 
@@ -44,7 +46,7 @@
         _method: 'patch',
     });
 
-    const { notifyWithUndo } = useFlash();
+    const { notify } = useFlash();
 
     const imageUrl = ref<string | null>(props.auth.user.avatar_url);
 
@@ -57,29 +59,18 @@
         },
     );
 
-    const submitInfo = (): void => {
-        formAvatar.post(route('profile.update'), {
-            preserveScroll: true,
-            preserveState: true,
-            onSuccess: () => {
-                imageUrl.value = props.auth.user.avatar_url;
-
-                if (imageUrl.value && imageUrl.value.startsWith('blob:')) {
-                    URL.revokeObjectURL(imageUrl.value);
-                }
-
-                playSuccess();
-
-                formAvatar.avatar = null;
-            },
-            onError: () => {
-                imageUrl.value = props.auth.user.avatar_url;
-                playCancel();
-            },
-        });
-    };
+    const isError = ref(false);
 
     const submitComment = (): void => {
+        if (!form.body.trim()) {
+            isError.value = true;
+            notify('Body text required', 'error');
+            playCancel();
+            return;
+        }
+
+        isError.value = false;
+
         form.post(route('comments.store'), {
             preserveScroll: true,
 
@@ -87,79 +78,19 @@
                 form.reset();
                 playSuccess();
             },
+
             onError: (errors) => {
                 console.error(errors);
+                const firstError = Object.values(errors)[0];
+                notify(firstError, 'error');
+
+                isError.value = true;
                 playCancel();
             },
         });
     };
 
     const isAdmin = computed(() => props.auth.user.role === 'admin');
-
-    const handleFileSelect = (file: File | null) => {
-        formAvatar.avatar = file;
-        if (file) {
-            imageUrl.value = URL.createObjectURL(file);
-        } else {
-            imageUrl.value = props.auth.user.avatar_url;
-        }
-    };
-
-    const isEditModalOpen = ref(false);
-
-    const editForm = useForm({
-        id: null as number | null,
-        body: '',
-        rating: 5.0,
-    });
-
-    const openEditModal = (comment: Comment) => {
-        editForm.id = comment.id;
-        editForm.body = comment.body;
-        editForm.rating = comment.rating;
-        isEditModalOpen.value = true;
-    };
-
-    const submitUpdate = () => {
-        if (!editForm.id) return;
-
-        editForm.patch(route('comments.update', editForm.id), {
-            preserveScroll: true,
-            onSuccess: () => {
-                isEditModalOpen.value = false;
-                playSuccess();
-            },
-            onError: () => playCancel(),
-        });
-    };
-
-    let deletingIds = ref<Set<number>>(new Set());
-
-    const deleteComment = async (id: number) => {
-        deletingIds.value.add(id);
-
-        try {
-            const confirmed = await notifyWithUndo('Review deletion scheduled...', 5000);
-
-            if (confirmed) {
-                form.delete(route('comments.destroy', id), {
-                    preserveScroll: true,
-                    onSuccess: () => {
-                        playSuccess();
-                        deletingIds.value.delete(id);
-                    },
-                    onError: () => {
-                        playCancel();
-                        deletingIds.value.delete(id);
-                    },
-                });
-            } else {
-                deletingIds.value.delete(id);
-            }
-        } catch (e) {
-            deletingIds.value.delete(id);
-        }
-    };
 
     watch(isEditModalOpen, (isOpen) => {
         if (isOpen) {
@@ -178,6 +109,10 @@
 
     onMounted(() => window.addEventListener('keydown', handleEsc));
     onUnmounted(() => window.removeEventListener('keydown', handleEsc));
+
+    const ratingProgress = computed(() => {
+        return ((form.rating - 0.5) / (5 - 0.5)) * 100;
+    });
 </script>
 
 <template>
@@ -228,90 +163,11 @@
                     </div>
                 </header>
 
-                <section
-                    class="group relative z-[3] mb-16 overflow-hidden rounded-[1rem] border border-emerald-400/50 p-4 backdrop-blur-xl md:p-8 lg:rounded-[2rem]"
-                >
-                    <form @submit.prevent="submitInfo" class="relative z-10 space-y-8">
-                        <div class="flex flex-col items-start gap-12 lg:flex-row">
-                            <div class="group/avatar relative mx-auto">
-                                <div
-                                    class="transition-all duration-500 group-hover/avatar:border-[#c5d86d]/50"
-                                >
-                                    <div
-                                        class="group/avatar relative mx-auto shrink-0 lg:h-48 lg:w-48"
-                                    >
-                                        <ImageUploader
-                                            ref="uploader"
-                                            v-model="formAvatar.avatar"
-                                            label="Avatar"
-                                            :error="formAvatar.errors.avatar"
-                                            :existingImage="imageUrl"
-                                            @on-file-select="handleFileSelect"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="w-full flex-1 space-y-6">
-                                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                    <div class="space-y-2">
-                                        <label
-                                            class="ml-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
-                                            for="name"
-                                            >Identity Name</label
-                                        >
-                                        <div class="relative">
-                                            <User
-                                                class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
-                                            />
-                                            <input
-                                                v-model="formAvatar.name"
-                                                id="name"
-                                                type="text"
-                                                class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <label
-                                            class="ml-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
-                                            for="email"
-                                            >Secure Email</label
-                                        >
-                                        <div class="relative">
-                                            <Mail
-                                                class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
-                                            />
-                                            <input
-                                                v-model="formAvatar.email"
-                                                id="email"
-                                                type="email"
-                                                class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="flex items-center justify-end gap-2 border-t border-white/5 pt-6"
-                                >
-                                    <button
-                                        type="submit"
-                                        @mousedown="playClick"
-                                        :disabled="formAvatar.processing"
-                                        class="flex items-center gap-3 rounded-2xl bg-emerald-500 px-8 py-4 text-[10px] font-black uppercase tracking-widest text-black transition-all hover:bg-emerald-200 disabled:opacity-50"
-                                    >
-                                        <Save class="h-4 w-4" />
-                                        {{ formAvatar.processing ? 'Syncing...' : 'Update' }}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </section>
+                <ProfileSettings :auth="auth" />
 
                 <div
                     class="relative z-[3] grid grid-cols-1 gap-8 italic lg:grid-cols-12 lg:items-start"
+                    id="feedbackSection"
                 >
                     <section
                         class="rounded-[1rem] border border-emerald-400/50 p-4 shadow-2xl backdrop-blur-xl md:p-8 lg:col-span-5 lg:rounded-[2rem]"
@@ -323,13 +179,51 @@
                         </h3>
 
                         <form @submit.prevent="submitComment" class="space-y-6">
-                            <textarea
-                                v-model="form.body"
-                                :disabled="form.processing"
-                                rows="4"
-                                class="custom-scrollbar w-full resize-none rounded-xl border border-white/5 bg-black/40 p-5 text-sm text-white placeholder-zinc-600 outline-none transition-all focus:ring-1 focus:ring-emerald-500/50"
-                                placeholder="Report your experience with the Plant Shop..."
-                            ></textarea>
+                            <div class="space-y-2">
+                                <div class="group relative overflow-hidden">
+                                    <textarea
+                                        v-model="form.body"
+                                        id="reviewMessage"
+                                        @input="isError = false"
+                                        :disabled="form.processing"
+                                        rows="4"
+                                        placeholder=" "
+                                        class="custom-scrollbar peer relative z-[1] w-full resize-none rounded-xl border-0 bg-[#0d0d0d] p-5 pt-10 text-sm text-white placeholder-zinc-600 outline-none transition-all focus:border-emerald-500/50 focus:shadow-none focus:outline-none focus:ring-0 focus:ring-offset-0"
+                                        :class="{ 'border-red-500/50': form.errors.body }"
+                                    ></textarea>
+
+                                    <label
+                                        for="reviewMessage"
+                                        class="pointer-events-none absolute left-3 top-0 z-[2] origin-left px-2 py-4 text-xs font-black uppercase tracking-widest text-zinc-500 transition-all duration-300 before:absolute before:inset-0 before:-z-10 before:rounded-lg before:bg-[#0d0d0d] before:opacity-0 before:transition-opacity peer-focus:-translate-y-[15%] peer-focus:scale-75 peer-focus:text-emerald-400 peer-focus:before:opacity-100 peer-[:not(:placeholder-shown)]:-translate-y-[15%] peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-emerald-400 peer-[:not(:placeholder-shown)]:before:opacity-100"
+                                    >
+                                        Report experience
+                                    </label>
+                                </div>
+
+                                <Transition name="fade">
+                                    <div
+                                        v-if="isError"
+                                        class="mt-4 flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4"
+                                    >
+                                        <ShieldAlert
+                                            class="animate-pulse-fast h-5 w-5 shrink-0 text-red-500"
+                                        />
+                                        <div class="space-y-1">
+                                            <p
+                                                class="text-[10px] font-black uppercase tracking-[0.2em] text-red-500"
+                                            >
+                                                [Failure]
+                                            </p>
+                                            <p
+                                                class="text-[11px] font-medium leading-relaxed text-red-400/80"
+                                            >
+                                                Transmission body is null or very small. Terminal
+                                                requires a valid string input.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Transition>
+                            </div>
 
                             <div class="rounded-2xl border border-white/5 bg-black/20 p-4">
                                 <div class="mb-4 flex items-center justify-between">
@@ -350,16 +244,20 @@
                                     max="5"
                                     step="0.5"
                                     class="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-emerald-700 accent-[#c5d86d]"
+                                    :style="{
+                                        background: `linear-gradient(to right, #c5d86d ${ratingProgress}%, rgba(255,255,255,0.1) ${ratingProgress}%)`,
+                                    }"
                                 />
                             </div>
 
                             <button
                                 type="submit"
                                 @mousedown="playClick"
-                                :disabled="form.processing || !form.body"
+                                :disabled="form.processing"
                                 class="w-full cursor-pointer rounded-2xl bg-emerald-400 py-4 text-[10px] font-black uppercase tracking-widest text-black transition-all hover:scale-[1.02] active:scale-95"
+                                :class="{ 'shake-anim': isError }"
                             >
-                                Publish Transmission
+                                {{ form.processing ? 'Syncing...' : 'Publish' }}
                             </button>
                         </form>
                     </section>
@@ -376,9 +274,9 @@
                         <div class="custom-scrollbar space-y-4 overflow-y-auto pr-2">
                             <div
                                 v-if="myComments.length === 0"
-                                class="flex flex-col items-center justify-center py-20 text-zinc-600"
+                                class="flex flex-col items-center justify-center py-20 text-emerald-800"
                             >
-                                <ShieldCheck class="mb-4 h-12 w-12 opacity-10" />
+                                <ShieldCheck class="mb-4 h-12 w-12 opacity-30" />
                                 <p
                                     class="text-center text-[10px] font-black uppercase tracking-widest"
                                 >
@@ -386,136 +284,25 @@
                                 </p>
                             </div>
 
-                            <div
+                            <CommentCard
                                 v-for="comment in myComments"
                                 :key="comment.id"
-                                class="group relative rounded-[1rem] border border-white/5 bg-black/40 p-5 transition-all hover:border-[#c5d86d]/30"
-                                :class="{
-                                    'pointer-events-none scale-95 opacity-30 grayscale':
-                                        deletingIds.has(comment.id),
-                                }"
-                            >
-                                <div class="mb-3 flex items-center justify-between gap-2">
-                                    <div class="flex items-center gap-1.5">
-                                        <AppRating :rating="comment.rating" />
-                                        <span class="text-[1rem] text-emerald-500"
-                                            >({{ comment.rating }})</span
-                                        >
-                                    </div>
-
-                                    <div class="flex gap-2">
-                                        <button
-                                            @click="deleteComment(comment.id)"
-                                            class="text-zinc-600 transition-colors duration-200 hover:text-red-400"
-                                        >
-                                            <Trash2 class="h-4 w-4" />
-                                        </button>
-
-                                        <button
-                                            v-if="!comment.is_active"
-                                            @click="openEditModal(comment)"
-                                            class="text-zinc-600 transition-colors duration-200 hover:text-[#c5d86d]"
-                                        >
-                                            <Edit3 class="h-4 w-4" />
-                                        </button>
-
-                                        <span
-                                            class="rounded border border-white/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-tighter"
-                                            :class="
-                                                comment.is_active
-                                                    ? 'border-[#c5d86d]/20 text-[#c5d86d]'
-                                                    : 'text-zinc-600'
-                                            "
-                                        >
-                                            {{ comment.is_active ? 'Verified' : 'Pending' }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <p class="text-xs font-medium leading-relaxed text-zinc-400">
-                                    {{ comment.body }}
-                                </p>
-                            </div>
+                                :comment="comment"
+                                :is-deleting="deletingIds.has(comment.id)"
+                                @edit="openEditModal"
+                                @delete="deleteComment"
+                            />
                         </div>
                     </section>
                 </div>
             </div>
         </div>
 
-        <Teleport to="body">
-            <Transition name="modal">
-                <div
-                    v-if="isEditModalOpen"
-                    class="fixed inset-0 z-[100] flex items-center justify-center px-4"
-                >
-                    <div
-                        class="absolute inset-0 bg-black/80 backdrop-blur-md"
-                        @click="isEditModalOpen = false"
-                    ></div>
-
-                    <div
-                        class="relative flex max-h-[90vh] w-full max-w-lg flex-col rounded-[2rem] border border-emerald-400/50 bg-plant-shop p-6 shadow-2xl md:p-8"
-                    >
-                        <h3
-                            class="mb-6 flex shrink-0 items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-white"
-                        >
-                            <Edit3 class="h-4 w-4 text-[#c5d86d]" /> Modification Mode
-                        </h3>
-
-                        <form
-                            @submit.prevent="submitUpdate"
-                            class="custom-scrollbar space-y-6 overflow-y-auto pr-2"
-                        >
-                            <div class="space-y-6">
-                                <textarea
-                                    v-model="editForm.body"
-                                    class="custom-scrollbar min-h-[120px] w-full resize-none rounded-xl border border-white/5 bg-black/40 p-5 text-sm text-white outline-none focus:ring-1 focus:ring-emerald-500/50"
-                                ></textarea>
-
-                                <div class="rounded-2xl border border-white/5 bg-black/20 p-4">
-                                    <div class="mb-4 flex items-center justify-between">
-                                        <span
-                                            class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
-                                            >Signal Rating</span
-                                        >
-                                        <div class="flex items-center gap-1 text-[#c5d86d]">
-                                            <span class="text-lg font-black">{{
-                                                editForm.rating
-                                            }}</span>
-                                            <Star class="h-4 w-4 fill-current" />
-                                        </div>
-                                    </div>
-                                    <input
-                                        type="range"
-                                        v-model="editForm.rating"
-                                        min="0.5"
-                                        max="5"
-                                        step="0.5"
-                                        class="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-emerald-700 accent-[#c5d86d]"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="sticky bottom-0 flex gap-4 bg-plant-shop pb-2 pt-4">
-                                <button
-                                    type="button"
-                                    @click="isEditModalOpen = false"
-                                    class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 transition-colors hover:text-white"
-                                >
-                                    Abort
-                                </button>
-                                <button
-                                    type="submit"
-                                    :disabled="editForm.processing"
-                                    class="flex-1 rounded-2xl bg-emerald-400 py-4 text-[10px] font-black uppercase tracking-widest text-black"
-                                >
-                                    Apply_Changes
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </Transition>
-        </Teleport>
+        <EditCommentModal
+            v-model="isEditModalOpen"
+            :comment="selectedComment"
+            @submit="handleUpdate"
+        />
     </AuthenticatedLayout>
 </template>
 
@@ -546,17 +333,6 @@
         scrollbar-color: rgba(16, 185, 129, 0.2) transparent;
     }
 
-    .modal-enter-active,
-    .modal-leave-active {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .modal-enter-from,
-    .modal-leave-to {
-        opacity: 0;
-        transform: scale(0.9) translateY(20px);
-    }
-
     input[type='range']::-webkit-slider-thumb {
         appearance: none;
         width: 16px;
@@ -565,5 +341,48 @@
         border-radius: 50%;
         cursor: pointer;
         box-shadow: 0 0 10px rgba(197, 216, 109, 0.5);
+    }
+
+    @keyframes shake {
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-4px);
+        }
+        75% {
+            transform: translateX(4px);
+        }
+    }
+
+    .shake-anim {
+        animation: shake 0.2s ease-in-out 0s 2;
+        border: 1px solid rgba(248, 113, 113, 0.5) !important;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    .animate-pulse-fast {
+        animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.6;
+        }
     }
 </style>

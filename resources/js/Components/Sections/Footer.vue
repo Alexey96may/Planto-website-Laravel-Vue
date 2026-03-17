@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed } from 'vue';
+    import { computed, ref } from 'vue';
 
     import { useForm, usePage } from '@inertiajs/vue3';
 
@@ -7,6 +7,7 @@
 
     import NavigationFooter from '@/Components/Shared/NavigationFooter.vue';
     import AppVisualEffectsToggle from '@/Components/UI/AppVisualEffectsToggle.vue';
+    import { useFlash } from '@/composables/useFlash';
     import { useSound } from '@/composables/useSound';
     import { SharedData } from '@/types';
 
@@ -14,23 +15,42 @@
         email: string;
     }
 
+    const { notify } = useFlash();
+
     const form = useForm<NewsletterForm>({
         email: '',
     });
 
     const { playSuccess, playClick, playCancel } = useSound();
 
+    const isError = ref(false);
+
     const submit = () => {
         playClick();
 
+        if (!form.email.trim()) {
+            isError.value = true;
+            notify('Email required', 'error');
+            return;
+        }
+
+        isError.value = false;
+
         form.post(route('newsletter.store'), {
             preserveScroll: true,
+
             onSuccess: () => {
                 form.reset();
                 playSuccess();
             },
-            onError: () => {
+
+            onError: (errors) => {
                 playCancel();
+                console.error(errors);
+                const firstError = Object.values(errors)[0];
+                notify(firstError, 'error');
+
+                isError.value = true;
             },
         });
     };
@@ -70,22 +90,21 @@
                         <input
                             v-model="form.email"
                             type="email"
+                            @input="isError = false"
                             placeholder="Your email"
                             class="footer__form-text"
-                            :class="{ '!border-red-500': form.errors.email }"
+                            :class="{ '!border-red-600': form.errors.email }"
                         />
                         <input
                             class="button footer__form-button"
                             type="submit"
+                            @mousedown="playClick"
                             aria-label="To Subscribe"
+                            :class="{ 'shake-anim': isError }"
                             :value="form.processing ? 'Sending...' : 'Subscribe'"
                             :disabled="form.processing"
                         />
                     </form>
-
-                    <span v-if="form.errors.email" class="mt-2 text-sm text-red-700">
-                        {{ form.errors.email }}
-                    </span>
 
                     <AppVisualEffectsToggle />
                 </div>
@@ -320,5 +339,22 @@
         @media (max-width: b.$mediaMobile) {
             font-size: calc(1rem * (18px / b.$basicFontSize));
         }
+    }
+
+    @keyframes shake {
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-4px);
+        }
+        75% {
+            transform: translateX(4px);
+        }
+    }
+
+    .shake-anim {
+        animation: shake 0.2s ease-in-out 0s 2;
     }
 </style>

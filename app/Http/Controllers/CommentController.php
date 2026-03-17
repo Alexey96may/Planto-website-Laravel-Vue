@@ -22,7 +22,7 @@ class CommentController extends Controller
             'is_active' => false,
         ]);
 
-        return back()->with('success', 'Your review sent for moderation!');
+        return back()->with('success', 'Your review has been sent for moderation!');
     }
 
     public function update(Request $request, Comment $comment)

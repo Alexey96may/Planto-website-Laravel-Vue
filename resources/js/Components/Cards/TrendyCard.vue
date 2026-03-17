@@ -85,7 +85,7 @@
         aspect-ratio: unset;
         max-height: unset;
         margin-top: 0;
-        padding: 4rem 4rem 4rem 0;
+        padding: 1rem 4rem 1rem 0;
         gap: calc(1rem * (60px / b.$basicFontSize));
 
         @media (max-width: b.$mediaSmallPC) {
@@ -112,7 +112,7 @@
             backdrop-filter: blur(5px);
             overflow: hidden;
 
-            @media (max-width: b.$mediaMobile) {
+            @media (max-width: b.$mediaSmallPC) {
                 border-radius: 0rem;
                 background: url('/resources/images/hero-bigCard_bg-mobile.png') center / 100% 100%
                     no-repeat;
@@ -199,7 +199,7 @@
     }
 
     .trendy-card:nth-child(2) {
-        padding: 4rem 0 4rem 4rem;
+        padding: 1rem 0 1rem 4rem;
 
         @media (max-width: b.$mediaSmallPC) {
             padding: 0 2rem 4rem;

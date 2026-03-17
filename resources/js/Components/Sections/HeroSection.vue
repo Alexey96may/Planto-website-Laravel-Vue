@@ -124,7 +124,7 @@
                         </div>
 
                         <div class="author__info" aria-label="Author`s info">
-                            <p class="author__name" aria-label="Author`s name">
+                            <p class="author__name truncate" aria-label="Author`s name">
                                 {{ comment.user?.name }}
                             </p>
 
@@ -134,8 +134,11 @@
                         </div>
                     </div>
 
-                    <div class="comment__message" aria-label="Author`s message">
-                        <p>
+                    <div
+                        class="comment__message max-h-12 overflow-hidden"
+                        aria-label="Author`s message"
+                    >
+                        <p class="line-clamp-3">
                             {{ comment.body }}
                         </p>
                     </div>
@@ -298,6 +301,7 @@
 
     .hero__comment {
         aspect-ratio: 41 / 24;
+        width: 80%;
 
         @media (max-width: 1115px) {
             display: none;
