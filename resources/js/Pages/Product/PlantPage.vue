@@ -16,6 +16,7 @@
     import AppImage from '@/Components/UI/AppImage.vue';
     import Modal from '@/Components/UI/Modal.vue';
     import ParallaxCard from '@/Components/UI/ParallaxCard.vue';
+    import ShareButton from '@/Components/UI/ShareButton.vue';
     import WindEffect from '@/Components/UI/WindEffect.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { useFlash } from '@/composables/useFlash';
@@ -163,13 +164,23 @@
         <div class="mx-auto max-w-6xl px-6 py-10 lg:py-16">
             <WindEffect :particleCount="30" :windStrength="1" />
 
-            <Link
-                :href="backUrl"
-                class="group relative z-[3] inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-emerald-500"
-            >
-                <ChevronLeftIcon class="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-                Back to Catalog
-            </Link>
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <Link
+                    :href="backUrl"
+                    class="group relative z-[3] inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-emerald-500"
+                >
+                    <ChevronLeftIcon
+                        class="h-4 w-4 transition-transform group-hover:-translate-x-1"
+                    />
+                    Back to Catalog
+                </Link>
+
+                <ShareButton
+                    variant="full"
+                    :title="product.title"
+                    :text="'Check out this plant: ' + product.title"
+                />
+            </div>
 
             <div
                 class="relative z-[3] mt-8 grid gap-12 rounded-[1rem] border border-emerald-400/50 bg-plant-green px-4 py-8 lg:grid-cols-2 lg:items-center lg:rounded-[2rem] lg:px-6 lg:py-12"
@@ -199,6 +210,7 @@
                         >
                             {{ product.title }}
                         </h1>
+
                         <Link
                             v-if="product.category"
                             :href="route('shop', { category: product?.category?.slug })"
@@ -211,7 +223,7 @@
                         </p>
                     </div>
 
-                    <div class="mb-8 border-t border-zinc-800 pt-8">
+                    <div class="mb-8 border-t border-emerald-900 pt-8">
                         <h3 class="text-sm font-bold uppercase tracking-widest text-zinc-500">
                             Description
                         </h3>

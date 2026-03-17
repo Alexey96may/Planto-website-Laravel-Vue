@@ -2,12 +2,14 @@
     import { Edit3, Trash2 } from 'lucide-vue-next';
 
     import AppRating from '@/Components/UI/AppRating.vue';
+    import ShareButton from '@/Components/UI/ShareButton.vue';
     import { useSound } from '@/composables/useSound';
     import { Comment } from '@/types';
 
     defineProps<{
         comment: Comment;
         isDeleting: boolean;
+        userName: string;
     }>();
 
     const emit = defineEmits<{
@@ -42,6 +44,8 @@
                 >
                     <Trash2 class="h-4 w-4" />
                 </button>
+
+                <ShareButton variant="icon" :title="'Review by ' + userName" :text="comment.body" />
 
                 <button
                     v-if="!comment.is_active"

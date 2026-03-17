@@ -77,7 +77,7 @@
     <div
         class="relative z-0 flex h-[650px] w-full flex-col overflow-hidden rounded-[1rem] border border-emerald-400/20 bg-zinc-900 shadow-2xl xl:h-[550px] xl:rounded-[1.5rem]"
     >
-        <WindEffect :particleCount="30" :windStrength="1" />
+        <WindEffect :particleCount="20" :windStrength="1" />
 
         <div ref="mapContainer" class="absolute inset-0 h-full w-full" />
 

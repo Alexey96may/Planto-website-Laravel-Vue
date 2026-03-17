@@ -8,6 +8,8 @@ class ContactController extends Controller
 {
     public function index()
     {
-        return \Inertia\Inertia::render('Contacts/Index');
+        return \Inertia\Inertia::render('Contacts/Index', [
+            'share_url' => url('/'),
+        ]);
     }
 }

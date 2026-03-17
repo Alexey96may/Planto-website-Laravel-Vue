@@ -4,10 +4,17 @@
     import { Mail, MapPin, Phone, Share2 } from 'lucide-vue-next';
 
     import Mapbox from '@/Components/Shared/Mapbox.vue';
+    import ShareButton from '@/Components/UI/ShareButton.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { SharedData } from '@/types';
 
     type SocialKey = 'link_fb' | 'link_x' | 'link_li';
+
+    type Props = {
+        share_url: string;
+    };
+
+    const { share_url = '' } = defineProps<Props>();
 
     const page = usePage<SharedData>();
 
@@ -42,9 +49,18 @@
             <div class="grid gap-16 xl:grid-cols-12">
                 <div class="relative z-[3] space-y-16 xl:col-span-5">
                     <section>
-                        <h2 class="mb-8 font-serif text-3xl italic opacity-90">
-                            {{ $page.props.settings.site_name }}
-                        </h2>
+                        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+                            <h2 class="font-serif text-4xl italic opacity-90">
+                                {{ $page.props.settings.site_name }}
+                            </h2>
+
+                            <ShareButton
+                                variant="full"
+                                title="Plant Shop - Best Greenery in Town"
+                                text="Check out this amazing plant shop I found! High-quality signals and rare plants."
+                                :url="share_url"
+                            />
+                        </div>
 
                         <div class="space-y-8">
                             <div

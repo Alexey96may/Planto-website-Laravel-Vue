@@ -290,6 +290,7 @@
                                 v-for="comment in myComments"
                                 :key="comment.id"
                                 :comment="comment"
+                                :userName="auth.user.name"
                                 :is-deleting="deletingIds.has(comment.id)"
                                 @edit="openEditModal"
                                 @delete="deleteComment"
