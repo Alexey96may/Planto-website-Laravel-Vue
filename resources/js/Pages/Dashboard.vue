@@ -236,6 +236,7 @@
                                         <Star class="h-4 w-4 fill-current" />
                                     </div>
                                 </div>
+
                                 <input
                                     type="range"
                                     @change="playClick"

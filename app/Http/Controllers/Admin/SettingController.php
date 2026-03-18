@@ -14,7 +14,12 @@ class SettingController extends Controller
         $settings = Setting::pluck('value', 'key')->all();
 
         return Inertia::render('Admin/Settings/Index', [
-            'settings' => $settings
+            'settings' => $settings,
+            'seo' => $this->seo(
+                title: "Admin | Settings",
+                description: 'See or Update store settings.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

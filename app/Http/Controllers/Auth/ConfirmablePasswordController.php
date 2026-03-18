@@ -17,7 +17,13 @@ class ConfirmablePasswordController extends Controller
      */
     public function show(): Response
     {
-        return Inertia::render('Auth/ConfirmPassword');
+        return Inertia::render('Auth/ConfirmPassword',  [
+            'seo' => $this->seo(
+                title: 'Confirm Password',
+                description: 'Confirm your Password.',
+                robots: 'noindex, nofollow'
+            )
+        ]);;
     }
 
     /**

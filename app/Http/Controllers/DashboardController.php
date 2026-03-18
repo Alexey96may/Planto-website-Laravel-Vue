@@ -9,10 +9,16 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $comments = $request->user()->comments()->latest()->get();
+        $user = $request->user();
+        $comments = $user->comments()->latest()->get();
 
         return Inertia::render('Dashboard', [
-            'myComments' => $comments
+            'myComments' => $comments,
+            'seo' => $this->seo(
+                title: "Dashboard: {$user->name}",
+                description: 'Manage your profile, comments, and personal settings.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 }

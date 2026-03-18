@@ -12,13 +12,15 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import WindEffect from '@/Components/UI/WindEffect.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import { FullOrder, OrderStatus } from '@/types';
+    import { FullOrder, OrderStatus, Seo } from '@/types';
     import { formatUSD } from '@/utils/money';
 
     const props = defineProps<{
         orders: FullOrder[];
+        seo: Seo;
     }>();
 
     const getStatusConfig = (status: OrderStatus) => {
@@ -33,7 +35,7 @@
 </script>
 
 <template>
-    <Head title="Order Archive" />
+    <SeoMeta :seo="seo" />
 
     <AuthenticatedLayout>
         <main class="px-6 py-16 lg:py-24">

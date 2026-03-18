@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, ref, watch } from 'vue';
 
-    import { Head, Link, router } from '@inertiajs/vue3';
+    import { Link, router } from '@inertiajs/vue3';
 
     import {
         ChevronLeftIcon,
@@ -13,6 +13,7 @@
     } from '@heroicons/vue/24/outline';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import Modal from '@/Components/UI/Modal.vue';
     import ParallaxCard from '@/Components/UI/ParallaxCard.vue';
@@ -21,7 +22,7 @@
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { useFlash } from '@/composables/useFlash';
     import { useSound } from '@/composables/useSound';
-    import { CartItems, ProductWithCategory } from '@/types';
+    import { CartItems, ProductWithCategory, Seo } from '@/types';
     import { calculateTotal, formatUSD } from '@/utils/money';
 
     defineOptions({ layout: MainLayout });
@@ -30,6 +31,7 @@
         product: ProductWithCategory;
         backUrl: string;
         cart_items: CartItems;
+        seo: Seo;
     }>();
 
     const count = ref(props.cart_items[props.product.id] || 1);
@@ -158,7 +160,7 @@
 </script>
 
 <template>
-    <Head :title="product.title" />
+    <SeoMeta :seo="seo" />
 
     <div class="w-full bg-plant-shop">
         <div class="mx-auto max-w-6xl px-6 py-10 lg:py-16">

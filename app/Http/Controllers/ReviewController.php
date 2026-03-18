@@ -9,19 +9,6 @@ use Inertia\Inertia;
 
 class ReviewController extends Controller
 {
-    public function inфdex()
-    {
-        $limit = SettingService::get('reviews_limit', 10);
-
-        return Inertia::render('Reviews/Index', [
-            'reviews' => Comment::with('user:id,name')
-                ->where('is_active', true)
-                ->latest()
-                ->paginate($limit),
-            'averageRating' => Comment::where('is_active', true)->avg('rating')
-        ]);
-    }
-
     public function index(Request $request)
     {
         $limit = SettingService::get('reviews_limit', 10);
@@ -44,7 +31,13 @@ class ReviewController extends Controller
             
             'filters' => [
                 'sort' => $sort
-            ]
+            ],
+            
+            'seo' => $this->seo(
+                title: 'Customer Reviews | Planto Community',
+                description: 'See what our customers say about their cyber-plants. Read real stories about our quality and worldwide delivery.',
+                keywords: 'planto reviews, customer feedback, plant store quality'
+            )
         ]);
     }
 }

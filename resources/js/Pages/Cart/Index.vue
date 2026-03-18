@@ -6,11 +6,12 @@
     import { ShoppingCartIcon } from '@heroicons/vue/24/outline';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { useFlash } from '@/composables/useFlash';
     import { useSound } from '@/composables/useSound';
-    import { CartData, CartItem } from '@/types';
+    import { CartData, CartItem, Seo } from '@/types';
     import { debounce } from '@/utils/helpers';
     import { formatUSD } from '@/utils/money';
 
@@ -18,6 +19,7 @@
 
     const props = defineProps<{
         cart: CartData;
+        seo: Seo;
     }>();
 
     defineOptions({
@@ -96,7 +98,7 @@
 </script>
 
 <template>
-    <Head title="Your Cart" />
+    <SeoMeta :seo="seo" />
 
     <div class="mx-auto max-w-5xl bg-plant-shop px-6 py-16 lg:py-24">
         <header class="mb-12">

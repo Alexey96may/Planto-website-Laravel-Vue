@@ -24,6 +24,11 @@ class NewPasswordController extends Controller
         return Inertia::render('Auth/ResetPassword', [
             'email' => $request->email,
             'token' => $request->route('token'),
+            'seo' => $this->seo(
+                title: 'Create New Password',
+                description: 'Set a new secure password for your Planto account.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

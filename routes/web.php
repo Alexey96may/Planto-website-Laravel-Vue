@@ -35,10 +35,45 @@ Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.u
 
 Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
+
+Route::get('/404', function () {
+    return inertia('Error', [
+    'status' => 404,
+    'seo' => $this->seo(
+        title: '404 - Page Not Found',
+        description: 'Oops! The plant you are looking for has been moved or doesn\'t exist.',
+        robots: 'noindex, follow'
+    )
+]);
+});
+
+Route::get('/terms', function () {
+    return Inertia::render('Terms', [
+        'seo' => $this->seo(
+            title: 'Terms of Service & Privacy Policy',
+            description: 'Read our terms of service, privacy policy, and shipping conditions.'
+        )
+    ]);
+})->name('terms');
+
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+
+Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.user');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::patch('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -74,30 +109,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::resource('categories', CategoryController::class)->except(['show', 'create']);
 });
-
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
-
-Route::get('/404', function () {
-    return inertia('Error', ['status' => 404]);
-});
-
-Route::get('/terms', function () {
-    return Inertia::render('Terms');
-})->name('terms');
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.user');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-
-    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::patch('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-});
-
-Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
-
-Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 
 require __DIR__.'/auth.php';

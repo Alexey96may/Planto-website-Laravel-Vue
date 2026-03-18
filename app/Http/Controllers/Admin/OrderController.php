@@ -13,7 +13,12 @@ class OrderController extends Controller
     public function index()
     {
         return Inertia::render('Admin/Orders/Index', [
-            'orders' => Order::with('user')->latest()->get()
+            'orders' => Order::with('user')->latest()->get(),
+            'seo' => $this->seo(
+                title: "Admin | Orders",
+                description: 'See all the orders of the store.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 
@@ -22,7 +27,12 @@ class OrderController extends Controller
         $order->load('items.product');
 
         return Inertia::render('Admin/Orders/Show', [
-            'order' => $order
+            'order' => $order,
+            'seo' => $this->seo(
+                title: "Editing: Order #{$order->id} by {$order->customer_name}",
+                description: 'See or update order status.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

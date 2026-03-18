@@ -19,7 +19,12 @@ class NavigationController extends Controller
                 ->whereNull('parent_id') 
                 ->orderBy('location')
                 ->orderBy('order')
-                ->get()
+                ->get(),
+            'seo' => $this->seo(
+                title: "Admin | Navigation",
+                description: 'See and change the navigation system.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 
@@ -30,6 +35,11 @@ class NavigationController extends Controller
                 ->orderBy('title')
                 ->get(['id', 'title', 'location']),
             'categories' => Category::all(['id', 'title']),
+            'seo' => $this->seo(
+                title: "Create Navigation item",
+                description: 'Create navigation details.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 
@@ -61,6 +71,11 @@ class NavigationController extends Controller
                 ->orderBy('title')
                 ->get(['id', 'title', 'location']),
             'categories' => Category::all(['id', 'title']),
+            'seo' => $this->seo(
+                title: "Editing: {$navigation->title}",
+                description: 'Update title details.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

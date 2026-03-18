@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Services\CategoryService;
 use App\Services\CartService;
+use Illuminate\Support\Str;
 use App\Services\SettingService;
 
 class ShopController extends Controller
@@ -56,6 +57,10 @@ class ShopController extends Controller
             'filters' => array_merge($request->only(['category', 'search', 'min_price', 'max_price', 'sort']), [
                 'in_stock' => $inStockOnly ? 'true' : 'false'
             ]),
+            'seo' => $this->seo(
+                title: 'Shop All Plants',
+                description: 'Browse our exclusive collection of indoor plants. From rare monsteras to tech-inspired succulents, find the perfect green companion.',
+            )
         ]);
     }
 
@@ -66,7 +71,13 @@ class ShopController extends Controller
         return Inertia::render('Product/PlantPage', [
             'product' => $product,
             'cart_items' => CartService::getIdsWithQuantities(),
-            'backUrl' => route('shop', ['page' => request('page', 1)])
+            'seo' => $product->getSeoData(),
+            'backUrl' => route('shop', ['page' => request('page', 1)]),
+            'seo' => $this->seo(
+                title: "Buy {$product->name}",
+                description: "Get your {$product->name} today. " . Str::limit($product->description, 100),
+                image: $product->image_url
+            )
         ]);
     }
 }

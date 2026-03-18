@@ -21,7 +21,12 @@ class AdminProductController extends Controller
             ->paginate($perPage);
 
         return Inertia::render('Admin/Products/Index', [
-            'products' => $products
+            'products' => $products, 
+            'seo' => $this->seo(
+                title: "Admin | All the products",
+                description: 'See all the products of the store.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 
@@ -30,7 +35,12 @@ class AdminProductController extends Controller
         $categories = Category::all();
 
         return Inertia::render('Admin/Products/Create', [
-            'categories' => $categories
+            'categories' => $categories,
+            'seo' => $this->seo(
+                title: "Create Product",
+                description: 'Create product details and stock.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 
@@ -64,7 +74,12 @@ class AdminProductController extends Controller
         return Inertia::render('Admin/Products/Edit', [
             'product' => $product,
             'categories' => $categories,
-            'page' => request('page')
+            'page' => request('page'),
+            'seo' => $this->seo(
+                title: "Editing: {$product->title}",
+                description: 'Update product details and stock.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

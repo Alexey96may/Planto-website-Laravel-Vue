@@ -26,6 +26,11 @@ class CheckoutController extends Controller
         return Inertia::render('Checkout/Index', [
             'cartItems' => $validItems,
             'total' => $totalSum,
+            'seo' => $this->seo(
+                title: 'Checkout | Secure Payment',
+                description: 'Complete your purchase securely at Planto Store.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 }

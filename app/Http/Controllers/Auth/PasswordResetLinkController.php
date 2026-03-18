@@ -19,6 +19,11 @@ class PasswordResetLinkController extends Controller
     {
         return Inertia::render('Auth/ForgotPassword', [
             'status' => session('status'),
+            'seo' => $this->seo(
+                title: 'Reset Password',
+                description: 'Enter your email address to receive a password reset link.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

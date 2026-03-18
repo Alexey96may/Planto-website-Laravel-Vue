@@ -14,7 +14,12 @@ class CommentController extends Controller
         return Inertia::render('Admin/Comments/Index', [
             'comments' => Comment::with('user:id,name,email,avatar')
                 ->latest()
-                ->get()
+                ->get(),
+            'seo' => $this->seo(
+                title: "Admin | Comments",
+                description: 'See or update comment status.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

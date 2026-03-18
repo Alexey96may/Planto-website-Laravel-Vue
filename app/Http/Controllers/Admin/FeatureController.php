@@ -14,7 +14,12 @@ class FeatureController extends Controller
     public function index()
     {
         return Inertia::render('Admin/Features/Index', [
-            'features' => Feature::orderBy('order')->get()
+            'features' => Feature::orderBy('order')->get(),
+            'seo' => $this->seo(
+                title: "Admin | Features",
+                description: 'See or update store features.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 
@@ -86,7 +91,12 @@ class FeatureController extends Controller
     public function edit(Feature $feature)
     {
         return Inertia::render('Admin/Features/Edit', [
-            'feature' => $feature
+            'feature' => $feature,
+            'seo' => $this->seo(
+                title: "Editing: '{$feature->title}'",
+                description: 'Update feature details.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 }

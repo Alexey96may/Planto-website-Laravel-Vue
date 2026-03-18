@@ -21,6 +21,11 @@ class AuthenticatedSessionController extends Controller
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
+            'seo' => $this->seo(
+                title: 'Login to Planto',
+                description: 'Secure access to your account.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

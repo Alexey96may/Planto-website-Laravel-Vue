@@ -20,7 +20,13 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('Auth/Register', [
+            'seo' => $this->seo(
+                title: 'Create Account', 
+                description: 'Join the Planto community. Create your account to start your cyber-gardening journey.',
+                robots: 'noindex, nofollow'
+            )
+        ]);
     }
 
     /**

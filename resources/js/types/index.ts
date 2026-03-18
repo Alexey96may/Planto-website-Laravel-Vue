@@ -23,6 +23,15 @@ export interface PaginationLink {
     page: number | null;
 }
 
+export interface Seo {
+    title: string;
+    description: string;
+    keywords?: string;
+    robots?: string;
+    image?: string;
+    canonical: string;
+}
+
 export interface PaginatedResponse<T> {
     current_page: number;
     data: T[];

@@ -17,6 +17,11 @@ class AdminController extends Controller
             'stats' => [
                 'products_count' => Product::count(),
                 'users_count' => User::count(),
+                'seo' => $this->seo(
+                    title: 'Dashboard | Admin',
+                    description: 'Store overview and statistics.',
+                    robots: 'noindex, nofollow'
+                )
             ]
         ]);
     }

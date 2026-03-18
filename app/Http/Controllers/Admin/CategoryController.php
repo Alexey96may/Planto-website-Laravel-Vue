@@ -14,7 +14,13 @@ class CategoryController extends Controller
     public function index()
     {
         return Inertia::render('Admin/Categories/Index', [
-            'categories' => CategoryService::getAll()
+            'categories' => CategoryService::getAll(),
+            'seo' => $this->seo(
+                title: "Admin | Categories",
+                description: 'See and change categories.',
+                robots: 'noindex, nofollow'
+            )
+            
         ]);
     }
 

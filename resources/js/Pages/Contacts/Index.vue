@@ -1,17 +1,19 @@
 <script setup lang="ts">
-    import { usePage } from '@inertiajs/vue3';
+    import { Head, usePage } from '@inertiajs/vue3';
 
     import { Mail, MapPin, Phone, Share2 } from 'lucide-vue-next';
 
     import Mapbox from '@/Components/Shared/Mapbox.vue';
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import ShareButton from '@/Components/UI/ShareButton.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
-    import { SharedData } from '@/types';
+    import { Seo, SharedData } from '@/types';
 
     type SocialKey = 'link_fb' | 'link_x' | 'link_li';
 
     type Props = {
         share_url: string;
+        seo: Seo;
     };
 
     const { share_url = '' } = defineProps<Props>();
@@ -29,13 +31,15 @@
 </script>
 
 <template>
+    <SeoMeta :seo="seo" />
+
     <div
         class="min-h-screen bg-[#0b120c] px-6 py-20 font-sans text-white selection:bg-emerald-500/30 lg:py-32"
     >
         <div class="mx-auto max-w-6xl">
             <header class="relative z-[3] mb-20">
                 <h1
-                    class="font-serif text-6xl font-light italic tracking-tight md:text-8xl lg:text-9xl"
+                    class="font-serif text-2xl font-light italic tracking-tight md:text-8xl lg:text-4xl"
                 >
                     Contact
                     <span

@@ -4,13 +4,20 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <meta inertia name="robots" content="index, follow">
+        <meta name="author" content="Planto">
 
-        <!-- Scripts -->
+        <meta inertia property="og:type" content="website">
+        <meta property="og:site_name" content="Cyber Plant Store">
+        <meta property="og:image" content="{{ asset('images/og-default.png') }}">
+
+        <meta name="twitter:card" content="summary_large_image">
+
+        <title inertia>{{ config('app.name', 'Planto') }}</title>
+        <meta inertia name="description" content="Welcome to Planto Cyber Store">
+
         @routes
         @vite(["resources/scss/app.scss", 'resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead

@@ -14,7 +14,12 @@ class AdminUserController extends Controller
         return Inertia::render('Admin/Users/Index', [
             'users' => User::select('id', 'name', 'email', 'role', 'created_at', 'avatar')
                            ->latest()
-                           ->get()
+                           ->get(),
+            'seo' => $this->seo(
+                title: "Admin | Users",
+                description: 'See store users.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

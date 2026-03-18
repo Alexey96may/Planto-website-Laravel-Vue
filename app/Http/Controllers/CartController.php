@@ -11,7 +11,12 @@ class CartController extends Controller
     public function index()
     {
         return \Inertia\Inertia::render('Cart/Index', [
-            'cart' => CartService::getFullCart()
+            'cart' => CartService::getFullCart(),
+            'seo' => $this->seo(
+                title: 'Your Cart',
+                description: 'Review your selected plants and proceed to secure checkout.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

@@ -16,7 +16,12 @@ class OrderController extends Controller
         $orders = $user->orders()->with('items.product')->latest()->get();
 
         return Inertia::render('Orders/UserOrders', [
-            'orders' => $orders
+            'orders' => $orders,
+            'seo' => $this->seo(
+                title: 'Order History',
+                description: 'Track your plant deliveries and view past purchases.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
 

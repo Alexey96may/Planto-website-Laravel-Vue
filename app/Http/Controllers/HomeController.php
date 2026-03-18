@@ -33,6 +33,10 @@ class HomeController extends Controller
             'comments'     => CommentService::getLatestActive(),
             'features'     => FeatureService::getActive(),
             'status'         => 'Today we work until 10:00 pm', //todo
+            'seo' => $this->seo(
+                title: 'Planto | Premium Plant Store',
+                description: 'Elevate your space with rare and exotic plants. Worldwide shipping, expert care guides, and unique digital-era greenery for your home.',
+            )
         ]);
     }
 }

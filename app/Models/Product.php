@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class Product extends Model
@@ -85,5 +86,15 @@ class Product extends Model
 
         return $query->orderByDesc('sales_count')
                     ->orderByDesc('created_at');
+    }
+
+    public function getSeoData()
+    {
+        return [
+            'title' => $this->title,
+            'description' => Str::limit(strip_tags($this->description), 150),
+            'keywords' => "plants, buy {$this->title}, Planto Shop",
+            'image' => $this->image_url ?? asset('images/og-default.png'),
+        ];
     }
 }
