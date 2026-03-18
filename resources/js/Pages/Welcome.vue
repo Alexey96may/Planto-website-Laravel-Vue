@@ -8,6 +8,7 @@
     import Review from '@/Components/Sections/ReviewSection.vue';
     import Top from '@/Components/Sections/TopSection.vue';
     import Trendy from '@/Components/Sections/TrendySection.vue';
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { useCart } from '@/composables/useCart';
     import { useScrollReveal } from '@/composables/useScrollReveal';
@@ -16,6 +17,7 @@
         Product,
         ProductWithCategory,
         Review as ReviewInterface,
+        Seo,
         SharedData,
     } from '@/types';
 
@@ -26,6 +28,7 @@
         status: string;
         comments: ReviewInterface[];
         features: Feature[];
+        seo?: Seo;
     }
 
     defineSlots<{
@@ -54,7 +57,7 @@
 </script>
 
 <template>
-    <Head title="Main" />
+    <SeoMeta :seo="props.seo" />
 
     <MainLayout :full="true">
         <template #hero>

@@ -16,14 +16,16 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import ImageUploader from '@/Components/UI/ImageUploader.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
-    import { Category, ProductForm } from '@/types';
+    import { Category, ProductForm, Seo } from '@/types';
 
     const uploader = ref<InstanceType<typeof ImageUploader> | null>(null);
 
     defineProps<{
         categories: Category[];
+        seo?: Seo;
     }>();
 
     const form = useForm<ProductForm>({
@@ -51,9 +53,9 @@
 </script>
 
 <template>
-    <AdminLayout>
-        <Head title="Initialize New Unit" />
+    <SeoMeta :seo="seo" />
 
+    <AdminLayout>
         <div class="mx-auto max-w-4xl space-y-8">
             <div class="flex flex-wrap items-center justify-between gap-6 px-2">
                 <div class="space-y-1">

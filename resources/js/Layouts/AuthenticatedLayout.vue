@@ -1,13 +1,14 @@
 <script setup lang="ts">
     import { ref, watch } from 'vue';
 
-    import { Link, usePage } from '@inertiajs/vue3';
+    import { Link } from '@inertiajs/vue3';
 
     import IconLogo from 'img/icons/logo.svg?component';
     import { ChevronDownIcon } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
     import Footer from '@/Components/Sections/Footer.vue';
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppToast from '@/Components/Shared/Toast.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import Dropdown from '@/Components/UI/Dropdown.vue';
@@ -27,6 +28,8 @@
 </script>
 
 <template>
+    <SeoMeta />
+
     <div
         class="font-sans text-zinc-300 antialiased selection:bg-[#c5d86d] selection:text-[#1a1f16]"
     >

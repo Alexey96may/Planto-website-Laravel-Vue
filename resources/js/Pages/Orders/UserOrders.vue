@@ -20,7 +20,7 @@
 
     const props = defineProps<{
         orders: FullOrder[];
-        seo: Seo;
+        seo?: Seo;
     }>();
 
     const getStatusConfig = (status: OrderStatus) => {

@@ -5,12 +5,14 @@
 
     import { Check, Hash, LayoutList, Pencil, Plus, RefreshCcw, Trash2, X } from 'lucide-vue-next';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { useFlash } from '@/composables/useFlash';
-    import { Category, CategoryForm } from '@/types';
+    import { Category, CategoryForm, Seo } from '@/types';
 
     const props = defineProps<{
         categories: Category[];
+        seo?: Seo;
     }>();
 
     const { notifyWithUndo } = useFlash();
@@ -76,9 +78,9 @@
 </script>
 
 <template>
-    <AdminLayout>
-        <Head title="Categories" />
+    <SeoMeta :seo="props.seo" />
 
+    <AdminLayout>
         <div class="mx-auto max-w-5xl space-y-6">
             <div class="flex items-center justify-between px-2">
                 <h1 class="text-3xl font-black uppercase italic tracking-tighter text-white">

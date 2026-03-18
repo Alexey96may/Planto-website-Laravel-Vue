@@ -14,15 +14,17 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import ImageUploader from '@/Components/UI/ImageUploader.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
-    import { Feature, FeatureForm } from '@/types';
+    import { Feature, FeatureForm, Seo } from '@/types';
 
     defineOptions({
         layout: AdminLayout,
     });
 
     const props = defineProps<{
+        seo?: Seo;
         feature: Feature;
     }>();
 
@@ -51,7 +53,7 @@
 </script>
 
 <template>
-    <Head :title="'Edit ' + feature.title" />
+    <SeoMeta :seo="props.seo" />
 
     <div class="mx-auto max-w-3xl">
         <div class="mb-8 flex flex-col gap-4 px-2">

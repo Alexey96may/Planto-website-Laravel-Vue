@@ -51,7 +51,15 @@ class HandleInertiaRequests extends Middleware
                 'message' => fn() => $request->session()->get('message'),
                 'warning' => fn() => $request->session()->get('warning'),
             ],
+
             'pending_comments_count' => fn() => \App\Models\Comment::where('is_approved', false)->count(),
+
+            'seo' => fn() => [
+                'title'       => 'Planto',
+                'description' => 'Great plant store',
+                'keywords'    => 'plants, green, shop',
+                'robots'      => 'index, follow',
+            ]
         ];
     }
 }

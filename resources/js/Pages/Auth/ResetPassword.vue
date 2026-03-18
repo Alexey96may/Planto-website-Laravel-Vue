@@ -3,11 +3,13 @@
 
     import { KeyIcon } from '@heroicons/vue/24/outline';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import InputError from '@/Components/UI/InputError.vue';
     import InputLabel from '@/Components/UI/InputLabel.vue';
     import PrimaryButton from '@/Components/UI/PrimaryButton.vue';
     import TextInput from '@/Components/UI/TextInput.vue';
     import GuestLayout from '@/Layouts/GuestLayout.vue';
+    import { Seo } from '@/types';
 
     interface ResetPasswordForm {
         token: string;
@@ -19,6 +21,7 @@
     const props = defineProps<{
         email: string;
         token: string;
+        seo?: Seo;
     }>();
 
     const form = useForm<ResetPasswordForm>({
@@ -36,9 +39,9 @@
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Reset Password" />
+    <SeoMeta :seo="props.seo" />
 
+    <GuestLayout>
         <div class="mb-8 text-center">
             <div
                 class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500"

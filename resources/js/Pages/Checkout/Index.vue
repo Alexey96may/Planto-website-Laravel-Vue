@@ -12,13 +12,15 @@
         User,
     } from 'lucide-vue-next';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import GuestLayout from '@/Layouts/GuestLayout.vue';
-    import { CartItem, CheckoutForm, SharedData } from '@/types';
+    import { CartItem, CheckoutForm, Seo, SharedData } from '@/types';
 
     const props = defineProps<{
         cartItems: CartItem[];
         total: number;
+        seo?: Seo;
     }>();
 
     const form = useForm<CheckoutForm>({
@@ -43,9 +45,9 @@
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Secure Checkout" />
+    <SeoMeta :seo="props.seo" />
 
+    <GuestLayout>
         <div class="mx-auto max-w-7xl px-2 py-6 md:px-4 md:py-12">
             <div class="mb-12 text-center">
                 <h1 class="text-4xl font-black uppercase italic tracking-tighter text-white">

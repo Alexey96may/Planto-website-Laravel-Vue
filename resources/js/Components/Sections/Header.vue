@@ -40,8 +40,8 @@
 
             <div class="header__socials relative z-20" aria-label="Socials field">
                 <Link
-                    :href="$page.props.auth.user ? route('dashboard') : route('register')"
-                    :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Register'"
+                    :href="$page.props.auth?.user ? route('dashboard') : route('register')"
+                    :aria-label="$page.props.auth?.user ? 'To Dashboard' : 'To Register'"
                     class="!hidden font-medium text-blue-600 hover:underline sm:!block"
                 >
                     <IconUser class="header__social-img" aria-label="Profile" />

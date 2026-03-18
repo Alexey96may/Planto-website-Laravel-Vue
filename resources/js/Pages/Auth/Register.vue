@@ -3,11 +3,17 @@
 
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import InputError from '@/Components/UI/InputError.vue';
     import InputLabel from '@/Components/UI/InputLabel.vue';
     import PrimaryButton from '@/Components/UI/PrimaryButton.vue';
     import TextInput from '@/Components/UI/TextInput.vue';
     import GuestLayout from '@/Layouts/GuestLayout.vue';
+    import { Seo } from '@/types';
+
+    interface Props {
+        seo?: Seo;
+    }
 
     interface RegisterForm {
         name: string;
@@ -15,6 +21,8 @@
         password: string;
         password_confirmation: string;
     }
+
+    const props = defineProps<Props>();
 
     const form = useForm<RegisterForm>({
         name: '',
@@ -31,9 +39,8 @@
 </script>
 
 <template>
+    <SeoMeta :seo="props.seo" />
     <GuestLayout>
-        <Head title="Join the Garden" />
-
         <div class="mb-8 text-center">
             <h2 class="text-2xl font-bold text-zinc-100 lg:text-3xl">Create Account</h2>
             <p class="mt-2 text-sm text-zinc-500">Join our community of plant lovers 🌿</p>

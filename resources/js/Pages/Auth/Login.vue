@@ -3,12 +3,14 @@
 
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import Checkbox from '@/Components/UI/Checkbox.vue';
     import InputError from '@/Components/UI/InputError.vue';
     import InputLabel from '@/Components/UI/InputLabel.vue';
     import PrimaryButton from '@/Components/UI/PrimaryButton.vue';
     import TextInput from '@/Components/UI/TextInput.vue';
     import GuestLayout from '@/Layouts/GuestLayout.vue';
+    import { Seo } from '@/types';
 
     interface ConfirmForm {
         email: string;
@@ -16,16 +18,16 @@
         remember: boolean;
     }
 
-    const props = withDefaults(
-        defineProps<{
-            canResetPassword?: boolean;
-            status?: string;
-        }>(),
-        {
-            canResetPassword: false,
-            status: '',
-        },
-    );
+    type Props = {
+        canResetPassword?: boolean;
+        seo?: Seo;
+        status?: string;
+    };
+
+    const props = withDefaults(defineProps<Props>(), {
+        canResetPassword: false,
+        status: '',
+    });
 
     const form = useForm<ConfirmForm>({
         email: '',
@@ -41,9 +43,9 @@
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Log in" />
+    <SeoMeta :seo="props.seo" />
 
+    <GuestLayout>
         <div class="mb-8 text-center">
             <h2 class="text-2xl font-bold text-zinc-100">Welcome back</h2>
             <p class="mt-2 text-sm text-zinc-500">Please enter your details to sign in</p>

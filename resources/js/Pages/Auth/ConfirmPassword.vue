@@ -1,11 +1,19 @@
 <script setup lang="ts">
     import { Head, Link, useForm } from '@inertiajs/vue3';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import InputError from '@/Components/UI/InputError.vue';
     import InputLabel from '@/Components/UI/InputLabel.vue';
     import PrimaryButton from '@/Components/UI/PrimaryButton.vue';
     import TextInput from '@/Components/UI/TextInput.vue';
     import GuestLayout from '@/Layouts/GuestLayout.vue';
+    import { Seo } from '@/types';
+
+    interface Props {
+        seo?: Seo;
+    }
+
+    const props = defineProps<Props>();
 
     interface PasswordConfirmForm {
         password: string;
@@ -27,9 +35,9 @@
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Secure Area" />
+    <SeoMeta :seo="props.seo" />
 
+    <GuestLayout>
         <div class="mb-8 text-center">
             <div
                 class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500"

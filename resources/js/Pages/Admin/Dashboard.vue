@@ -13,7 +13,9 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { Seo } from '@/types';
 
     interface Stats {
         products_count: number;
@@ -22,6 +24,7 @@
 
     const props = defineProps<{
         stats: Stats;
+        seo?: Seo;
     }>();
 
     const form = useForm({ subject: '', message: '' });
@@ -82,9 +85,9 @@
 </script>
 
 <template>
-    <AdminLayout>
-        <Head title="Dashboard" />
+    <SeoMeta :seo="props.seo" />
 
+    <AdminLayout>
         <div class="space-y-10">
             <div
                 class="relative overflow-hidden rounded-[2rem] border border-white/5 bg-gradient-to-r from-[#1a2315] to-[#242b1f] p-8 shadow-2xl"

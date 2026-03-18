@@ -13,9 +13,9 @@ class CartController extends Controller
         return \Inertia\Inertia::render('Cart/Index', [
             'cart' => CartService::getFullCart(),
             'seo' => $this->seo(
-                title: 'Your Cart',
-                description: 'Review your selected plants and proceed to secure checkout.',
-                robots: 'noindex, nofollow'
+                title: 'Your Shopping Cart',
+                description: 'Ready to checkout? Review your plants and proceed to secure delivery.',
+                robots: 'noindex, nofollow' 
             )
         ]);
     }

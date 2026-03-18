@@ -4,9 +4,10 @@
     import { ArrowUpRight, Clock, ShoppingBag } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
-    import { OrderStatus, OrderWithUser } from '@/types';
+    import { OrderStatus, OrderWithUser, Seo } from '@/types';
     import { formatUSD } from '@/utils/money';
 
     defineOptions({
@@ -15,6 +16,7 @@
 
     const props = defineProps<{
         orders: OrderWithUser[];
+        seo?: Seo;
     }>();
 
     const getStatusStyles = (status: OrderStatus): string => {
@@ -32,6 +34,8 @@
 </script>
 
 <template>
+    <SeoMeta :seo="props.seo" />
+
     <div class="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-3">
         <transition-group
             enter-active-class="transition duration-500 ease-out"

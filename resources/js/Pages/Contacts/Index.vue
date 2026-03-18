@@ -13,7 +13,7 @@
 
     type Props = {
         share_url: string;
-        seo: Seo;
+        seo?: Seo;
     };
 
     const { share_url = '' } = defineProps<Props>();

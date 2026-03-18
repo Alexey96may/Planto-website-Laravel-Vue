@@ -14,10 +14,11 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { useFlash } from '@/composables/useFlash';
-    import { Feature } from '@/types';
+    import { Feature, Seo } from '@/types';
 
     defineOptions({
         layout: AdminLayout,
@@ -25,6 +26,7 @@
 
     const props = defineProps<{
         features: Feature[];
+        seo?: Seo;
     }>();
 
     const { notifyWithUndo } = useFlash();
@@ -58,7 +60,7 @@
 </script>
 
 <template>
-    <Head title="Slider Cards" />
+    <SeoMeta :seo="props.seo" />
 
     <div class="mx-auto max-w-6xl space-y-6">
         <div

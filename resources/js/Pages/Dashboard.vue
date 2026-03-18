@@ -10,16 +10,18 @@
     import CommentCard from '@/Components/Shared/CommentCard.vue';
     import EditCommentModal from '@/Components/Shared/EditCommentModal.vue';
     import ProfileSettings from '@/Components/Shared/ProfileSettings.vue';
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import WindEffect from '@/Components/UI/WindEffect.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { useCommentActions } from '@/composables/useCommentActions';
     import { useFlash } from '@/composables/useFlash';
     import { useSound } from '@/composables/useSound';
-    import { AuthProps, Comment, CommentForm, UserForm } from '@/types';
+    import { AuthProps, Comment, CommentForm, Seo, UserForm } from '@/types';
 
     const props = defineProps<{
         myComments: Comment[];
         auth: AuthProps;
+        seo?: Seo;
     }>();
 
     const {
@@ -116,7 +118,7 @@
 </script>
 
 <template>
-    <Head title="System Dashboard" />
+    <SeoMeta :seo="props.seo" />
 
     <AuthenticatedLayout>
         <div

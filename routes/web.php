@@ -20,12 +20,12 @@ use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\NavigationController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\Admin\CategoryController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
-
 Route::get('/shop/plant-{product}', [ShopController::class, 'show'])->name('shop.show');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -38,25 +38,9 @@ Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsle
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
 
-Route::get('/404', function () {
-    return inertia('Error', [
-    'status' => 404,
-    'seo' => $this->seo(
-        title: '404 - Page Not Found',
-        description: 'Oops! The plant you are looking for has been moved or doesn\'t exist.',
-        robots: 'noindex, follow'
-    )
-]);
-});
+Route::get('/404', [StaticPageController::class, 'notFound'])->name('error.404');
 
-Route::get('/terms', function () {
-    return Inertia::render('Terms', [
-        'seo' => $this->seo(
-            title: 'Terms of Service & Privacy Policy',
-            description: 'Read our terms of service, privacy policy, and shipping conditions.'
-        )
-    ]);
-})->name('terms');
+Route::get('/terms', [StaticPageController::class, 'terms'])->name('terms');
 
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 
@@ -111,3 +95,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 
 require __DIR__.'/auth.php';
+
+Route::fallback([StaticPageController::class, 'notFound']);

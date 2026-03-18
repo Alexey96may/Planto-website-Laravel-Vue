@@ -1,7 +1,9 @@
 <script setup lang="ts">
     import { Head } from '@inertiajs/vue3';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import { Seo } from '@/types';
 
     import DeleteUserForm from './Partials/DeleteUserForm.vue';
     import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
@@ -10,11 +12,12 @@
     const props = defineProps<{
         mustVerifyEmail?: boolean;
         status?: string;
+        seo?: Seo;
     }>();
 </script>
 
 <template>
-    <Head title="Account Settings" />
+    <SeoMeta :seo="props.seo" />
 
     <AuthenticatedLayout>
         <template #header> Settings </template>

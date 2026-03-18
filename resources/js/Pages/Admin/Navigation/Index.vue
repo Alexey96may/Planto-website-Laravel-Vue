@@ -17,14 +17,16 @@
     import draggable from 'vuedraggable';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { useFlash } from '@/composables/useFlash';
-    import { NavigationItem } from '@/types';
+    import { NavigationItem, Seo } from '@/types';
 
     defineOptions({ layout: AdminLayout });
 
     const props = defineProps<{
         menuItems: NavigationItem[];
+        seo?: Seo;
     }>();
 
     const list = ref([...props.menuItems]);
@@ -95,7 +97,7 @@
 </script>
 
 <template>
-    <Head title="Menu Management" />
+    <SeoMeta :seo="props.seo" />
 
     <div class="mx-auto max-w-5xl space-y-6">
         <div

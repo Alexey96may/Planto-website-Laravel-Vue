@@ -10,6 +10,7 @@
     import Pagination from '@/Components/Shared/Pagination.vue';
     import PriceFilter from '@/Components/Shared/PriceFilter.vue';
     import SearchInput from '@/Components/Shared/SearchFilter.vue';
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import SortFilter from '@/Components/Shared/SortFilter.vue';
     import WindEffect from '@/Components/UI/WindEffect.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
@@ -20,6 +21,7 @@
         PaginatedResponse,
         Product,
         ProductFilters,
+        Seo,
         SharedData,
         SortOption,
     } from '@/types';
@@ -35,6 +37,7 @@
         currentCategory: string | null;
         filters: ProductFilters;
         loading?: boolean;
+        seo?: Seo;
     }>();
 
     const page = usePage<SharedData>();
@@ -132,7 +135,7 @@
 </script>
 
 <template>
-    <Head title="Plant Catalog" />
+    <SeoMeta :seo="props.seo" />
 
     <div class="w-full bg-plant-shop py-16 lg:py-24">
         <div class="mx-auto max-w-7xl px-4">

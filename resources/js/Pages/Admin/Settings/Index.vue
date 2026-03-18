@@ -15,11 +15,13 @@
         Video,
     } from 'lucide-vue-next';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
-    import { Settings, SettingsForm } from '@/types';
+    import { Seo, Settings, SettingsForm } from '@/types';
 
     const props = defineProps<{
         settings: Settings;
+        seo?: Seo;
     }>();
 
     const activeTab = ref('general');
@@ -95,9 +97,9 @@
 </script>
 
 <template>
-    <AdminLayout>
-        <Head title="Engine Settings" />
+    <SeoMeta :seo="props.seo" />
 
+    <AdminLayout>
         <div class="mx-auto max-w-6xl">
             <div class="flex flex-col gap-8 2xl:flex-row">
                 <aside class="flex-shrink-0 2xl:w-64">

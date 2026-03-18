@@ -16,14 +16,16 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
-    import { FullOrder, OrderStatus } from '@/types';
+    import { FullOrder, OrderStatus, Seo } from '@/types';
     import { calculateTotal, formatUSD } from '@/utils/money';
 
     defineOptions({ layout: AdminLayout });
 
     const props = defineProps<{
         order: FullOrder;
+        seo?: Seo;
     }>();
 
     const form = useForm<{ status: OrderStatus }>({
@@ -54,7 +56,7 @@
 </script>
 
 <template>
-    <Head :title="'Order #' + order.id" />
+    <SeoMeta :seo="props.seo" />
 
     <div class="mx-auto max-w-5xl space-y-8">
         <div class="flex flex-col flex-wrap justify-between gap-4 px-2 md:flex-row md:items-center">

@@ -19,7 +19,7 @@
 
     const props = defineProps<{
         cart: CartData;
-        seo: Seo;
+        seo?: Seo;
     }>();
 
     defineOptions({

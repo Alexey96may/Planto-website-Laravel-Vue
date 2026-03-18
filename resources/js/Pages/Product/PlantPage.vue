@@ -31,7 +31,7 @@
         product: ProductWithCategory;
         backUrl: string;
         cart_items: CartItems;
-        seo: Seo;
+        seo?: Seo;
     }>();
 
     const count = ref(props.cart_items[props.product.id] || 1);

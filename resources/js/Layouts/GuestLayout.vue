@@ -4,6 +4,7 @@
     import { HomeIcon } from '@heroicons/vue/24/outline';
     import IconLogo from 'img/icons/logo.svg?component';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppToast from '@/Components/Shared/Toast.vue';
 
     defineSlots<{
@@ -12,6 +13,8 @@
 </script>
 
 <template>
+    <SeoMeta />
+
     <div
         class="relative flex min-h-screen flex-col items-center justify-center bg-plant-shop px-6 py-12 selection:bg-emerald-500/30"
     >

@@ -6,13 +6,16 @@
     import { ArrowLeftStartOnRectangleIcon, PaperAirplaneIcon } from '@heroicons/vue/24/outline';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import PrimaryButton from '@/Components/UI/PrimaryButton.vue';
     import GuestLayout from '@/Layouts/GuestLayout.vue';
+    import { Seo } from '@/types';
 
     type VerificationStatus = 'verification-link-sent' | 'already-verified' | '';
 
     const props = defineProps<{
         status?: VerificationStatus;
+        seo?: Seo;
     }>();
 
     const form = useForm({});
@@ -25,9 +28,9 @@
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Email Verification" />
+    <SeoMeta :seo="props.seo" />
 
+    <GuestLayout>
         <div class="mb-8 text-center">
             <div
                 class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500"

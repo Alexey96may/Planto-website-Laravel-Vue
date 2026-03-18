@@ -16,14 +16,16 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import ImageUploader from '@/Components/UI/ImageUploader.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
-    import { Category, Product, ProductEditForm } from '@/types';
+    import { Category, Product, ProductEditForm, Seo } from '@/types';
 
     const props = defineProps<{
         product: Product;
         categories: Category[];
         page: string | number;
+        seo?: Seo;
     }>();
 
     const form = useForm<ProductEditForm>({
@@ -61,9 +63,9 @@
 </script>
 
 <template>
-    <AdminLayout>
-        <Head :title="'Edit Unit: ' + product.title" />
+    <SeoMeta :seo="props.seo" />
 
+    <AdminLayout>
         <div class="mx-auto max-w-4xl space-y-8">
             <div class="flex flex-wrap items-center justify-between gap-4 px-2">
                 <div class="space-y-1">

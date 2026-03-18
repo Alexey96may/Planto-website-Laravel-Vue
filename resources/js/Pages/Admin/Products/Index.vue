@@ -7,15 +7,18 @@
     import { route } from 'ziggy-js';
 
     import Pagination from '@/Components/Shared/Pagination.vue';
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import ProductAdminSkeleton from '@/Components/UI/ProductAdminSkeleton.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { useFlash } from '@/composables/useFlash';
-    import { PaginatedResponse, ProductWithCategory } from '@/types';
+    import '@/types';
+    import { PaginatedResponse, ProductWithCategory, Seo } from '@/types';
     import { formatUSD } from '@/utils/money';
 
     defineProps<{
         products: PaginatedResponse<ProductWithCategory>;
+        seo?: Seo;
     }>();
 
     const isUpdating = ref(false);
@@ -112,9 +115,9 @@
 </script>
 
 <template>
-    <AdminLayout>
-        <Head title="Inventory Management" />
+    <SeoMeta :seo="seo" />
 
+    <AdminLayout>
         <div class="mx-auto max-w-7xl space-y-8 pb-12">
             <div
                 class="flex flex-col flex-wrap gap-6 px-4 md:flex-row md:items-center md:justify-between"

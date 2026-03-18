@@ -29,7 +29,7 @@ export interface Seo {
     keywords?: string;
     robots?: string;
     image?: string;
-    canonical: string;
+    canonical: string | null;
 }
 
 export interface PaginatedResponse<T> {

@@ -21,6 +21,7 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppToast from '@/Components/Shared/Toast.vue';
 
     const page = usePage();
@@ -89,6 +90,8 @@
 </script>
 
 <template>
+    <SeoMeta force-robots="noindex, nofollow" />
+
     <div class="flex min-h-screen flex-col bg-[#0f120e] text-zinc-300 lg:flex-row">
         <div
             class="sticky top-0 z-[60] flex items-center justify-between border-b border-white/5 bg-[#161b14] p-4 lg:hidden"

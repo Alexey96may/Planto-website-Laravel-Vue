@@ -5,11 +5,12 @@
 
     import { Calendar, Eye, EyeOff, MessageSquare, Star, Trash2, User } from 'lucide-vue-next';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
     import { useFlash } from '@/composables/useFlash';
-    import { Review } from '@/types';
+    import { Review, Seo } from '@/types';
 
     defineOptions({
         layout: AdminLayout,
@@ -17,6 +18,7 @@
 
     const props = defineProps<{
         comments: Review[];
+        seo?: Seo;
     }>();
 
     const { notifyWithUndo } = useFlash();
@@ -65,7 +67,7 @@
 </script>
 
 <template>
-    <Head title="Moderation" />
+    <SeoMeta :seo="props.seo" />
 
     <div class="mx-auto max-w-4xl space-y-6">
         <div class="px-2">

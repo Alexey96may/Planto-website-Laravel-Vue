@@ -17,8 +17,9 @@
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
-    import { CategoryNavigationCreate, NavigationCreate, NavigationForm } from '@/types';
+    import { CategoryNavigationCreate, NavigationCreate, NavigationForm, Seo } from '@/types';
 
     defineOptions({
         layout: AdminLayout,
@@ -27,6 +28,7 @@
     const props = defineProps<{
         parentOptions: NavigationCreate[];
         categories: CategoryNavigationCreate[];
+        seo?: Seo;
     }>();
 
     const form = useForm<NavigationForm>({
@@ -59,7 +61,7 @@
 </script>
 
 <template>
-    <Head title="Create Menu Item" />
+    <SeoMeta :seo="props.seo" />
 
     <div class="mx-auto max-w-3xl">
         <div class="mb-8 flex flex-col gap-4 px-2">

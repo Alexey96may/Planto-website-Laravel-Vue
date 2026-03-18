@@ -3,8 +3,9 @@
 
     import { Calendar, Mail, ShieldCheck, User, UserCircle } from 'lucide-vue-next';
 
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
-    import { Role, User as UserType } from '@/types';
+    import { Role, Seo, User as UserType } from '@/types';
 
     type UserInAdmin = Pick<
         UserType,
@@ -13,6 +14,7 @@
 
     const props = defineProps<{
         users: UserInAdmin[];
+        seo?: Seo;
     }>();
 
     const changeRole = (user: UserInAdmin, newRole: Role) => {
@@ -27,9 +29,9 @@
 </script>
 
 <template>
-    <AdminLayout>
-        <Head title="Users Management" />
+    <SeoMeta :seo="props.seo" />
 
+    <AdminLayout>
         <div class="mx-auto max-w-6xl space-y-8">
             <div class="flex items-center justify-between">
                 <div>

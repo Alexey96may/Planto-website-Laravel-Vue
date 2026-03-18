@@ -1,34 +1,46 @@
 <script setup lang="ts">
     import { Link } from '@inertiajs/vue3';
+
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
+    import { Seo } from '@/types';
+
+    interface Props {
+        status: number;
+        seo?: Seo;
+    }
+
+    const props = defineProps<Props>();
 </script>
 
 <template>
+    <SeoMeta :seo="props.seo" />
+
     <div
-        class="min-h-screen bg-[#0b120c] flex items-center justify-center px-4 overflow-hidden relative"
+        class="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0b120c] px-4 py-6"
     >
         <div
-            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-green-900/20 rounded-full blur-[120px]"
+            class="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-green-900/20 blur-[120px]"
         ></div>
 
-        <div class="text-center z-10">
+        <div class="z-10 text-center">
             <h1
-                class="text-[12rem] md:text-[18rem] font-bold leading-none text-white/5 select-none"
+                class="select-none text-[12rem] font-bold leading-none text-white/5 md:text-[18rem]"
             >
-                404
+                {{ props.status }}
             </h1>
 
             <div class="-mt-12 md:-mt-20">
-                <h2 class="text-2xl md:text-4xl font-light text-white mb-4">
+                <h2 class="mb-4 text-2xl font-light text-white md:text-4xl">
                     Oops! You've wandered into
-                    <span class="text-green-500 font-medium">wild jungle</span>
+                    <span class="font-medium text-green-500">wild jungle</span>
                 </h2>
-                <p class="text-gray-400 mb-10 max-w-md mx-auto">
+                <p class="mx-auto mb-10 max-w-md text-gray-400">
                     It looks like this page hasn't grown yet or has been moved to another location.
                 </p>
 
                 <Link
                     href="/"
-                    class="inline-block px-10 py-4 border border-white text-white rounded-full hover:bg-white hover:text-black transition-all duration-500 uppercase tracking-widest text-sm font-semibold"
+                    class="inline-block rounded-full border border-white px-10 py-4 text-sm font-semibold uppercase tracking-widest text-white transition-all duration-500 hover:bg-white hover:text-black"
                 >
                     Return home
                 </Link>

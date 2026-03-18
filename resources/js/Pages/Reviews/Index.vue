@@ -8,12 +8,13 @@
 
     import CommentsFilter from '@/Components/Shared/CommentsFilter.vue';
     import Pagination from '@/Components/Shared/Pagination.vue';
+    import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import AppRating from '@/Components/UI/AppRating.vue';
     import ReviewSkeleton from '@/Components/UI/ReviewSkeleton.vue';
     import WindEffect from '@/Components/UI/WindEffect.vue';
     import MainLayout from '@/Layouts/MainLayout.vue';
-    import { PaginatedResponse, Review } from '@/types';
+    import { PaginatedResponse, Review, Seo } from '@/types';
 
     defineOptions({
         layout: MainLayout,
@@ -23,6 +24,7 @@
         reviews: PaginatedResponse<Review>;
         averageRating: number;
         filters?: { sort: string };
+        seo?: Seo;
     }>();
 
     const isLoading = ref(false);
@@ -62,7 +64,7 @@
 </script>
 
 <template>
-    <Head title="Customer Reviews" />
+    <SeoMeta :seo="props.seo" />
 
     <div class="bg-plant-shop">
         <div class="isolate mx-auto max-w-5xl px-6 py-16 lg:py-24">
