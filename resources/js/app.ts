@@ -1,7 +1,6 @@
-import { DefineComponent, createApp, h } from 'vue';
-import { onMounted } from 'vue';
+import { DefineComponent, createApp, h, onMounted } from 'vue';
 
-import { createInertiaApp } from '@inertiajs/vue3';
+import { createInertiaApp, router } from '@inertiajs/vue3';
 
 import { Howler } from 'howler';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';

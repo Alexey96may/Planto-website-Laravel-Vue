@@ -24,7 +24,7 @@
 
     const props = defineProps<{
         stats: Stats;
-        seo?: Seo;
+        seo: Seo;
     }>();
 
     const form = useForm({ subject: '', message: '' });

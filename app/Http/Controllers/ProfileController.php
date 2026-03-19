@@ -22,6 +22,12 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'seo' => [
+            'title' => 'Profile settings',
+            'description' => 'Managing your personal data and security settings.',
+            'robots' => 'noindex, nofollow',
+            'canonical' => url()->current(),
+        ]
         ]);
     }
 

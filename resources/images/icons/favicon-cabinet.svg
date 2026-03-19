@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="uuid-9e34250e-c54e-48b3-a6be-72bb539b006f" data-name="Слой 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 302.34 382.55">
+<svg id="uuid-9e34250e-c54e-48b3-a6be-72bb539b006f" data-name="Слой 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 380">
   <defs>
     <style>
       .uuid-69204812-78c5-4a20-bc3c-762047b7f6ad {
-        fill: #7fc46e;
+        fill: #2D4F36;
       }
 
       .uuid-69204812-78c5-4a20-bc3c-762047b7f6ad, .uuid-2c4e9ae8-3cc0-4580-9d7b-cb8c452a2a42, .uuid-2c4e36ac-3cda-4f1d-98af-fa099bb956a8, .uuid-41eb2580-9108-409c-93df-d774825ed8f0, .uuid-11399ef6-a852-49c1-9b07-0cb573db156e, .uuid-d8f60de8-c707-4adb-a243-dfd126a337d3, .uuid-fdbd4608-a051-4288-b1d4-e97fd5684bec, .uuid-fdb55a12-ab96-4199-8195-df2518b80661 {
@@ -11,31 +11,31 @@
       }
 
       .uuid-2c4e9ae8-3cc0-4580-9d7b-cb8c452a2a42 {
-        fill: #80c46e;
+        fill: #3A5F44;
       }
 
       .uuid-2c4e36ac-3cda-4f1d-98af-fa099bb956a8 {
-        fill: #f1a559;
+        fill: #B89655;
       }
 
       .uuid-41eb2580-9108-409c-93df-d774825ed8f0 {
-        fill: #66ad66;
+        fill: #1E3826;
       }
 
       .uuid-11399ef6-a852-49c1-9b07-0cb573db156e {
-        fill: #fdc27d;
+        fill: #D4BD8A;
       }
 
       .uuid-d8f60de8-c707-4adb-a243-dfd126a337d3 {
-        fill: #f8ae5d;
+        fill: #C4A462;
       }
 
       .uuid-fdbd4608-a051-4288-b1d4-e97fd5684bec {
-        fill: #e98f3d;
+        fill: #9C7A3C;
       }
 
       .uuid-fdb55a12-ab96-4199-8195-df2518b80661 {
-        fill: #66ac66;
+        fill: #24412B;
       }
     </style>
   </defs>

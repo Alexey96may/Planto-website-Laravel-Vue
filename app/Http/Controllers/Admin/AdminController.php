@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
 use Inertia\Inertia;
-use App\Models\Comment;
 
 class AdminController extends Controller
 {
@@ -17,13 +15,12 @@ class AdminController extends Controller
             'stats' => [
                 'products_count' => Product::count(),
                 'users_count' => User::count(),
-                'seo' => $this->seo(
-                    title: 'Dashboard | Admin',
-                    description: 'Store overview and statistics.',
-                    robots: 'noindex, nofollow'
-                )
-            ]
+            ],
+            'seo' => $this->seo(
+                title: 'Dashboard | Admin',
+                description: 'Store overview and statistics.',
+                robots: 'noindex, nofollow'
+            )
         ]);
     }
-
 }

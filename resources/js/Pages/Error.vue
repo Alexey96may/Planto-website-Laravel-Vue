@@ -19,18 +19,16 @@
         class="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0b120c] px-4 py-6"
     >
         <div
-            class="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-green-900/20 blur-[120px]"
+            class="absolute left-1/2 top-1/2 h-[500px] max-w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-green-900/20 blur-[120px]"
         ></div>
 
         <div class="z-10 text-center">
-            <h1
-                class="select-none text-[12rem] font-bold leading-none text-white/5 md:text-[18rem]"
-            >
+            <h1 class="select-none text-[50vw] font-bold leading-none text-white/5 lg:text-[12rem]">
                 {{ props.status }}
             </h1>
 
-            <div class="-mt-12 md:-mt-20">
-                <h2 class="mb-4 text-2xl font-light text-white md:text-4xl">
+            <div class="-mt-10 md:-mt-16">
+                <h2 class="mb-8 text-2xl font-light text-white md:text-4xl">
                     Oops! You've wandered into
                     <span class="font-medium text-green-500">wild jungle</span>
                 </h2>

@@ -3,7 +3,7 @@
 
     import { Link } from '@inertiajs/vue3';
 
-    import IconLogo from 'img/icons/logo.svg?component';
+    import IconLogo from 'img/icons/favicon-cabinet.svg?component';
     import { ChevronDownIcon } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
 

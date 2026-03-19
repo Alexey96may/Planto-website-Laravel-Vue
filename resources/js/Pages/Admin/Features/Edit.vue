@@ -148,7 +148,7 @@
                             v-model="form.order"
                             id="order"
                             type="number"
-                            class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 font-mono text-[#c5d86d] text-white shadow-inner outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
+                            class="w-full rounded-2xl border border-white/5 bg-[#0f120e] p-4 font-mono text-white shadow-inner outline-none transition focus:ring-2 focus:ring-[#c5d86d]"
                         />
                     </div>
                 </div>

@@ -3,6 +3,7 @@
 
     import { Link, usePage } from '@inertiajs/vue3';
 
+    import IconLogo from 'img/icons/favicon-admin.svg?component';
     import {
         ExternalLink,
         FolderTree,
@@ -97,7 +98,12 @@
             class="sticky top-0 z-[60] flex items-center justify-between border-b border-white/5 bg-[#161b14] p-4 lg:hidden"
         >
             <div class="flex items-center gap-2 font-black italic text-white">
-                <Leaf class="h-6 w-6 text-[#c5d86d]" />
+                <Link :href="route('admin.dashboard')">
+                    <IconLogo
+                        class="block h-9 w-auto fill-current text-[#c5d86d]"
+                        aria-label="Plant Shop Logo"
+                    />
+                </Link>
                 PLANTO <span class="text-[#c5d86d]">ADMIN</span>
             </div>
             <button
@@ -116,8 +122,13 @@
             <div class="h-16 lg:hidden"></div>
 
             <div class="mb-4 hidden items-center gap-3 border-b border-white/5 p-8 lg:flex">
-                <div class="rounded-xl bg-[#c5d86d]/20 p-2">
-                    <Leaf class="h-6 w-6 text-[#c5d86d]" />
+                <div class="rounded-xl p-2">
+                    <Link :href="route('admin.dashboard')">
+                        <IconLogo
+                            class="block h-9 w-auto fill-current text-[#c5d86d]"
+                            aria-label="Plant Shop Logo"
+                        />
+                    </Link>
                 </div>
                 <span class="text-lg font-black italic tracking-tighter text-white">
                     PLANTO <span class="text-[#c5d86d]">ADMIN</span>

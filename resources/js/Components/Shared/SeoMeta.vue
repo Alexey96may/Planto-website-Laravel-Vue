@@ -3,7 +3,7 @@
 
     import { Head, usePage } from '@inertiajs/vue3';
 
-    import { Seo, Settings } from '@/types';
+    import { Seo, Settings, SharedData } from '@/types';
 
     interface SeoProps {
         seo?: Seo;
@@ -11,7 +11,24 @@
     }
 
     const props = defineProps<SeoProps>();
-    const page = usePage();
+    const page = usePage<SharedData>();
+
+    const faviconPath = computed(() => {
+        const path = page.url.toLowerCase();
+
+        if (path.startsWith('/admin')) {
+            return '/images/favicon-admin.svg';
+        }
+
+        const cabinetPrefixes = ['/profile', '/dashboard', '/my-orders', '/account'];
+        const isCabinet = cabinetPrefixes.some((prefix) => path.startsWith(prefix));
+
+        if (isCabinet) {
+            return '/images/favicon-cabinet.svg';
+        }
+
+        return '/images/favicon-main.svg';
+    });
 
     const getSeoData = () => {
         const fromController = page.props.seo as Seo;
@@ -48,15 +65,43 @@
 <template>
     <Head>
         <title>{{ currentSeo.title }}</title>
-        <meta name="description" :content="currentSeo.description" />
-        <meta v-if="currentSeo.keywords" name="keywords" :content="currentSeo.keywords" />
-        <meta name="robots" :content="currentSeo.robots" />
-        <link v-if="currentSeo.canonical" rel="canonical" :href="currentSeo.canonical" />
 
-        <meta property="og:title" :content="currentSeo.title" />
-        <meta property="og:description" :content="currentSeo.description" />
-        <meta property="og:image" :content="currentSeo.image" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" :content="currentSeo.canonical || ''" />
+        <link rel="icon" type="image/svg+xml" :href="faviconPath" head-key="favicon" />
+
+        <link
+            v-if="currentSeo.canonical"
+            rel="canonical"
+            :href="currentSeo.canonical"
+            head-key="canonical"
+        />
+
+        <meta name="description" :content="currentSeo.description" head-key="description" />
+        <meta
+            v-if="currentSeo.keywords"
+            name="keywords"
+            :content="currentSeo.keywords"
+            head-key="keywords"
+        />
+
+        <meta name="robots" :content="currentSeo.robots" head-key="robots" />
+
+        <meta property="og:title" :content="currentSeo.title" head-key="og:title" />
+        <meta
+            property="og:description"
+            :content="currentSeo.description"
+            head-key="og:description"
+        />
+        <meta property="og:image" :content="currentSeo.image" head-key="og:image" />
+        <meta property="og:type" content="website" head-key="og:type" />
+        <meta property="og:url" :content="currentSeo.canonical || ''" head-key="og:url" />
+
+        <meta name="twitter:card" content="summary_large_image" head-key="twitter:card" />
+        <meta name="twitter:title" :content="currentSeo.title" head-key="twitter:title" />
+        <meta
+            name="twitter:description"
+            :content="currentSeo.description"
+            head-key="twitter:description"
+        />
+        <meta name="twitter:image" :content="currentSeo.image" head-key="twitter:image" />
     </Head>
 </template>
