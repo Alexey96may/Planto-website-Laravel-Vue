@@ -22,6 +22,7 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\SitemapController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -45,6 +46,8 @@ Route::get('/terms', [StaticPageController::class, 'terms'])->name('terms');
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 
 Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

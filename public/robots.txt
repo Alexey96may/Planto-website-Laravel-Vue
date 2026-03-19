@@ -1,2 +1,11 @@
 User-agent: *
-Disallow:
+Allow: /
+
+Disallow: /admin
+Disallow: /profile
+Disallow: /dashboard
+Disallow: /my-orders
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://planto-shop.com/sitemap.xml

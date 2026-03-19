@@ -166,10 +166,10 @@
         <div class="mx-auto max-w-6xl px-6 py-10 lg:py-16">
             <WindEffect :particleCount="30" :windStrength="1" />
 
-            <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="relative z-[3] flex flex-wrap items-center justify-between gap-4">
                 <Link
                     :href="backUrl"
-                    class="group relative z-[3] inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-emerald-500"
+                    class="group relative inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-emerald-500"
                 >
                     <ChevronLeftIcon
                         class="h-4 w-4 transition-transform group-hover:-translate-x-1"
