@@ -71,7 +71,6 @@ class ShopController extends Controller
         return Inertia::render('Product/PlantPage', [
             'product' => $product,
             'cart_items' => CartService::getIdsWithQuantities(),
-            'seo' => $product->getSeoData(),
             'backUrl' => route('shop', ['page' => request('page', 1)]),
             'seo' => $this->seo(
                 title: "Buy {$product->name}",

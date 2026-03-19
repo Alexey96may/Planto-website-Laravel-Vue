@@ -10,6 +10,9 @@
         comment: Comment;
         isDeleting: boolean;
         userName: string;
+        title: string;
+        text: string;
+        url: string;
     }>();
 
     const emit = defineEmits<{
@@ -45,7 +48,7 @@
                     <Trash2 class="h-4 w-4" />
                 </button>
 
-                <ShareButton variant="icon" :title="'Review by ' + userName" :text="comment.body" />
+                <ShareButton variant="icon" :title="title" :text="text" :url="url" />
 
                 <button
                     v-if="!comment.is_active"

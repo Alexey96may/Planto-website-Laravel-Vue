@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import { computed, onMounted, ref } from 'vue';
 
+    import { usePage } from '@inertiajs/vue3';
+
     import { Check, Share2 } from 'lucide-vue-next';
 
     const props = defineProps<{
@@ -10,35 +12,38 @@
         variant?: 'icon' | 'full';
     }>();
 
+    const isCopied = ref(false);
     const finalUrl = ref('');
 
-    onMounted(() => {
-        finalUrl.value = props.url || window.location.href;
+    const currentUrl = computed(() => {
+        return props.url || usePage().url;
     });
 
-    const isCopied = ref(false);
-    const currentUrl = props.url || window.location.href;
+    onMounted(() => {
+        finalUrl.value = currentUrl.value || window.location.href;
+    });
 
     const handleShare = async () => {
-        if (!finalUrl.value) return;
+        const urlToShare = finalUrl.value || currentUrl.value || '';
+        if (!urlToShare) return;
 
-        if (navigator.share) {
+        if (typeof navigator !== 'undefined' && navigator.share) {
             try {
                 await navigator.share({
                     title: props.title,
                     text: props.text,
-                    url: finalUrl.value,
+                    url: urlToShare,
                 });
             } catch (err) {
-                console.log('Sharing is canceled');
+                console.log('Sharing canceled');
             }
         } else {
             try {
-                await navigator.clipboard.writeText(currentUrl);
+                await navigator.clipboard.writeText(urlToShare);
                 isCopied.value = true;
                 setTimeout(() => (isCopied.value = false), 2000);
             } catch (err) {
-                alert('Couldnt copy the link');
+                alert('Could not copy the link');
             }
         }
     };
@@ -46,7 +51,6 @@
     const buttonClasses = computed(() => {
         const base =
             'relative flex items-center justify-center gap-2  overflow-hidden transition-all ';
-
         const variants = {
             icon: 'h-4 w-4 p-0 text-zinc-600',
             full: 'group border text-zinc-400 border-white/5 bg-white/5 px-4 py-2 text-xs font-medium rounded-xl  hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400 active:scale-95',

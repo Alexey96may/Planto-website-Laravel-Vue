@@ -31,7 +31,7 @@
         product: ProductWithCategory;
         backUrl: string;
         cart_items: CartItems;
-        seo?: Seo;
+        seo: Seo;
     }>();
 
     const count = ref(props.cart_items[props.product.id] || 1);
@@ -179,8 +179,9 @@
 
                 <ShareButton
                     variant="full"
-                    :title="product.title"
-                    :text="'Check out this plant: ' + product.title"
+                    :title="seo.title"
+                    :text="seo.description"
+                    :url="seo.canonical || ''"
                 />
             </div>
 

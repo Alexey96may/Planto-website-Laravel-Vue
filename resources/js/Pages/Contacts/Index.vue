@@ -13,10 +13,10 @@
 
     type Props = {
         share_url: string;
-        seo?: Seo;
+        seo: Seo;
     };
 
-    const { share_url = '' } = defineProps<Props>();
+    defineProps<Props>();
 
     const page = usePage<SharedData>();
 
@@ -60,9 +60,9 @@
 
                             <ShareButton
                                 variant="full"
-                                title="Plant Shop - Best Greenery in Town"
-                                text="Check out this amazing plant shop I found! High-quality signals and rare plants."
-                                :url="share_url"
+                                :title="seo.title"
+                                :text="seo.description"
+                                :url="seo.canonical || ''"
                             />
                         </div>
 

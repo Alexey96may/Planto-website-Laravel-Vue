@@ -21,7 +21,7 @@
     const props = defineProps<{
         myComments: Comment[];
         auth: AuthProps;
-        seo?: Seo;
+        seo: Seo;
     }>();
 
     const {
@@ -295,6 +295,9 @@
                                 :comment="comment"
                                 :userName="auth.user.name"
                                 :is-deleting="deletingIds.has(comment.id)"
+                                :title="seo.title"
+                                :text="seo.description"
+                                :url="seo.canonical || ''"
                                 @edit="openEditModal"
                                 @delete="deleteComment"
                                 class="snap-start snap-always shadow-none"
