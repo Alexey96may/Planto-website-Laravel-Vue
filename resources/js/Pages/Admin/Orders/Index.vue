@@ -1,8 +1,7 @@
 <script setup lang="ts">
-    import { Head, Link } from '@inertiajs/vue3';
+    import { Link } from '@inertiajs/vue3';
 
     import { ArrowUpRight, Clock, ShoppingBag } from 'lucide-vue-next';
-    import { route } from 'ziggy-js';
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';

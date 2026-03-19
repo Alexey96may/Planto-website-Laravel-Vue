@@ -8,6 +8,7 @@ use Inertia\Middleware;
 use App\Services\SettingService;
 use App\Services\NavigationService;
 use App\Services\CartService;
+use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -33,8 +34,17 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $ziggy = (new \Tighten\Ziggy\Ziggy)->toArray();
+
+        \Illuminate\Support\Facades\Log::info('Ziggy Data:', $ziggy);
+
         return [
             ...parent::share($request),
+
+            'ziggy' => array_merge($ziggy, [
+                'location' => $request->url(),
+            ]),
+            
             'auth' => [
                 'user' => $request->user(),
             ],

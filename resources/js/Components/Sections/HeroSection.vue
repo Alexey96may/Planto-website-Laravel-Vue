@@ -10,7 +10,6 @@
     import 'swiper/css/pagination';
     import { Autoplay, Navigation, Pagination } from 'swiper/modules';
     import { Swiper, SwiperSlide } from 'swiper/vue';
-    import { route } from 'ziggy-js';
 
     import HeroSliderCard from '@/Components/Cards/HeroSliderCard.vue';
     import AppExploreButton from '@/Components/UI/AppExploreButton.vue';

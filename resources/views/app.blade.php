@@ -12,7 +12,7 @@
         <meta name="author" content="Planto" head-key="author">
 
         @routes
-        @vite(["resources/scss/app.scss", 'resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+        @vite(["resources/scss/app.scss", 'resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
 
         <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon-main.svg') }}" head-key="favicon">

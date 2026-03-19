@@ -2,7 +2,6 @@
     import { Link } from '@inertiajs/vue3';
 
     import IconBag from 'img/icons/bag.svg?component';
-    import { route } from 'ziggy-js';
 
     import AppBuyButton from '@/Components/UI/AppBuyButton.vue';
     import AppExploreButton from '@/Components/UI/AppExploreButton.vue';

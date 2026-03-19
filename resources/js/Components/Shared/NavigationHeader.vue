@@ -21,6 +21,8 @@
     const moreBtnRef = ref<HTMLElement | null>(null);
 
     const updateNavigation = () => {
+        if (typeof window === 'undefined') return;
+
         if (!containerRef.value || !ghostRef.value || !moreBtnRef.value) return;
 
         const parent = containerRef.value.parentElement;
@@ -71,10 +73,12 @@
     let observer: ResizeObserver;
 
     onMounted(() => {
-        observer = new ResizeObserver(() => updateNavigation());
-        if (containerRef.value) observer.observe(containerRef.value);
+        if (typeof window !== 'undefined' && containerRef.value) {
+            observer = new ResizeObserver(() => updateNavigation());
+            if (containerRef.value) observer.observe(containerRef.value);
 
-        nextTick(() => updateNavigation());
+            nextTick(() => updateNavigation());
+        }
     });
 
     watch(menuItems, () => {

@@ -1,8 +1,6 @@
 <script setup lang="ts">
     import { Link, usePage } from '@inertiajs/vue3';
 
-    import { route } from 'ziggy-js';
-
     import AppExploreButton from '@/Components/UI/AppExploreButton.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import ParallaxCard from '@/Components/UI/ParallaxCard.vue';

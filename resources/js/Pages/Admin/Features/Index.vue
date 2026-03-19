@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref } from 'vue';
 
-    import { Head, Link, router, useForm } from '@inertiajs/vue3';
+    import { Link, router } from '@inertiajs/vue3';
 
     import {
         ArrowUpDown,

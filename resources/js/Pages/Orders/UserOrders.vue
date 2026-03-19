@@ -10,7 +10,6 @@
         ShoppingBag,
         XCircle,
     } from 'lucide-vue-next';
-    import { route } from 'ziggy-js';
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import WindEffect from '@/Components/UI/WindEffect.vue';

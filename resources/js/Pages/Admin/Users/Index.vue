@@ -1,7 +1,8 @@
 <script setup lang="ts">
-    import { Head, router } from '@inertiajs/vue3';
+    import { router } from '@inertiajs/vue3';
 
-    import { Calendar, Mail, ShieldCheck, User, UserCircle } from 'lucide-vue-next';
+    import { Calendar, Mail, ShieldCheck, UserCircle } from 'lucide-vue-next';
+    import { route } from 'ziggy-js';
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';

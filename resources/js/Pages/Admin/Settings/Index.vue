@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { computed, ref } from 'vue';
+    import { ref } from 'vue';
 
-    import { Head, useForm } from '@inertiajs/vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     import {
         AlertCircle,
@@ -14,6 +14,7 @@
         Share2,
         Video,
     } from 'lucide-vue-next';
+    import { route } from 'ziggy-js';
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';

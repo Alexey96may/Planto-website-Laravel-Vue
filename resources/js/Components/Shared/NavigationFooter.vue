@@ -14,16 +14,6 @@
         email: '',
     });
 
-    const submit = () => {
-        form.post(route('newsletter.store'), {
-            preserveScroll: true,
-            onSuccess: () => {
-                form.reset();
-                alert('Вы успешно подписаны!'); //todo
-            },
-        });
-    };
-
     const page = usePage<SharedData>();
 
     const footerMenuItems = computed(() => page.props.navigation?.footer || []);

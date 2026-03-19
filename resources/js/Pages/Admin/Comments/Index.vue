@@ -1,9 +1,10 @@
 <script setup lang="ts">
     import { ref } from 'vue';
 
-    import { Head, router } from '@inertiajs/vue3';
+    import { router } from '@inertiajs/vue3';
 
     import { Calendar, Eye, EyeOff, MessageSquare, Star, Trash2, User } from 'lucide-vue-next';
+    import { route } from 'ziggy-js';
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';

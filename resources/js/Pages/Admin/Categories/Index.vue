@@ -1,9 +1,10 @@
 <script setup lang="ts">
     import { ref } from 'vue';
 
-    import { Head, useForm } from '@inertiajs/vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     import { Check, Hash, LayoutList, Pencil, Plus, RefreshCcw, Trash2, X } from 'lucide-vue-next';
+    import { route } from 'ziggy-js';
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';

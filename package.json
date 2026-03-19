@@ -4,6 +4,7 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
+        "ssr:build": "vite build --ssr",
         "dev": "vite",
         "test:js": "vitest run --coverage",
         "test:php": "php artisan test",
@@ -43,6 +44,7 @@
     "dependencies": {
         "@headlessui/vue": "^1.7.23",
         "@heroicons/vue": "^2.2.0",
+        "@vue/server-renderer": "^3.5.30",
         "@vueuse/core": "^14.2.1",
         "browser-image-compression": "^2.0.2",
         "gsap": "^3.14.2",

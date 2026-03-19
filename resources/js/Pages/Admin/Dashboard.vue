@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Head, Link, useForm } from '@inertiajs/vue3';
+    import { Link, useForm } from '@inertiajs/vue3';
 
     import {
         FolderTreeIcon,
@@ -11,7 +11,6 @@
         ShoppingCartIcon,
         UsersIcon,
     } from 'lucide-vue-next';
-    import { route } from 'ziggy-js';
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';

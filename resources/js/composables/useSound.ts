@@ -9,34 +9,49 @@ import moneySrc from '@/../audio/sounds/money.mp3';
 import slideMoveSrc from '@/../audio/sounds/slideMove.mp3';
 import successSrc from '@/../audio/sounds/success.mp3';
 
-const clickSfx = new Howl({ src: [clickSrc], volume: 0.2 });
-const cancelSfx = new Howl({ src: [cancelSrc], volume: 0.2 });
-const moneySfx = new Howl({ src: [moneySrc], volume: 0.3 });
-const modalOpenSfx = new Howl({ src: [modalOpenSrc], volume: 0.2 });
-const modalCloseSfx = new Howl({ src: [modalCloseSrc], volume: 0.2 });
-const slideMoveSfx = new Howl({ src: [slideMoveSrc], volume: 0.2 });
-const successSfx = new Howl({ src: [successSrc], volume: 0.2 });
+let sounds: Record<string, Howl> | null = null;
+
+const getSound = (name: string, src: string, volume: number = 0.2): Howl | null => {
+    if (typeof window === 'undefined') return null;
+
+    if (!sounds) sounds = {};
+
+    if (!sounds[name]) {
+        sounds[name] = new Howl({ src: [src], volume });
+    }
+
+    return sounds[name];
+};
 
 export function useSound() {
     const playClick = () => {
-        clickSfx.rate(gsap.utils.random(0.9, 1.1));
-        clickSfx.play();
+        const sfx = getSound('click', clickSrc);
+        if (sfx) {
+            sfx.rate(gsap.utils.random(0.9, 1.1));
+            sfx.play();
+        }
     };
 
     const playCancel = () => {
-        cancelSfx.rate(gsap.utils.random(0.9, 1.0));
-        cancelSfx.play();
+        const sfx = getSound('cancel', cancelSrc);
+        if (sfx) {
+            sfx.rate(gsap.utils.random(0.9, 1.0));
+            sfx.play();
+        }
     };
 
     const moneyClick = () => {
-        moneySfx.rate(gsap.utils.random(0.9, 1.1));
-        moneySfx.play();
+        const sfx = getSound('money', moneySrc, 0.3);
+        if (sfx) {
+            sfx.rate(gsap.utils.random(0.9, 1.1));
+            sfx.play();
+        }
     };
 
-    const playModalOpen = () => modalOpenSfx.play();
-    const playModalClose = () => modalCloseSfx.play();
-    const playSlideMove = () => slideMoveSfx.play();
-    const playSuccess = () => successSfx.play();
+    const playModalOpen = () => getSound('modalOpen', modalOpenSrc)?.play();
+    const playModalClose = () => getSound('modalClose', modalCloseSrc)?.play();
+    const playSlideMove = () => getSound('slideMove', slideMoveSrc)?.play();
+    const playSuccess = () => getSound('success', successSrc)?.play();
 
     return {
         playClick,

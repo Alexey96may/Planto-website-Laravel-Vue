@@ -1,9 +1,17 @@
-import { route as routeFn } from 'ziggy-js';
+import { route as routziggyRouteeFn } from 'ziggy-js';
 
 import FlashMessage from '@/Components/Shared/Toast.vue';
 
-declare global {
-    var route: typeof routeFn;
+declare module 'vue' {
+    interface ComponentCustomProperties {
+        route: typeof ziggyRoute;
+    }
+}
+
+declare module '@vue/runtime-core' {
+    interface ComponentCustomProperties {
+        route: typeof ziggyRoute;
+    }
 }
 
 declare module '*.svg?component' {

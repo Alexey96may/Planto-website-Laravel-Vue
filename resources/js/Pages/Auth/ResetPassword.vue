@@ -2,6 +2,7 @@
     import { Head, useForm } from '@inertiajs/vue3';
 
     import { KeyIcon } from '@heroicons/vue/24/outline';
+    import { route } from 'ziggy-js';
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import InputError from '@/Components/UI/InputError.vue';

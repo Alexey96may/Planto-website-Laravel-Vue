@@ -24,7 +24,10 @@ use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\SitemapController;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::middleware(['web'])->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+});
+
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/shop/plant-{product}', [ShopController::class, 'show'])->name('shop.show');

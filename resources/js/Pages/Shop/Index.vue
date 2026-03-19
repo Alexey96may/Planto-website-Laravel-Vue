@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, ref, watch } from 'vue';
 
-    import { Head, Link, router, usePage } from '@inertiajs/vue3';
+    import { router, usePage } from '@inertiajs/vue3';
 
     import { route } from 'ziggy-js';
 

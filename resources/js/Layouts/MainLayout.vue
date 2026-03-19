@@ -21,7 +21,6 @@
 <template>
     <SeoMeta />
 
-    <Toast />
     <div class="app-wrapper">
         <div class="main-bg" v-if="full">
             <Header :cartCount="page.props.cart_count" />

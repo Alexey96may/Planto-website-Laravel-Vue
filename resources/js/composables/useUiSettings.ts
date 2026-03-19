@@ -1,10 +1,19 @@
 import { ref, watch } from 'vue';
 
-const isEffectsEnabled = ref(localStorage.getItem('ui_effects') !== 'false');
+const isEffectsEnabled = ref(true);
 
 export function useUiSettings() {
+    if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem('ui_effects');
+        if (saved !== null) {
+            isEffectsEnabled.value = saved !== 'false';
+        }
+    }
+
     watch(isEffectsEnabled, (newVal) => {
-        localStorage.setItem('ui_effects', newVal.toString());
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('ui_effects', newVal.toString());
+        }
     });
 
     return {

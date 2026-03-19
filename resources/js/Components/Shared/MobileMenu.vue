@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, ref, watch } from 'vue';
+    import { computed, onMounted, ref, watch } from 'vue';
     import { nextTick } from 'vue';
 
     import { TransitionChild, TransitionRoot } from '@headlessui/vue';
@@ -31,7 +31,7 @@
         return {};
     });
 
-    const isLocked = useScrollLock(document.body);
+    const isLocked = useScrollLock(typeof document !== 'undefined' ? document.body : null);
 
     const toggleMenu = () => {
         isOpen.value = !isOpen.value;
@@ -54,7 +54,7 @@
     };
 
     watch(isOpen, async (val) => {
-        if (val) {
+        if (val && typeof document !== 'undefined') {
             await nextTick();
 
             const items = document.querySelectorAll('.mobile-nav-wrapper > *');

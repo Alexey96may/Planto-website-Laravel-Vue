@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { onMounted, onUnmounted, ref, watch } from 'vue';
 
-    import { Head, Link, router } from '@inertiajs/vue3';
+    import { Link, router } from '@inertiajs/vue3';
 
     import { Calendar } from 'lucide-vue-next';
     import { route } from 'ziggy-js';

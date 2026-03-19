@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Head, useForm, usePage } from '@inertiajs/vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     import {
         ArrowRight,
@@ -11,6 +11,7 @@
         ShoppingBag,
         User,
     } from 'lucide-vue-next';
+    import { route } from 'ziggy-js';
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';

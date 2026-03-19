@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed } from 'vue';
+    import { computed, onMounted, ref } from 'vue';
 
     import { AlertCircle, AlertTriangle, CheckCircle2, Info, X } from 'lucide-vue-next';
 
@@ -25,10 +25,16 @@
     };
 
     const { playClick } = useSound();
+
+    const isServer = ref(true);
+
+    onMounted(() => {
+        isServer.value = false;
+    });
 </script>
 
 <template>
-    <Teleport to="body">
+    <Teleport to="body" :disabled="isServer">
         <Transition
             enter-active-class="transform transition duration-500 ease-out"
             enter-from-class="translate-y-12 opacity-0 scale-95"

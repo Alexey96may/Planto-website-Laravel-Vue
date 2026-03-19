@@ -11,7 +11,18 @@ import globalComponents from '@/plugins/global-components';
 import '../css/app.css';
 import './bootstrap';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const resumeAudio = async (): Promise<void> => {
+    if (typeof window !== 'undefined' && Howler.ctx && Howler.ctx.state === 'suspended') {
+        await Howler.ctx.resume();
+        window.removeEventListener('click', resumeAudio);
+        window.removeEventListener('keydown', resumeAudio);
+    }
+};
+
+if (typeof window !== 'undefined') {
+    window.addEventListener('click', resumeAudio);
+    window.addEventListener('keydown', resumeAudio);
+}
 
 createInertiaApp({
     title: (title) => (title ? `${title} — Planto` : 'Planto'),
@@ -32,19 +43,4 @@ createInertiaApp({
         includeCSS: true,
         showSpinner: false,
     },
-});
-
-onMounted(() => {
-    const resumeAudio = async (): Promise<void> => {
-        if (Howler.ctx && Howler.ctx.state === 'suspended') {
-            Howler.ctx.resume().then(() => {
-                console.log('AudioContext resumed successfully 🔊');
-                window.removeEventListener('click', resumeAudio);
-                window.removeEventListener('keydown', resumeAudio);
-            });
-        }
-    };
-
-    window.addEventListener('click', resumeAudio);
-    window.addEventListener('keydown', resumeAudio);
 });

@@ -6,7 +6,6 @@
     import IconBag from 'img/icons/bag.svg?component';
     import IconLogo from 'img/icons/logo.svg?component';
     import IconUser from 'img/icons/user.svg?component';
-    import { route } from 'ziggy-js';
 
     import NavigationHeader from '@/Components/Shared/NavigationHeader.vue';
     import { SharedData } from '@/types';

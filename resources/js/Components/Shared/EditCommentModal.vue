@@ -4,7 +4,6 @@
     import { useForm } from '@inertiajs/vue3';
 
     import { Edit3, Star, X } from 'lucide-vue-next';
-    import { route } from 'ziggy-js';
 
     import { useSound } from '@/composables/useSound';
     import { Comment } from '@/types';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
 
-    import { Head, Link, useForm } from '@inertiajs/vue3';
+    import { Link, useForm } from '@inertiajs/vue3';
 
     import {
         ArrowLeft,

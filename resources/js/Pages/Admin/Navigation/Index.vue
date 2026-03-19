@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref, watch } from 'vue';
 
-    import { Head, Link, router } from '@inertiajs/vue3';
+    import { Link, router } from '@inertiajs/vue3';
 
     import {
         CheckCircle2,

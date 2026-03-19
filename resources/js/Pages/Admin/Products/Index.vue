@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { onMounted, onUnmounted, ref } from 'vue';
 
-    import { Head, Link, router } from '@inertiajs/vue3';
+    import { Link, router } from '@inertiajs/vue3';
 
     import { AlertTriangle, Edit3, Layers, Package, Plus, Trash2 } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
