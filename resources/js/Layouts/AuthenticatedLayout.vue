@@ -35,7 +35,7 @@
     >
         <div class="min-h-screen bg-plant-shop">
             <nav class="sticky top-0 z-50 border-b border-white/5 bg-[#1a1f16]/60 backdrop-blur-xl">
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="container mx-auto max-w-7xl">
                     <div class="flex h-20 items-center justify-between">
                         <div class="flex items-center gap-2">
                             <div
@@ -49,7 +49,7 @@
                                 </Link>
                             </div>
 
-                            <div class="hidden space-x-6 sm:flex">
+                            <div class="hidden space-x-6 md:flex">
                                 <NavLink :href="route('home')" :active="false"> Store </NavLink>
 
                                 <NavLink
@@ -76,7 +76,7 @@
                             </div>
                         </div>
 
-                        <div class="hidden sm:ms-6 sm:flex sm:items-center">
+                        <div class="hidden md:ms-6 md:flex md:items-center">
                             <div class="relative ms-3">
                                 <Dropdown align="right" width="56">
                                     <template #trigger>
@@ -134,7 +134,7 @@
                             </div>
                         </div>
 
-                        <div class="-me-2 flex items-center sm:hidden">
+                        <div class="-me-2 flex items-center md:hidden">
                             <button
                                 @click="showingNavigationDropdown = !showingNavigationDropdown"
                                 class="relative h-10 w-10 rounded-2xl p-2 text-zinc-400 transition-all hover:bg-white/5 active:scale-90"
@@ -178,7 +178,7 @@
                 >
                     <div
                         v-if="showingNavigationDropdown"
-                        class="fixed inset-x-0 bottom-0 top-20 z-40 overflow-y-auto border-b border-white/5 bg-[#1a1f16]/95 p-4 pb-20 backdrop-blur-xl sm:hidden"
+                        class="fixed inset-x-0 bottom-0 top-20 z-40 overflow-y-auto border-b border-white/5 bg-[#1a1f16]/95 p-4 pb-20 backdrop-blur-xl md:hidden"
                         style="top: 80px; height: calc(100vh - 80px)"
                     >
                         <div class="space-y-1 rounded-xl bg-emerald-700/40 p-2 text-emerald-100">

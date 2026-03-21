@@ -39,7 +39,7 @@ body {
 }
 
 .container {
-    max-width: calc(vars.$containerWidth + vars.$containerPadding);
+    max-width: vars.$containerWidth;
     padding: 0 vars.$containerPadding;
     margin: 0 auto;
 }

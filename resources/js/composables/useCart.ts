@@ -2,6 +2,8 @@ import { ref } from 'vue';
 
 import { router } from '@inertiajs/vue3';
 
+import { route } from 'ziggy-js';
+
 import { useSound } from '@/composables/useSound';
 import { Product } from '@/types';
 

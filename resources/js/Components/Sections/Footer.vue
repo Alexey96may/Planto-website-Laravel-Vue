@@ -4,6 +4,7 @@
     import { useForm, usePage } from '@inertiajs/vue3';
 
     import IconLogo from 'img/icons/logo.svg?component';
+    import { route } from 'ziggy-js';
 
     import NavigationFooter from '@/Components/Shared/NavigationFooter.vue';
     import AppVisualEffectsToggle from '@/Components/UI/AppVisualEffectsToggle.vue';

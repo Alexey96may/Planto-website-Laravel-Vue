@@ -20,8 +20,13 @@
 </script>
 
 <template>
-    <header :class="headerClasses" class="header relative z-[999]" id="header" aria-label="Header">
-        <div class="header__container container">
+    <header
+        :class="headerClasses"
+        class="header relative z-[999] !py-0"
+        id="header"
+        aria-label="Header"
+    >
+        <div class="header__container container h-20">
             <div class="relative z-20 mr-auto lg:mr-0" aria-label="Logo field">
                 <Link
                     class="logo opacity-80 transition-opacity duration-300 hover:opacity-100"

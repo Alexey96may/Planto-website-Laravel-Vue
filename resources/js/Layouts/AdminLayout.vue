@@ -96,7 +96,7 @@
 
     <div class="flex min-h-screen flex-col bg-[#0f120e] text-zinc-300 lg:flex-row">
         <div
-            class="sticky top-0 z-[60] flex items-center justify-between border-b border-white/5 bg-[#161b14] p-4 lg:hidden"
+            class="sticky top-0 z-[60] flex h-20 items-center justify-between border-b border-white/5 bg-[#161b14] px-6 lg:hidden"
         >
             <div class="flex items-center gap-2 font-black italic text-white">
                 <Link :href="route('admin.dashboard')">
@@ -122,8 +122,8 @@
         >
             <div class="h-16 lg:hidden"></div>
 
-            <div class="mb-4 hidden items-center gap-3 border-b border-white/5 p-8 lg:flex">
-                <div class="rounded-xl p-2">
+            <div class="mb-4 hidden h-20 items-center gap-3 border-b border-white/5 px-6 lg:flex">
+                <div class="rounded-xl">
                     <Link :href="route('admin.dashboard')">
                         <IconLogo
                             class="block h-9 w-auto fill-current text-[#c5d86d]"

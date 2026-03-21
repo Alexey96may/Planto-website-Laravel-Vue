@@ -4,7 +4,6 @@
     import { Link, usePage } from '@inertiajs/vue3';
 
     import IconArrowMore from 'img/icons/arrow-more.svg?component';
-    import { route } from 'ziggy-js';
 
     import MobileMenu from '@/Components/Shared/MobileMenu.vue';
     import NavDropdown from '@/Components/Shared/NavDropdown.vue';
