@@ -24,8 +24,9 @@
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppToast from '@/Components/Shared/Toast.vue';
+    import { SharedData } from '@/types';
 
-    const page = usePage();
+    const page = usePage<SharedData>();
     const currentComponent = computed(() => page.component);
     const isMobileMenuOpen = ref(false);
 

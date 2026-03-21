@@ -58,7 +58,9 @@
             <slot name="trigger" />
         </div>
 
-        <div v-show="open" class="fixed inset-0 z-40" @click="open = false"></div>
+        <Teleport to="body">
+            <div v-show="open" class="fixed inset-0 z-40 bg-black/0" @click="open = false"></div>
+        </Teleport>
 
         <Transition
             enter-active-class="transition ease-out duration-200"

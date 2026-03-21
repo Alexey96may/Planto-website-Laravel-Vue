@@ -5,6 +5,7 @@
 
     import IconLogo from 'img/icons/favicon-cabinet.svg?component';
     import { ChevronDownIcon } from 'lucide-vue-next';
+    import { route } from 'ziggy-js';
 
     import Footer from '@/Components/Sections/Footer.vue';
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
@@ -101,17 +102,18 @@
                                         <div
                                             class="min-w-[200px] overflow-hidden rounded-2xl border border-white/10 bg-[#242b1f] p-1.5 shadow-2xl"
                                         >
-                                            <div class="mb-1 border-b border-white/5 px-4 py-3">
-                                                <p
-                                                    class="text-xs font-bold uppercase tracking-wider text-zinc-500"
-                                                >
-                                                    Account
-                                                </p>
-                                            </div>
+                                            <DropdownLink
+                                                :href="route('dashboard')"
+                                                class="my-1 flex items-center gap-2 rounded-xl"
+                                                :active="route().current('dashboard')"
+                                            >
+                                                Account
+                                            </DropdownLink>
 
                                             <DropdownLink
                                                 :href="route('profile.edit')"
-                                                class="flex items-center gap-2 rounded-xl"
+                                                class="my-1 flex items-center gap-2 rounded-xl"
+                                                :active="route().current('profile.edit')"
                                             >
                                                 Profile Settings
                                             </DropdownLink>
