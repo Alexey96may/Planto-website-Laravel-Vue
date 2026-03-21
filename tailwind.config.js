@@ -22,6 +22,10 @@ export default {
         },
     },
 
+    future: {
+        hoverOnlyWhenSupported: true,
+    },
+
     corePlugins: {
         container: false,
     },

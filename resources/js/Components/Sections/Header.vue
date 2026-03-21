@@ -4,7 +4,7 @@
     import { Link, usePage } from '@inertiajs/vue3';
 
     import IconBag from 'img/icons/bag.svg?component';
-    import IconLogo from 'img/icons/logo.svg?component';
+    import IconLogo from 'img/icons/favicon-main.svg?component';
     import IconUser from 'img/icons/user.svg?component';
 
     import NavigationHeader from '@/Components/Shared/NavigationHeader.vue';
@@ -33,7 +33,7 @@
                     :href="route('home')"
                     aria-label="To home page"
                 >
-                    <IconLogo class="logo__image opacity-100" aria-label="Logo image" />
+                    <IconLogo class="logo__image !h-8 opacity-100" aria-label="Logo image" />
                     <span class="logo__text opacity-100" aria-label="Logo text">{{
                         $page.props.settings?.site_name
                     }}</span>
