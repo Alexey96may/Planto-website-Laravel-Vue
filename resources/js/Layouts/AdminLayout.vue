@@ -126,13 +126,18 @@
                 <div class="rounded-xl">
                     <Link :href="route('admin.dashboard')">
                         <IconLogo
-                            class="block h-9 w-auto fill-current text-[#c5d86d]"
+                            class="block h-8 w-auto fill-current text-[#c5d86d]"
                             aria-label="Plant Shop Logo"
                         />
                     </Link>
                 </div>
-                <span class="text-lg font-black italic tracking-tighter text-white">
-                    PLANTO <span class="text-[#c5d86d]">ADMIN</span>
+                <span
+                    class="text-[1.17rem] text-lg font-black uppercase italic tracking-tighter text-white"
+                >
+                    <Link :href="route('admin.dashboard')">
+                        {{ $page.props.settings?.site_name }}
+                        <span class="text-[#c5d86d]">Admin</span>
+                    </Link>
                 </span>
             </div>
 

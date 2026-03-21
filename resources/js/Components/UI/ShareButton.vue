@@ -15,9 +15,7 @@
     const isCopied = ref(false);
     const finalUrl = ref('');
 
-    const currentUrl = computed(() => {
-        return props.url || usePage().url;
-    });
+    const currentUrl = computed(() => props.url || usePage().url);
 
     onMounted(() => {
         finalUrl.value = currentUrl.value || window.location.href;
@@ -35,7 +33,7 @@
                     url: urlToShare,
                 });
             } catch (err) {
-                console.log('Sharing canceled');
+                console.error(err);
             }
         } else {
             try {
@@ -43,51 +41,48 @@
                 isCopied.value = true;
                 setTimeout(() => (isCopied.value = false), 2000);
             } catch (err) {
-                alert('Could not copy the link');
+                console.error('Copy failed');
             }
         }
     };
 
     const buttonClasses = computed(() => {
         const base =
-            'relative flex items-center justify-center gap-2  overflow-hidden transition-all ';
+            'relative flex items-center justify-center gap-2 overflow-hidden transition-all outline-none ';
         const variants = {
-            icon: 'h-4 w-4 p-0 text-zinc-600',
-            full: 'group border text-zinc-400 border-white/5 bg-white/5 px-4 py-2 text-xs font-medium rounded-xl  hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400 active:scale-95',
+            icon: 'h-8 w-8 p-0 text-zinc-600 hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500/50 rounded-full',
+            full: 'group border text-zinc-400 border-white/5 bg-white/5 px-4 py-2 text-xs font-medium rounded-xl hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500/50 active:scale-95',
         };
-
         return `${base} ${variants[props.variant || 'icon']}`;
     });
 </script>
 
 <template>
-    <button @click="handleShare" :class="buttonClasses">
+    <button
+        type="button"
+        @click="handleShare"
+        :class="buttonClasses"
+        :aria-label="variant === 'icon' ? 'Share this page' : undefined"
+    >
+        <span class="sr-only" aria-live="polite">
+            {{ isCopied ? 'Link successfully copied to clipboard' : '' }}
+        </span>
+
         <transition name="fade" mode="out-in">
-            <div v-if="!isCopied" class="flex items-center gap-2">
-                <Share2 class="h-4 w-4" />
+            <div v-if="!isCopied" class="flex items-center gap-2" key="share">
+                <Share2 class="h-4 w-4" aria-hidden="true" />
                 <span v-if="variant !== 'icon'">Share</span>
             </div>
-            <div v-else class="flex items-center gap-2 text-emerald-400">
-                <Check class="h-4 w-4" />
+            <div v-else class="flex items-center gap-2 text-emerald-400" key="check">
+                <Check class="h-4 w-4" aria-hidden="true" />
                 <span v-if="variant !== 'icon'">Link Copied!</span>
             </div>
         </transition>
 
         <div
             v-if="variant === 'full'"
+            aria-hidden="true"
             class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent transition-transform duration-500 group-hover:translate-x-full"
         ></div>
     </button>
 </template>
-
-<style scoped>
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: all 0.2s ease;
-    }
-    .fade-enter-from,
-    .fade-leave-to {
-        opacity: 0;
-        transform: translateY(5px);
-    }
-</style>

@@ -1,9 +1,38 @@
-@use "./utils/reset";
-@use "./modules/body";
-@use "./modules/header";
-@use "./modules/hero";
-@use "./modules/trendy";
-@use "./modules/top";
-@use "./modules/review";
-@use "./modules/best";
-@use "./modules/footer";
+@use './utils/reset';
+@use './modules/body';
+@use './modules/header';
+@use './modules/hero';
+@use './modules/trendy';
+@use './modules/top';
+@use './modules/review';
+@use './modules/best';
+@use './modules/footer';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :focus:not(:focus-visible) {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    :focus-visible {
+        outline: 2px solid rgba(197, 216, 109, 0.5);
+        outline-offset: 2px;
+        border-radius: 0.25rem;
+    }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

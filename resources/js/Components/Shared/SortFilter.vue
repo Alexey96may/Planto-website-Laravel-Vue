@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, onMounted, onUnmounted, ref } from 'vue';
+    import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
 
     import { useSound } from '@/composables/useSound';
 
@@ -8,10 +8,10 @@
     }>();
 
     const emit = defineEmits(['update:modelValue', 'change']);
-
     const { playClick } = useSound();
 
     const isOpen = ref(false);
+    const focusedIndex = ref(-1);
     const options = [
         { value: 'popular', label: 'Best Sellers' },
         { value: 'new', label: 'New Arrivals' },
@@ -23,11 +23,46 @@
         return options.find((o) => o.value === props.modelValue)?.label || 'Sorting';
     });
 
-    const selectOption = (option: { value: string; label: string }) => {
+    const toggleDropdown = () => {
+        isOpen.value = !isOpen.value;
+        if (isOpen.value) {
+            focusedIndex.value = options.findIndex((o) => o.value === props.modelValue);
+        }
+    };
+
+    const selectOption = (index: number) => {
+        const option = options[index];
         emit('update:modelValue', option.value);
         emit('change', option.value);
         playClick();
         isOpen.value = false;
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+        if (!isOpen.value) {
+            if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+                toggleDropdown();
+            }
+            return;
+        }
+
+        switch (e.key) {
+            case 'ArrowDown':
+                focusedIndex.value = (focusedIndex.value + 1) % options.length;
+                break;
+            case 'ArrowUp':
+                focusedIndex.value = (focusedIndex.value - 1 + options.length) % options.length;
+                break;
+            case 'Enter':
+            case ' ':
+                e.preventDefault();
+                selectOption(focusedIndex.value);
+                break;
+            case 'Escape':
+            case 'Tab':
+                isOpen.value = false;
+                break;
+        }
     };
 
     const closeDropdown = (e: MouseEvent) => {
@@ -41,12 +76,14 @@
 </script>
 
 <template>
-    <div class="custom-select relative inline-block w-[200px] text-left">
+    <div class="custom-select relative inline-block w-[220px] text-left" @keydown="onKeyDown">
         <button
-            @click="isOpen = !isOpen"
+            @click="toggleDropdown"
             @mousedown="playClick"
             type="button"
-            class="flex w-full items-center justify-between rounded-xl border border-zinc-200 bg-zinc-800/50 px-3 py-2 text-sm font-bold text-zinc-200 transition-all hover:bg-zinc-800"
+            aria-haspopup="listbox"
+            :aria-expanded="isOpen"
+            class="flex w-full items-center justify-between rounded-xl border border-white/10 bg-zinc-800/50 px-3 py-2.5 text-sm font-bold text-zinc-200 transition-all hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-[#c5d86d]/50"
         >
             <span class="truncate">{{ selectedLabel }}</span>
             <svg
@@ -75,22 +112,25 @@
         >
             <div
                 v-if="isOpen"
-                class="absolute z-50 mt-2 w-full origin-top-right overflow-hidden rounded-xl border border-emerald-500/10 bg-zinc-900 shadow-2xl"
+                role="listbox"
+                class="absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-2xl focus:outline-none"
             >
                 <div class="py-1">
-                    <button
-                        v-for="option in options"
+                    <div
+                        v-for="(option, index) in options"
                         :key="option.value"
-                        @click="selectOption(option)"
-                        class="block w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-emerald-500/10"
-                        :class="
-                            modelValue === option.value
-                                ? 'bg-emerald-500/5 text-emerald-400'
-                                : 'text-zinc-400 hover:text-white'
-                        "
+                        role="option"
+                        :aria-selected="modelValue === option.value"
+                        @click="selectOption(index)"
+                        @mouseenter="focusedIndex = index"
+                        class="block w-full cursor-pointer px-4 py-2.5 text-left text-sm transition-colors"
+                        :class="[
+                            modelValue === option.value ? 'text-emerald-400' : 'text-zinc-400',
+                            focusedIndex === index ? 'bg-emerald-500/10 text-white' : '',
+                        ]"
                     >
                         {{ option.label }}
-                    </button>
+                    </div>
                 </div>
             </div>
         </transition>

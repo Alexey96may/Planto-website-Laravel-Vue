@@ -1,6 +1,5 @@
 <script setup lang="ts">
-    import { computed, onMounted, ref, watch } from 'vue';
-    import { nextTick } from 'vue';
+    import { computed, nextTick, ref, watch } from 'vue';
 
     import { TransitionChild, TransitionRoot } from '@headlessui/vue';
     import { useScrollLock, useSwipe } from '@vueuse/core';
@@ -10,10 +9,9 @@
 
     const isOpen = ref(false);
     const target = ref<HTMLElement | null>(null);
-
     const { playSlideMove } = useSound();
 
-    const { isSwiping, direction, lengthX } = useSwipe(target, {
+    const { isSwiping, lengthX } = useSwipe(target, {
         onSwipeEnd(e, direction) {
             if (direction === 'left' && lengthX.value > 50) {
                 isOpen.value = false;
@@ -35,7 +33,6 @@
 
     const toggleMenu = () => {
         isOpen.value = !isOpen.value;
-        isLocked.value = isOpen.value;
     };
 
     watch(isOpen, (val) => {
@@ -43,14 +40,9 @@
     });
 
     const scrollY = ref(0);
-    const scrollHeight = ref(0);
-    const clientHeight = ref(0);
-
     const handleScroll = (e: Event) => {
         const el = e.target as HTMLElement;
         scrollY.value = el.scrollTop;
-        scrollHeight.value = el.scrollHeight;
-        clientHeight.value = el.clientHeight;
     };
 
     watch(isOpen, async (val) => {
@@ -59,19 +51,20 @@
 
             const items = document.querySelectorAll('.mobile-nav-wrapper > *');
 
-            gsap.set(items, {
-                x: -120,
-                opacity: 0,
-            });
+            gsap.killTweensOf(items);
 
-            gsap.to(items, {
-                x: 0,
-                opacity: 1,
-                duration: 0.5,
-                stagger: 0.2,
-                ease: 'power2.out',
-                delay: 0.2,
-            });
+            gsap.fromTo(
+                items,
+                { x: -40, opacity: 0 },
+                {
+                    x: 0,
+                    opacity: 1,
+                    duration: 0.4,
+                    stagger: 0.1,
+                    ease: 'power2.out',
+                    delay: 0.1,
+                },
+            );
         }
     });
 </script>
@@ -82,9 +75,14 @@
         @click="toggleMenu"
         @mousedown="playSlideMove"
         class="relative z-[200] block text-white opacity-75 outline-none focus:outline-none"
-        aria-label="Toggle menu"
+        :aria-expanded="isOpen"
+        aria-controls="mobile-menu"
+        aria-label="Toggle navigation menu"
     >
-        <div class="flex h-[18px] w-[24px] flex-col gap-[6px] md:h-[26px] md:w-[32px] md:gap-[8px]">
+        <div
+            class="flex h-[18px] w-[24px] flex-col gap-[6px] md:h-[26px] md:w-[32px] md:gap-[8px]"
+            aria-hidden="true"
+        >
             <span
                 :class="[
                     'h-[2px] w-full rounded-sm bg-current transition-all duration-300 md:h-[4px]',
@@ -107,9 +105,10 @@
             ></span>
         </div>
     </button>
+
     <Teleport to="body">
         <TransitionRoot :show="isOpen" as="template" appear>
-            <div class="relative z-[100]">
+            <div id="mobile-menu" class="relative z-[100]" role="dialog" aria-modal="true">
                 <TransitionChild
                     as="template"
                     enter="duration-300 ease-out"
@@ -121,7 +120,8 @@
                 >
                     <div
                         @click="isOpen = false"
-                        class="fixed inset-0 bg-black/30 backdrop-blur-md"
+                        class="fixed inset-0 bg-black/40 backdrop-blur-md"
+                        aria-hidden="true"
                     />
                 </TransitionChild>
 
@@ -129,7 +129,7 @@
                     <div class="flex min-h-full items-stretch justify-start">
                         <TransitionChild
                             as="template"
-                            enter="duration-300 ease-out"
+                            enter="duration-400 ease-out"
                             enter-from="-translate-x-full"
                             enter-to="translate-x-0"
                             leave="duration-300 ease-in"
@@ -140,48 +140,40 @@
                                 ref="target"
                                 :style="containerStyle"
                                 @scroll="handleScroll"
-                                class="scrollbar-hide pointer-events-auto relative flex h-screen w-full flex-col overflow-y-auto bg-plant-green/80 shadow-2xl sm:mr-auto sm:max-w-xs"
+                                class="scrollbar-hide pointer-events-auto relative flex h-screen w-full flex-col overflow-y-auto bg-plant-green/90 shadow-2xl sm:mr-auto sm:max-w-xs"
                             >
-                                <div class="relative w-full flex-1">
-                                    <div
-                                        class="pointer-events-none sticky top-0 z-50 h-24 w-full bg-gradient-to-b from-plant-green via-plant-green to-transparent sm:h-28"
-                                    ></div>
+                                <div
+                                    class="pointer-events-none sticky top-0 z-50 h-24 w-full shrink-0 bg-gradient-to-b from-plant-green via-plant-green to-transparent"
+                                />
 
-                                    <nav
-                                        class="mobile-nav-wrapper flex flex-col gap-6 p-8 pt-0 text-sm font-medium text-zinc-200 md:text-xl"
-                                    >
-                                        <slot />
-                                    </nav>
-                                </div>
+                                <nav
+                                    class="mobile-nav-wrapper flex flex-col gap-6 p-8 pt-0 text-sm font-bold uppercase tracking-widest text-zinc-100 md:text-xl"
+                                >
+                                    <slot />
+                                </nav>
                             </div>
                         </TransitionChild>
                     </div>
                 </div>
-            </div> </TransitionRoot
-    ></Teleport>
+            </div>
+        </TransitionRoot>
+    </Teleport>
 </template>
 
 <style lang="scss" scoped>
     @use '../../../scss/bootstrap' as b;
 
-    .scrollbar-hide::-webkit-scrollbar {
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
-    }
-
     .scrollbar-hide {
-        -ms-overflow-style: none !important; /* IE and Edge */
-        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 
     @media (min-width: b.$mediaTablet) {
         .relative.z-\[100\] {
             display: none !important;
-        }
-
-        :deep(body) {
-            overflow: auto !important;
         }
     }
 </style>

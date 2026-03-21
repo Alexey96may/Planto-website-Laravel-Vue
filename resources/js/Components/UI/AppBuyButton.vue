@@ -10,7 +10,7 @@
         isProcessing?: boolean;
         disabled?: boolean;
         classes?: string;
-        areaLabel?: string;
+        ariaLabel?: string;
     }
 
     const props = withDefaults(defineProps<Props>(), {
@@ -18,7 +18,7 @@
         isProcessing: false,
         disabled: false,
         classes: '',
-        areaLabel: 'Add to Cart',
+        ariaLabel: 'Add to Cart',
     });
 
     const emit = defineEmits<{
@@ -30,6 +30,12 @@
             emit('click');
         }
     };
+
+    const computedAriaLabel = computed(() => {
+        if (props.isProcessing) return 'Adding to cart...';
+        if (props.isInCart) return 'Already in cart';
+        return props.ariaLabel;
+    });
 
     const allIconClasses = computed(() => {
         return [
@@ -49,16 +55,31 @@
 <template>
     <button
         class="transition-all duration-200"
-        :class="allIconClasses"
+        :class="[
+            classes,
+            {
+                'pointer-events-none bg-orange-700/50 opacity-50 hover:opacity-50':
+                    disabled || isProcessing,
+                'cursor-default bg-emerald-700/50': isInCart,
+                'hover:brightness-110 active:scale-90': !disabled && !isProcessing && !isInCart,
+                'focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2':
+                    !disabled,
+            },
+        ]"
         :disabled="isInCart || disabled || isProcessing"
-        :aria-label="areaLabel"
+        :aria-label="computedAriaLabel"
+        :aria-busy="isProcessing"
+        :aria-pressed="isInCart"
         @click="handleClick"
-        @mousedown="playClick"
+        @mousedown="!disabled && !isProcessing && !isInCart ? playClick() : null"
     >
-        <IconBag
-            class="button-image"
-            :class="{ 'text-green-500': isInCart }"
-            aria-label="Cart icon"
-        />
+        <IconBag class="button-image" :class="{ 'text-green-500': isInCart }" aria-hidden="true" />
+
+        <span
+            v-if="isProcessing"
+            class="absolute inset-0 flex items-center justify-center"
+            aria-hidden="true"
+        >
+        </span>
     </button>
 </template>

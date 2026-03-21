@@ -46,11 +46,14 @@
             <div
                 v-if="show"
                 :key="message"
+                :role="type === 'error' ? 'alert' : 'status'"
+                aria-live="polite"
                 class="fixed bottom-8 right-8 z-[9999] flex min-w-[320px] flex-col overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-md"
                 :class="typeStyles[type]"
             >
                 <div class="flex items-center gap-4 px-6 py-4">
-                    <component :is="iconComponent" class="h-5 w-5 shrink-0" />
+                    <component :is="iconComponent" class="h-5 w-5 shrink-0" aria-hidden="true" />
+
                     <div class="flex-1 text-xs font-black uppercase tracking-widest">
                         {{ message }}
                     </div>
@@ -59,7 +62,7 @@
                         v-if="isCountingDown"
                         @mousedown="playClick"
                         @click="undoRequested = true"
-                        class="ml-2 rounded-lg bg-white/10 px-3 py-1.5 text-[10px] font-black uppercase transition-all hover:bg-white/20 active:scale-95"
+                        class="ml-2 rounded-lg bg-white/10 px-3 py-1.5 text-[10px] font-black uppercase outline-none transition-all hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-current active:scale-95"
                     >
                         Undo
                     </button>
@@ -67,9 +70,10 @@
                         v-else
                         @mousedown="playClick"
                         @click="show = false"
-                        class="opacity-50 hover:opacity-100"
+                        aria-label="Close notification"
+                        class="rounded-md opacity-50 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
                     >
-                        <X class="h-4 w-4" />
+                        <X class="h-4 w-4" aria-hidden="true" />
                     </button>
                 </div>
 
@@ -79,7 +83,12 @@
                         :style="{
                             animation: `shrink ${timerDuration}ms linear forwards`,
                         }"
+                        aria-hidden="true"
                     ></div>
+                    <span class="sr-only"
+                        >This notification will disappear in
+                        {{ timerDuration / 1000 }} seconds</span
+                    >
                 </div>
             </div>
         </Transition>

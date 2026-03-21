@@ -24,28 +24,35 @@
 </script>
 
 <template>
-    <div
+    <article
         class="group relative snap-start snap-always scroll-mt-6 rounded-[1rem] border border-white/5 bg-black/40 p-5 transition-all hover:border-[#c5d86d]/30"
         :class="{
             'pointer-events-none scale-95 opacity-30 grayscale': isDeleting,
         }"
+        :aria-busy="isDeleting"
     >
         <div
             class="mb-4 flex flex-col flex-wrap items-end justify-between gap-2 sm:flex-row sm:items-center"
         >
-            <div class="flex items-center gap-1.5">
-                <AppRating :rating="comment.rating" />
-                <span class="text-[1rem] text-emerald-500">({{ comment.rating }})</span>
+            <div
+                class="flex items-center gap-1.5"
+                :aria-label="`Rating: ${comment.rating} out of 5 stars`"
+            >
+                <AppRating :rating="comment.rating" aria-hidden="true" />
+                <span class="text-[1rem] font-bold text-emerald-500" aria-hidden="true">
+                    ({{ comment.rating }})
+                </span>
             </div>
 
-            <div class="flex gap-2">
+            <div class="flex items-center gap-3">
                 <button
                     @click="emit('delete', comment.id)"
                     @mousedown="playClick"
-                    class="text-zinc-600 transition-colors duration-200 hover:text-red-400"
-                    title="Delete log"
+                    type="button"
+                    class="text-zinc-600 transition-colors duration-200 hover:text-red-400 focus:text-red-400 focus:outline-none"
+                    aria-label="Delete comment"
                 >
-                    <Trash2 class="h-4 w-4" />
+                    <Trash2 class="h-4 w-4" aria-hidden="true" />
                 </button>
 
                 <ShareButton variant="icon" :title="title" :text="text" :url="url" />
@@ -54,10 +61,11 @@
                     v-if="!comment.is_active"
                     @click="emit('edit', comment)"
                     @mousedown="playClick"
-                    class="text-zinc-600 transition-colors duration-200 hover:text-[#c5d86d]"
-                    title="Edit transmission"
+                    type="button"
+                    class="text-zinc-600 transition-colors duration-200 hover:text-[#c5d86d] focus:text-[#c5d86d] focus:outline-none"
+                    aria-label="Edit pending transmission"
                 >
-                    <Edit3 class="h-4 w-4" />
+                    <Edit3 class="h-4 w-4" aria-hidden="true" />
                 </button>
 
                 <span
@@ -65,6 +73,7 @@
                     :class="
                         comment.is_active ? 'border-[#c5d86d]/20 text-[#c5d86d]' : 'text-zinc-600'
                     "
+                    role="status"
                 >
                     {{ comment.is_active ? 'Verified' : 'Pending' }}
                 </span>
@@ -74,5 +83,5 @@
         <p class="text-xs font-medium leading-relaxed text-zinc-400">
             {{ comment.body }}
         </p>
-    </div>
+    </article>
 </template>

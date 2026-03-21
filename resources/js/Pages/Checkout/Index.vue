@@ -8,7 +8,6 @@
         MapPin,
         MessageSquare,
         Phone,
-        ShoppingBag,
         User,
     } from 'lucide-vue-next';
     import { route } from 'ziggy-js';
@@ -40,6 +39,7 @@
                 const firstError = Object.keys(errors)[0];
                 const element = document.getElementsByName(firstError)[0];
                 element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element?.focus();
             },
         });
     };
@@ -63,11 +63,13 @@
                 <div class="space-y-6">
                     <section
                         class="rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8"
+                        aria-labelledby="personal-info-heading"
                     >
                         <h2
+                            id="personal-info-heading"
                             class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-widest text-[#c5d86d]"
                         >
-                            <User class="h-4 w-4" /> Personal Information
+                            <User class="h-4 w-4" aria-hidden="true" /> Personal Information
                         </h2>
 
                         <div class="space-y-4">
@@ -79,6 +81,7 @@
                                 >
                                 <div class="relative">
                                     <User
+                                        aria-hidden="true"
                                         class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
                                     />
                                     <input
@@ -86,13 +89,20 @@
                                         id="name"
                                         name="name"
                                         type="text"
-                                        class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                        autocomplete="name"
+                                        :aria-invalid="form.errors.name ? 'true' : 'false'"
+                                        :aria-describedby="
+                                            form.errors.name ? 'name-error' : undefined
+                                        "
+                                        class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-2 focus:ring-[#c5d86d]/50"
                                         placeholder="John Doe"
                                         required
                                     />
                                 </div>
                                 <p
                                     v-if="form.errors.name"
+                                    id="name-error"
+                                    role="alert"
                                     class="px-2 text-[10px] font-bold uppercase text-red-500"
                                 >
                                     {{ form.errors.name }}
@@ -108,6 +118,7 @@
                                     >
                                     <div class="relative">
                                         <Phone
+                                            aria-hidden="true"
                                             class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
                                         />
                                         <input
@@ -115,11 +126,24 @@
                                             id="phone"
                                             name="phone"
                                             type="tel"
-                                            class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            autocomplete="tel"
+                                            :aria-invalid="form.errors.phone ? 'true' : 'false'"
+                                            :aria-describedby="
+                                                form.errors.phone ? 'phone-error' : undefined
+                                            "
+                                            class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-2 focus:ring-[#c5d86d]/50"
                                             placeholder="+7 (___) ___"
                                             required
                                         />
                                     </div>
+                                    <p
+                                        v-if="form.errors.phone"
+                                        id="phone-error"
+                                        role="alert"
+                                        class="px-2 text-[10px] font-bold uppercase text-red-500"
+                                    >
+                                        {{ form.errors.phone }}
+                                    </p>
                                 </div>
                                 <div class="space-y-2">
                                     <label
@@ -129,6 +153,7 @@
                                     >
                                     <div class="relative">
                                         <Mail
+                                            aria-hidden="true"
                                             class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
                                         />
                                         <input
@@ -136,11 +161,24 @@
                                             id="email"
                                             name="email"
                                             type="email"
-                                            class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                            autocomplete="email"
+                                            :aria-invalid="form.errors.email ? 'true' : 'false'"
+                                            :aria-describedby="
+                                                form.errors.email ? 'email-error' : undefined
+                                            "
+                                            class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-2 focus:ring-[#c5d86d]/50"
                                             placeholder="email@example.com"
                                             required
                                         />
                                     </div>
+                                    <p
+                                        v-if="form.errors.email"
+                                        id="email-error"
+                                        role="alert"
+                                        class="px-2 text-[10px] font-bold uppercase text-red-500"
+                                    >
+                                        {{ form.errors.email }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -148,11 +186,13 @@
 
                     <section
                         class="rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8"
+                        aria-labelledby="logistics-heading"
                     >
                         <h2
+                            id="logistics-heading"
                             class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-widest text-[#c5d86d]"
                         >
-                            <MapPin class="h-4 w-4" /> Logistics
+                            <MapPin class="h-4 w-4" aria-hidden="true" /> Logistics
                         </h2>
 
                         <div class="space-y-4">
@@ -167,10 +207,23 @@
                                     name="address"
                                     id="address"
                                     rows="3"
-                                    class="w-full rounded-xl border border-white/5 bg-black/40 p-4 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                    autocomplete="street-address"
+                                    :aria-invalid="form.errors.address ? 'true' : 'false'"
+                                    :aria-describedby="
+                                        form.errors.address ? 'address-error' : undefined
+                                    "
+                                    class="w-full rounded-xl border border-white/5 bg-black/40 p-4 text-white outline-none focus:ring-2 focus:ring-[#c5d86d]/50"
                                     placeholder="Enter your full address..."
                                     required
                                 ></textarea>
+                                <p
+                                    v-if="form.errors.address"
+                                    id="address-error"
+                                    role="alert"
+                                    class="px-2 text-[10px] font-bold uppercase text-red-500"
+                                >
+                                    {{ form.errors.address }}
+                                </p>
                             </div>
 
                             <div class="space-y-2">
@@ -181,6 +234,7 @@
                                 >
                                 <div class="relative">
                                     <MessageSquare
+                                        aria-hidden="true"
                                         class="absolute left-4 top-5 h-4 w-4 text-zinc-600"
                                     />
                                     <textarea
@@ -188,7 +242,7 @@
                                         id="comment"
                                         name="comment"
                                         rows="2"
-                                        class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-1 focus:ring-[#c5d86d]/50"
+                                        class="w-full rounded-xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none focus:ring-2 focus:ring-[#c5d86d]/50"
                                         placeholder="Gate code, floor, etc."
                                     ></textarea>
                                 </div>
@@ -213,6 +267,7 @@
                                         class="peer absolute h-full w-full cursor-pointer opacity-0"
                                     />
                                     <div
+                                        aria-hidden="true"
                                         class="h-2 w-2 rounded-sm bg-[#c5d86d] opacity-0 transition-opacity peer-checked:opacity-100"
                                     ></div>
                                 </div>
@@ -230,8 +285,10 @@
                     <div class="top-8 space-y-6">
                         <section
                             class="rounded-[1rem] border border-white/5 bg-[#161b14] p-4 shadow-2xl md:rounded-[2rem] md:p-8"
+                            aria-labelledby="manifest-heading"
                         >
                             <h2
+                                id="manifest-heading"
                                 class="mb-6 text-xs font-black uppercase tracking-widest text-white"
                             >
                                 Order <span class="text-[#c5d86d]">Manifest</span>
@@ -241,11 +298,13 @@
                                 <div
                                     v-for="item in cartItems"
                                     :key="item.id"
+                                    role="listitem"
                                     class="flex flex-col flex-wrap items-start gap-4 rounded-xl border border-white/[0.02] bg-black/20 p-4"
                                 >
                                     <div class="flex flex-wrap items-center gap-4">
                                         <AppImage
                                             :src="item.image"
+                                            alt=""
                                             class="h-16 w-16 rounded-xl border border-white/5 object-cover"
                                         />
                                         <div class="min-w-[50px] flex-1">
@@ -263,7 +322,11 @@
                                 </div>
                             </div>
 
-                            <div class="mt-8 space-y-3 border-t border-white/5 pt-6">
+                            <div
+                                class="mt-8 space-y-3 border-t border-white/5 pt-6"
+                                role="region"
+                                aria-label="Totals"
+                            >
                                 <div
                                     class="flex flex-wrap justify-between gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
                                 >
@@ -278,6 +341,7 @@
                                 </div>
                                 <div
                                     class="flex flex-wrap justify-between gap-2 border-t border-white/10 pt-4"
+                                    aria-live="polite"
                                 >
                                     <span
                                         class="text-xs font-black uppercase tracking-[0.3em] text-white"
@@ -292,14 +356,19 @@
                             <button
                                 type="submit"
                                 :disabled="form.processing"
-                                class="mt-8 flex w-full items-center justify-center gap-3 rounded-xl bg-emerald-500 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-black transition-all hover:scale-[1.02] hover:bg-emerald-300 active:scale-95 disabled:opacity-50"
+                                class="mt-8 flex w-full items-center justify-center gap-3 rounded-xl bg-emerald-500 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-black outline-none transition-all hover:scale-[1.02] hover:bg-emerald-300 focus:ring-4 focus:ring-emerald-500/20 active:scale-95 disabled:opacity-50"
                             >
                                 <CreditCard
                                     v-if="!form.processing"
+                                    aria-hidden="true"
                                     class="hidden h-4 w-4 sm:block"
                                 />
                                 <span>{{ form.processing ? 'Syncing...' : 'Initiate Order' }}</span>
-                                <ArrowRight v-if="!form.processing" class="h-4 w-4" />
+                                <ArrowRight
+                                    v-if="!form.processing"
+                                    aria-hidden="true"
+                                    class="h-4 w-4"
+                                />
                             </button>
                         </section>
                     </div>

@@ -16,9 +16,7 @@
     import MainLayout from '@/Layouts/MainLayout.vue';
     import { PaginatedResponse, Review, Seo } from '@/types';
 
-    defineOptions({
-        layout: MainLayout,
-    });
+    defineOptions({ layout: MainLayout });
 
     const props = defineProps<{
         reviews: PaginatedResponse<Review>;
@@ -56,7 +54,6 @@
     });
 
     const getInitials = (name: string) => (name ? name.charAt(0).toUpperCase() : 'A');
-
     const formatDate = (dateStr?: string) => {
         if (!dateStr) return '';
         return new Date(dateStr).toLocaleDateString();
@@ -68,25 +65,22 @@
 
     <div class="bg-plant-shop">
         <div class="isolate mx-auto max-w-5xl px-6 py-16 lg:py-24">
-            <WindEffect :particleCount="35" :windStrength="1.5" />
+            <WindEffect aria-hidden="true" :particleCount="35" :windStrength="1.5" />
 
             <header class="relative z-[3] mb-16">
-                <div>
-                    <h1 class="mb-4 text-4xl font-bold tracking-tight text-zinc-200 lg:text-6xl">
-                        What our <span class="text-emerald-600">customers say</span>
-                    </h1>
-                    <p class="text-lg text-zinc-500">
-                        Real feedback from our plant-loving community.
-                    </p>
-                </div>
+                <h1 class="mb-4 text-4xl font-bold tracking-tight text-zinc-200 lg:text-6xl">
+                    What our <span class="text-emerald-600">customers say</span>
+                </h1>
+                <p class="text-lg text-zinc-500">Real feedback from our plant-loving community.</p>
             </header>
 
-            <div
+            <section
                 v-if="averageRating"
+                aria-label="Reviews summary"
                 class="relative z-[3] mb-8 flex flex-col items-center gap-8 rounded-[1rem] border border-emerald-400/50 p-10 backdrop-blur-lg sm:justify-between lg:flex-row lg:rounded-[2rem]"
             >
                 <div class="flex flex-col items-center gap-6 sm:flex-row">
-                    <span class="text-7xl font-black text-emerald-500">
+                    <span class="text-7xl font-black text-emerald-500" aria-hidden="true">
                         {{ averageRating.toFixed(1) }}
                     </span>
                     <div class="flex flex-col gap-1">
@@ -95,7 +89,11 @@
                         >
                             Average Rating
                         </div>
-                        <AppRating :rating="averageRating" class="origin-left scale-150" />
+                        <AppRating
+                            :rating="averageRating"
+                            class="origin-left scale-150"
+                            :aria-label="`Average rating ${averageRating.toFixed(1)} out of 5`"
+                        />
                     </div>
                 </div>
 
@@ -104,37 +102,47 @@
                         Based on {{ reviews.total }} verified reviews
                     </p>
                 </div>
-            </div>
+            </section>
 
             <main class="relative">
                 <div
                     v-if="reviews.data.length !== 0"
                     class="relative z-20 overflow-hidden rounded-[1rem] border border-emerald-400/50 bg-plant-green px-4 py-8 lg:rounded-[2rem] lg:px-6 lg:py-12"
                 >
-                    <CommentsFilter
-                        v-model="selectedSort"
-                        class="z-[1] mb-8 ml-auto w-full md:w-1/3"
-                    />
+                    <div class="mb-8 flex flex-col items-end gap-4">
+                        <label for="sort-filter" class="sr-only">Sort reviews by</label>
+                        <CommentsFilter
+                            id="sort-filter"
+                            v-model="selectedSort"
+                            class="z-[1] w-full md:w-1/3"
+                        />
+                    </div>
 
-                    <div class="z-10 grid gap-8">
+                    <div
+                        class="z-10 grid gap-8"
+                        role="region"
+                        aria-live="polite"
+                        :aria-busy="isLoading"
+                    >
                         <TransitionGroup name="list-fade">
                             <template v-if="isLoading">
                                 <ReviewSkeleton
                                     v-for="i in reviews.data.length || 3"
                                     :key="'skeleton-' + i"
-                                    class="review-card sm:6 relative rounded-[1rem] border border-emerald-400/30 bg-[#1b2316]/60 p-4 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/60 hover:bg-[#1b2316]/80 md:p-10 xl:rounded-[2rem]"
+                                    class="review-card relative rounded-[1rem] border border-emerald-400/30 bg-[#1b2316]/60 p-4 md:p-10 xl:rounded-[2rem]"
                                 />
+                                <span class="sr-only">Loading reviews...</span>
                             </template>
 
                             <template v-else>
-                                <div
+                                <article
                                     v-for="(review, index) in reviews.data"
                                     :key="review.id"
-                                    class="review-card sm:6 group relative rounded-[1rem] border border-emerald-700 bg-plant-shop p-4 transition-all duration-500 md:p-10 xl:rounded-[2rem]"
+                                    class="review-card group relative rounded-[1rem] border border-emerald-700 bg-plant-shop p-4 transition-all duration-500 md:p-10 xl:rounded-[2rem]"
                                     :style="{ animationDelay: `${index * 100}ms` }"
                                 >
                                     <div class="relative z-10 text-white">
-                                        <div
+                                        <header
                                             class="mb-8 flex items-center justify-between border-b border-white/20 pb-6"
                                         >
                                             <div
@@ -142,10 +150,12 @@
                                             >
                                                 <div
                                                     class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#c5d86d]/20 bg-zinc-800"
+                                                    aria-hidden="true"
                                                 >
                                                     <AppImage
                                                         v-if="review.user?.avatar_url"
                                                         :src="review.user?.avatar_url"
+                                                        :alt="''"
                                                         class="h-full w-full object-cover"
                                                     />
                                                     <span
@@ -169,14 +179,20 @@
                                                         <AppRating :rating="review.rating" />
                                                         <span
                                                             class="ml-2 text-xs font-black italic text-white"
-                                                            >{{ review.rating?.toFixed(1) }}</span
                                                         >
+                                                            <span class="sr-only">Rated </span
+                                                            >{{ review.rating?.toFixed(1) }}
+                                                        </span>
                                                     </div>
 
                                                     <time
+                                                        :datetime="review.created_at"
                                                         class="flex justify-center gap-1 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 md:items-center"
                                                     >
-                                                        <Calendar class="h-3 w-3"></Calendar>
+                                                        <Calendar
+                                                            class="h-3 w-3"
+                                                            aria-hidden="true"
+                                                        />
                                                         <span>{{
                                                             formatDate(review.created_at)
                                                         }}</span>
@@ -188,25 +204,27 @@
                                                 class="hidden items-center gap-1 rounded-full border border-white/5 bg-black/20 px-3 py-1.5 md:flex"
                                             >
                                                 <AppRating :rating="review.rating" />
-
                                                 <span
                                                     class="ml-2 text-xs font-black italic text-white"
-                                                    >{{ review.rating?.toFixed(1) }}</span
                                                 >
+                                                    <span class="sr-only">Rated </span
+                                                    >{{ review.rating?.toFixed(1) }}
+                                                </span>
                                             </div>
-                                        </div>
+                                        </header>
 
-                                        <p
+                                        <blockquote
                                             class="text-sm italic leading-relaxed text-zinc-300 lg:text-xl"
                                         >
                                             <span
                                                 class="md:text-md mr-1 font-serif text-[#c5d86d] xl:text-xl"
+                                                aria-hidden="true"
                                                 >“</span
                                             >
                                             {{ review.body }}
-                                        </p>
+                                        </blockquote>
                                     </div>
-                                </div>
+                                </article>
                             </template>
                         </TransitionGroup>
                     </div>
@@ -214,10 +232,12 @@
 
                 <div
                     v-else
+                    role="status"
                     class="relative z-[3] rounded-[1rem] border border-emerald-400/50 bg-plant-green py-12 text-center"
                 >
                     <div
                         class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-plant-shop text-4xl"
+                        aria-hidden="true"
                     >
                         🍃
                     </div>
@@ -229,7 +249,6 @@
                                     ? route('dashboard') + '#feedbackSection'
                                     : route('register')
                             "
-                            :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Register'"
                             class="text-emerald-500 transition-colors duration-200 hover:text-emerald-300"
                         >
                             Be the first
@@ -241,10 +260,16 @@
         </div>
     </div>
 
-    <Pagination :disabled="isLoading" class="z-[3]" :links="reviews.links" />
+    <Pagination
+        :disabled="isLoading"
+        class="z-[3]"
+        :links="reviews.links"
+        aria-label="Reviews pagination"
+    />
 </template>
 
 <style scoped>
+    /* Стили остаются без изменений */
     .list-fade-enter-active,
     .list-fade-leave-active {
         transition: all 0.4s ease;
@@ -264,20 +289,5 @@
 
     .review-card {
         will-change: transform, opacity;
-    }
-
-    .parent-green {
-        clip-path: polygon(
-            0% 0%,
-            0% 100%,
-            100% 100%,
-            100% 0%,
-            0% 0%,
-            /* Дырка */ calc(50% - 175px) calc(50% - 225px),
-            calc(50% + 175px) calc(50% - 225px),
-            calc(50% + 175px) calc(50% + 225px),
-            calc(50% - 175px) calc(50% + 225px),
-            calc(50% - 175px) calc(50% - 225px)
-        );
     }
 </style>

@@ -8,9 +8,9 @@
 </script>
 
 <template>
-    <div class="mb-8 relative group text-zinc-900">
+    <div class="group relative mb-8 text-zinc-900">
         <div
-            class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-emerald-500 transition-colors"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 transition-colors group-focus-within:text-emerald-500"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@
             @keyup.enter="handleEnter"
             type="text"
             placeholder="Search plants..."
-            class="w-full pl-11 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-2xl text-sm focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white outline-none transition-all duration-300 placeholder:text-zinc-400"
+            class="w-full rounded-2xl border border-zinc-200 bg-zinc-50 py-2 pl-11 pr-4 text-sm outline-none transition-all duration-300 placeholder:text-zinc-400 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
         />
 
         <button
@@ -42,7 +42,7 @@
                 search = '';
                 handleEnter();
             "
-            class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-500 transition-colors"
+            class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-300 transition-colors hover:text-zinc-500"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"

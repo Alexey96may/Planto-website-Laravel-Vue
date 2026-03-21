@@ -43,35 +43,40 @@
                             >
                                 <Link :href="route('home')">
                                     <IconLogo
-                                        class="block h-9 w-auto fill-current text-[#c5d86d]"
+                                        class="block h-8 w-auto fill-current text-[#c5d86d]"
                                         aria-label="Plant Shop Logo"
                                     />
                                 </Link>
                             </div>
 
                             <div class="hidden space-x-6 md:flex">
-                                <NavLink :href="route('home')" :active="false"> Store </NavLink>
+                                <NavLink
+                                    :href="route('home')"
+                                    :active="false"
+                                    class="text-[1.17rem]"
+                                >
+                                    {{ $page.props.settings?.site_name || 'Planto' }}
+                                </NavLink>
 
                                 <NavLink
                                     v-if="$page.props.auth.user.role === 'admin'"
                                     :href="route('admin.dashboard')"
                                     :active="route().current('admin.dashboard')"
+                                    class="text-[1rem]"
                                 >
                                     Admin Panel
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
+                                    :active="
+                                        ['dashboard', 'orders*', 'profile*'].some((name) =>
+                                            route().current(name),
+                                        )
+                                    "
+                                    class="text-[1rem]"
                                 >
                                     My Garden
-                                </NavLink>
-
-                                <NavLink
-                                    :href="route('orders.user')"
-                                    :active="route().current('orders.user')"
-                                >
-                                    My Orders
                                 </NavLink>
                             </div>
                         </div>
@@ -108,6 +113,14 @@
                                                 :active="route().current('dashboard')"
                                             >
                                                 Account
+                                            </DropdownLink>
+
+                                            <DropdownLink
+                                                :href="route('orders.user')"
+                                                :active="route().current('orders.user')"
+                                                class="my-1 flex items-center gap-2 rounded-xl"
+                                            >
+                                                My Orders
                                             </DropdownLink>
 
                                             <DropdownLink

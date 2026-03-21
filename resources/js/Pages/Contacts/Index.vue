@@ -25,6 +25,11 @@
         return page.props.settings[key] || null;
     };
 
+    const getPlatformName = (key: string): string => {
+        const names: Record<string, string> = { fb: 'Facebook', x: 'Twitter', li: 'LinkedIn' };
+        return names[key] || key;
+    };
+
     defineOptions({
         layout: MainLayout,
     });
@@ -39,7 +44,7 @@
         <div class="mx-auto max-w-6xl">
             <header class="relative z-[3] mb-20">
                 <h1
-                    class="font-serif text-2xl font-light italic tracking-tight md:text-8xl lg:text-4xl"
+                    class="font-serif text-2xl font-light italic tracking-tight md:text-4xl lg:text-6xl"
                 >
                     Contact
                     <span
@@ -47,14 +52,14 @@
                         >Us</span
                     >
                 </h1>
-                <div class="mt-6 h-px w-24 bg-emerald-500/50"></div>
+                <div class="mt-6 h-px w-24 bg-emerald-500/50" aria-hidden="true"></div>
             </header>
 
             <div class="grid gap-16 xl:grid-cols-12">
                 <div class="relative z-[3] space-y-16 xl:col-span-5">
-                    <section>
+                    <section aria-labelledby="contact-title">
                         <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-                            <h2 class="font-serif text-4xl italic opacity-90">
+                            <h2 id="contact-title" class="font-serif text-4xl italic opacity-90">
                                 {{ $page.props.settings.site_name }}
                             </h2>
 
@@ -73,6 +78,7 @@
                             >
                                 <div
                                     class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/20 bg-emerald-900/25 text-emerald-600 transition-colors group-hover:bg-emerald-900/80 group-hover:text-white"
+                                    aria-hidden="true"
                                 >
                                     <MapPin class="h-5 w-5" />
                                 </div>
@@ -82,9 +88,9 @@
                                     >
                                         Location
                                     </p>
-                                    <p class="text-lg font-medium text-zinc-300">
+                                    <address class="text-lg font-medium not-italic text-zinc-300">
                                         {{ $page.props.settings.contact_address }}
-                                    </p>
+                                    </address>
                                 </div>
                             </div>
 
@@ -94,6 +100,7 @@
                             >
                                 <div
                                     class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/20 bg-emerald-900/25 text-emerald-400 transition-colors group-hover:bg-emerald-900/80 group-hover:text-white"
+                                    aria-hidden="true"
                                 >
                                     <Phone class="h-5 w-5" />
                                 </div>
@@ -103,9 +110,12 @@
                                     >
                                         Phone
                                     </p>
-                                    <p class="text-lg font-medium text-zinc-300">
+                                    <a
+                                        :href="`tel:${$page.props.settings.contact_phone.replace(/\s+/g, '')}`"
+                                        class="text-lg font-medium text-zinc-300 transition-colors hover:text-emerald-400"
+                                    >
                                         {{ $page.props.settings.contact_phone }}
-                                    </p>
+                                    </a>
                                 </div>
                             </div>
 
@@ -115,6 +125,7 @@
                             >
                                 <div
                                     class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/20 bg-emerald-900/25 text-emerald-400 transition-colors group-hover:bg-emerald-900/80 group-hover:text-white"
+                                    aria-hidden="true"
                                 >
                                     <Mail class="h-5 w-5" />
                                 </div>
@@ -124,37 +135,47 @@
                                     >
                                         Email
                                     </p>
-                                    <p class="text-lg font-medium text-zinc-300">
+                                    <a
+                                        :href="`mailto:${$page.props.settings.contact_email}`"
+                                        class="text-lg font-medium text-zinc-300 transition-colors hover:text-emerald-400"
+                                    >
                                         {{ $page.props.settings.contact_email }}
-                                    </p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    <section>
+                    <section aria-labelledby="social-title">
                         <div class="mb-8 flex items-center gap-4">
-                            <Share2 class="h-5 w-5 text-emerald-500" />
-                            <h3 class="text-sm font-black uppercase tracking-[0.3em] text-zinc-500">
+                            <Share2 class="h-5 w-5 text-emerald-500" aria-hidden="true" />
+                            <h3
+                                id="social-title"
+                                class="text-sm font-black uppercase tracking-[0.3em] text-zinc-500"
+                            >
                                 Social Networks
                             </h3>
                         </div>
-                        <div class="flex flex-wrap gap-4">
+                        <div class="flex flex-wrap gap-4" role="list">
                             <a
                                 v-for="social in ['fb', 'x', 'li']"
                                 :key="social"
                                 v-show="getSocialLink(social)"
                                 :href="getSocialLink(social) ?? '#'"
+                                :aria-label="`Visit our ${getPlatformName(social)} page`"
+                                role="listitem"
                                 class="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/5 bg-emerald-900/30 text-[10px] font-black uppercase tracking-tighter transition-all hover:-translate-y-1 hover:border-emerald-500/50 hover:bg-emerald-500/10 hover:text-emerald-400"
                             >
-                                {{ social }}
+                                <span aria-hidden="true">{{ social }}</span>
                             </a>
                         </div>
                     </section>
                 </div>
 
                 <div class="xl:col-span-7">
-                    <Mapbox class="sticky top-12 h-[600px] overflow-hidden rounded-[2rem]" />
+                    <section aria-label="Location Map">
+                        <Mapbox class="sticky top-12 h-[600px] overflow-hidden rounded-[2rem]" />
+                    </section>
                 </div>
             </div>
         </div>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-    import { computed, ref, watch } from 'vue';
-    import { onMounted, onUnmounted } from 'vue';
+    import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
     import { Head, useForm } from '@inertiajs/vue3';
 
@@ -35,31 +34,12 @@
     } = useCommentActions();
 
     const { playClick, playCancel, playSuccess } = useSound();
+    const { notify } = useFlash();
 
     const form = useForm<CommentForm>({
         body: '',
         rating: 5.0,
     });
-
-    const formAvatar = useForm<UserForm>({
-        name: props.auth.user.name,
-        email: props.auth.user.email,
-        avatar: null,
-        _method: 'patch',
-    });
-
-    const { notify } = useFlash();
-
-    const imageUrl = ref<string | null>(props.auth.user.avatar_url);
-
-    watch(
-        () => props.auth.user.avatar_url,
-        (newUrl) => {
-            if (newUrl && !formAvatar.processing) {
-                imageUrl.value = newUrl;
-            }
-        },
-    );
 
     const isError = ref(false);
 
@@ -75,17 +55,13 @@
 
         form.post(route('comments.store'), {
             preserveScroll: true,
-
             onSuccess: () => {
                 form.reset();
                 playSuccess();
             },
-
             onError: (errors) => {
-                console.error(errors);
                 const firstError = Object.values(errors)[0];
-                notify(firstError, 'error');
-
+                notify(firstError as string, 'error');
                 isError.value = true;
                 playCancel();
             },
@@ -95,11 +71,7 @@
     const isAdmin = computed(() => props.auth.user.role === 'admin');
 
     watch(isEditModalOpen, (isOpen) => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
-        }
+        document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 
     const handleEsc = (e: KeyboardEvent) => {
@@ -125,7 +97,7 @@
             class="min-h-screen bg-plant-shop px-4 py-16 font-sans selection:bg-[#c5d86d] selection:text-black sm:px-6 lg:px-8 lg:py-24"
         >
             <div class="mx-auto max-w-5xl">
-                <WindEffect :particleCount="35" :windStrength="1.5" />
+                <WindEffect :particleCount="35" :windStrength="1.5" aria-hidden="true" />
 
                 <header
                     class="relative z-[3] mb-16 flex flex-col justify-between gap-4 md:flex-row md:items-end"
@@ -149,7 +121,7 @@
                             User <span class="text-[#c5d86d]">Core</span>
                         </h2>
                         <p class="font-medium tracking-tight text-zinc-500">
-                            Accessing terminal for {{ formAvatar.name }}...
+                            Accessing terminal for {{ props.auth.user.name }}...
                         </p>
                     </div>
 
@@ -177,7 +149,8 @@
                         <h3
                             class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] text-white"
                         >
-                            <MessageSquare class="h-4 w-4 text-[#c5d86d]" /> New Feedback
+                            <MessageSquare class="h-4 w-4 text-[#c5d86d]" aria-hidden="true" /> New
+                            Feedback
                         </h3>
 
                         <form @submit.prevent="submitComment" class="space-y-6">
@@ -186,6 +159,7 @@
                                     <textarea
                                         v-model="form.body"
                                         id="reviewMessage"
+                                        aria-label="Experience report text"
                                         @input="isError = false"
                                         :disabled="form.processing"
                                         rows="4"
@@ -205,10 +179,12 @@
                                 <Transition name="fade">
                                     <div
                                         v-if="isError"
+                                        role="alert"
                                         class="mt-4 flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4"
                                     >
                                         <ShieldAlert
                                             class="animate-pulse-fast h-5 w-5 shrink-0 text-red-500"
+                                            aria-hidden="true"
                                         />
                                         <div class="space-y-1">
                                             <p
@@ -229,23 +205,26 @@
 
                             <div class="rounded-2xl border border-white/5 bg-black/20 p-4">
                                 <div class="mb-4 flex items-center justify-between">
-                                    <span
+                                    <label
+                                        for="signal-rating"
                                         class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
-                                        >Signal Rating</span
+                                        >Signal Rating</label
                                     >
                                     <div class="flex items-center gap-1 text-[#c5d86d]">
                                         <span class="text-lg font-black">{{ form.rating }}</span>
-                                        <Star class="h-4 w-4 fill-current" />
+                                        <Star class="h-4 w-4 fill-current" aria-hidden="true" />
                                     </div>
                                 </div>
 
                                 <input
+                                    id="signal-rating"
                                     type="range"
                                     @change="playClick"
                                     v-model="form.rating"
                                     min="0.5"
                                     max="5"
                                     step="0.5"
+                                    aria-label="Adjust signal strength from 0.5 to 5"
                                     class="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-emerald-700 accent-[#c5d86d]"
                                     :style="{
                                         background: `linear-gradient(to right, #c5d86d ${ratingProgress}%, rgba(255,255,255,0.1) ${ratingProgress}%)`,
@@ -257,6 +236,9 @@
                                 type="submit"
                                 @mousedown="playClick"
                                 :disabled="form.processing"
+                                :aria-label="
+                                    form.processing ? 'Synchronizing feedback' : 'Publish feedback'
+                                "
                                 class="w-full cursor-pointer rounded-2xl bg-emerald-400 py-4 text-[10px] font-black uppercase tracking-widest text-black transition-all hover:scale-[1.02] active:scale-95"
                                 :class="{ 'shake-anim': isError }"
                             >
@@ -271,7 +253,8 @@
                         <h3
                             class="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] text-white"
                         >
-                            <History class="h-4 w-4 text-[#c5d86d]" /> Archive_Log
+                            <History class="h-4 w-4 text-[#c5d86d]" aria-hidden="true" />
+                            Archive_Log
                         </h3>
 
                         <div
@@ -281,7 +264,7 @@
                                 v-if="myComments.length === 0"
                                 class="flex flex-col items-center justify-center py-20 text-emerald-800"
                             >
-                                <ShieldCheck class="mb-4 h-12 w-12 opacity-30" />
+                                <ShieldCheck class="mb-4 h-12 w-12 opacity-30" aria-hidden="true" />
                                 <p
                                     class="text-center text-[10px] font-black uppercase tracking-widest"
                                 >

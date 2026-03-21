@@ -7,6 +7,7 @@
         show?: boolean;
         maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
         closeable?: boolean;
+        ariaLabelledby?: string; // ID заголовка внутри модалки
     }
 
     const props = withDefaults(defineProps<Props>(), {
@@ -18,13 +19,17 @@
     const emit = defineEmits<{
         (e: 'close'): void;
     }>();
+
     const dialog = ref<HTMLDialogElement | null>(null);
     const showSlot = ref<boolean>(props.show);
+    const returnFocusElement = ref<HTMLElement | null>(null);
 
     watch(
         () => props.show,
         (isVisible: boolean) => {
             if (isVisible) {
+                returnFocusElement.value = document.activeElement as HTMLElement;
+
                 const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
                 document.body.style.paddingRight = `${scrollBarWidth}px`;
                 document.body.style.overflow = 'hidden';
@@ -37,6 +42,8 @@
                     document.body.style.paddingRight = '';
                     dialog.value?.close();
                     showSlot.value = false;
+
+                    returnFocusElement.value?.focus();
                 }, 200);
             }
         },
@@ -51,18 +58,13 @@
     const closeOnEscape = (e: KeyboardEvent): void => {
         if (e.key === 'Escape') {
             e.preventDefault();
-
-            if (props.show) {
-                close();
-            }
+            if (props.show) close();
         }
     };
 
     onMounted(() => document.addEventListener('keydown', closeOnEscape));
-
     onUnmounted(() => {
         document.removeEventListener('keydown', closeOnEscape);
-
         document.body.style.overflow = '';
     });
 
@@ -91,8 +93,10 @@
 
 <template>
     <dialog
-        class="z-50 m-0 min-h-full min-w-full overflow-y-auto bg-transparent backdrop:bg-transparent"
         ref="dialog"
+        class="z-50 m-0 min-h-full min-w-full overflow-y-auto bg-transparent backdrop:bg-transparent"
+        :aria-labelledby="ariaLabelledby"
+        aria-modal="true"
     >
         <div class="fixed inset-0 z-50 overflow-y-auto px-4 py-6 sm:px-0" scroll-region>
             <Transition
@@ -104,8 +108,7 @@
                 leave-to-class="opacity-0"
             >
                 <div v-show="show" class="fixed inset-0 transform transition-all" @click="close">
-                    <div class="absolute inset-0 bg-gray-500 opacity-75" />
-                    <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" />
+                    <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" aria-hidden="true" />
                 </div>
             </Transition>
 
@@ -119,10 +122,10 @@
             >
                 <div
                     v-show="show"
-                    class="mb-6 transform overflow-hidden rounded-lg bg-black shadow-xl transition-all sm:mx-auto sm:w-full"
+                    class="mb-6 transform overflow-hidden rounded-[2rem] border border-white/10 bg-[#161b14] shadow-xl transition-all sm:mx-auto sm:w-full"
                     :class="[props.maxWidth === 'full' ? 'w-auto' : 'sm:w-full', maxWidthClass]"
                 >
-                    <div class="custom-scrollbar overflow-y-auto">
+                    <div class="custom-scrollbar overflow-y-auto p-2">
                         <slot v-if="showSlot" />
                     </div>
                 </div>
@@ -130,26 +133,3 @@
         </div>
     </dialog>
 </template>
-
-<style scoped>
-    div::-webkit-scrollbar {
-        display: none;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #313136;
-        border-radius: 10px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #10b981;
-    }
-</style>

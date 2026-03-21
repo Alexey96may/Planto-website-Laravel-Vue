@@ -1,5 +1,7 @@
 <template>
     <div
+        aria-hidden="true"
+        inert
         class="grid animate-pulse grid-cols-1 items-center gap-4 border-b border-white/5 px-8 py-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-[80px_1fr_120px_120px_100px_140px]"
     >
         <div class="flex justify-center 2xl:justify-start">

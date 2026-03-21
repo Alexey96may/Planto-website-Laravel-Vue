@@ -67,42 +67,55 @@
 
 <template>
     <section
-        class="group relative z-[3] mb-16 overflow-hidden rounded-[1rem] border border-emerald-400/50 p-4 backdrop-blur-xl md:p-8 lg:rounded-[2rem]"
+        class="group relative z-[3] mb-16 overflow-hidden rounded-[1rem] border border-emerald-400/20 p-4 backdrop-blur-xl md:p-8 lg:rounded-[2rem]"
     >
-        <form @submit.prevent="submitInfo" class="relative z-10 space-y-8">
+        <form
+            @submit.prevent="submitInfo"
+            :aria-busy="formAvatar.processing"
+            class="relative z-10 space-y-8"
+        >
             <div class="flex flex-col items-start gap-12 lg:flex-row">
                 <div class="group/avatar relative mx-auto shrink-0 lg:w-48">
                     <ImageUploader
                         ref="uploader"
                         v-model="formAvatar.avatar"
-                        label="Avatar"
+                        label="Avatar Profile"
                         :error="formAvatar.errors.avatar"
                         :existingImage="imageUrl"
                         @on-file-select="handleFileSelect"
                     />
                 </div>
 
-                <div class="w-full flex-1 space-y-6">
+                <fieldset class="w-full flex-1 space-y-6">
+                    <legend class="sr-only">Identity information</legend>
+
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <div class="space-y-2">
                             <label
-                                class="ml-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
+                                class="ml-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 transition-colors group-focus-within:text-[#c5d86d]"
                                 for="name"
-                                >Identity Name</label
                             >
+                                Identity Name
+                            </label>
                             <div class="relative">
                                 <User
+                                    aria-hidden="true"
                                     class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
                                 />
                                 <input
                                     v-model="formAvatar.name"
                                     id="name"
                                     type="text"
-                                    class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
+                                    autocomplete="name"
+                                    :aria-invalid="!!formAvatar.errors.name"
+                                    aria-describedby="name-error"
+                                    class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-sm text-white outline-none transition-all focus:border-[#c5d86d]/50 focus:ring-4 focus:ring-[#c5d86d]/10"
                                 />
                                 <div
                                     v-if="formAvatar.errors.name"
-                                    class="mt-1 text-xs text-red-400"
+                                    id="name-error"
+                                    role="alert"
+                                    class="ml-2 mt-2 text-[10px] font-bold uppercase tracking-widest text-red-400"
                                 >
                                     {{ formAvatar.errors.name }}
                                 </div>
@@ -113,21 +126,28 @@
                             <label
                                 class="ml-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
                                 for="email"
-                                >Secure Email</label
                             >
+                                Secure Email
+                            </label>
                             <div class="relative">
                                 <Mail
+                                    aria-hidden="true"
                                     class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600"
                                 />
                                 <input
                                     v-model="formAvatar.email"
                                     id="email"
                                     type="email"
-                                    class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-white outline-none transition-all focus:ring-1 focus:ring-[#c5d86d]/50"
+                                    autocomplete="email"
+                                    :aria-invalid="!!formAvatar.errors.email"
+                                    aria-describedby="email-error"
+                                    class="w-full rounded-2xl border border-white/5 bg-black/40 p-4 pl-12 text-sm text-white outline-none transition-all focus:border-[#c5d86d]/50 focus:ring-4 focus:ring-[#c5d86d]/10"
                                 />
                                 <div
                                     v-if="formAvatar.errors.email"
-                                    class="mt-1 text-xs text-red-400"
+                                    id="email-error"
+                                    role="alert"
+                                    class="ml-2 mt-2 text-[10px] font-bold uppercase tracking-widest text-red-400"
                                 >
                                     {{ formAvatar.errors.email }}
                                 </div>
@@ -140,13 +160,15 @@
                             type="submit"
                             @mousedown="playClick"
                             :disabled="formAvatar.processing"
-                            class="flex items-center gap-3 rounded-2xl bg-emerald-500 px-8 py-4 text-[10px] font-black uppercase tracking-widest text-black transition-all hover:bg-emerald-200 disabled:opacity-50"
+                            class="group/btn relative flex items-center gap-3 overflow-hidden rounded-2xl bg-[#c5d86d] px-8 py-4 text-[10px] font-black uppercase tracking-widest text-[#0f120e] transition-all hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                            <Save class="h-4 w-4" />
-                            {{ formAvatar.processing ? 'Syncing...' : 'Update' }}
+                            <Save v-if="!formAvatar.processing" class="h-4 w-4" />
+                            <span :class="{ 'animate-pulse': formAvatar.processing }">
+                                {{ formAvatar.processing ? 'Syncing...' : 'Update Identity' }}
+                            </span>
                         </button>
                     </div>
-                </div>
+                </fieldset>
             </div>
         </form>
     </section>

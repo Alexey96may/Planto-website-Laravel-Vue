@@ -273,7 +273,12 @@
 </script>
 
 <template>
-    <canvas v-show="isEffectsEnabled" ref="canvasRef" class="wind-effect-canvas"></canvas>
+    <canvas
+        v-show="isEffectsEnabled"
+        ref="canvasRef"
+        class="wind-effect-canvas"
+        aria-hidden="true"
+    ></canvas>
 </template>
 
 <style scoped>

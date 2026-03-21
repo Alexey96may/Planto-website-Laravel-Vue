@@ -18,15 +18,25 @@
 </script>
 
 <template>
-    <div class="rating-display flex items-center" :aria-label="`Rating: ${rating} out of ${max}`">
-        <IconStar v-for="n in stars.full" :key="'full-' + n" class="rating-star hover:scale-110" />
+    <div
+        class="rating-display flex items-center"
+        role="img"
+        :aria-label="`Rating: ${rating || 0} out of ${max}`"
+    >
+        <IconStar
+            v-for="n in stars.full"
+            :key="'full-' + n"
+            class="rating-star hover:scale-110"
+            aria-hidden="true"
+        />
 
-        <IconStarHalf v-if="stars.half" class="rating-star hover:scale-110" />
+        <IconStarHalf v-if="stars.half" class="rating-star hover:scale-110" aria-hidden="true" />
 
         <IconStarEmpty
             v-for="n in stars.empty"
             :key="'empty-' + n"
             class="rating-star hover:scale-110"
+            aria-hidden="true"
         />
     </div>
 </template>

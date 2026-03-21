@@ -15,17 +15,16 @@
     });
 
     const page = usePage<SharedData>();
-
     const footerMenuItems = computed(() => page.props.navigation?.footer || []);
 </script>
 
 <template>
-    <nav class="footer__nav" aria-label="Footer navigation">
-        <ul class="space-y-2"></ul>
-        <ul class="footer__nav-list" aria-label="Navigation list">
-            <li class="footer__nav-item">Quick Link’s</li>
-            <li v-for="item in footerMenuItems" :key="item.id" :aria-label="item.title">
-                <Link :href="getHref(item) || '#'" :aria-label="'To ' + item.title">
+    <nav class="footer__nav" aria-labelledby="footer-nav-title">
+        <h3 id="footer-nav-title" class="footer__nav-title">Quick Links</h3>
+
+        <ul class="footer__nav-list">
+            <li v-for="item in footerMenuItems" :key="item.id" class="footer__nav-item">
+                <Link :href="getHref(item) || '#'" class="footer__nav-link">
                     {{ item.title }}
                 </Link>
             </li>
@@ -35,37 +34,49 @@
 
 <style lang="scss" scoped>
     @use '../../../scss/bootstrap' as b;
-    .footer__nav-list {
-        @include b.flex(flex-start, flex-start, column);
-        gap: calc(1rem * (26px / b.$basicFontSize));
 
-        @media (max-width: b.$mediaMobile) {
-            gap: calc(1rem * (20px / b.$basicFontSize));
-        }
-    }
-
-    .footer__nav-item {
-        font-size: calc(1rem * (28px / b.$basicFontSize));
-        font-weight: 800;
-        color: b.$lightTextColor;
-
-        &:first-child {
+    .footer__nav {
+        &-title {
+            font-size: calc(1rem * (28px / b.$basicFontSize));
+            font-weight: 800;
+            color: b.$lightTextColor;
             margin-bottom: calc(1rem * (20px / b.$basicFontSize));
 
             @media (max-width: b.$mediaMobile) {
                 font-size: calc(1rem * (26px / b.$basicFontSize));
-                margin-bottom: calc(1rem * (5px / b.$basicFontSize));
+                margin-bottom: calc(1rem * (10px / b.$basicFontSize));
             }
         }
 
-        a {
-            font-size: calc(1rem * (24px / b.$basicFontSize));
-            font-weight: 500;
-            color: b.$lightTextColor;
-            white-space: nowrap;
+        &-list {
+            @include b.flex(flex-start, flex-start, column);
+            gap: calc(1rem * (12px / b.$basicFontSize));
+            list-style: none;
+            padding: 0;
 
             @media (max-width: b.$mediaMobile) {
-                font-size: calc(1rem * (20px / b.$basicFontSize));
+                gap: calc(1rem * (8px / b.$basicFontSize));
+            }
+        }
+
+        &-link {
+            font-size: calc(1rem * (20px / b.$basicFontSize));
+            font-weight: 500;
+            color: b.$lightTextColor;
+            opacity: 0.8;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            text-decoration: none;
+
+            &:hover {
+                opacity: 1;
+                color: b.$mainTextColor;
+                transform: translateX(4px);
+                display: inline-block;
+            }
+
+            @media (max-width: b.$mediaMobile) {
+                font-size: calc(1rem * (18px / b.$basicFontSize));
             }
         }
     }

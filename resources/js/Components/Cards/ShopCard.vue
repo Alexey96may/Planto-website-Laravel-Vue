@@ -36,19 +36,18 @@
         return [
             {
                 'hover:bg-teal-700/30': !isProcessing && !isInCart && !disabled.value,
-                'opacity-50 bg-teal-700/10 hover:bg-teal-700/50': isProcessing,
-                'bg-teal-700/30 hover:bg-teal-700/50': isInCart,
-                'opacity-50 bg-orange-700/20 hover:bg-orange-700/50': disabled.value,
+                'opacity-50 bg-teal-700/10': isProcessing,
+                'bg-teal-700/30': isInCart,
+                'opacity-50 bg-orange-700/20': disabled.value,
             },
         ];
     });
 </script>
 
 <template>
-    <figure
+    <article
         class="product-card group relative w-full rounded-xl border border-current p-5 transition-all duration-300 sm:max-w-60"
         :class="[allClasses, { 'is-card-loading': isLoading }]"
-        aria-label="Top card"
     >
         <div
             class="image-wrapper mb-8 aspect-square w-full overflow-hidden"
@@ -64,16 +63,16 @@
 
         <div class="product-info w-full text-left">
             <h3
-                class="mb-1.5 overflow-hidden text-ellipsis whitespace-nowrap text-nowrap break-all text-lg font-medium text-white"
-                aria-label="Card title"
+                class="mb-1.5 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium text-white"
                 :title="plant.title"
                 :class="{ 'skeleton-item': isLoading }"
             >
                 <Link
+                    v-if="!isLoading"
                     :href="'/shop/plant-' + plant.id"
                     :data="{ page: current_page }"
-                    class="card__tag-title absolute inset-0"
-                    aria-label="To {{ plant.title }}"
+                    class="absolute inset-0 z-0 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                    :aria-label="'View details for ' + plant.title"
                 >
                 </Link>
                 {{ plant.title }}
@@ -81,20 +80,16 @@
 
             <p
                 class="mb-4 line-clamp-2 text-xs text-zinc-400"
-                aria-label="Plant description"
                 :class="{ 'skeleton-item': isLoading }"
             >
                 {{ plant.description }}
             </p>
 
-            <div
-                class="mt-auto flex items-center justify-between gap-2"
-                aria-label="Plant buying info"
-            >
+            <div class="mt-auto flex items-center justify-between gap-2">
                 <p
                     class="text-sd font-bold text-white"
-                    aria-label="Plant price"
                     :class="{ 'skeleton-item': isLoading }"
+                    aria-live="polite"
                 >
                     {{ isLoading ? '$0.00' : formatUSD(plant.price) }}
                 </p>
@@ -105,13 +100,13 @@
                     :is-in-cart="isInCart"
                     :is-processing="isProcessing"
                     :disabled="disabled"
-                    @click="emit('add-to-cart', plant)"
-                    class="button--square z-[1]"
-                    aria-label="Add to cart"
+                    @click.stop.prevent="emit('add-to-cart', plant)"
+                    class="button--square relative z-10"
+                    :aria-label="isInCart ? 'In cart' : 'Add ' + plant.title + ' to cart'"
                 />
             </div>
         </div>
-    </figure>
+    </article>
 </template>
 
 <style scoped>
@@ -119,7 +114,7 @@
         pointer-events: none;
     }
 
-    .is-card-loading .skeleton-item {
+    .skeleton-item {
         background: rgba(255, 255, 255, 0.05);
         color: transparent !important;
         border-color: transparent !important;
@@ -128,7 +123,7 @@
         overflow: hidden;
     }
 
-    .is-card-loading .skeleton-item::after {
+    .skeleton-item::after {
         content: '';
         position: absolute;
         inset: 0;

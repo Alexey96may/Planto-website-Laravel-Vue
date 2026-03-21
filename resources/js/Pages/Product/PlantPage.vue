@@ -59,7 +59,6 @@
 
     const add = () => {
         if (count.value >= props.product.stock) return;
-
         playClick();
         count.value++;
     };
@@ -82,15 +81,10 @@
             router.patch(
                 route('cart.update', id),
                 { quantity: count.value },
-
                 {
                     preserveScroll: true,
-                    onSuccess: () => {
-                        moneyClick();
-                    },
-                    onError: () => {
-                        playCancel();
-                    },
+                    onSuccess: () => moneyClick(),
+                    onError: () => playCancel(),
                 },
             );
         } else {
@@ -99,40 +93,29 @@
                 { product_id: id, quantity: count.value },
                 {
                     preserveScroll: true,
-                    onSuccess: () => {
-                        moneyClick();
-                    },
-                    onError: () => {
-                        playCancel();
-                    },
+                    onSuccess: () => moneyClick(),
+                    onError: () => playCancel(),
                 },
             );
         }
     };
 
     const buttonText = computed(() => (props.cart_items[props.product.id] ? 'Update' : 'Add'));
-
     const { notifyWithUndo } = useFlash();
-
     let isDeleting = ref<number | null>(null);
 
     const removeFromCart = async (): Promise<void> => {
         if (isDeleting.value === props.product.id) return;
-
         isDeleting.value = props.product.id;
-
         try {
             const confirmed = await notifyWithUndo('Purging from cart...', 5000);
-
             if (confirmed) {
                 router.delete(route('cart.remove', props.product.id), {
                     preserveScroll: true,
                     onFinish: () => {
                         isDeleting.value = null;
                     },
-                    onSuccess: () => {
-                        playSuccess();
-                    },
+                    onSuccess: () => playSuccess(),
                     onError: () => {
                         isDeleting.value = null;
                         playCancel();
@@ -148,9 +131,7 @@
 
     const sumClasses = computed(() => {
         const cartCount = props.cart_items[props.product.id];
-
         if (cartCount === undefined) return 'text-emerald-500';
-
         return {
             'text-zinc-400 opacity-80 transition-colors duration-300': cartCount === count.value,
             'text-amber-500 font-medium transition-colors duration-300': cartCount > count.value,
@@ -164,15 +145,19 @@
 
     <div class="w-full bg-plant-shop">
         <div class="mx-auto max-w-6xl px-6 py-10 lg:py-16">
-            <WindEffect :particleCount="30" :windStrength="1" />
+            <WindEffect aria-hidden="true" :particleCount="30" :windStrength="1" />
 
-            <div class="relative z-[3] flex flex-wrap items-center justify-between gap-4">
+            <nav
+                class="relative z-[3] flex flex-wrap items-center justify-between gap-4"
+                aria-label="Product navigation"
+            >
                 <Link
                     :href="backUrl"
                     class="group relative inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-emerald-500"
                 >
                     <ChevronLeftIcon
                         class="h-4 w-4 transition-transform group-hover:-translate-x-1"
+                        aria-hidden="true"
                     />
                     Back to Catalog
                 </Link>
@@ -183,13 +168,15 @@
                     :text="seo.description"
                     :url="seo.canonical || ''"
                 />
-            </div>
+            </nav>
 
-            <div
+            <article
                 class="relative z-[3] mt-8 grid gap-12 rounded-[1rem] border border-emerald-400/50 bg-plant-green px-4 py-8 lg:grid-cols-2 lg:items-center lg:rounded-[2rem] lg:px-6 lg:py-12"
             >
                 <ParallaxCard
                     @click="openModal"
+                    role="button"
+                    aria-label="Zoom product image"
                     class="aspect-square cursor-pointer rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 shadow-2xl"
                 >
                     <AppImage
@@ -207,7 +194,7 @@
                 </ParallaxCard>
 
                 <div class="flex flex-col">
-                    <div class="mb-6">
+                    <header class="mb-6">
                         <h1
                             class="mt-2 text-3xl font-bold tracking-tight text-zinc-100 lg:text-5xl"
                         >
@@ -219,15 +206,21 @@
                             :href="route('shop', { category: product?.category?.slug })"
                             class="mt-4 block text-xs font-bold uppercase tracking-[0.2em] text-emerald-600 hover:underline"
                         >
-                            {{ product?.category?.title }}
+                            <span class="sr-only">Category: </span>{{ product?.category?.title }}
                         </Link>
                         <p class="mt-6 text-3xl font-light text-emerald-300">
-                            {{ formatUSD(product.price) }}
+                            <span class="sr-only">Price: </span>{{ formatUSD(product.price) }}
                         </p>
-                    </div>
+                    </header>
 
-                    <div class="mb-8 border-t border-emerald-900 pt-8">
-                        <h3 class="text-sm font-bold uppercase tracking-widest text-zinc-500">
+                    <section
+                        class="mb-8 border-t border-emerald-900 pt-8"
+                        aria-labelledby="desc-title"
+                    >
+                        <h3
+                            id="desc-title"
+                            class="text-sm font-bold uppercase tracking-widest text-zinc-500"
+                        >
                             Description
                         </h3>
                         <p class="mt-4 text-lg leading-relaxed text-zinc-400">
@@ -236,7 +229,7 @@
                                 'Our master gardeners are still writing a perfect description for this green friend.'
                             }}
                         </p>
-                    </div>
+                    </section>
 
                     <div v-if="product.stock" class="space-y-6">
                         <div
@@ -244,27 +237,36 @@
                         >
                             <div
                                 class="flex items-center rounded-2xl border border-zinc-800 bg-zinc-900 p-1"
+                                role="group"
+                                aria-label="Adjust quantity"
                             >
                                 <button
                                     @click="remove"
                                     :disabled="count <= 1"
+                                    aria-label="Decrease quantity"
                                     class="flex h-12 w-12 items-center justify-center rounded-xl text-zinc-400 transition-all hover:bg-zinc-800 hover:text-white disabled:opacity-20"
                                 >
-                                    <MinusIcon class="h-5 w-5" />
+                                    <MinusIcon class="h-5 w-5" aria-hidden="true" />
                                 </button>
-                                <span class="w-12 text-center text-xl font-bold text-zinc-200">{{
-                                    count
-                                }}</span>
+                                <span
+                                    class="w-12 text-center text-xl font-bold text-zinc-200"
+                                    aria-live="polite"
+                                >
+                                    {{ count }}
+                                </span>
                                 <button
                                     @click="add"
                                     :disabled="count >= product.stock"
+                                    aria-label="Increase quantity"
                                     class="flex h-12 w-12 items-center justify-center rounded-xl text-zinc-400 transition-all hover:bg-zinc-800 hover:text-white disabled:opacity-20"
                                 >
-                                    <PlusIcon class="h-5 w-5" />
+                                    <PlusIcon class="h-5 w-5" aria-hidden="true" />
                                 </button>
                             </div>
 
-                            <span :class="sumClasses">{{ formattedPrice }}</span>
+                            <span :class="sumClasses" aria-live="polite">
+                                <span class="sr-only">Total:</span> {{ formattedPrice }}
+                            </span>
                         </div>
 
                         <div class="flex flex-wrap gap-4">
@@ -272,8 +274,8 @@
                                 @click="addOrUpdateCart"
                                 class="group flex items-center justify-center gap-3 rounded-2xl bg-emerald-700 px-8 py-4 font-bold text-white transition-all hover:bg-emerald-600 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)] active:scale-[0.98]"
                             >
-                                <ShoppingBagIcon class="h-6 w-6" />
-                                {{ buttonText }}
+                                <ShoppingBagIcon class="h-6 w-6" aria-hidden="true" />
+                                {{ buttonText }} <span class="sr-only">to cart</span>
                             </button>
 
                             <transition
@@ -289,8 +291,8 @@
                                     class="flex items-center gap-2 text-sm font-bold text-zinc-500 transition-colors duration-300 hover:text-amber-500"
                                     :class="{ 'text-amber-500': isDeleting }"
                                 >
-                                    <TrashIcon class="h-4 w-4" />
-                                    Remove
+                                    <TrashIcon class="h-4 w-4" aria-hidden="true" />
+                                    Remove <span class="sr-only">from cart</span>
                                 </button>
                             </transition>
                         </div>
@@ -298,6 +300,7 @@
 
                     <div
                         v-else
+                        role="alert"
                         class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center"
                     >
                         <p class="text-xl font-medium text-emerald-600">
@@ -308,29 +311,36 @@
                         </p>
                     </div>
                 </div>
-            </div>
+            </article>
         </div>
     </div>
 
     <Modal :show="isZoomed" @close="closeModal" maxWidth="xl">
-        <div class="relative flex items-center justify-center overflow-hidden bg-plant-shop p-1">
+        <div
+            class="relative flex items-center justify-center overflow-hidden bg-plant-shop p-1"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Product Image View"
+        >
             <button
                 @click="closeModal"
+                aria-label="Close modal"
                 class="absolute right-4 top-4 z-50 rounded-full border bg-orange-700/80 p-2 text-orange-200 transition-colors hover:bg-orange-900/80"
             >
-                <XMarkIcon class="h-6 w-6" />
+                <XMarkIcon class="h-6 w-6" aria-hidden="true" />
             </button>
 
             <img
                 :src="product?.image_url"
                 class="w-auto rounded-md object-contain"
-                :alt="product.title"
+                :alt="'Full size image of ' + product.title"
             />
         </div>
     </Modal>
 </template>
 
 <style scoped>
+    /* Твои стили остаются без изменений */
     .parallax-container {
         perspective: 1200px;
         transform-style: preserve-3d;
@@ -339,7 +349,6 @@
     .parallax-image {
         transform: rotateX(calc(var(--my) * -6deg)) rotateY(calc(var(--mx) * 6deg))
             translateX(calc(var(--mx) * -10px)) translateY(calc(var(--my) * -10px)) scale(1.1);
-
         transition: transform 0.1s ease-out;
         will-change: transform;
     }
@@ -349,9 +358,7 @@
         height: 150%;
         top: -25%;
         left: -25%;
-
         transform: translateX(calc(var(--mx) * 10%)) translateY(calc(var(--my) * 10%));
-
         filter: blur(40px);
     }
 

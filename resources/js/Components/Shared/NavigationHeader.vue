@@ -20,19 +20,22 @@
     const moreBtnRef = ref<HTMLElement | null>(null);
 
     const updateNavigation = () => {
-        if (typeof window === 'undefined') return;
-
-        if (!containerRef.value || !ghostRef.value || !moreBtnRef.value) return;
+        if (
+            typeof window === 'undefined' ||
+            !containerRef.value ||
+            !ghostRef.value ||
+            !moreBtnRef.value
+        )
+            return;
 
         const parent = containerRef.value.parentElement;
         if (!parent) return;
 
-        const maxAllowedWidth = parent.offsetWidth * 0.5;
-
-        const gap = parseInt(window.getComputedStyle(ghostRef.value).columnGap) || 0;
+        const maxAllowedWidth = parent.offsetWidth * 0.55;
+        const styles = window.getComputedStyle(ghostRef.value);
+        const gap = parseInt(styles.columnGap) || 20;
 
         const moreButtonWidth = moreBtnRef.value.offsetWidth + gap;
-
         const ghostItems = Array.from(ghostRef.value.querySelectorAll('.nav__item--ghost')).slice(
             1,
         );
@@ -56,25 +59,24 @@
             }
         }
 
-        if (count < ghostItems.length) {
-            const lastItemIdx = ghostItems.length - 1;
-            const lastItemTotalWidth =
-                totalWidth + (ghostItems[count] as HTMLElement).offsetWidth + gap;
-
-            if (count === lastItemIdx && lastItemTotalWidth <= maxAllowedWidth) {
-                count++;
-            }
+        if (count === ghostItems.length) {
+            visibleCount.value = count;
+        } else {
+            visibleCount.value = count > 0 ? count : 1;
         }
-
-        visibleCount.value = count > 0 ? count : 1;
     };
 
     let observer: ResizeObserver;
 
     onMounted(() => {
-        if (typeof window !== 'undefined' && containerRef.value) {
-            observer = new ResizeObserver(() => updateNavigation());
-            if (containerRef.value) observer.observe(containerRef.value);
+        if (typeof window !== 'undefined') {
+            observer = new ResizeObserver(() => {
+                window.requestAnimationFrame(() => updateNavigation());
+            });
+
+            if (containerRef.value?.parentElement) {
+                observer.observe(containerRef.value.parentElement);
+            }
 
             nextTick(() => updateNavigation());
         }
@@ -91,28 +93,31 @@
     <nav
         class="nav relative order-1 flex items-center justify-between gap-5 lg:order-none lg:w-full"
         id="nav"
-        aria-label="Navigation"
+        aria-label="Main Navigation"
         ref="containerRef"
     >
         <ul
             class="nav__list hidden flex-1 items-center justify-center gap-5 lg:flex"
-            aria-label="Navigation list"
+            role="menubar"
         >
-            <template v-for="item in menuItems.slice(0, visibleCount)" :key="item.id">
-                <NavDropdown
-                    v-if="item.children && item.children.length > 0"
-                    :items="item.children"
-                    :title="item.title"
-                />
+            <template v-for="(item, index) in menuItems" :key="item.id">
+                <template v-if="index < visibleCount">
+                    <NavDropdown
+                        v-if="item.children && item.children.length > 0"
+                        :items="item.children"
+                        :title="item.title"
+                    />
 
-                <li v-else class="nav__item whitespace-nowrap">
-                    <Link
-                        :href="getHref(item)"
-                        class="nav__link rounded-lg p-1 font-bold text-green-50 outline-none transition-colors hover:text-white focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900"
-                    >
-                        {{ item.title }}
-                    </Link>
-                </li>
+                    <li v-else class="nav__item whitespace-nowrap" role="none">
+                        <Link
+                            :href="getHref(item)"
+                            role="menuitem"
+                            class="nav__link rounded-lg p-1 font-bold text-green-50 outline-none transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900"
+                        >
+                            {{ item.title }}
+                        </Link>
+                    </li>
+                </template>
             </template>
 
             <NavDropdown
@@ -126,24 +131,23 @@
             <MobileMenu>
                 <div class="mobile-nav-wrapper flex flex-col gap-6 pb-6 sm:gap-8">
                     <template v-for="item in menuItems" :key="'mobile-' + item.id">
-                        <div v-if="item.children?.length" class="flex flex-col gap-2 sm:gap-4">
+                        <div v-if="item.children?.length" class="flex flex-col gap-3 sm:gap-4">
                             <span
-                                class="ml-1 text-[0.5rem] font-bold uppercase tracking-[0.2em] text-zinc-400/70 sm:text-xs"
+                                class="ml-1 text-[0.65rem] font-black uppercase tracking-[0.2em] text-emerald-500/60"
                             >
                                 {{ item.title }}
                             </span>
 
-                            <div class="ml-1 flex flex-col gap-1 border-l-2 border-zinc-600">
+                            <div class="ml-1 flex flex-col gap-1 border-l border-zinc-700/50">
                                 <Link
                                     v-for="child in item.children"
                                     :key="child.id"
                                     :href="getHref(child)"
-                                    class="group relative py-1 pl-5 text-sm text-zinc-300 transition-all duration-300 hover:text-emerald-400 active:bg-emerald-500/10 active:text-emerald-400 sm:py-2 sm:text-lg"
+                                    class="group relative py-2 pl-5 text-base text-zinc-300 transition-all hover:text-emerald-400 active:bg-emerald-500/5"
                                 >
                                     <span
-                                        class="absolute left-[-2px] top-0 h-full w-[2px] scale-y-0 bg-emerald-500 transition-transform group-hover:scale-y-100"
+                                        class="absolute left-[-1px] top-0 h-full w-[2px] scale-y-0 bg-emerald-500 transition-transform duration-300 group-hover:scale-y-100"
                                     ></span>
-
                                     {{ child.title }}
                                 </Link>
                             </div>
@@ -152,21 +156,15 @@
                         <Link
                             v-else
                             :href="getHref(item)"
-                            class="text-lg font-medium text-zinc-100 hover:text-emerald-400 active:translate-x-2 sm:text-2xl"
+                            class="text-xl font-bold text-zinc-100 transition-transform hover:text-emerald-400 active:translate-x-1"
                         >
                             {{ item.title }}
                         </Link>
                     </template>
 
-                    <AppVisualEffectsToggle class="border-t border-zinc-600" />
-
-                    <Link
-                        :href="$page.props.auth.user ? route('dashboard') : route('register')"
-                        :aria-label="$page.props.auth.user ? 'To Dashboard' : 'To Register'"
-                        class="block font-medium text-zinc-400 hover:underline sm:!hidden"
-                    >
-                        User Panel
-                    </Link>
+                    <div class="mt-4 border-t border-zinc-800 pt-6">
+                        <AppVisualEffectsToggle />
+                    </div>
                 </div>
             </MobileMenu>
         </div>
@@ -174,14 +172,15 @@
         <ul
             ref="ghostRef"
             class="pointer-events-none invisible absolute left-0 top-0 flex h-0 w-full gap-5 overflow-hidden"
+            aria-hidden="true"
         >
-            <li ref="moreBtnRef" class="nav__item--ghost font-bold text-green-600">
+            <li ref="moreBtnRef" class="nav__item--ghost font-bold">
                 More <IconArrowMore class="inline-block" />
             </li>
             <li
                 v-for="item in menuItems"
                 :key="'ghost-' + item.id"
-                class="nav__item--ghost whitespace-nowrap font-bold text-green-600"
+                class="nav__item--ghost whitespace-nowrap font-bold"
             >
                 {{ item.title }}
                 <IconArrowMore v-if="item.children?.length" class="inline-block" />

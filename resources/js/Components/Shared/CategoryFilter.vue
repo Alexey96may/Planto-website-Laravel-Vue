@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, ref } from 'vue';
+    import { computed, onMounted, onUnmounted, ref } from 'vue';
 
     import { Link } from '@inertiajs/vue3';
 
@@ -32,20 +32,43 @@
     const toggleMenu = () => {
         isMobileMenuOpen.value = !isMobileMenuOpen.value;
     };
+
+    const menuId = 'category-navigation-menu';
+
+    const isDesktop = ref(true);
+
+    const updateWidth = () => {
+        isDesktop.value = window.innerWidth >= 1280;
+    };
+
+    onMounted(() => {
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+    });
+
+    onUnmounted(() => {
+        window.removeEventListener('resize', updateWidth);
+    });
 </script>
 
 <template>
     <div class="shop-sidebar w-full xl:w-64">
         <div class="mb-2 xl:mb-6">
-            <h2 class="hidden text-xs font-bold uppercase tracking-widest text-zinc-500 xl:block">
+            <h2
+                id="categories-label"
+                class="hidden text-xs font-bold uppercase tracking-widest text-zinc-500 xl:block"
+            >
                 Categories
             </h2>
 
             <button
-                @click="isMobileMenuOpen = !isMobileMenuOpen"
+                @click="toggleMenu"
+                type="button"
+                :aria-expanded="isMobileMenuOpen"
+                :aria-controls="menuId"
                 class="flex w-full items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900/50 px-5 py-4 text-zinc-200 transition-colors hover:border-emerald-500/30 xl:hidden"
             >
-                <div class="flex flex-col items-start">
+                <div class="flex flex-col items-start text-left">
                     <span class="text-[10px] uppercase tracking-tighter text-zinc-500"
                         >Selected Category</span
                     >
@@ -56,6 +79,7 @@
                 <svg
                     class="h-5 w-5 transition-transform duration-500 ease-in-out"
                     :class="{ 'rotate-180 text-emerald-500': isMobileMenuOpen }"
+                    aria-hidden="true"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -71,17 +95,21 @@
         </div>
 
         <nav
-            class="flex flex-col gap-y-1.5 overflow-hidden transition-all duration-500 ease-in-out"
+            :id="menuId"
+            aria-labelledby="categories-label"
+            class="flex flex-col gap-y-1.5 transition-all duration-500 ease-in-out"
             :class="[
                 isMobileMenuOpen
                     ? 'mt-4 max-h-[1000px] opacity-100'
-                    : 'max-h-0 opacity-0 xl:max-h-none xl:opacity-100',
+                    : 'max-h-0 overflow-hidden opacity-0 xl:max-h-none xl:opacity-100',
             ]"
         >
             <Link
                 :href="route('shop')"
                 :preserve-scroll="true"
                 @click="isMobileMenuOpen = false"
+                :aria-current="!currentCategory ? 'page' : undefined"
+                :tabindex="!isMobileMenuOpen && !isDesktop ? -1 : 0"
                 :class="[
                     'group flex items-center rounded-xl border border-transparent px-4 py-3.5 transition-all duration-300',
                     !currentCategory
@@ -93,6 +121,7 @@
                 <div
                     v-if="!currentCategory"
                     class="ml-auto h-1.5 w-1.5 animate-pulse rounded-full bg-white"
+                    aria-hidden="true"
                 ></div>
             </Link>
 
@@ -102,6 +131,7 @@
                 :href="route('shop', { category: category.slug })"
                 :preserve-scroll="true"
                 @click="isMobileMenuOpen = false"
+                :aria-current="currentCategory === category.slug ? 'page' : undefined"
                 :class="[
                     'group flex items-center rounded-xl border border-transparent px-4 py-3.5 transition-all duration-300',
                     currentCategory === category.slug
@@ -113,6 +143,7 @@
                 <div
                     v-if="currentCategory === category.slug"
                     class="ml-auto h-1.5 w-1.5 rounded-full bg-white"
+                    aria-hidden="true"
                 ></div>
             </Link>
         </nav>
