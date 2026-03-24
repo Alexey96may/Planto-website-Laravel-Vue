@@ -37,18 +37,6 @@
         return props.ariaLabel;
     });
 
-    const allIconClasses = computed(() => {
-        return [
-            props.classes,
-            {
-                'opacity-50 cursor-normal bg-orange-700/50 pointer-events-none': props.disabled,
-                'opacity-50 cursor-normal bg-emerald-700/50 pointer-events-none':
-                    props.isProcessing,
-                'bg-emerald-700/40 pointer-events-none': props.isInCart,
-            },
-        ];
-    });
-
     const { playClick } = useSound();
 </script>
 
@@ -58,8 +46,7 @@
         :class="[
             classes,
             {
-                'pointer-events-none bg-orange-700/50 opacity-50 hover:opacity-50':
-                    disabled || isProcessing,
+                'pointer-events-none opacity-50 hover:opacity-50': disabled || isProcessing,
                 'cursor-default bg-emerald-700/50': isInCart,
                 'hover:brightness-110 active:scale-90': !disabled && !isProcessing && !isInCart,
                 'focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2':

@@ -48,10 +48,12 @@
             @click="toggleMenu"
             type="button"
             aria-haspopup="true"
+            @mousedown.prevent
+            tabindex="-1"
             :aria-expanded="isOpened"
             aria-controls="dropdown-menu"
+            class="flex items-center gap-1 rounded-md p-1 font-bold outline-none ring-0 transition-all focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:scale-95"
             :class="[isOpened ? 'text-emerald-400' : 'text-green-50 hover:text-white']"
-            class="flex items-center gap-1 rounded-md p-1 font-bold outline-none transition-all focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 active:scale-95"
         >
             <span>{{ title }}</span>
             <IconArrowMore

@@ -104,36 +104,30 @@
                     : 'max-h-0 overflow-hidden opacity-0 xl:max-h-none xl:opacity-100',
             ]"
         >
-            <Link
-                :href="route('shop')"
-                :preserve-scroll="true"
-                @click="isMobileMenuOpen = false"
-                :aria-current="!currentCategory ? 'page' : undefined"
-                :tabindex="!isMobileMenuOpen && !isDesktop ? -1 : 0"
+            <button
+                type="button"
+                @click="
+                    $emit('change-category', null);
+                    isMobileMenuOpen = false;
+                "
                 :class="[
-                    'group flex items-center rounded-xl border border-transparent px-4 py-3.5 transition-all duration-300',
-                    !currentCategory
-                        ? 'bg-emerald-600 font-semibold text-white shadow-lg shadow-emerald-900/40'
-                        : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200',
+                    'group flex w-full items-center rounded-xl border border-transparent px-4 py-3.5 transition-all duration-300',
+                    !currentCategory ? 'bg-emerald-600 font-semibold text-white' : 'text-zinc-400',
                 ]"
             >
-                <span class="text-sm">All Plants</span>
-                <div
-                    v-if="!currentCategory"
-                    class="ml-auto h-1.5 w-1.5 animate-pulse rounded-full bg-white"
-                    aria-hidden="true"
-                ></div>
-            </Link>
+                <span>All Plants</span>
+            </button>
 
-            <Link
+            <button
                 v-for="category in categories"
                 :key="category.id"
-                :href="route('shop', { category: category.slug })"
-                :preserve-scroll="true"
-                @click="isMobileMenuOpen = false"
-                :aria-current="currentCategory === category.slug ? 'page' : undefined"
+                type="button"
+                @click="
+                    $emit('change-category', category.slug);
+                    isMobileMenuOpen = false;
+                "
                 :class="[
-                    'group flex items-center rounded-xl border border-transparent px-4 py-3.5 transition-all duration-300',
+                    'group flex w-full items-center rounded-xl border border-transparent px-4 py-3.5 transition-all duration-300',
                     currentCategory === category.slug
                         ? 'bg-emerald-600 font-semibold text-white shadow-lg shadow-emerald-900/40'
                         : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200',
@@ -143,9 +137,8 @@
                 <div
                     v-if="currentCategory === category.slug"
                     class="ml-auto h-1.5 w-1.5 rounded-full bg-white"
-                    aria-hidden="true"
                 ></div>
-            </Link>
+            </button>
         </nav>
     </div>
 </template>

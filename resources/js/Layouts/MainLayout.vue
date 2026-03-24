@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import { computed } from 'vue';
+
     import { usePage } from '@inertiajs/vue3';
 
     import Footer from '@/Components/Sections/Footer.vue';
@@ -16,6 +18,7 @@
     defineProps({ full: { type: Boolean, default: false } });
 
     const page = usePage<SharedData>();
+    const pagePath = computed(() => page.url.split('?')[0]);
 </script>
 
 <template>
@@ -30,8 +33,7 @@
         <Header v-else :cartCount="page.props.cart_count" />
 
         <Transition name="fade" mode="out-in" appear>
-            <main :key="page.url" class="content">
-                <slot /></main
+            <main :key="pagePath" class="content"><slot /></main
         ></Transition>
 
         <Footer />

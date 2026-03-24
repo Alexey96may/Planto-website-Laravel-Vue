@@ -54,12 +54,24 @@
 
 <template>
     <div class="relative">
-        <div @click="open = !open" class="cursor-pointer">
+        <div
+            @click="open = !open"
+            class="cursor-pointer outline-none"
+            :aria-expanded="open"
+            aria-haspopup="true"
+        >
             <slot name="trigger" />
         </div>
 
         <Teleport to="body">
-            <div v-show="open" class="fixed inset-0 z-40 bg-black/0" @click="open = false"></div>
+            <div
+                v-show="open"
+                class="fixed inset-0 z-40 select-none bg-black/0 outline-none"
+                @click="open = false"
+                aria-hidden="true"
+                @mousedown.prevent
+                tabindex="-1"
+            ></div>
         </Teleport>
 
         <Transition
@@ -72,12 +84,13 @@
         >
             <div
                 v-show="open"
-                class="absolute z-50 mt-2 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                class="absolute z-50 mt-2 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] outline-none"
                 :class="[widthClass, alignmentClasses]"
                 @click="open = false"
+                role="menu"
             >
                 <div
-                    class="overflow-hidden rounded-2xl ring-1 ring-white/10"
+                    class="overflow-hidden rounded-2xl outline-none ring-1 ring-white/10"
                     :class="contentClasses"
                 >
                     <slot name="content" />

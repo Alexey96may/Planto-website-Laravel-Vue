@@ -38,7 +38,7 @@
                 'hover:bg-teal-700/30': !isProcessing && !isInCart && !disabled.value,
                 'opacity-50 bg-teal-700/10': isProcessing,
                 'bg-teal-700/30': isInCart,
-                'opacity-50 bg-orange-700/20': disabled.value,
+                'opacity-50 border-orange-700/90': disabled.value,
             },
         ];
     });

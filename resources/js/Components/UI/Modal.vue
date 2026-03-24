@@ -36,18 +36,17 @@
 
                 showSlot.value = true;
                 dialog.value?.showModal();
-            } else {
-                setTimeout(() => {
-                    document.body.style.overflow = '';
-                    document.body.style.paddingRight = '';
-                    dialog.value?.close();
-                    showSlot.value = false;
-
-                    returnFocusElement.value?.focus();
-                }, 200);
             }
         },
     );
+
+    const handleAfterLeave = () => {
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        dialog.value?.close();
+        showSlot.value = false;
+        returnFocusElement.value?.focus();
+    };
 
     const close = (): void => {
         if (props.closeable) {
@@ -94,7 +93,7 @@
 <template>
     <dialog
         ref="dialog"
-        class="z-50 m-0 min-h-full min-w-full overflow-y-auto bg-transparent backdrop:bg-transparent"
+        class="z-50 m-0 min-h-full min-w-full overflow-y-auto bg-transparent outline-none backdrop:bg-transparent"
         :aria-labelledby="ariaLabelledby"
         aria-modal="true"
     >
@@ -119,13 +118,14 @@
                 leave-active-class="ease-in duration-200"
                 leave-from-class="opacity-100 translate-y-0 sm:scale-100"
                 leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                @after-leave="handleAfterLeave"
             >
                 <div
                     v-show="show"
-                    class="mb-6 transform overflow-hidden rounded-[2rem] border border-white/10 bg-[#161b14] shadow-xl transition-all sm:mx-auto sm:w-full"
+                    class="mb-6 transform overflow-hidden rounded-[2rem] border border-white/10 bg-[#161b14] shadow-xl outline-none transition-all sm:mx-auto sm:w-full"
                     :class="[props.maxWidth === 'full' ? 'w-auto' : 'sm:w-full', maxWidthClass]"
                 >
-                    <div class="custom-scrollbar overflow-y-auto p-2">
+                    <div class="custom-scrollbar overflow-y-auto">
                         <slot v-if="showSlot" />
                     </div>
                 </div>
@@ -133,3 +133,31 @@
         </div>
     </dialog>
 </template>
+
+<style scoped>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(16, 185, 129, 0.2);
+        border-radius: 10px;
+        border: 1px solid rgba(16, 185, 129, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(16, 185, 129, 0.5);
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+    }
+    .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(16, 185, 129, 0.2) transparent;
+    }
+</style>

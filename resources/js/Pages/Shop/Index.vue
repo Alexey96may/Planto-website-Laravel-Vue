@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, ref, watch } from 'vue';
+    import { computed, onMounted, ref, watch } from 'vue';
 
     import { router, usePage } from '@inertiajs/vue3';
 
@@ -49,6 +49,14 @@
 
     const { playSlideMove, playClick, playCancel } = useSound();
     const currentCategory = ref<string | null>(props.currentCategory);
+
+    watch(
+        () => props.currentCategory,
+        (newVal) => {
+            currentCategory.value = newVal;
+        },
+    );
+
     const isFiltering = ref(false);
 
     const applyFilters = (): void => {
@@ -65,6 +73,7 @@
             preserveState: true,
             preserveScroll: true,
             replace: true,
+            only: ['products', 'currentCategory', 'filters'],
             onBefore: () => {
                 isFiltering.value = true;
             },
@@ -105,13 +114,6 @@
         inStockOnly.value = true;
         debouncedApplyFilters();
     };
-
-    watch(
-        () => props.currentCategory,
-        (newVal) => {
-            currentCategory.value = newVal;
-        },
-    );
 
     router.on('start', (event) => {
         if (event.detail.visit.url.pathname.includes('/shop')) {
@@ -273,10 +275,7 @@
                         </div>
                     </div>
 
-                    <div
-                        v-if="products.data.length > 0"
-                        :class="{ 'opacity-50 transition-opacity duration-300': isFiltering }"
-                    >
+                    <div :class="{ 'opacity-50 transition-opacity duration-300': isFiltering }">
                         <transition-group
                             tag="div"
                             name="staggered-fade"
@@ -296,7 +295,11 @@
                         </transition-group>
                     </div>
 
-                    <div v-else role="status" class="rounded-3xl bg-plant-shop py-20 text-center">
+                    <div
+                        v-if="products.data.length === 0 && !isFiltering"
+                        role="status"
+                        class="rounded-3xl bg-plant-shop py-20 text-center"
+                    >
                         <p class="text-xl text-gray-300">
                             There are no products in this category yet...
                         </p>
@@ -324,22 +327,27 @@
     .staggered-fade-move {
         transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
     .staggered-fade-enter-active {
         transition: all 0.5s ease-out;
         transition-delay: calc(var(--index) * 0.05s);
     }
+
     .staggered-fade-leave-active {
-        transition: all 0.3s ease-in;
+        transition: all 0.4s ease-in;
         position: absolute;
+        width: 100%;
         z-index: 0;
-        max-width: 300px;
+        max-width: 320px;
     }
+
     .staggered-fade-enter-from {
         opacity: 0;
         transform: translateY(30px) scale(0.9);
     }
+
     .staggered-fade-leave-to {
         opacity: 0;
-        transform: scale(0.8);
+        transform: translateY(-30px) scale(0.8);
     }
 </style>

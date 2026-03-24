@@ -32,6 +32,7 @@ body {
     background-color: vars.$mainBgColor;
     font-family: vars.$mainFontFamily;
     color: vars.$mainTextColor;
+    transition: padding-right 0.3s ease;
 }
 
 .body__fixed {
