@@ -99,9 +99,9 @@
                     v-else
                     :is-in-cart="isInCart"
                     :is-processing="isProcessing"
-                    :disabled="disabled"
-                    @click.stop.prevent="emit('add-to-cart', plant)"
-                    class="button--square relative z-10"
+                    :disabled="disabled || isProcessing"
+                    @click="emit('add-to-cart', plant)"
+                    class="button--square z-15 relative"
                     :aria-label="isInCart ? 'In cart' : 'Add ' + plant.title + ' to cart'"
                 />
             </div>

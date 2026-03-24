@@ -169,6 +169,12 @@
 <style lang="scss" scoped>
     @use '../../../scss/bootstrap' as b;
 
+    .slider {
+        isolation: isolate;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+    }
+
     .best {
         padding-top: calc(1rem * (219px / b.$basicFontSize));
         overflow: hidden;
@@ -239,11 +245,6 @@
         }
     }
 
-    :deep(.card__info),
-    :deep(.card__img-wrapper) {
-        will-change: filter, opacity, transform;
-    }
-
     :deep(.card__info *) {
         transition: none !important;
     }
@@ -253,7 +254,6 @@
     :deep(.card__descr-wrapper),
     :deep(.card__button),
     :deep(.card__number) {
-        will-change: transform, opacity, filter;
         backface-visibility: hidden;
     }
 </style>

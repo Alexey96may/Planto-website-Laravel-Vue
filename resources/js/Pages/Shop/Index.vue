@@ -160,7 +160,7 @@
             <div class="relative z-[3] flex flex-col gap-2 xl:flex-row">
                 <aside
                     class="w-full rounded-lg border border-emerald-400/50 bg-plant-green px-4 py-10 shadow-sm shadow-emerald-400/50 transition-all duration-500 xl:w-64"
-                    :class="{ 'opacity-50 blur-[2px]': isFiltering }"
+                    :class="{ 'blur-[2px]': isFiltering }"
                     :aria-busy="isFiltering"
                 >
                     <h2 class="sr-only">Filters</h2>
@@ -218,6 +218,7 @@
                 <main
                     id="shop-main"
                     class="relative min-h-[500px] flex-grow rounded-lg border border-emerald-400/50 bg-plant-green px-4 py-10 shadow-sm shadow-emerald-400/50"
+                    :class="{ 'opacity-40': isFiltering }"
                     role="region"
                     aria-live="polite"
                     :aria-busy="isFiltering"
@@ -288,7 +289,7 @@
                                 :is-loading="isFiltering"
                                 :style="{ '--index': index }"
                                 :current_page="products.current_page"
-                                :processing-id="processingId === plant.id"
+                                :is-processing="processingId === plant.id"
                                 :is-in-cart="cartIds.includes(plant.id)"
                                 @add-to-cart="addToCart"
                             />

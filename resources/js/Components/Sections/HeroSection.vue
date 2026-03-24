@@ -172,7 +172,11 @@
                     :grab-cursor="true"
                     class="rounded-3xl"
                 >
-                    <swiper-slide v-for="plant in heroPlants" :key="plant.id" class="!flex !h-auto">
+                    <swiper-slide
+                        v-for="plant in heroPlants"
+                        :key="plant.id"
+                        class="!flex !h-auto justify-center"
+                    >
                         <HeroSliderCard :plant="plant" class="xl:aspect-[128 / 157] w-full" />
                     </swiper-slide>
                 </swiper>
@@ -355,7 +359,6 @@
             transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         -webkit-font-smoothing: antialiased;
         backface-visibility: hidden;
-        will-change: transform, opacity;
         outline: 1px solid transparent;
         background-clip: padding-box;
         -webkit-perspective: 1000px;

@@ -95,11 +95,14 @@
             opacity 0.8s cubic-bezier(0.21, 0.45, 0.32, 0.9),
             transform 0.8s cubic-bezier(0.21, 0.45, 0.32, 0.9);
         will-change: transform, opacity;
+        backface-visibility: hidden;
+        -webkit-font-smoothing: antialiased;
     }
 
     .reveal-visible {
         opacity: 1;
         transform: translateY(0) scale(1);
+        will-change: auto;
     }
 
     @media (prefers-reduced-motion: reduce) {

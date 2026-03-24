@@ -90,7 +90,6 @@
 
         -webkit-font-smoothing: antialiased;
         backface-visibility: hidden;
-        will-change: transform, opacity;
         outline: 1px solid transparent;
         background-clip: padding-box;
         -webkit-perspective: 1000px;
