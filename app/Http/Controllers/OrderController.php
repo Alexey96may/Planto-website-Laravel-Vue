@@ -74,7 +74,7 @@ class OrderController extends Controller
                 }
 
                 $order = \App\Models\Order::create([
-                    'user_id' => $user?->id ?? Auth::id(),
+                    'user_id' => Auth::id(),
                     'total_price' => $total,
                     'customer_name' => $request->name,
                     'customer_email' => $request->email,
@@ -95,7 +95,7 @@ class OrderController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Checkout error: " . $e->getMessage());
-            return redirect()->back()->withErrors(['quantity' => $e->getMessage()])->withInput();
+            return to_route('cart.index')->withErrors(['error' => $e->getMessage()])->withInput();
         }
     }
 

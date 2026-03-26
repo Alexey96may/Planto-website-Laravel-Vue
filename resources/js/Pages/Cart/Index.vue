@@ -65,11 +65,6 @@
     const updateQuantity = (item: CartItem, newQuantity: number) => {
         if (newQuantity < 1) return;
 
-        if (newQuantity > item.stock) {
-            notify("Sorry, we don't have that many plants 🌿", 'error');
-            return;
-        }
-
         item.quantity = newQuantity;
 
         isUpdating.value = item.product_id;
@@ -94,6 +89,14 @@
 
     const hasAvailableItems = computed(() => {
         return props.cart.items.some((item) => item.is_available);
+    });
+
+    const hasStockIssues = computed(() => {
+        return props.cart.items.some((item) => item.quantity > item.stock);
+    });
+
+    const canCheckout = computed(() => {
+        return hasAvailableItems.value && !hasStockIssues.value;
     });
 </script>
 
@@ -131,6 +134,9 @@
                                 deletingIds.has(item.product_id)
                                     ? 'pointer-events-none scale-95 opacity-50'
                                     : '',
+                                item.quantity > item.stock
+                                    ? 'border-orange-500/50 bg-orange-500/5 shadow-[0_0_20px_rgba(249,115,22,0.1)]'
+                                    : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700',
                             ]"
                             :aria-busy="isUpdating === item.product_id"
                         >
@@ -178,9 +184,18 @@
                                     </button>
                                 </div>
 
-                                <p class="mt-2 text-sm font-medium text-emerald-600/80">
-                                    <span class="sr-only">Price: </span>{{ formatUSD(item.price) }}
-                                </p>
+                                <div class="mt-2 flex items-center gap-3">
+                                    <p class="text-sm font-medium text-emerald-600/80">
+                                        {{ formatUSD(item.price) }}
+                                    </p>
+
+                                    <span
+                                        v-if="item.quantity > item.stock && item.stock > 0"
+                                        class="animate-pulse text-[10px] font-bold uppercase tracking-widest text-orange-500"
+                                    >
+                                        Only {{ item.stock }} left in stock!
+                                    </span>
+                                </div>
 
                                 <div class="mt-auto pt-4">
                                     <div v-if="item.stock" class="flex items-center gap-4">

@@ -15,7 +15,10 @@
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AppImage from '@/Components/UI/AppImage.vue';
     import GuestLayout from '@/Layouts/GuestLayout.vue';
+    import { useFlash } from '@/composables/useFlash';
     import { CartItem, CheckoutForm, Seo, SharedData } from '@/types';
+
+    const { notify } = useFlash();
 
     const props = defineProps<{
         cartItems: CartItem[];
@@ -37,6 +40,7 @@
             preserveScroll: true,
             onError: (errors) => {
                 const firstError = Object.keys(errors)[0];
+                notify(errors?.error as string, 'error');
                 const element = document.getElementsByName(firstError)[0];
                 element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 element?.focus();
