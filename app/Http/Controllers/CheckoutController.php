@@ -33,4 +33,24 @@ class CheckoutController extends Controller
             )
         ]);
     }
+
+    public function success(Request $request)
+    {
+        $userId = Auth::id();
+        
+        if ($userId) {
+            \App\Models\CartItem::where('user_id', $userId)->delete();
+        } else {
+            session()->forget('cart');
+        }
+
+        return Inertia::render('Checkout/Success', [
+            'sessionId' => $request->query('session_id')
+        ]);
+    }
+
+    public function cancel()
+    {
+        return Inertia::render('Checkout/Cancel');
+    }
 }

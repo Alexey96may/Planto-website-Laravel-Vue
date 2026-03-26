@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
 
 class OrderController extends Controller
 {
@@ -42,7 +44,7 @@ class OrderController extends Controller
         ]);
 
         try {
-            $order = DB::transaction(function () use ($request, $items) {
+            DB::transaction(function () use ($request, $items) {
                 $total = 0;
                 $purchasedItems = [];
                 $purchasedProductIds = [];
@@ -81,14 +83,41 @@ class OrderController extends Controller
                     'customer_phone' => $request->phone,
                     'delivery_address' => $request->address,
                     'comment' => $request->comment,
-                    'status' => 'new',
+                    'status' => 'pending',
                 ]);
 
                 $order->items()->createMany($purchasedItems);
+                
+                // $this->clearCart($purchasedProductIds);
 
-                $this->clearCart($purchasedProductIds);
+                Stripe::setApiKey(config('services.stripe.secret'));
 
-                return $order;
+                $lineItems = [];
+                foreach ($items as $item) {
+                    $lineItems[] = [
+                        'price_data' => [
+                            'currency' => 'usd',
+                            'product_data' => [
+                                'name' => $item['title'],
+                            ],
+                            'unit_amount' => $item['price'] * 100,
+                        ],
+                        'quantity' => $item['quantity'],
+                    ];
+                }
+
+                $checkoutSession = Session::create([
+                    'payment_method_types' => ['card'],
+                    'line_items' => $lineItems,
+                    'mode' => 'payment',
+                    'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                    'cancel_url' => route('checkout.cancel'),
+                    'metadata' => [
+                        'order_id' => $order->id,
+                    ],
+                ]);
+
+                return Inertia::location($checkoutSession->url);
             });
 
             return to_route('home')->with('success', 'The order has been placed!');
