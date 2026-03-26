@@ -8,22 +8,77 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Spatie\Image\Enums\Fit;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-class Product extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+class Product extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
     protected $fillable = ['title', 'description', 'price', 'stock', 'image', 'category_id', 'is_trending', 'trending_order', 'sales_count'];
 
-    protected $appends = ['image_url'];
+    protected $appends = ['optimized_images', 'thumb_url'];
 
     protected $casts = [
         'is_trending' => 'boolean',
         'trending_order' => 'integer',
         'price' => 'decimal:2',
     ];
+
+    public function getThumbUrlAttribute(): string
+    {
+        return $this->getFirstMediaUrl('gallery', 'thumb') ?: asset('images/no-image.png');
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('gallery')->singleFile();
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('webp')
+            ->format('webp')
+            ->width(600) 
+            ->nonQueued(); 
+
+        $this->addMediaConversion('avif')
+            ->format('avif')
+            ->width(600)
+            ->nonQueued();
+
+        $this->addMediaConversion('thumb')
+            ->fit(Fit::Contain, 150, 150) 
+            ->nonQueued();
+    }
+
+    protected function getOptimizedImagesAttribute(): ?array
+    {
+        $media = $this->getFirstMedia('gallery');
+
+        if (!$media) {
+            return [
+                ['src' => $this->image ? Storage::url($this->image) : asset('images/no-image.png'), 'format' => 'png']
+            ];
+        }
+
+        return [
+            ['src' => $media->getUrl('avif'), 'format' => 'avif'],
+            ['src' => $media->getUrl('webp'), 'format' => 'webp'],
+            ['src' => $media->getUrl(), 'format' => $media->extension],
+        ];
+    }
+    
+    protected function getImageUrlAttribute(): string
+    {
+        $media = $this->getFirstMedia('gallery');
+        return $media ? $media->getUrl() : ($this->image ? Storage::url($this->image) : asset('images/no-image.png'));
+    }
 
     protected function imageUrl(): Attribute
     {

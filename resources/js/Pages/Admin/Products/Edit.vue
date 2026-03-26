@@ -91,7 +91,7 @@
 
             <form @submit.prevent="submit" class="grid grid-cols-1 gap-8 2xl:grid-cols-3">
                 <div class="space-y-6 lg:col-span-1">
-                    <div class="rounded-[2.5rem] border border-white/5 bg-[#161b14] p-6 shadow-2xl">
+                    <div class="rounded-[1rem] border border-white/5 bg-[#161b14] p-6 shadow-2xl">
                         <h3
                             class="mb-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500"
                         >
@@ -101,8 +101,9 @@
                             ref="uploader"
                             v-model="form.image"
                             label="Unit Image"
+                            class-name="w-full max-w-md"
                             :error="form.errors.image"
-                            :existingImage="product.image_url"
+                            :existingImage="product.optimized_images"
                             @on-file-select="handleFileSelect"
                         />
                         <p class="mt-4 text-[9px] italic leading-relaxed text-zinc-500">

@@ -24,7 +24,7 @@
         <div class="card__img-wrapper" aria-label="Top card image">
             <ParallaxCard :with-glare="false" class="cursor-move">
                 <AppImage
-                    :src="plant.image_url"
+                    :src="plant.optimized_images"
                     class="parallax-image drop-shadow-md transition-transform duration-500 hover:scale-110 md:drop-shadow-lg"
                     :alt="plant.title"
                 ></AppImage>

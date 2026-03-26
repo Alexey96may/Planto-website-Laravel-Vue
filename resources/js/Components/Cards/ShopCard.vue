@@ -55,7 +55,7 @@
         >
             <AppImage
                 v-if="!isLoading"
-                :src="plant.image_url"
+                :src="plant.optimized_images"
                 :alt="plant.title"
                 class="plant-image mx-auto h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
             ></AppImage>

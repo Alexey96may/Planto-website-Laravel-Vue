@@ -56,13 +56,18 @@ export interface ProductFilters {
     in_stock: 'true' | 'false' | boolean | null;
 }
 
+type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'avif';
+
+export type OptimizedImage = { src: string; format: ImageFormat };
+
 export interface Product {
     id: number;
     title: string;
     description: string;
     price: string;
-    image: string;
-    image_url: string;
+    // image: string;
+    optimized_images: OptimizedImage[];
+    thumb_url?: string;
     category_id: number;
     sales_count: number;
     is_trending: boolean;

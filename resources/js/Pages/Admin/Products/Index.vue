@@ -183,7 +183,7 @@
                                     class="relative h-14 w-14 overflow-hidden rounded-xl border border-white/10 bg-black shadow-inner transition-colors group-hover:border-[#c5d86d]/30"
                                 >
                                     <AppImage
-                                        :src="product.image_url"
+                                        :src="product.thumb_url || ''"
                                         class="h-full w-full object-cover opacity-80 transition-opacity group-hover:opacity-100"
                                     />
                                 </div>

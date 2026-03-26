@@ -8,7 +8,6 @@ use App\Models\Product;
 use Inertia\Inertia;
 use App\Models\Category;
 use App\Models\Setting;
-use Illuminate\Support\Facades\Storage;
 
 class AdminProductController extends Controller
 {
@@ -19,6 +18,7 @@ class AdminProductController extends Controller
         $products = Product::with('category')
             ->latest()
             ->paginate($perPage);
+
 
         return Inertia::render('Admin/Products/Index', [
             'products' => $products, 
@@ -54,17 +54,18 @@ class AdminProductController extends Controller
             'price'       => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'nullable|exists:categories,id',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:5120'
         ]);
 
+        $product = Product::create(collect($validated)->except('image')->toArray());
+
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $product->addMediaFromRequest('image')
+                ->toMediaCollection('gallery');
         }
 
-        Product::create($validated);
-
         return redirect()->route('admin.products.index')
-            ->with('message', 'The Product has been succesfully created!');
+            ->with('message', 'The Product has been successfully created!');
     }
 
     public function edit(Product $product)
@@ -93,20 +94,15 @@ class AdminProductController extends Controller
             'trending_order' => 'nullable|integer|min:0',
             'price'       => 'required|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
-            'image'       => $request->hasFile('image') ? 'image|mimes:jpg,jpeg,png|max:2048' : 'nullable',
+            'image'       => $request->hasFile('image') ? 'image|mimes:jpg,jpeg,png|max:5120' : 'nullable',
         ]);
 
+        $product->update(collect($validated)->except('image')->toArray());
+
         if ($request->hasFile('image')) {
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
-
-            $validated['image'] = $request->file('image')->store('products', 'public');
-        } else {
-            unset($validated['image']);
+            $product->addMediaFromRequest('image')
+                ->toMediaCollection('gallery');
         }
-
-        $product->update($validated);
 
         return redirect()->route('admin.products.index', ['page' => $request->query('page', 1)])
             ->with('message', 'The Product has been succesfully updated!');

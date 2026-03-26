@@ -27,7 +27,7 @@
         <div class="card__img-wrapper w-full" aria-label="Trendy card image">
             <ParallaxCard :with-glare="false" class="cursor-move">
                 <AppImage
-                    :src="plant.image_url"
+                    :src="plant.optimized_images"
                     :alt="plant.title"
                     class="parallax-image filte h-full w-full object-contain drop-shadow-md transition-transform duration-500 hover:scale-110 md:drop-shadow-2xl"
                 />

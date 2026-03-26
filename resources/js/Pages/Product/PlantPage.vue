@@ -180,7 +180,7 @@
                     class="aspect-square cursor-pointer rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 shadow-2xl"
                 >
                     <AppImage
-                        :src="product?.image_url"
+                        :src="product.optimized_images"
                         :alt="product.title"
                         class="parallax-image h-full w-full object-cover"
                     />
@@ -330,17 +330,16 @@
                 <XMarkIcon class="h-6 w-6" aria-hidden="true" />
             </button>
 
-            <img
-                :src="product?.image_url"
-                class="w-auto rounded-md object-contain"
+            <AppImage
+                :src="product.optimized_images"
                 :alt="'Full size image of ' + product.title"
+                class="w-auto rounded-md object-contain"
             />
         </div>
     </Modal>
 </template>
 
 <style scoped>
-    /* Твои стили остаются без изменений */
     .parallax-container {
         perspective: 1200px;
         transform-style: preserve-3d;

@@ -21,7 +21,7 @@
         >
             <ParallaxCard :with-glare="false">
                 <AppImage
-                    :src="plant.image_url"
+                    :src="plant.optimized_images"
                     :alt="plant.title"
                     class="parallax-image h-full w-full object-contain drop-shadow-md transition-transform duration-500 md:drop-shadow-xl"
                 />
