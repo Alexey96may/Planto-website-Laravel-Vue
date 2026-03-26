@@ -87,11 +87,8 @@
         }
     }
 
-    :deep(.parallax-target) {
-        --mx: 0;
-        --my: 0;
-        --intensity: 6;
-
+    :deep(.parallax-target),
+    :deep(.parallax-image) {
         transform: rotateX(calc(var(--my) * -1 * var(--intensity) * 1deg))
             rotateY(calc(var(--mx) * var(--intensity) * 1deg)) translateX(calc(var(--mx) * -10px))
             translateY(calc(var(--my) * -10px)) scale(1.05);

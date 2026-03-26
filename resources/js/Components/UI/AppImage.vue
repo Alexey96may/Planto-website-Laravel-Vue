@@ -3,6 +3,10 @@
 
     import { handleImageError } from '@/utils';
 
+    defineOptions({
+        inheritAttrs: false,
+    });
+
     interface ImageMetadata {
         src: string;
         format: string;
@@ -52,10 +56,11 @@
             :alt="isDecorative ? '' : alt || 'Plant image'"
             :role="isDecorative ? 'presentation' : undefined"
             :aria-hidden="isDecorative ? 'true' : undefined"
-            :class="className"
             @error="handleImageError"
             loading="lazy"
             class="object-cover"
+            v-bind="$attrs"
+            :class="className"
         />
     </picture>
 
@@ -63,9 +68,10 @@
         v-else
         :src="src as string"
         :alt="isDecorative ? '' : alt || 'Plant image'"
-        :class="className"
         @error="handleImageError"
         loading="lazy"
+        v-bind="$attrs"
         class="object-cover"
+        :class="className"
     />
 </template>

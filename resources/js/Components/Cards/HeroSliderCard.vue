@@ -19,7 +19,7 @@
             class="card__img-wrapper relative aspect-[1/1] w-full sm:h-64"
             aria-label="Slider card image"
         >
-            <ParallaxCard :with-glare="false">
+            <ParallaxCard :with-glare="false" :intensity="15">
                 <AppImage
                     :src="plant.optimized_images"
                     :alt="plant.title"
@@ -81,7 +81,8 @@
     }
 
     .parallax-image {
-        transform: rotateX(calc(var(--my) * -6deg)) translateX(calc(var(--mx) * -10px)) scale(1.1);
+        transform: rotateX(calc(var(--my) * -6deg)) rotateY(calc(var(--mx) * 6deg))
+            translateX(calc(var(--mx) * -10px)) translateY(calc(var(--my) * -10px)) scale(1.1);
         transition: transform 0.3s ease-out;
         will-change: transform;
     }
