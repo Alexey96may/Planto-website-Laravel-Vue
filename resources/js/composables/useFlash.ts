@@ -11,9 +11,9 @@ const message = ref('');
 const type = ref<NotificationType>('info');
 const isCountingDown = ref(false);
 const undoRequested = ref(false);
-const timerDuration = ref(5000);
+const timerDuration = ref(4000);
 
-const lastFlashId = ref<string | null>(null);
+const lastProcessedKey = ref<string | null>(null);
 let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
 export function useFlash() {
@@ -29,7 +29,6 @@ export function useFlash() {
     const notify = (msg: string, t: NotificationType = 'info') => {
         clearExistingTimer();
 
-        lastFlashId.value = null;
         isCountingDown.value = false;
         undoRequested.value = false;
         message.value = msg;
@@ -44,7 +43,7 @@ export function useFlash() {
     const notifyWithUndo = (msg: string, duration: number = 5000): Promise<boolean> => {
         clearExistingTimer();
 
-        lastFlashId.value = null;
+        lastProcessedKey.value = null;
 
         message.value = msg;
         type.value = 'warning';
@@ -60,7 +59,7 @@ export function useFlash() {
                     clearInterval(interval);
                     show.value = false;
                     isCountingDown.value = false;
-                    lastFlashId.value = null;
+                    lastProcessedKey.value = null;
                     resolve(false);
                 } else if (Date.now() - start >= duration) {
                     clearInterval(interval);
@@ -78,26 +77,28 @@ export function useFlash() {
             if (!flash) return;
             const flashMsg = flash.success || flash.error || flash.message || flash.warning;
 
-            if (flashMsg) {
-                const currentId = JSON.stringify(flash);
-                if (currentId === lastFlashId.value) return;
+            if (!flashMsg) return;
 
-                lastFlashId.value = currentId;
+            const currentKey = `${page.url}_${JSON.stringify(flash)}`;
 
-                const flashType = flash.success
-                    ? 'success'
-                    : flash.error
-                      ? 'error'
-                      : flash.warning
-                        ? 'warning'
-                        : 'info';
-                notify(flashMsg, flashType);
+            if (currentKey === lastProcessedKey.value) return;
 
-                page.props.flash.success = null;
-                page.props.flash.error = null;
-                page.props.flash.message = null;
-                page.props.flash.warning = null;
-            }
+            lastProcessedKey.value = currentKey;
+
+            const flashType = flash.success
+                ? 'success'
+                : flash.error
+                  ? 'error'
+                  : flash.warning
+                    ? 'warning'
+                    : 'info';
+
+            notify(flashMsg, flashType);
+
+            page.props.flash.success = null;
+            page.props.flash.error = null;
+            page.props.flash.message = null;
+            page.props.flash.warning = null;
         },
         { deep: true, immediate: true },
     );
