@@ -17,6 +17,7 @@ RUN apk add --no-cache \
     postgresql-dev \
     icu-dev \
     libwebp-dev \
+    libavif-dev \
     zlib-dev
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
