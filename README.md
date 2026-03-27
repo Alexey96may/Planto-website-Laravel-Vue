@@ -1,59 +1,87 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🌿 PlantShop — Fullstack E-commerce Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**PlantShop** is a specialized e-commerce solution for botanical enthusiasts. It features a modern interface, real-time inventory management, and a secure payment pipeline. This project demonstrates a deep integration of Laravel 11 and Vue.js 3, with a focus on reliability, database integrity, and handling real-world API challenges.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🛠 Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Backend:** PHP 8.2+ | Laravel 11 (Service Layer, Eloquent, Notifications)
+- **Frontend:** Vue.js 3 (Composition API) | Inertia.js | Tailwind CSS
+- **Database:** SQLite (Atomic Transactions & `lockForUpdate` implementation)
+- **Payments:** Stripe API (Checkout Sessions & Webhook handling)
+- **Testing:** Mailtrap (SMTP Testing) | Stripe CLI
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🚀 Key Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 🛒 Inventory & Stock Integrity
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Overselling Protection:** Uses database-level locking (`lockForUpdate`) during the checkout process to ensure stock levels are accurate even under high traffic.
+- **Atomic Transactions:** Guarantees that order creation and stock decrement happen as a single unit—no "ghost" orders or missing inventory.
+- **Persistent Cart:** A robust `CartService` handles all calculations and item persistence on the server side.
 
-## Laravel Sponsors
+### 💳 Payment & Reliability
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Stripe Checkout:** Secure, PCI-compliant payment processing.
+- **Environment-Aware Logic:** Custom handling for local development to bypass network restrictions and SSL/TLS handshake timeouts.
+- **Webhook Ready:** Architecture prepared for asynchronous payment confirmation and automated order fulfillment.
 
-### Premium Partners
+### 📧 Notification System
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- **Automated Receipts:** Instant email notifications triggered by order status changes.
+- **Development SMTP:** Configured to work seamlessly with Mailtrap, including SSL bypass for local OpenSSL environments.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📦 Installation & Setup
 
-## Code of Conduct
+1.  **Clone the repository:**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    ```bash
+    git clone [https://github.com/your-username/plant-shop.git](https://github.com/your-username/plant-shop.git)
+    cd plant-shop
+    ```
 
-## Security Vulnerabilities
+2.  **Install dependencies:**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    ```bash
+    composer install
+    npm install
+    ```
 
-## License
+3.  **Environment Configuration:**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    ```bash
+    cp .env.example .env
+    # Update your DB_DATABASE, STRIPE_SECRET, and MAIL credentials
+    ```
+
+4.  **Database Migration:**
+
+    ```bash
+    php artisan migrate --seed
+    ```
+
+5.  **Run the Application:**
+    ```bash
+    npm run dev
+    php artisan serve
+    ```
+
+---
+
+## 📈 Roadmap
+
+- [ ] **Automated Stock Recovery:** Scheduled Task to restock items from abandoned "pending" orders.
+- [ ] **Advanced Filtering:** Filter plants by light requirements, pet-friendliness, and difficulty level.
+- [ ] **User Profiles:** Dashboard for users to track their order history and plant "wishlist".
+
+---
+
+## 👤 Author
+
+**Aleksey** — Fullstack Developer
+
+- **Specialization:** Laravel, Vue.js, Node.js
