@@ -59,25 +59,18 @@ export default defineConfig({
         }),
     ],
     build: {
-        minify: 'esbuild',
+        minify: 'terser',
         cssMinify: true,
         rollupOptions: {
             output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
-                        if (
-                            id.includes('vue') ||
-                            id.includes('@inertiajs') ||
-                            id.includes('axios')
-                        ) {
-                            return 'vendor';
-                        }
-                        return 'libs';
+                        return 'vendor';
                     }
                 },
             },
         },
-        chunkSizeWarningLimit: 600,
+        chunkSizeWarningLimit: 1000,
     },
     test: {
         globals: true,
