@@ -30,7 +30,6 @@ class WebhookController extends Controller
 
             if ($order && $order->status === 'pending') {
                 $order->update(['status' => 'paid']);
-                
                 Log::info("Order {$orderId} paid successfully.");
             }
         }

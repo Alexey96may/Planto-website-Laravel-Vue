@@ -28,105 +28,116 @@ class OrderController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $cartData = \App\Services\CartService::getFullCart();
-        $items = $cartData['items'];
+{
+    $cartData = \App\Services\CartService::getFullCart();
+    $items = $cartData['items'];
 
-        if (empty($items)) {
-            return redirect()->back()->withErrors(['cart' => 'Your cart is empty!']);
-        }
+    if (empty($items)) {
+        return redirect()->back()->withErrors(['cart' => 'Your cart is empty!']);
+    }
 
-        $request->validate([
-            'email' => 'required|email',
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string',
-            'address' => 'required|string|min:5',
-        ]);
+    $request->validate([
+        'email' => 'required|email',
+        'name' => 'required|string|max:255',
+        'phone' => 'required|string',
+        'address' => 'required|string|min:5',
+    ]);
 
-        try {
-            DB::transaction(function () use ($request, $items) {
-                $total = 0;
-                $purchasedItems = [];
-                $purchasedProductIds = [];
+    try {
+        $data = DB::transaction(function () use ($request, $items) {
+            $total = 0;
+            $purchasedItems = [];
 
-                foreach ($items as $item) {
-                    $product = \App\Models\Product::lockForUpdate()->find($item['product_id']);
+            foreach ($items as $item) {
+                $product = \App\Models\Product::lockForUpdate()->find($item['product_id']);
 
-                    if (!$product) {
-                        throw new \Exception("The item in your cart no longer exists.");
-                    }
-
-                    if ($product->stock < $item['quantity']) {
-                        throw new \Exception("Not enough product '{$product->title}' in stock (5 pieces {$product->stock} in stock).");
-                    }
-
-                    $sum = $product->price * $item['quantity'];
-
-                    $purchasedItems[] = [
-                        'product_id'   => $product->id,
-                        'product_name' => $product->title,
-                        'price'        => $product->price,
-                        'quantity'     => $item['quantity'],
-                    ];
-
-                    $total += $sum;
-                    $purchasedProductIds[] = $product->id;
-
-                    $product->decrement('stock', $item['quantity']);
+                if (!$product) {
+                    throw new \Exception("Product '{$item['title']}' no longer exists.");
                 }
 
-                $order = \App\Models\Order::create([
-                    'user_id' => Auth::id(),
-                    'total_price' => $total,
-                    'customer_name' => $request->name,
-                    'customer_email' => $request->email,
-                    'customer_phone' => $request->phone,
-                    'delivery_address' => $request->address,
-                    'comment' => $request->comment,
-                    'status' => 'pending',
-                ]);
+                if ($product->stock < $item['quantity']) {
+                    throw new \Exception("Not enough stock for '{$product->title}'. Available: {$product->stock}.");
+                }
 
-                $order->items()->createMany($purchasedItems);
-                
-                // $this->clearCart($purchasedProductIds);
+                $purchasedItems[] = [
+                    'product_id'   => $product->id,
+                    'product_name' => $product->title,
+                    'price'        => $product->price,
+                    'quantity'     => $item['quantity'],
+                ];
 
-                Stripe::setApiKey(config('services.stripe.secret'));
+                $total += $product->price * $item['quantity'];
+                $product->decrement('stock', $item['quantity']);
+            }
+
+            $order = \App\Models\Order::create([
+                'user_id' => Auth::id(),
+                'total_price' => $total,
+                'customer_name' => $request->name,
+                'customer_email' => $request->email,
+                'customer_phone' => $request->phone,
+                'delivery_address' => $request->address,
+                'comment' => $request->comment,
+                'status' => 'pending',
+            ]);
+
+            $order->items()->createMany($purchasedItems);
+
+            // --- STRIPE LOGIC ---
+            $checkoutUrl = route('checkout.success') . '?session_id=local_test_' . uniqid();
+
+            // Стучимся в Stripe только если мы НЕ на локалке (чтобы избежать ошибки 403/timeout)
+            if (config('app.env') !== 'local') {
+                \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
                 $lineItems = [];
                 foreach ($items as $item) {
                     $lineItems[] = [
                         'price_data' => [
                             'currency' => 'usd',
-                            'product_data' => [
-                                'name' => $item['title'],
-                            ],
+                            'product_data' => ['name' => $item['title']],
                             'unit_amount' => $item['price'] * 100,
                         ],
                         'quantity' => $item['quantity'],
                     ];
                 }
 
-                $checkoutSession = Session::create([
+                $checkoutSession = \Stripe\Checkout\Session::create([
                     'payment_method_types' => ['card'],
                     'line_items' => $lineItems,
                     'mode' => 'payment',
                     'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
                     'cancel_url' => route('checkout.cancel'),
-                    'metadata' => [
-                        'order_id' => $order->id,
-                    ],
+                    'metadata' => ['order_id' => $order->id],
                 ]);
 
-                return Inertia::location($checkoutSession->url);
-            });
+                $checkoutUrl = $checkoutSession->url;
+            }
 
-            return to_route('home')->with('success', 'The order has been placed!');
+            return [
+                'url' => $checkoutUrl,
+                'order' => $order
+            ];
+        });
 
-        } catch (\Exception $e) {
-            Log::error("Checkout error: " . $e->getMessage());
-            return to_route('cart.index')->withErrors(['error' => $e->getMessage()])->withInput();
+        $checkoutUrl = $data['url'];
+        $order = $data['order'];
+
+        if (config('app.env') === 'local') {
+            $order->update(['status' => 'processing']);
+            session()->forget('cart'); 
+            Log::info("LOCAL TEST: Order {$order->id} auto-paid.");
         }
+
+        return Inertia::location($checkoutUrl);
+
+    } catch (\Exception $e) {
+        Log::error("Checkout error: " . $e->getMessage());
+        return redirect()->route('cart.index')
+            ->withErrors(['error' => $e->getMessage()])
+            ->withInput();
     }
+}
 
     protected function clearCart(array $productIds)
     {

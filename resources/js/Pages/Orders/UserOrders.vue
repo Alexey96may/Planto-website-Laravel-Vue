@@ -108,16 +108,16 @@
                             <div class="flex flex-col items-end gap-2">
                                 <div
                                     class="flex items-center gap-2 rounded-full border border-white/5 bg-black/40 px-3 py-1"
-                                    :class="getStatusConfig(order.status).color"
-                                    :aria-label="'Status: ' + getStatusConfig(order.status).label"
+                                    :class="getStatusConfig(order.status)?.color"
+                                    :aria-label="'Status: ' + getStatusConfig(order.status)?.label"
                                 >
                                     <component
-                                        :is="getStatusConfig(order.status).icon"
+                                        :is="getStatusConfig(order.status)?.icon"
                                         class="h-3 w-3"
                                         aria-hidden="true"
                                     />
                                     <span class="text-[10px] font-black uppercase tracking-widest">
-                                        {{ getStatusConfig(order.status).label }}
+                                        {{ getStatusConfig(order.status)?.label }}
                                     </span>
                                 </div>
                                 <p class="text-xl font-black italic tracking-tighter text-white">
@@ -157,15 +157,6 @@
                                     </span>
                                 </li>
                             </ul>
-                        </div>
-
-                        <div class="mt-4 flex justify-end">
-                            <button
-                                class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-500 transition-colors hover:text-[#c5d86d] focus:outline-none focus:ring-1 focus:ring-[#c5d86d]/30"
-                            >
-                                View Full Protocol
-                                <ExternalLink class="h-3 w-3" aria-hidden="true" />
-                            </button>
                         </div>
                     </article>
                 </div>

@@ -17,7 +17,6 @@
     defineOptions({ layout: MainLayout });
 
     onMounted(() => {
-        // Звуковой фидбек при успешной загрузке страницы
         playSlideMove();
     });
 </script>
@@ -26,7 +25,7 @@
     <Head title="Order Confirmed" />
 
     <div
-        class="flex min-h-[80vh] items-center justify-center px-6 py-16 lg:py-24"
+        class="flex min-h-[80vh] items-center justify-center bg-plant-shop px-6 py-16 lg:py-24"
         role="main"
         aria-labelledby="success-heading"
     >
@@ -78,7 +77,7 @@
                 aria-label="Post-purchase navigation"
             >
                 <Link
-                    href="/orders"
+                    href="/my-orders"
                     class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-zinc-800 px-8 py-4 font-bold text-white transition-all hover:bg-zinc-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-zinc-500/50 sm:w-auto"
                     aria-label="View your order history"
                 >
@@ -111,7 +110,6 @@
 </template>
 
 <style scoped>
-    /* Плавное появление контента при загрузке */
     div[role='main'] {
         animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
