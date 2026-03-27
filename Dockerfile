@@ -1,4 +1,3 @@
-
 FROM node:22-alpine as frontend-builder
 WORKDIR /app
 COPY package*.json ./
@@ -16,9 +15,11 @@ RUN apk add --no-cache \
     freetype-dev \
     libjpeg-turbo-dev \
     postgresql-dev \
-    icu-dev
+    icu-dev \
+    libwebp-dev \
+    zlib-dev
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) \
     gd \
     pdo_mysql \
@@ -45,4 +46,4 @@ COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 
 EXPOSE 10000
 
-CMD composer dump-autoload && php artisan migrate:fresh --seed --force && php-fpm -D && nginx -g 'daemon off;'
+CMD php artisan config:clear && php artisan migrate:fresh --seed --force && php-fpm -D && nginx -g 'daemon off;'
