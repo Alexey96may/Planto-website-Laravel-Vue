@@ -6,7 +6,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build
 
-FROM php:8.2-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 RUN apk add --no-cache \
     nginx \
@@ -25,7 +25,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     pdo_pgsql \
     bcmath \
     zip \
-    intl
+    intl \
+    exif
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
