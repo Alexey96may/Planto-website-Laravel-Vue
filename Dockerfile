@@ -45,4 +45,4 @@ COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 
 EXPOSE 10000
 
-CMD php-fpm -D && nginx -g 'daemon off;'
+CMD php artisan migrate --force && php-fpm -D && nginx -g 'daemon off;'
