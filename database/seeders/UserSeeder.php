@@ -15,10 +15,9 @@ class UserSeeder extends Seeder
         
         \App\Models\User::factory(15)->create();
         
-        // И одного админа для себя, чтобы не потерять доступ
         \App\Models\User::factory()->create([
             'name' => 'Admin',
-            'email' => 'admin@example.com',
+            'email' => 'shulga_alexey@vk.com',
             'password' => bcrypt('password'),
         ]);
     }
