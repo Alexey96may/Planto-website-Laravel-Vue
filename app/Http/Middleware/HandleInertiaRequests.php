@@ -62,7 +62,7 @@ class HandleInertiaRequests extends Middleware
                 'warning' => fn() => $request->session()->get('warning'),
             ],
 
-            'pending_comments_count' => fn() => \App\Models\Comment::where('is_approved', false)->count(),
+            'pending_comments_count' => fn() => \App\Models\Comment::where('is_approved', '=', false)->count(),
 
             'seo' => fn() => [
                 'title'       => 'Planto',
