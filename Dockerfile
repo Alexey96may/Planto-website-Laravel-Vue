@@ -1,9 +1,10 @@
 FROM node:22-alpine as frontend-builder
+ARG VITE_MAPBOX_TOKEN
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
-RUN npm run build
+RUN VITE_MAPBOX_TOKEN=${VITE_MAPBOX_TOKEN} npm run build
 
 FROM php:8.4-fpm-alpine
 
