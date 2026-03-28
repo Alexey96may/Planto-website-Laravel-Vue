@@ -40,8 +40,10 @@ COPY --from=frontend-builder /app/public/build ./public/build
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+RUN php artisan storage:link
+
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 
