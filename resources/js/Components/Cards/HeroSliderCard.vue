@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import { ref } from 'vue';
+
     import { Link, usePage } from '@inertiajs/vue3';
 
     import AppExploreButton from '@/Components/UI/AppExploreButton.vue';

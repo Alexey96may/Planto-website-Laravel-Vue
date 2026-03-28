@@ -41,6 +41,12 @@
 
         return fallback ? fallback.src : optimizedSources.value[0].src;
     });
+
+    const emit = defineEmits(['load']);
+
+    const onImageLoad = (event: Event) => {
+        emit('load', event);
+    };
 </script>
 
 <template>
@@ -57,6 +63,7 @@
             :role="isDecorative ? 'presentation' : undefined"
             :aria-hidden="isDecorative ? 'true' : undefined"
             @error="handleImageError"
+            @load="onImageLoad"
             loading="lazy"
             class="object-cover"
             v-bind="$attrs"
@@ -68,6 +75,7 @@
         v-else
         :src="src as string"
         :alt="isDecorative ? '' : alt || 'Plant image'"
+        @load="onImageLoad"
         @error="handleImageError"
         loading="lazy"
         v-bind="$attrs"
