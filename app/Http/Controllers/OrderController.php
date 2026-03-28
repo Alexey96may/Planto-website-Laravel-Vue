@@ -107,7 +107,8 @@ class OrderController extends Controller
 
                 $checkoutSession = \Stripe\Checkout\Session::create([
                     'payment_method_types' => ['card'],
-                    'line_items' => $lineItems,
+                    'line_items' => array_values($lineItems),
+                    
                     'mode' => 'payment',
                     'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
                     'cancel_url' => route('checkout.cancel'),
