@@ -58,7 +58,7 @@
             </div>
         </transition>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="text-zinc-900">
             <div class="flex flex-col gap-4">
                 <PrimaryButton
                     class="w-full py-4"

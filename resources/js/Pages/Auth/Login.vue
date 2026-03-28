@@ -55,7 +55,7 @@
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit" class="space-y-6">
+        <form @submit.prevent="submit" class="space-y-6 text-zinc-900">
             <div>
                 <InputLabel for="email" value="Email Address" class="text-zinc-400" />
 

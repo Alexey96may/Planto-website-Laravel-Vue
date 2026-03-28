@@ -46,7 +46,7 @@
             <p class="mt-2 text-sm text-zinc-500">Join our community of plant lovers 🌿</p>
         </div>
 
-        <form @submit.prevent="submit" class="space-y-5">
+        <form @submit.prevent="submit" class="space-y-5 text-zinc-900">
             <div>
                 <InputLabel for="name" value="Full Name" class="text-zinc-400" />
                 <TextInput

@@ -55,7 +55,7 @@
             </p>
         </div>
 
-        <form @submit.prevent="submit" class="space-y-5">
+        <form @submit.prevent="submit" class="space-y-5 text-zinc-900">
             <div>
                 <InputLabel for="email" value="Email Address" class="text-zinc-400" />
                 <TextInput

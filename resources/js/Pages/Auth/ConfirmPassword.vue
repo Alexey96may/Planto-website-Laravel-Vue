@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import { Head, Link, useForm } from '@inertiajs/vue3';
 
+    import { route } from 'ziggy-js';
+
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import InputError from '@/Components/UI/InputError.vue';
     import InputLabel from '@/Components/UI/InputLabel.vue';
@@ -64,7 +66,7 @@
             </p>
         </div>
 
-        <form @submit.prevent="submit" class="space-y-6">
+        <form @submit.prevent="submit" class="space-y-6 text-zinc-900">
             <div>
                 <InputLabel for="password" value="Your Password" class="text-zinc-400" />
                 <TextInput
