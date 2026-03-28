@@ -57,7 +57,7 @@
                         No active transmissions found
                     </p>
                     <Link
-                        :href="route('shop.index')"
+                        :href="route('shop')"
                         class="mt-6 text-xs font-black uppercase tracking-widest text-[#c5d86d] underline decoration-2 underline-offset-8 transition-colors hover:text-white"
                     >
                         Initialize New Purchase

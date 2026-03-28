@@ -33,7 +33,6 @@
                     form.rating = props.comment.rating;
                 }
                 document.body.style.overflow = 'hidden';
-                // Автофокус на первое поле при открытии
                 await nextTick();
                 firstInput.value?.focus();
             } else {
@@ -47,7 +46,6 @@
         playCancel();
     };
 
-    // Закрытие по ESC
     const handleKeydown = (e: KeyboardEvent) => {
         if (e.key === 'Escape' && props.modelValue) closeModal();
     };

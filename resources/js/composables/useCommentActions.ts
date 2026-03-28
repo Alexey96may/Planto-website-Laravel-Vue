@@ -28,8 +28,13 @@ export function useCommentActions() {
         isEditModalOpen.value = true;
     };
 
-    const handleUpdate = () => {
+    const handleUpdate = (data?: { body: string; rating: number }) => {
         if (!selectedComment.value) return;
+
+        if (data) {
+            editForm.body = data.body;
+            editForm.rating = data.rating;
+        }
 
         editForm.patch(route('comments.update', selectedComment.value.id), {
             preserveScroll: true,
