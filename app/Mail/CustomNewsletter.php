@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CustomNewsletter extends Mailable
+class CustomNewsletter extends Mailable implements ShouldQueue
 {
     public $subject;
     public $content;
@@ -38,7 +38,6 @@ class CustomNewsletter extends Mailable
      */
     public function content(): Content
     {
-        sleep(3);
         return new Content(
             markdown: 'emails.custom-newsletter',
             with: [

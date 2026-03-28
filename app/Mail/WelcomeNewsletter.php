@@ -3,13 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class WelcomeNewsletter extends Mailable implements ShouldQueue
+class WelcomeNewsletter extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -27,7 +26,7 @@ class WelcomeNewsletter extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Добро пожаловать в наш магазин растений!',
+            subject: 'Welcome to our plant store!',
         );
     }
 
