@@ -23,7 +23,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\SitemapController;
-use App\Http\Controllers\WebhookController;
+use App\Http\Controllers\StripeWebhookController;
 
 Route::middleware(['web'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -46,7 +46,7 @@ Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.stor
 Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 
-Route::post('/webhooks/stripe', [WebhookController::class, 'handle'])->name('webhooks.stripe');
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
 
 Route::get('/404', [StaticPageController::class, 'notFound'])->name('error.404');
 
