@@ -35,7 +35,7 @@
     );
 
     const submitInfo = (): void => {
-        formAvatar.post(route('profile.update'), {
+        formAvatar.post(route('profile.patch'), {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {
