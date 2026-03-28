@@ -61,7 +61,7 @@ class StripeWebhookController extends Controller
                 }
             }
         }
-
+ 
         return response()->json(['status' => 'success']);
     }
 }
