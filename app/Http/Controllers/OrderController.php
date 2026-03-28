@@ -111,8 +111,8 @@ class OrderController extends Controller
                     'line_items' => array_values($lineItems),
 
                     'mode' => 'payment',
-                    'success_url' => 'https://planto-website-laravel-vue.onrender.com/checkout/success',
-                    'cancel_url' => 'https://planto-website-laravel-vue.onrender.com/checkout/cancel',
+                    'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                    'cancel_url' => route('checkout.cancel'),
                     'metadata' => [
                         'order_id' => (string) $order->id, 
                     ],
@@ -125,7 +125,7 @@ class OrderController extends Controller
                 Log::info("LOCAL TEST: Order {$order->id} auto-paid.");
             }
 
-            return redirect()->away($checkoutUrl);
+            return Inertia::location($checkoutUrl);
 
         } catch (\Exception $e) {
             Log::error("Checkout error: " . $e->getMessage());
