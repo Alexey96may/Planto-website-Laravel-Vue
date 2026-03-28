@@ -27,6 +27,7 @@ class OrderController extends Controller
         ]);
     }
 
+    //to do: session()->forget('cart') for Stripe logic
     public function store(Request $request)
     {
         $cartData = \App\Services\CartService::getFullCart();
@@ -110,8 +111,8 @@ class OrderController extends Controller
                     'line_items' => array_values($lineItems),
 
                     'mode' => 'payment',
-                    'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                    'cancel_url' => route('checkout.cancel'),
+                    'success_url' => 'https://planto-website-laravel-vue.onrender.com/checkout/success',
+                    'cancel_url' => 'https://planto-website-laravel-vue.onrender.com/checkout/cancel',
                     'metadata' => [
                         'order_id' => (string) $order->id, 
                     ],
@@ -124,7 +125,7 @@ class OrderController extends Controller
                 Log::info("LOCAL TEST: Order {$order->id} auto-paid.");
             }
 
-            return Inertia::location($checkoutUrl);
+            return redirect()->away($checkoutUrl);
 
         } catch (\Exception $e) {
             Log::error("Checkout error: " . $e->getMessage());
