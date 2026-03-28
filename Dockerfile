@@ -50,9 +50,4 @@ COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 
 EXPOSE 10000
 
-CMD php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan storage:link && \
-    php artisan migrate:fresh --force && \
-    php-fpm -D && \
-    nginx -g 'daemon off;'
+CMD php artisan config:clear && php artisan route:clear && php artisan config:cache && php artisan storage:link && php artisan migrate:fresh --force && php-fpm -D && nginx -g 'daemon off;'
