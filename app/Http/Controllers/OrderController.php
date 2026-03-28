@@ -28,65 +28,68 @@ class OrderController extends Controller
     }
 
     public function store(Request $request)
-{
-    $cartData = \App\Services\CartService::getFullCart();
-    $items = $cartData['items'];
+    {
+        $cartData = \App\Services\CartService::getFullCart();
+        $items = $cartData['items'];
 
-    if (empty($items)) {
-        return redirect()->back()->withErrors(['cart' => 'Your cart is empty!']);
-    }
+        if (empty($items)) {
+            return redirect()->back()->withErrors(['cart' => 'Your cart is empty!']);
+        }
 
-    $request->validate([
-        'email' => 'required|email',
-        'name' => 'required|string|max:255',
-        'phone' => 'required|string',
-        'address' => 'required|string|min:5',
-    ]);
+        $request->validate([
+            'email' => 'required|email',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string',
+            'address' => 'required|string|min:5',
+        ]);
 
-    try {
-        $data = DB::transaction(function () use ($request, $items) {
-            $total = 0;
-            $purchasedItems = [];
+        try {
+            $order = DB::transaction(function () use ($request, $items) {
+                $total = 0;
+                $purchasedItems = [];
 
-            foreach ($items as $item) {
-                $product = \App\Models\Product::lockForUpdate()->find($item['product_id']);
+                foreach ($items as $item) {
+                    $product = \App\Models\Product::lockForUpdate()->find($item['product_id']);
 
-                if (!$product) {
-                    throw new \Exception("Product '{$item['title']}' no longer exists.");
+                    if (!$product) {
+                        throw new \Exception("Product '{$item['title']}' no longer exists.");
+                    }
+
+                    if ($product->stock < $item['quantity']) {
+                        throw new \Exception("Not enough stock for '{$product->title}'. Available: {$product->stock}.");
+                    }
+
+                    $purchasedItems[] = [
+                        'product_id'   => $product->id,
+                        'product_name' => $product->title,
+                        'price'        => $product->price,
+                        'quantity'     => $item['quantity'],
+                    ];
+
+                    $total += $product->price * $item['quantity'];
+                    $product->decrement('stock', $item['quantity']);
                 }
 
-                if ($product->stock < $item['quantity']) {
-                    throw new \Exception("Not enough stock for '{$product->title}'. Available: {$product->stock}.");
-                }
+                $order = \App\Models\Order::create([
+                    'user_id' => Auth::id(),
+                    'total_price' => $total,
+                    'customer_name' => $request->name,
+                    'customer_email' => $request->email,
+                    'customer_phone' => $request->phone,
+                    'delivery_address' => $request->address,
+                    'comment' => $request->comment,
+                    'status' => 'pending',
+                ]);
 
-                $purchasedItems[] = [
-                    'product_id'   => $product->id,
-                    'product_name' => $product->title,
-                    'price'        => $product->price,
-                    'quantity'     => $item['quantity'],
-                ];
+                $order->items()->createMany($purchasedItems);
+                return $order;
 
-                $total += $product->price * $item['quantity'];
-                $product->decrement('stock', $item['quantity']);
-            }
+            });
 
-            $order = \App\Models\Order::create([
-                'user_id' => Auth::id(),
-                'total_price' => $total,
-                'customer_name' => $request->name,
-                'customer_email' => $request->email,
-                'customer_phone' => $request->phone,
-                'delivery_address' => $request->address,
-                'comment' => $request->comment,
-                'status' => 'pending',
-            ]);
-
-            $order->items()->createMany($purchasedItems);
-
+            
             // --- STRIPE LOGIC ---
             $checkoutUrl = route('checkout.success') . '?session_id=local_test_' . uniqid();
 
-            // Стучимся в Stripe только если мы НЕ на локалке (чтобы избежать ошибки 403/timeout)
             if (config('app.env') !== 'local') {
                 \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
@@ -96,7 +99,7 @@ class OrderController extends Controller
                         'price_data' => [
                             'currency' => 'usd',
                             'product_data' => ['name' => $item['title']],
-                            'unit_amount' => $item['price'] * 100,
+                            'unit_amount' => (int) round($item['price'] * 100),
                         ],
                         'quantity' => $item['quantity'],
                     ];
@@ -112,32 +115,21 @@ class OrderController extends Controller
                 ]);
 
                 $checkoutUrl = $checkoutSession->url;
+            } else {
+                $order->update(['status' => 'processing']);
+                session()->forget('cart'); 
+                Log::info("LOCAL TEST: Order {$order->id} auto-paid.");
             }
 
-            return [
-                'url' => $checkoutUrl,
-                'order' => $order
-            ];
-        });
+            return Inertia::location($checkoutUrl);
 
-        $checkoutUrl = $data['url'];
-        $order = $data['order'];
-
-        if (config('app.env') === 'local') {
-            $order->update(['status' => 'processing']);
-            session()->forget('cart'); 
-            Log::info("LOCAL TEST: Order {$order->id} auto-paid.");
+        } catch (\Exception $e) {
+            Log::error("Checkout error: " . $e->getMessage());
+            return redirect()->route('cart.index')
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
         }
-
-        return Inertia::location($checkoutUrl);
-
-    } catch (\Exception $e) {
-        Log::error("Checkout error: " . $e->getMessage());
-        return redirect()->route('cart.index')
-            ->withErrors(['error' => $e->getMessage()])
-            ->withInput();
     }
-}
 
     protected function clearCart(array $productIds)
     {
