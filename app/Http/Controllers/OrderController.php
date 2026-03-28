@@ -99,9 +99,9 @@ class OrderController extends Controller
                         'price_data' => [
                             'currency' => 'usd',
                             'product_data' => ['name' => $item['title']],
-                            'unit_amount' => (int) round($item['price'] * 100),
+                            'unit_amount' => (int) max(50, round($item['price'] * 100)),
                         ],
-                        'quantity' => $item['quantity'],
+                        'quantity' => (int) ($item['quantity'] ?? 1),
                     ];
                 }
 
