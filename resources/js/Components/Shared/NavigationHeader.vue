@@ -162,7 +162,14 @@
                         </Link>
                     </template>
 
-                    <div class="mt-4 border-t border-zinc-800 pt-6">
+                    <div class="mt-4 border-t border-zinc-400 pt-8">
+                        <Link
+                            :href="$page.props.auth?.user ? route('dashboard') : route('register')"
+                            :aria-label="$page.props.auth?.user ? 'To Dashboard' : 'To Register'"
+                            class="!block font-medium text-zinc-400 sm:!hidden"
+                        >
+                            User Dashboard
+                        </Link>
                         <AppVisualEffectsToggle />
                     </div>
                 </div>

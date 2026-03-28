@@ -7,12 +7,13 @@
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 pt-8">
+    <div class="flex flex-col gap-6 pt-4">
         <div class="flex items-center justify-start gap-4 text-sm text-zinc-400">
-            <span class="font-medium tracking-wide">Visual Effects</span>
+            <label for="buttonV" class="font-medium tracking-wide">Visual Effects</label>
 
             <button
                 type="button"
+                id="buttonV"
                 @click="isEffectsEnabled = !isEffectsEnabled"
                 @mousedown="playClick"
                 class="relative h-6 w-11 shrink-0 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 focus:ring-offset-zinc-900"
