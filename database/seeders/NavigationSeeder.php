@@ -18,7 +18,7 @@ class NavigationSeeder extends Seeder
             ['title' => 'Plants Type', 'location' => 'header', 'link' => '/shop', 'order' => 2],
             ['title' => 'Shop', 'location' => 'header', 'link' => '/shop', 'order' => 3],
             ['title' => 'Contact', 'location' => 'header', 'link' => '/contacts', 'order' => 4],
-            ['title' => 'Review', 'location' => 'header', 'link' => '/reviews', 'order' => 5],
+            ['title' => 'Reviews', 'location' => 'header', 'link' => '/reviews', 'order' => 5],
             ['title' => 'Home', 'location' => 'footer', 'link' => '/', 'order' => 1],
             ['title' => 'Type’s Of plant’s', 'location' => 'footer', 'link' => '/shop', 'order' => 2],
             ['title' => 'Contact', 'location' => 'footer', 'link' => '/contacts', 'order' => 3],

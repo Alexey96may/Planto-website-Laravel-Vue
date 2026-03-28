@@ -1,7 +1,8 @@
 <script setup lang="ts">
-    import { ref, watch } from 'vue';
+    import { onUnmounted, ref, watch } from 'vue';
 
     import { Link } from '@inertiajs/vue3';
+    import { router } from '@inertiajs/vue3';
 
     import IconLogo from 'img/icons/favicon-cabinet.svg?component';
     import { ChevronDownIcon } from 'lucide-vue-next';
@@ -24,6 +25,15 @@
         } else {
             document.body.style.overflow = '';
         }
+    });
+
+    onUnmounted(() => {
+        document.body.style.overflow = '';
+    });
+
+    router.on('start', () => {
+        showingNavigationDropdown.value = false;
+        document.body.style.overflow = '';
     });
 </script>
 
