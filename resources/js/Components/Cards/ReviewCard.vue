@@ -69,8 +69,10 @@
         }
 
         .author__photo {
-            max-width: calc(1rem * (88px / b.$basicFontSize));
-            height: calc(1rem * (88px / b.$basicFontSize));
+            width: calc(1rem * (100px / b.$basicFontSize));
+            aspect-ratio: 1;
+            flex-grow: 1;
+            flex-shrink: 0;
         }
 
         .author__info {

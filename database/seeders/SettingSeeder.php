@@ -38,6 +38,7 @@ class SettingSeeder extends Seeder
             ['key' => 'reviews_limit', 'value' => 5],
             ['key' => 'trendy_limit', 'value' => 2],
 
+            ['key' => 'section_reviews_link', 'value' => '/reviews'],
         ];
 
         foreach ($settings as $setting) {

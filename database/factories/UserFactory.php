@@ -26,13 +26,23 @@ class UserFactory extends Factory
     {
         $faker = \Faker\Factory::create();
 
+        $avatars = [
+            'users/user1.png',
+            'users/user2.png',
+            'users/user3.png',
+            'users/user4.png',
+            'users/user5.png',
+            'users/user6.png',
+            null,
+        ];
+
         return [
             'name' => $faker->name(),
             'email' => $faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'avatar' => null,
+            'avatar' => $faker->randomElement($avatars),
             'role' => 'user',
         ];
     }

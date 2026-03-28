@@ -257,15 +257,15 @@
                     </p>
                 </div>
             </main>
+
+            <Pagination
+                :disabled="isLoading"
+                class="z-[3]"
+                :links="reviews.links"
+                aria-label="Reviews pagination"
+            />
         </div>
     </div>
-
-    <Pagination
-        :disabled="isLoading"
-        class="z-[3]"
-        :links="reviews.links"
-        aria-label="Reviews pagination"
-    />
 </template>
 
 <style scoped>

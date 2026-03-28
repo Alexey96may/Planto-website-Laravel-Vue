@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, ref } from 'vue';
 
-    import { usePage } from '@inertiajs/vue3';
+    import { Link, usePage } from '@inertiajs/vue3';
 
     import { gsap } from 'gsap';
     import 'swiper/css';
@@ -19,7 +19,7 @@
     const page = usePage<SharedData>();
 
     const sectionTitle = computed(() => {
-        return page.props.settings?.section_o2_title || '';
+        return page.props.settings?.section_slider_title || '';
     });
 
     const sectionLink = computed(() => {
@@ -104,13 +104,12 @@
     <section class="best" id="best" aria-label="Review section" v-if="features.length">
         <div class="best__container container">
             <h2 class="title best__title">
-                <component
-                    :is="sectionLink ? 'Link' : 'span'"
-                    :href="sectionLink"
-                    :aria-label="sectionLink ? sectionTitle : undefined"
-                >
+                <Link v-if="sectionLink" :href="sectionLink" :aria-label="sectionTitle">
                     {{ sectionTitle }}
-                </component>
+                </Link>
+                <template v-else>
+                    {{ sectionTitle }}
+                </template>
             </h2>
 
             <div

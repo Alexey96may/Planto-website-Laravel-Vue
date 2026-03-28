@@ -24,10 +24,19 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            ProductSeeder::class,
             CategorySeeder::class,
             SettingSeeder::class,
+            NavigationSeeder::class,
+            FeatureSeeder::class,
+        ]);
+
+        $this->call([
             UserSeeder::class,
+            ProductSeeder::class,
+        ]);
+
+        $this->call([
+            CommentSeeder::class,
         ]);
     }
 }

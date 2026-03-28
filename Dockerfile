@@ -20,7 +20,7 @@ RUN apk add --no-cache \
     libavif-dev \
     zlib-dev
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \ --with-avif \
     && docker-php-ext-install -j$(nproc) \
     gd \
     pdo_mysql \

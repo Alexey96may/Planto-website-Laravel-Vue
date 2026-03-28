@@ -23,13 +23,13 @@
 <template>
     <section class="review" id="review" aria-label="Review section">
         <div class="review__container container">
-            <h2 class="title review__title" v-if="allReviewsUrl">
-                <Link :href="allReviewsUrl" :aria-label="reviewsTitle">
+            <h2 class="title review__title">
+                <Link v-if="allReviewsUrl" :href="allReviewsUrl" :aria-label="reviewsTitle">
                     {{ reviewsTitle }}
                 </Link>
-            </h2>
-            <h2 class="title review__title" v-else>
-                {{ reviewsTitle }}
+                <template v-else>
+                    {{ reviewsTitle }}
+                </template>
             </h2>
 
             <div class="review__cards" aria-label="Cards field with Review">
