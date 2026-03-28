@@ -11,6 +11,8 @@
     }
 
     const { plant = {} as ProductWithCategory } = defineProps<Props>();
+
+    const isLoaded = ref(false);
 </script>
 
 <template>
@@ -19,11 +21,18 @@
             class="card__img-wrapper relative aspect-[1/1] w-full sm:h-64"
             aria-label="Slider card image"
         >
-            <ParallaxCard :with-glare="false" :intensity="15">
+            <ParallaxCard :with-glare="false" :intensity="8">
+                <div
+                    v-if="!isLoaded"
+                    class="skeleton-loader absolute inset-0 z-10 rounded-xl"
+                ></div>
+
                 <AppImage
                     :src="plant.optimized_images"
                     :alt="plant.title"
+                    @load="isLoaded = true"
                     class="parallax-image h-full w-full object-contain drop-shadow-md transition-transform duration-500 md:drop-shadow-xl"
+                    :class="{ 'opacity-0': !isLoaded, 'opacity-100': isLoaded }"
                 />
             </ParallaxCard>
         </div>
@@ -62,6 +71,26 @@
 <style lang="scss" scoped>
     @use '../../../scss/bootstrap' as b;
 
+    .skeleton-loader {
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0.05) 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-pulse 1.5s infinite linear;
+    }
+
+    @keyframes skeleton-pulse {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
     .card {
         margin-top: 20%;
 
@@ -83,7 +112,9 @@
     .parallax-image {
         transform: rotateX(calc(var(--my) * -6deg)) rotateY(calc(var(--mx) * 6deg))
             translateX(calc(var(--mx) * -10px)) translateY(calc(var(--my) * -10px)) scale(1.1);
-        transition: transform 0.3s ease-out;
-        will-change: transform;
+        transition:
+            transform 0.3s ease-out,
+            opacity 0.5s ease-in;
+        will-change: transform, opacity;
     }
 </style>
