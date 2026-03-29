@@ -8,6 +8,7 @@ use App\Mail\WelcomeNewsletter;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CustomNewsletter;
+use Illuminate\Support\Facades\Log;
 
 class NewsletterController extends Controller
 {
@@ -19,8 +20,12 @@ class NewsletterController extends Controller
         ]);
 
         $subscriber = Newsletter::create($validated);
-        
+        try {
         Mail::to($subscriber->email)->send(new WelcomeNewsletter());
+        } catch (\Exception $e) {
+                Log::error("Ошибка почты: " . $e->getMessage());
+            return back()->with('message', 'Ошибка при отправке: ' . $e->getMessage());
+        }
 
         return back()->with('message', 'The letter has been sent!');
     }
