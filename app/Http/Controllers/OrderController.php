@@ -95,21 +95,26 @@ class OrderController extends Controller
 
                 $lineItems = [];
                 foreach ($items as $item) {
+                    $name = (string) ($item['title'] ?? 'Plant');
+                    $priceInCents = (int) max(50, round(($item['price'] ?? 0) * 100));
+                    $qty = (int) ($item['quantity'] ?? 1);
+
                     $lineItems[] = [
                         'price_data' => [
                             'currency' => 'usd',
-                            'product_data' => ['name' => $item['title']],
-                            'unit_amount' => (int) max(50, round($item['price'] * 100)),
+                            'product_data' => [
+                                'name' => $name,
+                            ],
+                            'unit_amount' => $priceInCents,
                         ],
-                        'quantity' => (int) ($item['quantity'] ?? 1),
+                        'quantity' => $qty,
                     ];
                 }
 
-                $lineItems = array_values($lineItems);
+                $finalLineItems = array_values($lineItems);
 
                 $checkoutSession = \Stripe\Checkout\Session::create([
-                    'line_items' => $lineItems,
-
+                    'line_items' => $finalLineItems,
                     'mode' => 'payment',
                     'success_url' => route('checkout.success', [], true),
                     'cancel_url' => route('checkout.cancel', [], true),
