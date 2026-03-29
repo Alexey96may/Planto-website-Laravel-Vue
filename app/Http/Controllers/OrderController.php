@@ -150,6 +150,7 @@ class OrderController extends Controller
                 Log::info("LOCAL TEST: Order {$order->id} auto-paid.");
             }
 
+            error_log("--- STRIPE URL: " . $checkoutSession->url);
             return Inertia::location($checkoutSession->url);
 
         } catch (\Exception $e) {
