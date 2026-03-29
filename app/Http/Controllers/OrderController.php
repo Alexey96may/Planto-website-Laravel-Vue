@@ -114,7 +114,6 @@ class OrderController extends Controller
                 $finalLineItems = array_values($lineItems);
 
                 $checkoutSession = \Stripe\Checkout\Session::create([
-                    'payment_method_types' => ['card'],
                     'line_items' => [[
                         'price_data' => [
                             'currency' => 'usd',
@@ -144,14 +143,14 @@ class OrderController extends Controller
                 //     ],
                 // ]);
 
-                $checkoutUrl = $checkoutSession->url;
+                // $checkoutUrl = $checkoutSession->url;
             } else {
                 $order->update(['status' => 'processing']);
                 session()->forget('cart'); 
                 Log::info("LOCAL TEST: Order {$order->id} auto-paid.");
             }
 
-            return Inertia::location($checkoutUrl);
+            return Inertia::location($checkoutSession->url);
 
         } catch (\Exception $e) {
             Log::error("Checkout error: " . $e->getMessage());

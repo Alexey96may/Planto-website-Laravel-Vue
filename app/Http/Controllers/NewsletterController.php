@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 class NewsletterController extends Controller
 {
     public function store(Request $request) {
+        error_log("--- NEWSLETTER START: " . $request->email . " ---");
+
         $validated = $request->validate([
             'email' => 'required|email|unique:newsletters,email'
         ], [
@@ -20,10 +22,14 @@ class NewsletterController extends Controller
         ]);
 
         $subscriber = Newsletter::create($validated);
+
         try {
+            error_log("Attempting to send mail to: " . $subscriber->email);
         Mail::to($subscriber->email)->send(new WelcomeNewsletter());
+        error_log("MAIL SENT SUCCESSFULLY (TO LOG)");
         } catch (\Exception $e) {
-                Log::error("Ошибка почты: " . $e->getMessage());
+            error_log("!!! MAIL ERROR: " . $e->getMessage());
+            Log::error("Ошибка почты: " . $e->getMessage());
             return back()->with('message', 'Ошибка при отправке: ' . $e->getMessage());
         }
 
