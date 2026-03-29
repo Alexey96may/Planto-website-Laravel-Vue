@@ -144,7 +144,7 @@ class OrderController extends Controller
                 //     ],
                 // ]);
 
-                // $checkoutUrl = $checkoutSession->url;
+                $checkoutUrl = $checkoutSession->url;
             } else {
                 $order->update(['status' => 'processing']);
                 session()->forget('cart'); 
