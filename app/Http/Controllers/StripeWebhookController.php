@@ -50,7 +50,7 @@ class StripeWebhookController extends Controller
             if ($orderId) {
                 $order = Order::with('items')->find($orderId);
                 
-                if ($order && $order->status === 'pending') {
+                if ($order && $order->status === 'processing') {
                     foreach ($order->items as $item) {
                         \App\Models\Product::where('id', $item->product_id)
                             ->increment('stock', $item->quantity);
