@@ -20,7 +20,7 @@ class NewsletterController extends Controller
 
         $subscriber = Newsletter::create($validated);
         
-        Mail::to($subscriber->email)->queue(new WelcomeNewsletter());
+        Mail::to($subscriber->email)->send(new WelcomeNewsletter());
 
         return back()->with('message', 'The letter has been sent!');
     }
@@ -38,7 +38,7 @@ class NewsletterController extends Controller
         Newsletter::chunk(100, function ($subscribers) use ($request) {
             foreach ($subscribers as $subscriber) {
                 Mail::to($subscriber->email)
-                    ->queue(new CustomNewsletter($request->subject, $request->message));
+                    ->send(new CustomNewsletter($request->subject, $request->message));
             }
         });
 
