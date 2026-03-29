@@ -23,7 +23,6 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\SitemapController;
-use App\Http\Controllers\StripeWebhookController;
 
 Route::middleware(['web'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');

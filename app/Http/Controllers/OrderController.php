@@ -105,9 +105,10 @@ class OrderController extends Controller
                     ];
                 }
 
+                $lineItems = array_values($lineItems);
+
                 $checkoutSession = \Stripe\Checkout\Session::create([
-                    'payment_method_types' => array_values(['card']),
-                    'line_items' => array_values($lineItems),
+                    'line_items' => $lineItems,
 
                     'mode' => 'payment',
                     'success_url' => route('checkout.success', [], true),
