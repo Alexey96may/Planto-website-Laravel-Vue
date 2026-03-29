@@ -125,6 +125,8 @@ class OrderController extends Controller
                 Log::info("LOCAL TEST: Order {$order->id} auto-paid.");
             }
 
+            dd($checkoutUrl);
+
             return Inertia::location($checkoutUrl);
 
         } catch (\Exception $e) {
