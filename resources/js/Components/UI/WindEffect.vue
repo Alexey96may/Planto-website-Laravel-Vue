@@ -48,10 +48,10 @@
     };
 
     const seasonConfig = {
-        winter: 11,
-        spring: 22,
-        summer: 17,
-        autumn: 19,
+        winter: 24,
+        spring: 35,
+        summer: 24,
+        autumn: 32,
     };
 
     const currentSeason = getCurrentSeason();
