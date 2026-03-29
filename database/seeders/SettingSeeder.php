@@ -31,7 +31,7 @@ class SettingSeeder extends Seeder
             ['key' => 'section_hero_title',  'value' => 'Breath Natureal'],
             ['key' => 'section_selling_title', 'value' => 'Our Top Selling'],
             ['key' => 'section_reviews_title', 'value' => 'Customer Review'],
-            ['key' => 'section_slider_title',      'value' => 'Our Best o2'],
+            ['key' => 'section_slider_title',  'value' => 'Our Best o2'],
             ['key' => 'top_plants_limit', 'value' => 4],
             ['key' => 'comments_limit', 'value' => 3],
             ['key' => 'features_limit', 'value' => 4],

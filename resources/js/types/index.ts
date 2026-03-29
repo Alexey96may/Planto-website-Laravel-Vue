@@ -248,14 +248,13 @@ export interface Settings {
     section_selling_title: string;
     section_reviews_title: string;
     section_slider_title: string;
-    section_o2_title: string;
     section_hero_title: string;
     hero_main_text: string;
 
     section_trendy_link: string | null;
     section_selling_link: string | null;
     section_reviews_link: string | null;
-    section_o2_link: string | null;
+    section_slider_link: string | null;
     live_demo_url: string;
 }
 
@@ -296,14 +295,14 @@ export interface SettingsForm {
     section_trendy_title: string;
     section_selling_title: string;
     section_reviews_title: string;
-    section_o2_title: string;
+    section_slider_title: string;
     section_hero_title: string;
 
     // Section Links
     section_trendy_link: string | null;
     section_selling_link: string | null;
     section_reviews_link: string | null;
-    section_o2_link: string | null;
+    section_slider_link: string | null;
 }
 
 export interface NavigationItem {

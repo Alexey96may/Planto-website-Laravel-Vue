@@ -46,12 +46,12 @@ class SettingController extends Controller
             'section_hero_title'  =>   'required|string|max:100',
             'section_selling_title' => 'required|string|max:100',
             'section_reviews_title' => 'required|string|max:100',
-            'section_o2_title'      => 'required|string|max:100',
+            'section_slider_title' => 'required|string|max:100',
 
             'section_trendy_link'   => 'nullable|string|max:255',
             'section_selling_link'  => 'nullable|string|max:255',
             'section_reviews_link'  => 'nullable|string|max:255',
-            'section_o2_link'       => 'nullable|string|max:255',
+            'section_slider_link'       => 'nullable|string|max:255',
 
             'top_plants_limit'   => 'required|integer|min:1|max:100',
             'comments_limit'     => 'required|integer|min:1|max:100',

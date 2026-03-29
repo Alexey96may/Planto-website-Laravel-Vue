@@ -18,7 +18,12 @@
 
     import SeoMeta from '@/Components/Shared/SeoMeta.vue';
     import AdminLayout from '@/Layouts/AdminLayout.vue';
+    import { useFlash } from '@/composables/useFlash';
+    import { useSound } from '@/composables/useSound';
     import { Seo, Settings, SettingsForm } from '@/types';
+
+    const { playClick, playCancel } = useSound();
+    const { notify } = useFlash();
 
     const props = defineProps<{
         settings: Settings;
@@ -56,11 +61,11 @@
         section_trendy_title: props.settings.section_trendy_title || '',
         section_selling_title: props.settings.section_selling_title || '',
         section_reviews_title: props.settings.section_reviews_title || '',
-        section_o2_title: props.settings.section_o2_title || '',
+        section_slider_title: props.settings.section_slider_title || '',
         section_trendy_link: props.settings.section_trendy_link || '',
         section_selling_link: props.settings.section_selling_link || '',
         section_reviews_link: props.settings.section_reviews_link || '',
-        section_o2_link: props.settings.section_o2_link || '',
+        section_slider_link: props.settings.section_slider_link || '',
         live_demo_url: props.settings.live_demo_url || '',
         contact_address: props.settings.contact_address || '',
         hero_main_text: props.settings.hero_main_text || '',
@@ -88,10 +93,13 @@
     ];
 
     const submit = () => {
+        playClick();
+
         form.post(route('admin.settings.update'), {
             preserveScroll: true,
-            onSuccess: () => {
-                // Здесь можно вызвать Toast
+            onError: (err) => {
+                playCancel();
+                notify(err[1], 'error');
             },
         });
     };
@@ -428,7 +436,7 @@
                                                 'trendy',
                                                 'selling',
                                                 'reviews',
-                                                'o2',
+                                                'slider',
                                             ]"
                                             :key="section"
                                             class="space-y-4 rounded-3xl border border-white/5 bg-black/20 p-6"
