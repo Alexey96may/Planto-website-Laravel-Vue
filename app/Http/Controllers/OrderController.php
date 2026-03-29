@@ -88,70 +88,39 @@ class OrderController extends Controller
 
             
             // --- STRIPE LOGIC ---
-            $checkoutUrl = route('checkout.success') . '?session_id=local_test_' . uniqid();
+            $skipStripe = true;
 
-            if (config('app.env') !== 'local') {
-                \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+            // $checkoutUrl = route('checkout.success') . '?session_id=local_test_' . uniqid();
 
-                $lineItems = [];
-                foreach ($items as $item) {
-                    $name = (string) ($item['title'] ?? 'Plant');
-                    $priceInCents = (int) max(50, round(($item['price'] ?? 0) * 100));
-                    $qty = (int) ($item['quantity'] ?? 1);
-
-                    $lineItems[] = [
-                        'price_data' => [
-                            'currency' => 'usd',
-                            'product_data' => [
-                                'name' => $name,
+            if (!$skipStripe && config('app.env') !== 'local') {
+                try {
+                    \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+                    $checkoutSession = \Stripe\Checkout\Session::create([
+                        'line_items' => [[
+                            'price_data' => [
+                                'currency' => 'usd',
+                                'product_data' => ['name' => 'Order #' . $order->id],
+                                'unit_amount' => (int)($order->total_price * 100),
                             ],
-                            'unit_amount' => $priceInCents,
-                        ],
-                        'quantity' => $qty,
-                    ];
+                            'quantity' => 1,
+                        ]],
+                        'mode' => 'payment',
+                        'success_url' => route('checkout.success', [], true),
+                        'cancel_url' => route('checkout.cancel', [], true),
+                    ]);
+
+                    return Inertia::location($checkoutSession->url);
+                    
+                } catch (\Exception $e) {
+                    Log::error("Stripe Error: " . $e->getMessage());
                 }
-
-                $finalLineItems = array_values($lineItems);
-
-                $checkoutSession = \Stripe\Checkout\Session::create([
-                    'line_items' => [[
-                        'price_data' => [
-                            'currency' => 'usd',
-                            'product_data' => [
-                                'name' => 'Test Hoya Plant',
-                                'description' => 'Hardcoded test item',
-                            ],
-                            'unit_amount' => 2000, // Это $20.00 (строго число INT)
-                        ],
-                        'quantity' => 1, // Строго число INT
-                    ]],
-                    'mode' => 'payment',
-                    'success_url' => route('checkout.success', [], true),
-                    'cancel_url' => route('checkout.cancel', [], true),
-                    'metadata' => [
-                        'order_id' => (string) $order->id, 
-                    ],
-                ]);
-
-                // $checkoutSession = \Stripe\Checkout\Session::create([
-                //     'line_items' => $finalLineItems,
-                //     'mode' => 'payment',
-                //     'success_url' => route('checkout.success', [], true),
-                //     'cancel_url' => route('checkout.cancel', [], true),
-                //     'metadata' => [
-                //         'order_id' => (string) $order->id, 
-                //     ],
-                // ]);
-
-                // $checkoutUrl = $checkoutSession->url;
-            } else {
-                $order->update(['status' => 'processing']);
-                session()->forget('cart'); 
-                Log::info("LOCAL TEST: Order {$order->id} auto-paid.");
             }
 
-            error_log("--- STRIPE URL: " . $checkoutSession->url);
-            return Inertia::location($checkoutSession->url);
+            $order->update(['status' => 'processing']);
+
+            $this->clearCart(collect($items)->pluck('product_id')->toArray());
+
+            return redirect()->route('checkout.success')->with('message', 'Order placed successfully (Test Mode)');
 
         } catch (\Exception $e) {
             Log::error("Checkout error: " . $e->getMessage());
