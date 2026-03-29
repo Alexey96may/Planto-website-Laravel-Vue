@@ -114,7 +114,18 @@ class OrderController extends Controller
                 $finalLineItems = array_values($lineItems);
 
                 $checkoutSession = \Stripe\Checkout\Session::create([
-                    'line_items' => $finalLineItems,
+                    'payment_method_types' => ['card'],
+                    'line_items' => [[
+                        'price_data' => [
+                            'currency' => 'usd',
+                            'product_data' => [
+                                'name' => 'Test Hoya Plant',
+                                'description' => 'Hardcoded test item',
+                            ],
+                            'unit_amount' => 2000, // Это $20.00 (строго число INT)
+                        ],
+                        'quantity' => 1, // Строго число INT
+                    ]],
                     'mode' => 'payment',
                     'success_url' => route('checkout.success', [], true),
                     'cancel_url' => route('checkout.cancel', [], true),
@@ -123,7 +134,17 @@ class OrderController extends Controller
                     ],
                 ]);
 
-                $checkoutUrl = $checkoutSession->url;
+                // $checkoutSession = \Stripe\Checkout\Session::create([
+                //     'line_items' => $finalLineItems,
+                //     'mode' => 'payment',
+                //     'success_url' => route('checkout.success', [], true),
+                //     'cancel_url' => route('checkout.cancel', [], true),
+                //     'metadata' => [
+                //         'order_id' => (string) $order->id, 
+                //     ],
+                // ]);
+
+                // $checkoutUrl = $checkoutSession->url;
             } else {
                 $order->update(['status' => 'processing']);
                 session()->forget('cart'); 
