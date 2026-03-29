@@ -46,8 +46,6 @@ Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.stor
 Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
-
 Route::get('/404', [StaticPageController::class, 'notFound'])->name('error.404');
 
 Route::get('/terms', [StaticPageController::class, 'terms'])->name('terms');
