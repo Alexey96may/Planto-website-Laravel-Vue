@@ -28,12 +28,12 @@ class NewsletterController extends Controller
             'sender_name'  => env('UNISENDER_SENDER_NAME', 'Planto Shop'),
             'sender_email' => env('UNISENDER_SENDER_EMAIL'),
             'subject'      => 'Wellcome to Planto!',
-            'body'         => view('emails.welcome_newsletter')->render(),
+            'body'         => view('emails.welcome-newsletter')->render(),
             'list_id'      => 1,
         ]);
 
         if ($response->failed() || isset($response->json()['error'])) {
-            Log::error("Ошибка UniSender: " . $response->body());
+            Log::error("Error UniSender: " . $response->body());
             return back()->with('message', 'The subscription has been completed, but there was a delay with the letter.');
         }
 
@@ -58,7 +58,7 @@ class NewsletterController extends Controller
                     'sender_name'   => env('UNISENDER_SENDER_NAME'),
                     'sender_email'  => env('UNISENDER_SENDER_EMAIL'),
                     'subject'       => $request->subject,
-                    'body'          => view('emails.custom_newsletter', [
+                    'body'          => view('emails.custom-newsletter', [
                                             'subject' => $request->subject, 
                                             'messageText' => $request->message
                                        ])->render(),
