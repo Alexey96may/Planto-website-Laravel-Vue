@@ -69,9 +69,14 @@ class Product extends Model implements HasMedia
             ];
         }
 
-        return [
-            ['src' => $media->getUrl(), 'format' => $media->extension],
-        ];
+        try {
+            return [
+                ['src' => $media->getUrl(), 'format' => $media->extension],
+            ];
+        } catch (\Exception $e) {
+            
+            return [['src' => asset('images/no-image.png'), 'format' => 'png']];
+        }
     }
     
     protected function getImageUrlAttribute(): string
