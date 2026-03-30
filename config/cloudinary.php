@@ -1,6 +1,11 @@
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Cloudinary Configuration
+    |--------------------------------------------------------------------------
+    */
     'cloud' => [
         'cloud_name' => env('CLOUDINARY_NAME'),
         'api_key'    => env('CLOUDINARY_API_KEY'),

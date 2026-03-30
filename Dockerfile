@@ -50,7 +50,9 @@ COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 
 EXPOSE 10000
 
-CMD php artisan config:cache && \
+CMD php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache && \
     php artisan storage:link && \
