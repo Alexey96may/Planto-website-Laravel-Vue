@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
+use Illuminate\Support\Facades\Http;
 use Stripe\Checkout\Session;
 
 class OrderController extends Controller
@@ -86,7 +87,8 @@ class OrderController extends Controller
 
             });
 
-            
+            $this->sendTelegramNotification($order);
+
             // --- STRIPE LOGIC ---
             $skipStripe = true;
 
@@ -142,6 +144,43 @@ class OrderController extends Controller
                 unset($sessionCart[$id]);
             }
             session()->put('cart', $sessionCart);
+        }
+    }
+
+    /**
+    * Sending a notification to the administrator in Telegram
+    */
+    protected function sendTelegramNotification($order)
+    {
+        try {
+            $token = env('TELEGRAM_BOT_TOKEN');
+            $chatId = env('TELEGRAM_ADMIN_CHAT_ID');
+
+            if (!$token || !$chatId) {
+                Log::warning("Telegram credentials not set in .env");
+                return;
+            }
+            
+            $message = "🛍 *New order #{$order->id}*\n\n";
+            $message .= "👤 *Customer:* {$order->customer_name}\n";
+            $message .= "📞 *Tel:* `{$order->customer_phone}`\n";
+            $message .= "💰 *Amount:* {$order->total_price} $\n";
+            $message .= "🏠 *Address:* {$order->delivery_address}\n";
+            
+            if ($order->comment) {
+                $message .= "📝 *Comment:* {$order->comment}\n";
+            }
+
+            $message .= "\n🌿 _Process the order in the Planto admin panel!_";
+
+            Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
+                'chat_id' => $chatId,
+                'text' => $message,
+                'parse_mode' => 'Markdown',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error("Telegram Notification Error: " . $e->getMessage());
         }
     }
 }

@@ -22,6 +22,20 @@ class NewsletterController extends Controller
 
         $subscriber = Newsletter::create($validated);
 
+        try {
+            $botToken = env('TELEGRAM_BOT_TOKEN');
+            $chatId = env('TELEGRAM_ADMIN_CHAT_ID');
+            $text = "🌱 *New newsletter subscription!*\n📧 Email: {$subscriber->email}";
+
+            Http::post("https://api.telegram.org/bot{$botToken}/sendMessage", [
+                'chat_id' => $chatId,
+                'text' => $text,
+                'parse_mode' => 'Markdown',
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Ошибка уведомления в ТГ: " . $e->getMessage());
+        }
+
         $response = Http::post('https://api.unisender.com/ru/api/sendEmail?format=json', [
             'api_key' => env('UNISENDER_API_KEY'),
             'email'    => $subscriber->email,
