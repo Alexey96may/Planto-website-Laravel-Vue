@@ -10,6 +10,8 @@ FROM php:8.4-fpm-alpine
 
 RUN apk add --no-cache \
     nginx \
+    nodejs \ 
+    npm \
     libpng-dev \
     libzip-dev \
     oniguruma-dev \
@@ -38,10 +40,9 @@ WORKDIR /var/www/html
 COPY . .
 
 COPY --from=frontend-builder /app/public/build ./public/build
+COPY --from=frontend-builder /app/bootstrap/ssr ./bootstrap/ssr
 
 RUN composer install --no-dev --optimize-autoloader
-
-RUN php artisan storage:link
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
@@ -55,6 +56,7 @@ CMD php artisan config:clear && \
     php artisan config:cache && \
     php artisan storage:link && \
     php artisan migrate --force && \
+    (node bootstrap/ssr/ssr.mjs &) && \
     (php artisan queue:work --tries=3 --timeout=90 &) && \
     php-fpm -D && \
     nginx -g 'daemon off;'

@@ -3,8 +3,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "ssr:build": "vite build --ssr",
+        "build": "vite build && vite build --ssr",
+        "ssr:run": "node bootstrap/ssr/ssr.mjs",
         "dev": "vite",
         "test:js": "vitest run --coverage",
         "test:php": "php artisan test",
