@@ -56,7 +56,7 @@ CMD php artisan config:clear && \
     php artisan config:cache && \
     php artisan storage:link && \
     php artisan migrate --force && \
-    (node bootstrap/ssr/ssr.mjs &) && \
+    (node bootstrap/ssr/ssr.js &) && \
     (php artisan queue:work --tries=3 --timeout=90 &) && \
     php-fpm -D && \
     nginx -g 'daemon off;'
