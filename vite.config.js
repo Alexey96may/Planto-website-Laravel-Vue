@@ -58,6 +58,9 @@ export default defineConfig({
             },
         }),
     ],
+    ssr: {
+        noExternal: ['@inertiajs/vue3', 'vue', '@vue/server-renderer'],
+    },
     build: {
         minify: 'terser',
         cssMinify: true,
