@@ -36,7 +36,6 @@ class Product extends Model implements HasMedia
        
             return $this->getFirstMediaUrl('gallery', 'thumb') ?: asset('images/no-image.png');
         } catch (\Exception $e) {
-           
             return asset('images/no-image.png');
         }
     }
