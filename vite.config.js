@@ -66,11 +66,7 @@ export default defineConfig({
         cssMinify: true,
         rollupOptions: {
             output: {
-                manualChunks(id) {
-                    if (id.includes('node_modules')) {
-                        return 'vendor';
-                    }
-                },
+                inlineDynamicImports: true,
             },
         },
         chunkSizeWarningLimit: 1000,
