@@ -4,9 +4,9 @@
 {{ $body }}
 
 <x-mail::button :url="config('app.url')">
-Перейти на сайт
+Go to the website
 </x-mail::button>
 
-Спасибо,<br>
-Команда {{ config('app.name') }}
+Thank you,<br>
+Team {{ config('app.name') }}
 </x-mail::message>

@@ -8,6 +8,7 @@ use App\Mail\WelcomeNewsletter;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CustomNewsletter;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class NewsletterController extends Controller
@@ -21,11 +22,19 @@ class NewsletterController extends Controller
 
         $subscriber = Newsletter::create($validated);
 
-        try {
-        Mail::to($subscriber->email)->send(new WelcomeNewsletter());
-        } catch (\Exception $e) {
-            Log::error("Ошибка почты: " . $e->getMessage());
-            return back()->with('message', 'Ошибка при отправке: ' . $e->getMessage());
+        $response = Http::post('https://api.unisender.com/ru/api/sendEmail?format=json', [
+            'api_key' => env('UNISENDER_API_KEY'),
+            'email'    => $subscriber->email,
+            'sender_name'  => env('UNISENDER_SENDER_NAME', 'Planto Shop'),
+            'sender_email' => env('UNISENDER_SENDER_EMAIL'),
+            'subject'      => 'Wellcome to Planto!',
+            'body'         => view('emails.welcome_newsletter')->render(),
+            'list_id'      => 1,
+        ]);
+
+        if ($response->failed() || isset($response->json()['error'])) {
+            Log::error("Ошибка UniSender: " . $response->body());
+            return back()->with('message', 'The subscription has been completed, but there was a delay with the letter.');
         }
 
         return back()->with('message', 'The letter has been sent!');
@@ -41,10 +50,21 @@ class NewsletterController extends Controller
 
         $count = Newsletter::count();
 
-        Newsletter::chunk(100, function ($subscribers) use ($request) {
+        Newsletter::chunk(100, function ($subscribers) use ($request, &$count) {
             foreach ($subscribers as $subscriber) {
-                Mail::to($subscriber->email)
-                    ->send(new CustomNewsletter($request->subject, $request->message));
+                Http::post('https://api.unisender.com/ru/api/sendEmail?format=json', [
+                    'api_key'      => env('UNISENDER_API_KEY'),
+                    'email'         => $subscriber->email,
+                    'sender_name'   => env('UNISENDER_SENDER_NAME'),
+                    'sender_email'  => env('UNISENDER_SENDER_EMAIL'),
+                    'subject'       => $request->subject,
+                    'body'          => view('emails.custom_newsletter', [
+                                            'subject' => $request->subject, 
+                                            'messageText' => $request->message
+                                       ])->render(),
+                    'list_id'       => 1,
+                ]);
+                $count++;
             }
         });
 
