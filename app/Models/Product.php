@@ -32,7 +32,13 @@ class Product extends Model implements HasMedia
 
     public function getThumbUrlAttribute(): string
     {
-        return $this->getFirstMediaUrl('gallery', 'thumb') ?: asset('images/no-image.png');
+        try {
+       
+            return $this->getFirstMediaUrl('gallery', 'thumb') ?: asset('images/no-image.png');
+        } catch (\Exception $e) {
+           
+            return asset('images/no-image.png');
+        }
     }
 
     public function registerMediaCollections(): void
