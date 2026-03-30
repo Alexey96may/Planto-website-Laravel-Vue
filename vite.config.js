@@ -10,7 +10,7 @@ import viteCompression from 'vite-plugin-compression';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import svgLoader from 'vite-svg-loader';
 
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
     plugins: [
         laravel({
             input: ['resources/scss/app.scss', 'resources/js/app.ts'],
@@ -66,7 +66,7 @@ export default defineConfig({
         cssMinify: true,
         rollupOptions: {
             output: {
-                inlineDynamicImports: true,
+                inlineDynamicImports: isSsrBuild,
             },
         },
         chunkSizeWarningLimit: 1000,
@@ -85,4 +85,4 @@ export default defineConfig({
             img: path.resolve(__dirname, './resources/images'),
         },
     },
-});
+}));

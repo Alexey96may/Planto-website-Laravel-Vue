@@ -11,7 +11,6 @@ FROM php:8.4-fpm-alpine
 RUN apk add --no-cache \
     nginx \
     nodejs \ 
-    npm \
     libpng-dev \
     libzip-dev \
     oniguruma-dev \
@@ -51,9 +50,9 @@ COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 
 EXPOSE 10000
 
-CMD php artisan config:clear && \
-    php artisan route:clear && \
-    php artisan config:cache && \
+CMD php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache && \
     php artisan storage:link && \
     php artisan migrate --force && \
     (node bootstrap/ssr/ssr.js &) && \
