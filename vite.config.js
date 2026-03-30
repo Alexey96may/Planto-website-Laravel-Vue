@@ -59,7 +59,14 @@ export default defineConfig({
         }),
     ],
     ssr: {
-        noExternal: ['@inertiajs/vue3', 'vue', '@vue/server-renderer'],
+        noExternal: [
+            '@inertiajs/vue3',
+            '@vue/server-renderer',
+            'vue',
+            '@vue/compiler-dom',
+            'lucide-vue-next',
+            'ziggy-js',
+        ],
     },
     build: {
         minify: 'terser',
