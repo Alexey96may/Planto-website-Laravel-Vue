@@ -20,7 +20,7 @@
 <template>
     <figure class="card slider-mini__card w-full" aria-label="Slider card">
         <div
-            class="card__img-wrapper relative aspect-[1/1] w-full sm:h-64"
+            class="card__img-wrapper relative aspect-square w-full !overflow-hidden sm:h-64"
             aria-label="Slider card image"
         >
             <ParallaxCard :with-glare="false" :intensity="8">

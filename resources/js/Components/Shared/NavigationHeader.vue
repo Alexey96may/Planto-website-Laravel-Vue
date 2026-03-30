@@ -133,7 +133,7 @@
                     <template v-for="item in menuItems" :key="'mobile-' + item.id">
                         <div v-if="item.children?.length" class="flex flex-col gap-3 sm:gap-4">
                             <span
-                                class="ml-1 text-[0.65rem] font-black uppercase tracking-[0.2em] text-emerald-500/60"
+                                class="text-md ml-1 text-[0.65rem] font-black uppercase tracking-[0.2em] text-emerald-500/60"
                             >
                                 {{ item.title }}
                             </span>
@@ -143,7 +143,7 @@
                                     v-for="child in item.children"
                                     :key="child.id"
                                     :href="getHref(child)"
-                                    class="group relative py-2 pl-5 text-base text-zinc-300 transition-all hover:text-emerald-400 active:bg-emerald-500/5"
+                                    class="group relative py-2 pl-5 text-base text-sm text-zinc-300 transition-all hover:text-emerald-400 active:bg-emerald-500/5"
                                 >
                                     <span
                                         class="absolute left-[-1px] top-0 h-full w-[2px] scale-y-0 bg-emerald-500 transition-transform duration-300 group-hover:scale-y-100"
@@ -156,7 +156,7 @@
                         <Link
                             v-else
                             :href="getHref(item)"
-                            class="text-xl font-bold text-zinc-100 transition-transform hover:text-emerald-400 active:translate-x-1"
+                            class="text-md font-bold text-zinc-100 transition-transform hover:text-emerald-400 active:translate-x-1"
                         >
                             {{ item.title }}
                         </Link>
@@ -166,7 +166,7 @@
                         <Link
                             :href="$page.props.auth?.user ? route('dashboard') : route('register')"
                             :aria-label="$page.props.auth?.user ? 'To Dashboard' : 'To Register'"
-                            class="!block font-medium text-zinc-400 sm:!hidden"
+                            class="!block text-sm font-medium text-zinc-400 sm:!hidden"
                         >
                             User Dashboard
                         </Link>

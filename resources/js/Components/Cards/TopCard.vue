@@ -21,11 +21,14 @@
 
 <template>
     <figure class="card top__card" aria-label="Top card">
-        <div class="card__img-wrapper" aria-label="Top card image">
+        <div
+            class="card__img-wrapper !aspect-square !w-full !overflow-hidden"
+            aria-label="Top card image"
+        >
             <ParallaxCard :with-glare="false" class="cursor-move">
                 <AppImage
                     :src="plant.optimized_images"
-                    class="parallax-image drop-shadow-md transition-transform duration-500 hover:scale-110 md:drop-shadow-lg"
+                    class="parallax-image !h-full !w-full !object-contain drop-shadow-md transition-transform duration-500 hover:scale-110 md:drop-shadow-lg"
                     :alt="plant.title"
                 ></AppImage>
             </ParallaxCard>

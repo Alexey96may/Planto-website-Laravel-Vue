@@ -16,7 +16,7 @@
                 id="buttonV"
                 @click="isEffectsEnabled = !isEffectsEnabled"
                 @mousedown="playClick"
-                class="relative h-6 w-11 shrink-0 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 focus:ring-offset-zinc-900"
+                class="relative h-6 w-11 shrink-0 rounded-full text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 focus:ring-offset-zinc-900"
                 :class="isEffectsEnabled ? 'bg-emerald-600' : 'bg-plant-shop'"
                 aria-label="Toggle visual effects"
             >

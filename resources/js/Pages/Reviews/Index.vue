@@ -138,7 +138,7 @@
                                 <article
                                     v-for="(review, index) in reviews.data"
                                     :key="review.id"
-                                    class="review-card group relative rounded-[1rem] border border-emerald-700 bg-plant-shop p-4 transition-all duration-500 md:p-10 xl:rounded-[2rem]"
+                                    class="review-card group relative rounded-[1rem] border border-emerald-700 bg-plant-shop px-4 py-10 transition-all duration-500 md:p-10 xl:rounded-[2rem]"
                                     :style="{ animationDelay: `${index * 100}ms` }"
                                 >
                                     <div class="relative z-10 text-white">
@@ -167,7 +167,7 @@
                                                 </div>
 
                                                 <div
-                                                    class="flex flex-col gap-2 sm:items-start md:gap-1"
+                                                    class="flex flex-col items-center gap-2 sm:items-start md:gap-1"
                                                 >
                                                     <h3
                                                         class="text-center text-lg font-black uppercase tracking-tight text-white"
@@ -175,7 +175,7 @@
                                                         {{ review.user?.name || 'Anonymous' }}
                                                     </h3>
 
-                                                    <div class="flex items-center gap-1 md:hidden">
+                                                    <div class="flex gap-1 self-center md:hidden">
                                                         <AppRating :rating="review.rating" />
                                                         <span
                                                             class="ml-2 text-xs font-black italic text-white"
@@ -269,7 +269,6 @@
 </template>
 
 <style scoped>
-    /* Стили остаются без изменений */
     .list-fade-enter-active,
     .list-fade-leave-active {
         transition: all 0.4s ease;

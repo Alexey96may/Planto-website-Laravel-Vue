@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import { computed, nextTick, ref, watch } from 'vue';
 
+    import { usePage } from '@inertiajs/vue3';
+
     import { TransitionChild, TransitionRoot } from '@headlessui/vue';
     import { useScrollLock, useSwipe } from '@vueuse/core';
     import gsap from 'gsap';
@@ -39,6 +41,15 @@
         isLocked.value = val;
     });
 
+    const page = usePage();
+
+    watch(
+        () => page.url,
+        () => {
+            isOpen.value = false;
+        },
+    );
+
     const scrollY = ref(0);
     const handleScroll = (e: Event) => {
         const el = e.target as HTMLElement;
@@ -55,14 +66,18 @@
 
             gsap.fromTo(
                 items,
-                { x: -40, opacity: 0 },
+                { x: -600, opacity: 0 },
                 {
                     x: 0,
                     opacity: 1,
-                    duration: 0.4,
+                    duration: 0.6,
                     stagger: 0.1,
                     ease: 'power2.out',
-                    delay: 0.1,
+                    delay: 0.2,
+
+                    onComplete: () => {
+                        gsap.set(items, { clearProps: 'all' });
+                    },
                 },
             );
         }
