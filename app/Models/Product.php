@@ -70,8 +70,6 @@ class Product extends Model implements HasMedia
         }
 
         return [
-            ['src' => $media->getUrl('avif'), 'format' => 'avif'],
-            ['src' => $media->getUrl('webp'), 'format' => 'webp'],
             ['src' => $media->getUrl(), 'format' => $media->extension],
         ];
     }
