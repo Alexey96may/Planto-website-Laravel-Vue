@@ -66,14 +66,14 @@
 
             gsap.fromTo(
                 items,
-                { x: -600, opacity: 0 },
+                { x: -500, opacity: 0 },
                 {
                     x: 0,
                     opacity: 1,
                     duration: 0.6,
                     stagger: 0.1,
                     ease: 'power2.out',
-                    delay: 0.2,
+                    delay: 0,
 
                     onComplete: () => {
                         gsap.set(items, { clearProps: 'all' });
