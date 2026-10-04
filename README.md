@@ -1,87 +1,122 @@
-# 🌿 PlantShop — Fullstack E-commerce Platform
+# 🌿 PlantShop — E-commerce Shop for Plants
 
-**PlantShop** is a specialized e-commerce solution for botanical enthusiasts. It features a modern interface, real-time inventory management, and a secure payment pipeline. This project demonstrates a deep integration of Laravel 11 and Vue.js 3, with a focus on reliability, database integrity, and handling real-world API challenges.
+Pet project of an online houseplant store built with Laravel 11 + Vue 3 + Inertia.js.
+Demonstrates database transactions, overselling protection, Stripe Checkout integration, and webhook handling.
+
+---
+
+## 📸 Demo
+
+![Demo](docs/screenshots/Planto.gif)
+
+| Home                                      | Shop                                      | Cart                                      |
+| ----------------------------------------- | ----------------------------------------- | ----------------------------------------- |
+| ![home](docs/screenshots/Planto_main.jpg) | ![shop](docs/screenshots/Planto_shop.jpg) | ![cart](docs/screenshots/Planto_cart.jpg) |
+
+| Profile                                   | Admin                                       | Contact                                         |
+| ----------------------------------------- | ------------------------------------------- | ----------------------------------------------- |
+| ![user](docs/screenshots/Planto_user.jpg) | ![admin](docs/screenshots/Planto_admin.jpg) | ![contact](docs/screenshots/Planto_contact.jpg) |
+
+> No live demo yet. The project runs locally in a few minutes — see [Installation](#-installation).
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Backend:** PHP 8.2+ | Laravel 11 (Service Layer, Eloquent, Notifications)
-- **Frontend:** Vue.js 3 (Composition API) | Inertia.js | Tailwind CSS
-- **Database:** SQLite (Atomic Transactions & `lockForUpdate` implementation)
-- **Payments:** Stripe API (Checkout Sessions & Webhook handling)
-- **Testing:** Mailtrap (SMTP Testing) | Stripe CLI
+**Backend**
+
+- PHP 8.2+, Laravel 11
+- Service Layer, Eloquent, Notifications
+- PostgreSQL 14+
+
+**Frontend**
+
+- Vue 3 (Composition API)
+- Inertia.js
+- Tailwind CSS
+- Vite
+
+**Payments**
+
+- Stripe Checkout Sessions + Webhooks
+
+**Local dev tools**
+
+- Mailtrap (catches outgoing emails in dev)
+- Stripe CLI (forwards webhooks locally)
 
 ---
 
-## 🚀 Key Features
+## ✨ Features
 
-### 🛒 Inventory & Stock Integrity
+### 🛒 Inventory & stock
 
-- **Overselling Protection:** Uses database-level locking (`lockForUpdate`) during the checkout process to ensure stock levels are accurate even under high traffic.
-- **Atomic Transactions:** Guarantees that order creation and stock decrement happen as a single unit—no "ghost" orders or missing inventory.
-- **Persistent Cart:** A robust `CartService` handles all calculations and item persistence on the server side.
+- **Overselling protection** — during checkout, the product row is locked with `lockForUpdate` so two concurrent requests can't sell the same unit.
+- **Atomic transactions** — order creation and stock decrement happen inside a single DB transaction.
+- **Server-side cart** — `CartService` stores items and recalculates totals on the server, not on the client.
 
-### 💳 Payment & Reliability
+### 💳 Payments
 
-- **Stripe Checkout:** Secure, PCI-compliant payment processing.
-- **Environment-Aware Logic:** Custom handling for local development to bypass network restrictions and SSL/TLS handshake timeouts.
-- **Webhook Ready:** Architecture prepared for asynchronous payment confirmation and automated order fulfillment.
+- **Stripe Checkout** — payment goes through Stripe's hosted checkout page.
+- **Webhooks** — `checkout.session.completed` handler confirms payment and moves the order to paid status.
+- **Dev mode** — separate configuration for local development without public webhooks.
 
-### 📧 Notification System
+### 📧 Notifications
 
-- **Automated Receipts:** Instant email notifications triggered by order status changes.
-- **Development SMTP:** Configured to work seamlessly with Mailtrap, including SSL bypass for local OpenSSL environments.
-
----
-
-## 📦 Installation & Setup
-
-1.  **Clone the repository:**
-
-    ```bash
-    git clone [https://github.com/your-username/plant-shop.git](https://github.com/your-username/plant-shop.git)
-    cd plant-shop
-    ```
-
-2.  **Install dependencies:**
-
-    ```bash
-    composer install
-    npm install
-    ```
-
-3.  **Environment Configuration:**
-
-    ```bash
-    cp .env.example .env
-    # Update your DB_DATABASE, STRIPE_SECRET, and MAIL credentials
-    ```
-
-4.  **Database Migration:**
-
-    ```bash
-    php artisan migrate --seed
-    ```
-
-5.  **Run the Application:**
-    ```bash
-    npm run dev
-    php artisan serve
-    ```
+- Order status change triggers a receipt email to the customer (Laravel Notifications).
+- Emails are caught with Mailtrap locally.
 
 ---
 
-## 📈 Roadmap
+## 🚀 Installation
 
-- [ ] **Automated Stock Recovery:** Scheduled Task to restock items from abandoned "pending" orders.
-- [ ] **Advanced Filtering:** Filter plants by light requirements, pet-friendliness, and difficulty level.
-- [ ] **User Profiles:** Dashboard for users to track their order history and plant "wishlist".
+### Requirements
 
----
+- PHP 8.2+
+- Composer 2
+- Node.js 18+ and npm
+- PostgreSQL 14+
+- Stripe account (test keys) — needed only to try the payment flow
 
-## 👤 Author
+### Steps
 
-**Aleksey** — Fullstack Developer
+```bash
+# 1. Clone
+git clone https://github.com/your-username/plant-shop.git
+cd plant-shop
 
-- **Specialization:** Laravel, Vue.js, Node.js
+# 2. Dependencies
+composer install
+npm install
+
+# 3. Environment
+cp .env.example .env
+php artisan key:generate
+
+# 4. Create the database
+createdb plant_shop
+# or: psql -U postgres -c "CREATE DATABASE plant_shop;"
+
+# 5. In .env set:
+#    DB_CONNECTION=pgsql
+#    DB_HOST=127.0.0.1
+#    DB_PORT=5432
+#    DB_DATABASE=plant_shop
+#    DB_USERNAME=postgres
+#    DB_PASSWORD=your_password
+#
+#    STRIPE_KEY / STRIPE_SECRET — test keys from dashboard.stripe.com
+#    STRIPE_WEBHOOK_SECRET — you'll get this on step 8
+#    MAIL_* — Mailtrap, or set MAIL_MAILER=log (emails go to storage/logs)
+
+# 6. Migrate and seed
+php artisan migrate --seed
+
+# 7. Run backend and frontend in two terminals
+php artisan serve       # terminal 1
+npm run dev             # terminal 2
+
+# 8. (Optional) Receive Stripe webhooks locally
+stripe listen --forward-to localhost:8000/stripe/webhook
+# Copy whsec_... into STRIPE_WEBHOOK_SECRET
+```

@@ -79,7 +79,6 @@ class Product extends Model implements HasMedia
                 ['src' => $media->getUrl(), 'format' => $media->extension],
             ];
         } catch (\Exception $e) {
-            
             return [['src' => asset('images/no-image.png'), 'format' => 'png']];
         }
     }
